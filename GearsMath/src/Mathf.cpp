@@ -126,7 +126,7 @@ int Mathf::RoundToInt(float f)
     return static_cast<int>(roundf(f));
 }
 
-inline float Mathf::Sign(float f)
+float Mathf::Sign(float f)
 {
     return f >= 0.0f ? 1.0f : -1.0f;
 }

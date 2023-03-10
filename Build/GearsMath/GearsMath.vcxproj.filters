@@ -10,6 +10,9 @@
     <ClCompile Include="F:\GearsLib\GearsLibrary\GearsMath\src\Vector3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="F:\GearsLib\GearsLibrary\GearsMath\src\Vector4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="F:\GearsLib\GearsLibrary\GearsMath\src\Random.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -22,6 +25,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="F:\GearsLib\GearsLibrary\GearsMath\include\Vector3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="F:\GearsLib\GearsLibrary\GearsMath\include\Vector4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="F:\GearsLib\GearsLibrary\GearsMath\include\Random.h">

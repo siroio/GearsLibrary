@@ -7,6 +7,8 @@ set(SOURCE_FOLDER
 
 set(HEADER_FOLDER 
     ./include/StringUtility.h
+    ./include/Debugging.h
+    ./include/SingletonBase.h
 )
 
 set(LIB_NAME GearsUtility)

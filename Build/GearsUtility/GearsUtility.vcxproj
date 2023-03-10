@@ -271,6 +271,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemGroup>
     <ClCompile Include="F:\GearsLib\GearsLibrary\GearsUtility\src\CSVLoader.cpp" />
     <ClInclude Include="F:\GearsLib\GearsLibrary\GearsUtility\include\StringUtility.h" />
+    <ClInclude Include="F:\GearsLib\GearsLibrary\GearsUtility\include\Debugging.h" />
+    <ClInclude Include="F:\GearsLib\GearsLibrary\GearsUtility\include\SingletonBase.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="F:\GearsLib\GearsLibrary\Build\ZERO_CHECK.vcxproj">

@@ -6,11 +6,14 @@ project(GearsLibrary
 		LANGUAGES CXX)
 
 # == CONFIG ==
-set(LIBRARY GearsMath GearsUtility)
+set(LIBRARYS
+	GearsMath 
+	GearsUtility
+)
 
-add_executable(GearsLibrary main.cpp)
+add_library(GearsLibrary STATIC main.cpp)
 add_subdirectory(./GearsMath)
 add_subdirectory(./GearsUtility)
 
 target_compile_features(GearsLibrary PRIVATE cxx_std_20)
-target_link_libraries(GearsLibrary ${LIBRARY})
+target_link_libraries(GearsLibrary ${LIBRARYS})

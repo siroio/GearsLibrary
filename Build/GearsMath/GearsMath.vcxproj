@@ -78,7 +78,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;F:\GearsLib\GearsLibrary\GearsUtility\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -96,10 +96,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;F:\GearsLib\GearsLibrary\GearsUtility\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;F:\GearsLib\GearsLibrary\GearsUtility\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -112,7 +112,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;F:\GearsLib\GearsLibrary\GearsUtility\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -130,10 +130,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;F:\GearsLib\GearsLibrary\GearsUtility\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;F:\GearsLib\GearsLibrary\GearsUtility\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -146,7 +146,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;F:\GearsLib\GearsLibrary\GearsUtility\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
@@ -164,10 +164,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;F:\GearsLib\GearsLibrary\GearsUtility\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;F:\GearsLib\GearsLibrary\GearsUtility\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -180,7 +180,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;F:\GearsLib\GearsLibrary\GearsUtility\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -197,10 +197,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;F:\GearsLib\GearsLibrary\GearsUtility\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\GearsLib\GearsLibrary\GearsMath\.\include;F:\GearsLib\GearsLibrary\GearsUtility\.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -272,10 +272,12 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="F:\GearsLib\GearsLibrary\GearsMath\src\Mathf.cpp" />
     <ClCompile Include="F:\GearsLib\GearsLibrary\GearsMath\src\Vector2.cpp" />
     <ClCompile Include="F:\GearsLib\GearsLibrary\GearsMath\src\Vector3.cpp" />
+    <ClCompile Include="F:\GearsLib\GearsLibrary\GearsMath\src\Vector4.cpp" />
     <ClCompile Include="F:\GearsLib\GearsLibrary\GearsMath\src\Random.cpp" />
     <ClInclude Include="F:\GearsLib\GearsLibrary\GearsMath\include\Mathf.h" />
     <ClInclude Include="F:\GearsLib\GearsLibrary\GearsMath\include\Vector2.h" />
     <ClInclude Include="F:\GearsLib\GearsLibrary\GearsMath\include\Vector3.h" />
+    <ClInclude Include="F:\GearsLib\GearsLibrary\GearsMath\include\Vector4.h" />
     <ClInclude Include="F:\GearsLib\GearsLibrary\GearsMath\include\Random.h" />
   </ItemGroup>
   <ItemGroup>
@@ -284,6 +286,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="F:\GearsLib\GearsLibrary\Build\GearsUtility\GearsUtility.vcxproj">
+      <Project>{DE281824-BE81-3352-B78A-3C4B9BED87F2}</Project>
+      <Name>GearsUtility</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

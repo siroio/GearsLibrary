@@ -1,7 +1,8 @@
 struct Mathf
 {
 public:
-    static constexpr float Epsilon = 1.0e-5;
+    static constexpr float Epsilon = 1e-5f;
+    static constexpr float EpsilonNormalSqrt = 1e-15f;
     static constexpr float PI = 3.141592653589793238462643383279f;
     static constexpr float Deg2Rad = PI / 180.0f;
     static constexpr float Rad2Deg = 180.0f / PI;
@@ -35,7 +36,7 @@ public:
     static int FloorToInt(float f);
     static int RoundToInt(float f);
 
-    static inline float Sign(float f);
+    static float Sign(float f);
     static bool Approximately(float a, float b);
     static float Clamp(float value, float min, float max);
     static int Clamp(int value, int min, int max);

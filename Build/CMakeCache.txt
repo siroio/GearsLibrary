@@ -188,8 +188,14 @@ GearsLibrary_BINARY_DIR:STATIC=F:/GearsLib/GearsLibrary/Build
 //Value Computed by CMake
 GearsLibrary_IS_TOP_LEVEL:STATIC=ON
 
+//Dependencies for the target
+GearsLibrary_LIB_DEPENDS:STATIC=general;GearsMath;general;GearsUtility;
+
 //Value Computed by CMake
 GearsLibrary_SOURCE_DIR:STATIC=F:/GearsLib/GearsLibrary
+
+//Dependencies for the target
+GearsMath_LIB_DEPENDS:STATIC=general;GearsUtility;
 
 
 ########################

@@ -9,6 +9,12 @@
     <ClInclude Include="F:\GearsLib\GearsLibrary\GearsUtility\include\StringUtility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="F:\GearsLib\GearsLibrary\GearsUtility\include\Debugging.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="F:\GearsLib\GearsLibrary\GearsUtility\include\SingletonBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="F:\GearsLib\GearsLibrary\GearsUtility\CMakeLists.txt" />

@@ -1,12 +1,16 @@
 #include "Random.h"
 #include <random>
+#include <limits>
 
 PCG_XSH_RR Random::pcg;
 
 PCG_XSH_RR::PCG_XSH_RR(std::uint64_t seed, std::uint64_t inc)
     : state{ 0ull }, increment{ inc | 1ull }
 {
-    if (seed == 0) seed = std::random_device{}();
+    if (seed == 0)
+    {
+        seed = std::random_device{}();
+    }
     NextInt();
     state += seed;
     NextInt();
@@ -20,18 +24,23 @@ void PCG_XSH_RR::Seed(std::uint64_t seed)
     NextInt();
 }
 
+void Random::Seed(std::uint64_t seed)
+{
+    pcg.Seed(seed);
+}
+
 std::uint32_t PCG_XSH_RR::NextInt()
 {
     std::uint64_t oldState = state;
     state = oldState * increment + increment;
     std::uint32_t xorshifted = static_cast<std::uint32_t>((oldState >> 18) ^ oldState) >> 27;
     int rot = static_cast<int>(oldState >> 59);
-    return (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
+    return (xorshifted >> rot) | (xorshifted << (-rot & 31));
 }
 
 double PCG_XSH_RR::NextDouble()
 {
-    return static_cast<double>(NextInt()) / UINT32_MAX;
+    return static_cast<double>(NextInt()) / std::numeric_limits<std::uint32_t>::max();
 }
 
 int Random::Next()
