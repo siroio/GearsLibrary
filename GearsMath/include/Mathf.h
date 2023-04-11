@@ -1,3 +1,6 @@
+#ifndef GEAR_MATHF_H
+#define GEAR_MATHF_H
+
 struct Mathf
 {
 public:
@@ -52,3 +55,5 @@ public:
     static float SmoothStep(float from, float to, float t);
     static float Gamma(float value, float absmax, float gamma);
 };
+
+#endif // !GEAR_MATHF_H

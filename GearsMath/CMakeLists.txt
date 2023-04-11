@@ -6,6 +6,7 @@ set(SOURCE_FOLDER
     ./src/Vector2.cpp 
     ./src/Vector3.cpp
     ./src/Vector4.cpp
+    ./src/Color.cpp
     ./src/Random.cpp
 )
 
@@ -14,6 +15,7 @@ set(HEADER_FOLDER
     ./include/Vector2.h
     ./include/Vector3.h
     ./include/Vector4.h
+    ./include/Color.h
     ./include/Random.h
 )
 

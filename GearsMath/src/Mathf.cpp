@@ -1,5 +1,5 @@
 #include "Mathf.h"
-#include <math.h>
+#include <cmath>
 
 float Mathf::Sin(float f)
 {

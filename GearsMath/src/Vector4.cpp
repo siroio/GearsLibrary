@@ -1,7 +1,6 @@
 #include <Vector4.h>
 #include <Vector3.h>
 #include <Mathf.h>
-#include <iosfwd>
 #include <sstream>
 #include <Debugging.h>
 
@@ -250,12 +249,12 @@ bool operator==(const Vector4& v1, const Vector4 v2)
         diff_w * diff_w
     };
 
-    return sqrMag < (Mathf::Epsilon* Mathf::Epsilon);
+    return sqrMag < (Mathf::Epsilon * Mathf::Epsilon);
 }
 
 bool operator!=(const Vector4& v1, const Vector4 v2)
 {
-    return false;
+    return !(v1 == v2);
 }
 
 std::ostream& operator<<(std::ostream& stream, const Vector4& v)

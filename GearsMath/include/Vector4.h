@@ -2,6 +2,7 @@
 #define GEAR_Vector3_H
 
 #include <string>
+#include<iosfwd>
 
 struct Vector3;
 
@@ -13,12 +14,9 @@ public:
     {
         struct
         {
-            float xyzw[4];
-        };
-        struct
-        {
             float x, y, z, w;
         };
+        float xyzw[4];
     };
 
 public:

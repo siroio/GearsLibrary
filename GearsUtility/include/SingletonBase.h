@@ -3,64 +3,41 @@
 #include <type_traits>
 #include <memory>
 
-template<class T>
-class SingletonBase
+template<typename T>
+class Singleton
 {
 private:
-    static std::unique_ptr<T> instance{ nullptr };
+    static std::unique_ptr<T> instance_;
 
 public:
-    SingletonBase(const SingletonBase&) = delete;
-    SingletonBase operator = (const SingletonBase&) = delete;
-    SingletonBase& operator = (const SingletonBase&) = delete;
-
-    static T& Instance()
-    {
-        // デフォルトコンストラクタがないとSingletonにできない
-        static_assert(std::is_default_constructible<T>::value,
-            "Singleton must be default constructible");
-
-        if (!instance)
-        {
-            // インスタンスの生成
-            instance.reset(new(std::nothrow) T);
-
-            // Initialize関数がある場合実行
-            if constexpr (std::is_invocable_v<decltype(&T::Initialize), T>)
-            {
-                instance->Initialize();
-            }
-        }
-
-        return *instance;
-    }
+    Singleton(const Singleton&) = delete;
+    Singleton& operator=(const Singleton&) = delete;
+    Singleton(Singleton&&) = delete;
+    Singleton& operator=(Singleton&&) = delete;
 
     template<typename... Args>
     static T& Instance(Args&&... args)
     {
-        // デフォルトコンストラクタがないとSingletonにできない
-        static_assert(std::is_default_constructible<T>::value,
-            "Singleton must be default constructible");
+        static_assert(std::is_constructible_v<T, Args...>,
+            "Singleton class must be constructible with provided arguments.");
 
-        if (!instance)
+        if (!instance_)
         {
-            // インスタンスの生成
-            instance.reset(new(std::nothrow) T(std::forward<Args>(args)...));
+            instance_ = std::make_unique<T>(std::forward<Args>(args)...);
 
-            // Initialize関数がある場合引数を渡して実行
             if constexpr (std::is_invocable_v<decltype(&T::Initialize), T, Args...>)
             {
-                std::invoke(&T::Initialize, *instance, std::forward<Args>(args)...);
+                std::invoke(&T::Initialize, *instance_, std::forward<Args>(args)...);
             }
         }
 
-        return *instance;
+        return *instance_;
     }
 
 protected:
-    SingletonBase() = default;
-    ~SingletonBase() = default;
+    Singleton() = default;
+    ~Singleton() = default;
 };
 
-template<class T>
-std::unique_ptr<T> SingletonBase<T>::instance{ nullptr };
+template<typename T>
+std::unique_ptr<T> Singleton<T>::instance_{ nullptr };

@@ -1,7 +1,6 @@
 #include <Vector2.h>
 #include <Vector3.h>
 #include <Mathf.h>
-#include <iosfwd>
 #include <sstream>
 #include <Debugging.h>
 
@@ -414,7 +413,7 @@ bool operator==(const Vector3& v1, const Vector3 v2)
     float diff_z = v1.z - v2.z;
     float sqrMag = diff_x * diff_x + diff_y * diff_y + diff_z * diff_z;
 
-    return sqrMag < (Mathf::Epsilon* Mathf::Epsilon);
+    return sqrMag < (Mathf::Epsilon * Mathf::Epsilon);
 }
 
 bool operator!=(const Vector3& v1, const Vector3 v2)

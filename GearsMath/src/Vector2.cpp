@@ -2,7 +2,6 @@
 #include <Vector3.h>
 #include <Debugging.h>
 #include <Mathf.h>
-#include <iosfwd>
 #include <sstream>
 
 Vector2::Vector2(float x, float y) : x{ x }, y{ y }
@@ -348,7 +347,7 @@ bool operator==(const Vector2& v1, const Vector2 v2)
     float diff_y = v1.y - v2.y;
     float sqrMag = diff_x * diff_x + diff_y * diff_y;
 
-    return sqrMag < (Mathf::Epsilon* Mathf::Epsilon);
+    return sqrMag < (Mathf::Epsilon * Mathf::Epsilon);
 }
 
 bool operator!=(const Vector2& v1, const Vector2 v2)
