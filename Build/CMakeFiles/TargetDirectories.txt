@@ -1,5 +1,0 @@
-F:/GearsLib/GearsLibrary/Build/CMakeFiles/GearsLibrary.dir
-F:/GearsLib/GearsLibrary/Build/CMakeFiles/ALL_BUILD.dir
-F:/GearsLib/GearsLibrary/Build/CMakeFiles/ZERO_CHECK.dir
-F:/GearsLib/GearsLibrary/Build/GearsMath/CMakeFiles/GearsMath.dir
-F:/GearsLib/GearsLibrary/Build/GearsUtility/CMakeFiles/GearsUtility.dir
