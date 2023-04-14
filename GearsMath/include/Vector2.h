@@ -1,4 +1,4 @@
-#ifndef GEAR_Vector2_H
+ï»¿#ifndef GEAR_Vector2_H
 #define GEAR_Vector2_H
 
 #include <string>
@@ -7,7 +7,7 @@
 struct Vector3;
 
 /**
- * @brief 2ŸŒ³ƒxƒNƒgƒ‹‚ğ•\‚·\‘¢‘Ì
+ * @brief 2æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«ã‚’è¡¨ã™æ§‹é€ ä½“
  */
 struct Vector2
 {
@@ -17,175 +17,210 @@ public:
     {
         struct
         {
-            float x, y;///< x‚Æy‚ÌÀ•W
+            float x, y;
         };
-        float xy[2];///< x‚Æy‚ÌÀ•W‚ğ”z—ñ‚É‚µ‚½‚à‚Ì
+        struct
+        {
+            float xy[2];
+        };
     };
 
 public:
     /**
-     * @brief ƒRƒs[ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-     * @param[in] v ƒRƒs[Œ³‚ÌƒxƒNƒgƒ‹
+     * @brief ã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+     * @param[in] v ã‚³ãƒ”ãƒ¼å…ƒã®ãƒ™ã‚¯ãƒˆãƒ«
      */
     Vector2(const Vector2& v) = default;
     /**
-     * @brief ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-     * @param[in] x X¬•ª‚Ì’l
-     * @param[in] y Y¬•ª‚Ì’l
+     * @brief ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+     * @param[in] x Xæˆåˆ†ã®å€¤
+     * @param[in] y Yæˆåˆ†ã®å€¤
      */
     Vector2(float x, float y);
     /**
-     * @brief ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-     * @param[in] xy X,Y¬•ª‚Ì’l‚ª“™‚µ‚¢’l
+     * @brief ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+     * @param[in] xy X,Yæˆåˆ†ã®å€¤ãŒç­‰ã—ã„å€¤
      */
     explicit Vector2(float xy);
     /**
-     * @brief ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-     * @param[in] v 3ŸŒ³ƒxƒNƒgƒ‹
-     * @details v.z¬•ª‚Í–³‹‚³‚ê‚é
+     * @brief ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+     * @param[in] v 3æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«
+     * @details v.zæˆåˆ†ã¯ç„¡è¦–ã•ã‚Œã‚‹
      */
     explicit Vector2(const Vector3& v);
 
 public:
     /**
-     * @brief ƒ[ƒƒxƒNƒgƒ‹‚ğ•Ô‚·
+     * @brief ã‚¼ãƒ­ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¿”ã™
      * @return Vector2(0, 0)
      */
     static Vector2 Zero();
 
     /**
-     * @brief ’PˆÊƒxƒNƒgƒ‹‚ğ•Ô‚·
+     * @brief å˜ä½ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¿”ã™
      * @return Vector2(1, 1)
      */
     static Vector2 One();
 
     /**
-     * @brief ã•ûŒü‚ğ•\‚·ƒxƒNƒgƒ‹‚ğ•Ô‚·
+     * @brief ä¸Šæ–¹å‘ã‚’è¡¨ã™ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¿”ã™
      * @return Vector2(0, 1)
      */
     static Vector2 Up();
 
     /**
-     * @brief ‰º•ûŒü‚ğ•\‚·ƒxƒNƒgƒ‹‚ğ•Ô‚·
+     * @brief ä¸‹æ–¹å‘ã‚’è¡¨ã™ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¿”ã™
      * @return Vector2(0, -1)
      */
     static Vector2 Down();
 
     /**
-     * @brief ¶•ûŒü‚ğ•\‚·ƒxƒNƒgƒ‹‚ğ•Ô‚·
+     * @brief å·¦æ–¹å‘ã‚’è¡¨ã™ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¿”ã™
      * @return Vector2(-1, 0)
      */
     static Vector2 Left();
 
     /**
-     * @brief ‰E•ûŒü‚ğ•\‚·ƒxƒNƒgƒ‹‚ğ•Ô‚·
+     * @brief å³æ–¹å‘ã‚’è¡¨ã™ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¿”ã™
      * @return Vector2(1, 0)
      */
     static Vector2 Right();
 
 public:
     /**
-    * @brief 2‚Â‚ÌƒxƒNƒgƒ‹‚ÌƒhƒbƒgÏ‚ğ•Ô‚µ‚Ü‚·
-    * @param v1 ƒhƒbƒgÏ‚ğæ‚è‚½‚¢ƒxƒNƒgƒ‹1
-    * @param v2 ƒhƒbƒgÏ‚ğæ‚è‚½‚¢ƒxƒNƒgƒ‹2
-    * @return float ƒxƒNƒgƒ‹1‚ÆƒxƒNƒgƒ‹2‚ÌƒhƒbƒgÏ
+    * @brief 2ã¤ã®ãƒ™ã‚¯ãƒˆãƒ«ã®ãƒ‰ãƒƒãƒˆç©ã‚’è¿”ã—ã¾ã™
+    * @param v1 ãƒ‰ãƒƒãƒˆç©ã‚’å–ã‚ŠãŸã„ãƒ™ã‚¯ãƒˆãƒ«1
+    * @param v2 ãƒ‰ãƒƒãƒˆç©ã‚’å–ã‚ŠãŸã„ãƒ™ã‚¯ãƒˆãƒ«2
+    * @return float ãƒ™ã‚¯ãƒˆãƒ«1ã¨ãƒ™ã‚¯ãƒˆãƒ«2ã®ãƒ‰ãƒƒãƒˆç©
     */
     static float Dot(const Vector2& v1, const Vector2& v2);
 
     /**
-    * @brief 2‚Â‚ÌƒxƒNƒgƒ‹‚Ì‚È‚·Šp“x‚ğ•Ô‚µ‚Ü‚·
-    * @param from Šp“x‚ğŒvZ‚·‚én“_ƒxƒNƒgƒ‹
-    * @param to Šp“x‚ğŒvZ‚·‚éI“_ƒxƒNƒgƒ‹
-    * @return float ƒxƒNƒgƒ‹from‚ÆƒxƒNƒgƒ‹to‚Ì‚È‚·Šp“xiƒ‰ƒWƒAƒ“j
+    * @brief 2ã¤ã®ãƒ™ã‚¯ãƒˆãƒ«ã®ãªã™è§’åº¦ã‚’è¿”ã—ã¾ã™
+    * @param from è§’åº¦ã‚’è¨ˆç®—ã™ã‚‹å§‹ç‚¹ãƒ™ã‚¯ãƒˆãƒ«
+    * @param to è§’åº¦ã‚’è¨ˆç®—ã™ã‚‹çµ‚ç‚¹ãƒ™ã‚¯ãƒˆãƒ«
+    * @return float ãƒ™ã‚¯ãƒˆãƒ«fromã¨ãƒ™ã‚¯ãƒˆãƒ«toã®ãªã™è§’åº¦ï¼ˆãƒ©ã‚¸ã‚¢ãƒ³ï¼‰
     */
     static float Angle(const Vector2& from, const Vector2& to);
 
     /**
-    * @brief 2‚Â‚ÌƒxƒNƒgƒ‹‚Ì‚È‚·Šp“x‚ğ•„†•t‚«‚Å•Ô‚µ‚Ü‚·
-    * @param from Šp“x‚ğŒvZ‚·‚én“_ƒxƒNƒgƒ‹
-    * @param to Šp“x‚ğŒvZ‚·‚éI“_ƒxƒNƒgƒ‹
-    * @return float ƒxƒNƒgƒ‹from‚ÆƒxƒNƒgƒ‹to‚Ì‚È‚·Šp“xiƒ‰ƒWƒAƒ“j
-    * •„†‚ÍAfrom‚©‚çto‚ÉŒü‚©‚¤‰ñ“]•ûŒü‚É‘Î‰‚·‚é•„†‚Å‚·
+    * @brief 2ã¤ã®ãƒ™ã‚¯ãƒˆãƒ«ã®ãªã™è§’åº¦ã‚’ç¬¦å·ä»˜ãã§è¿”ã—ã¾ã™
+    * @param from è§’åº¦ã‚’è¨ˆç®—ã™ã‚‹å§‹ç‚¹ãƒ™ã‚¯ãƒˆãƒ«
+    * @param to è§’åº¦ã‚’è¨ˆç®—ã™ã‚‹çµ‚ç‚¹ãƒ™ã‚¯ãƒˆãƒ«
+    * @return float ãƒ™ã‚¯ãƒˆãƒ«fromã¨ãƒ™ã‚¯ãƒˆãƒ«toã®ãªã™è§’åº¦ï¼ˆãƒ©ã‚¸ã‚¢ãƒ³ï¼‰
+    * ç¬¦å·ã¯ã€fromã‹ã‚‰toã«å‘ã‹ã†å›è»¢æ–¹å‘ã«å¯¾å¿œã™ã‚‹ç¬¦å·ã§ã™
     */
     static float SignedAngle(const Vector2& from, const Vector2& to);
 
     /**
-    * @brief 2‚Â‚ÌƒxƒNƒgƒ‹ŠÔ‚Ì‹——£‚ğ•Ô‚µ‚Ü‚·
-    * @param a ‹——£‚ğŒvZ‚·‚éƒxƒNƒgƒ‹1
-    * @param b ‹——£‚ğŒvZ‚·‚éƒxƒNƒgƒ‹2
-    * @return float ƒxƒNƒgƒ‹a‚ÆƒxƒNƒgƒ‹b‚ÌŠÔ‚Ì‹——£
+    * @brief 2ã¤ã®ãƒ™ã‚¯ãƒˆãƒ«é–“ã®è·é›¢ã‚’è¿”ã—ã¾ã™
+    * @param a è·é›¢ã‚’è¨ˆç®—ã™ã‚‹ãƒ™ã‚¯ãƒˆãƒ«1
+    * @param b è·é›¢ã‚’è¨ˆç®—ã™ã‚‹ãƒ™ã‚¯ãƒˆãƒ«2
+    * @return float ãƒ™ã‚¯ãƒˆãƒ«aã¨ãƒ™ã‚¯ãƒˆãƒ«bã®é–“ã®è·é›¢
     */
     static float Distance(const Vector2& a, const Vector2& b);
 
     /**
-    * @brief ƒxƒNƒgƒ‹‚Ì‘å‚«‚³‚Ì2æ‚ğ•Ô‚µ‚Ü‚·
-    * @param vector ‘å‚«‚³‚Ì2æ‚ğ‹‚ß‚½‚¢ƒxƒNƒgƒ‹
-    * @return float ƒxƒNƒgƒ‹‚Ì‘å‚«‚³‚Ì2æ
+    * @brief ãƒ™ã‚¯ãƒˆãƒ«ã®å¤§ãã•ã®2ä¹—ã‚’è¿”ã—ã¾ã™
+    * @param vector å¤§ãã•ã®2ä¹—ã‚’æ±‚ã‚ãŸã„ãƒ™ã‚¯ãƒˆãƒ«
+    * @return float ãƒ™ã‚¯ãƒˆãƒ«ã®å¤§ãã•ã®2ä¹—
     */
     static float SqrMagnitude(const Vector2& vector);
 
     /**
-    * @brief ƒxƒNƒgƒ‹‚Ì‘å‚«‚³‚ğ•Ô‚µ‚Ü‚·
-    * @param vector ‘å‚«‚³‚ğ‹‚ß‚½‚¢ƒxƒNƒgƒ‹
-    * @return float ƒxƒNƒgƒ‹‚Ì‘å‚«‚³
+    * @brief ãƒ™ã‚¯ãƒˆãƒ«ã®å¤§ãã•ã‚’è¿”ã—ã¾ã™
+    * @param vector å¤§ãã•ã‚’æ±‚ã‚ãŸã„ãƒ™ã‚¯ãƒˆãƒ«
+    * @return float ãƒ™ã‚¯ãƒˆãƒ«ã®å¤§ãã•
     */
     static float Magnitude(const Vector2& vector);
 
     /**
-    * @brief 2‚Â‚ÌƒxƒNƒgƒ‹‚Ì‚¤‚¿AŠe—v‘f‚ª¬‚³‚¢•û‚ğ•Ô‚µ‚Ü‚·
-    * @param lhs Å¬’l‚ğ‹‚ß‚éƒxƒNƒgƒ‹1
-    * @param rhs Å¬’l‚ğ‹‚ß‚éƒxƒNƒgƒ‹2
-    * @return Vector2 Še—v‘f‚ª¬‚³‚¢•û‚ÌƒxƒNƒgƒ‹
+    * @brief 2ã¤ã®ãƒ™ã‚¯ãƒˆãƒ«ã®ã†ã¡ã€å„è¦ç´ ãŒå°ã•ã„æ–¹ã‚’è¿”ã—ã¾ã™
+    * @param lhs æœ€å°å€¤ã‚’æ±‚ã‚ã‚‹ãƒ™ã‚¯ãƒˆãƒ«1
+    * @param rhs æœ€å°å€¤ã‚’æ±‚ã‚ã‚‹ãƒ™ã‚¯ãƒˆãƒ«2
+    * @return Vector2 å„è¦ç´ ãŒå°ã•ã„æ–¹ã®ãƒ™ã‚¯ãƒˆãƒ«
     */
     static Vector2 Min(const Vector2& lhs, const Vector2& rhs);
 
     /**
-    * @brief 2‚Â‚ÌƒxƒNƒgƒ‹‚Ì‚¤‚¿A‚æ‚è‘å‚«‚¢’l‚ğ‚Â—v‘f‚ğ‚ÂVector2‚ğ•Ô‚·
-    * @param lhs ”äŠr‚·‚éƒxƒNƒgƒ‹‚Ìˆê‚Â
-    * @param rhs ”äŠr‚·‚éƒxƒNƒgƒ‹‚Ì‚à‚¤ˆê‚Â
-    * @return Vector2 Še—v‘f‚ª‘å‚«‚¢•û‚ÌƒxƒNƒgƒ‹
+    * @brief 2ã¤ã®ãƒ™ã‚¯ãƒˆãƒ«ã®ã†ã¡ã€ã‚ˆã‚Šå¤§ãã„å€¤ã‚’æŒã¤è¦ç´ ã‚’æŒã¤Vector2ã‚’è¿”ã™
+    * @param lhs æ¯”è¼ƒã™ã‚‹ãƒ™ã‚¯ãƒˆãƒ«ã®ä¸€ã¤
+    * @param rhs æ¯”è¼ƒã™ã‚‹ãƒ™ã‚¯ãƒˆãƒ«ã®ã‚‚ã†ä¸€ã¤
+    * @return Vector2 å„è¦ç´ ãŒå¤§ãã„æ–¹ã®ãƒ™ã‚¯ãƒˆãƒ«
     */
     static Vector2 Max(const Vector2& lhs, const Vector2& rhs);
 
     /**
-    * @brief 2‚Â‚ÌƒxƒNƒgƒ‹‚Ì—v‘f‚²‚Æ‚ÌÏ‚ğŒvZ‚µA‚»‚ÌŒ‹‰Ê‚ğVector2‚Æ‚µ‚Ä•Ô‚·
-    * @param a 1‚Â–Ú‚ÌƒxƒNƒgƒ‹
-    * @param b 2‚Â–Ú‚ÌƒxƒNƒgƒ‹
-    * @return Vector2 —v‘f‚²‚Æ‚ÌÏ‚ÌŒ‹‰Ê‚ğ‚ÂƒxƒNƒgƒ‹
+    * @brief 2ã¤ã®ãƒ™ã‚¯ãƒˆãƒ«ã®è¦ç´ ã”ã¨ã®ç©ã‚’è¨ˆç®—ã—ã€ãã®çµæœã‚’Vector2ã¨ã—ã¦è¿”ã™
+    * @param a 1ã¤ç›®ã®ãƒ™ã‚¯ãƒˆãƒ«
+    * @param b 2ã¤ç›®ã®ãƒ™ã‚¯ãƒˆãƒ«
+    * @return Vector2 è¦ç´ ã”ã¨ã®ç©ã®çµæœã‚’æŒã¤ãƒ™ã‚¯ãƒˆãƒ«
     */
     static Vector2 Scale(const Vector2& a, const Vector2& b);
 
     /**
-    * @brief “üËƒxƒNƒgƒ‹‚É‘Î‚·‚é–@üƒxƒNƒgƒ‹‚ğg—p‚µ‚Ä”½ËƒxƒNƒgƒ‹‚ğŒvZ‚·‚é
-    * @param inDirection “üËƒxƒNƒgƒ‹
-    * @param inNormal –@üƒxƒNƒgƒ‹
-    * @return Vector2 ”½ËƒxƒNƒgƒ‹
+    * @brief å…¥å°„ãƒ™ã‚¯ãƒˆãƒ«ã«å¯¾ã™ã‚‹æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«ã‚’ä½¿ç”¨ã—ã¦åå°„ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¨ˆç®—ã™ã‚‹
+    * @param inDirection å…¥å°„ãƒ™ã‚¯ãƒˆãƒ«
+    * @param inNormal æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«
+    * @return Vector2 åå°„ãƒ™ã‚¯ãƒˆãƒ«
     */
     static Vector2 Reflect(const Vector2& inDirection, const Vector2& inNormal);
 
     /**
-    * @brief —^‚¦‚ç‚ê‚½ƒxƒNƒgƒ‹‚É’¼Œğ‚·‚éA‚’¼‚ÈƒxƒNƒgƒ‹‚ğŒvZ‚µ‚Ä•Ô‚·
-    * @param inDirection “ü—ÍƒxƒNƒgƒ‹
-    * @return Vector2 inDirection‚É‚’¼‚ÈƒxƒNƒgƒ‹
+    * @brief ä¸ãˆã‚‰ã‚ŒãŸãƒ™ã‚¯ãƒˆãƒ«ã«ç›´äº¤ã™ã‚‹ã€å‚ç›´ãªãƒ™ã‚¯ãƒˆãƒ«ã‚’è¨ˆç®—ã—ã¦è¿”ã™
+    * @param inDirection å…¥åŠ›ãƒ™ã‚¯ãƒˆãƒ«
+    * @return Vector2 inDirectionã«å‚ç›´ãªãƒ™ã‚¯ãƒˆãƒ«
     */
     static Vector2 Perpendicular(const Vector2& inDirection);
 
     /**
-    * @brief w’è‚³‚ê‚½2‚Â‚ÌƒxƒNƒgƒ‹ŠÔ‚Ì•ûŒü‚ğ•Ô‚·
-    * @param from ƒxƒNƒgƒ‹‚Ìn“_
-    * @param to ƒxƒNƒgƒ‹‚ÌI“_
-    * @return Vector2 ƒxƒNƒgƒ‹‚Ì•ûŒü
+    * @brief æŒ‡å®šã•ã‚ŒãŸ2ã¤ã®ãƒ™ã‚¯ãƒˆãƒ«é–“ã®æ–¹å‘ã‚’è¿”ã™
+    * @param from ãƒ™ã‚¯ãƒˆãƒ«ã®å§‹ç‚¹
+    * @param to ãƒ™ã‚¯ãƒˆãƒ«ã®çµ‚ç‚¹
+    * @return Vector2 ãƒ™ã‚¯ãƒˆãƒ«ã®æ–¹å‘
     */
     static Vector2 Direction(const Vector2& from, const Vector2& to);
+
     /**
-    * @brief w’è‚³‚ê‚½ƒxƒNƒgƒ‹‚ğ³‹K‰»‚µA’·‚³‚ğ1‚É‚·‚é
-    * @param v ³‹K‰»‚·‚éƒxƒNƒgƒ‹
-    * @return Vector2 ³‹K‰»‚³‚ê‚½ƒxƒNƒgƒ‹
+    * @brief æŒ‡å®šã•ã‚ŒãŸãƒ™ã‚¯ãƒˆãƒ«ã‚’æ­£è¦åŒ–ã—ã€é•·ã•ã‚’1ã«ã™ã‚‹
+    * @param v æ­£è¦åŒ–ã™ã‚‹ãƒ™ã‚¯ãƒˆãƒ«
+    * @return Vector2 æ­£è¦åŒ–ã•ã‚ŒãŸãƒ™ã‚¯ãƒˆãƒ«
     */
     static Vector2 Normalize(const Vector2& v);
+
+    /**
+    * @brief æŒ‡å®šã•ã‚ŒãŸãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•ã‚’ã€æŒ‡å®šã•ã‚ŒãŸmaxLengthã«ã‚¯ãƒ©ãƒ³ãƒ—ã™ã‚‹
+    * @param vector ã‚¯ãƒ©ãƒ³ãƒ—ã™ã‚‹ãƒ™ã‚¯ãƒˆãƒ«
+    * @param maxLength ãƒ™ã‚¯ãƒˆãƒ«ã®æœ€å¤§é•·
+    * @return Vector2 ã‚¯ãƒ©ãƒ³ãƒ—ã•ã‚ŒãŸãƒ™ã‚¯ãƒˆãƒ«
+    */
     static Vector2 ClampMagnitude(const Vector2& vector, float maxLength);
+
+    /**
+    * @brief 2ã¤ã®ãƒ™ã‚¯ãƒˆãƒ«aã¨bã®é–“ã§ç·šå½¢è£œé–“ã‚’å®Ÿè¡Œã—ã¾ã™
+    * @param a å§‹ç‚¹ã®ãƒ™ã‚¯ãƒˆãƒ«
+    * @param b çµ‚ç‚¹ã®ãƒ™ã‚¯ãƒˆãƒ«
+    * @param t è£œé–“ä¿‚æ•°ï¼ˆ0ã€œ1ã®ç¯„å›²ï¼‰
+    * @return Vector2 è£œå®Œã•ã‚ŒãŸãƒ™ã‚¯ãƒˆãƒ«
+    */
     static Vector2 Lerp(const Vector2& a, const Vector2& b, float t);
+
+    /**
+    * @brief 2ã¤ã®ãƒ™ã‚¯ãƒˆãƒ«aã¨bã®é–“ã§ç·šå½¢è£œé–“ã‚’å®Ÿè¡Œã—ã¾ã™
+    * @param a å§‹ç‚¹ã®ãƒ™ã‚¯ãƒˆãƒ«
+    * @param b çµ‚ç‚¹ã®ãƒ™ã‚¯ãƒˆãƒ«
+    * @param t è£œé–“ä¿‚æ•°
+    * @return Vector2 è£œå®Œã•ã‚ŒãŸãƒ™ã‚¯ãƒˆãƒ«
+    */
     static Vector2 LerpUnclamped(const Vector2& a, const Vector2& b, float t);
+
+    /**
+    @brief ç¾åœ¨ã®ä½ç½®ã‹ã‚‰ç›®æ¨™ä½ç½®ã¾ã§ã€æŒ‡å®šã•ã‚ŒãŸæœ€å¤§ç§»å‹•è·é›¢ã«å¿œã˜ã¦ç§»å‹•ã—ã¾ã™ã€‚
+    @param current ç¾åœ¨ã®ä½ç½®ã®ãƒ™ã‚¯ãƒˆãƒ«
+    @param target ç›®æ¨™ä½ç½®ã®ãƒ™ã‚¯ãƒˆãƒ«
+    @param maxDistanceDelta æœ€å¤§ç§»å‹•è·é›¢
+    @return Vector2 ç§»å‹•å¾Œã®ä½ç½®ã®ãƒ™ã‚¯ãƒˆãƒ«
+    */
     static Vector2 MoveTowards(const Vector2& current, const Vector2& target, float maxDistanceDelta);
 
 public:

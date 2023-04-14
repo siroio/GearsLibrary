@@ -21,6 +21,7 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 [Bb]uild
+[Dd]ocs/doxygen
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

@@ -3,7 +3,7 @@
 
 #include<cstdint>
 
-class PCG_XSH_RR
+struct PCG_XSH_RR
 {
 private:
     std::uint64_t state;

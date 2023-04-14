@@ -16,7 +16,10 @@ public:
         {
             float x, y, z, w;
         };
-        float xyzw[4];
+        struct
+        {
+            float xyzw[4];
+        };
     };
 
 public:
