@@ -279,6 +279,11 @@ float Vector3::Magnitude() const
     return Mathf::Sqrt(SqrMagnitude());
 }
 
+Vector3 Vector3::Normalized() const
+{
+    return Normalize(*this);
+}
+
 std::string Vector3::ToString() const
 {
     std::stringstream ss;

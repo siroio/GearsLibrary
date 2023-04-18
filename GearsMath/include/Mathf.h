@@ -10,6 +10,8 @@ public:
     static constexpr float Deg2Rad = PI / 180.0f;
     static constexpr float Rad2Deg = 180.0f / PI;
 
+    static float Inverse(float v);
+
     static float Sin(float f);
     static float Cos(float f);
     static float Tan(float f);

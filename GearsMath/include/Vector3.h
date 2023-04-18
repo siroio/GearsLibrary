@@ -1,8 +1,8 @@
-#ifndef GEAR_Vector3_H
-#define GEAR_Vector3_H
+#ifndef GEAR_VECTOR3_H
+#define GEAR_VECTOR3_H
 
 #include <string>
-#include<iosfwd>
+#include <iosfwd>
 
 struct Vector2;
 
@@ -67,6 +67,7 @@ public:
     float SqrMagnitude() const;
     float Magnitude() const;
 
+    Vector3 Normalized() const;
 public:
     std::string ToString() const;
 
@@ -95,4 +96,4 @@ bool operator != (const Vector3& v1, const Vector3 v2);
 
 std::ostream& operator << (std::ostream& stream, const Vector3& v);
 
-#endif // !GEAR_Vector3_H
+#endif // !GEAR_VECTOR3_H

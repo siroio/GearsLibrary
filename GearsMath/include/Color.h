@@ -3,7 +3,7 @@
 
 #include <cstdint>
 #include <string>
-#include<iosfwd>
+#include <iosfwd>
 
 struct Color
 {

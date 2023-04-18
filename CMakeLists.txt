@@ -12,6 +12,8 @@ set(LIBRARY
 	GearsMath 
 	GearsUtility)
 
+set(LIBRARY_OUTPUT_DIRECTORY /Lib)
+
 add_executable(GearsLibrary main.cpp)
 add_subdirectory(./GearsMath)
 add_subdirectory(./GearsUtility)

@@ -1,8 +1,8 @@
-#ifndef GEAR_Vector3_H
-#define GEAR_Vector3_H
+#ifndef GEAR_VECTOR4_H
+#define GEAR_VECTOR4_H
 
 #include <string>
-#include<iosfwd>
+#include <iosfwd>
 
 struct Vector3;
 
@@ -78,4 +78,4 @@ bool operator != (const Vector4& v1, const Vector4 v2);
 
 std::ostream& operator<<(std::ostream& stream, const Vector4& v);
 
-#endif // !GEAR_Vector3_H
+#endif // !GEAR_VECTOR4_H

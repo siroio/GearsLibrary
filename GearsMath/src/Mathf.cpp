@@ -1,6 +1,11 @@
 #include "Mathf.h"
 #include <cmath>
 
+float Mathf::Inverse(float v)
+{
+    return 1.0f / v;
+}
+
 float Mathf::Sin(float f)
 {
     return sinf(f);

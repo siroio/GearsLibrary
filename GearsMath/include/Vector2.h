@@ -1,8 +1,8 @@
-﻿#ifndef GEAR_Vector2_H
-#define GEAR_Vector2_H
+﻿#ifndef GEAR_VECTOR2_H
+#define GEAR_VECTOR2_H
 
 #include <string>
-#include<iosfwd>
+#include <iosfwd>
 
 struct Vector3;
 
@@ -86,7 +86,6 @@ public:
      */
     static Vector2 Right();
 
-public:
     /**
     * @brief 2つのベクトルのドット積を返します
     * @param v1 ドット積を取りたいベクトル1
@@ -232,9 +231,6 @@ public:
     void Normalize();
     float SqrMagnitude() const;
     float Magnitude() const;
-
-
-public:
     std::string ToString() const;
 
 public:
@@ -262,4 +258,4 @@ bool operator != (const Vector2& v1, const Vector2 v2);
 
 std::ostream& operator << (std::ostream& stream, const Vector2& v);
 
-#endif // !GEAR_Vector2_H
+#endif // !GEAR_VECTOR2_H
