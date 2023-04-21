@@ -1,6 +1,7 @@
 #ifndef QUATERNION_H
 #define QUATERNION_H
 
+#include <string>
 #include <iosfwd>
 
 struct Vector3;
@@ -55,7 +56,16 @@ public:
     static Quaternion SerpUnclamped(const Quaternion& a, const Quaternion& b, float t);
 
 public:
+    void Set(const Quaternion& q);
+    void Set(float x, float y, float z, float w);
+    void Set(float xyzw);
+    void SetIdentity();
     Quaternion Normalized() const;
+    std::string ToString() const;
+
+public:
+    void operator = (const Quaternion& v);
+    float& operator [] (const size_t index);
 };
 
 Quaternion operator - (const Quaternion& q);

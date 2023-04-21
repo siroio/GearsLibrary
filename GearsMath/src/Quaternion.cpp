@@ -1,6 +1,7 @@
 #include "Quaternion.h"
 #include "Vector3.h"
 #include "Mathf.h"
+#include <sstream>
 
 Quaternion::Quaternion(float x, float y, float z, float w) : x{ x }, y{ y }, z{ z }, w{ w }
 {}
@@ -14,8 +15,7 @@ float Quaternion::Angle(const Quaternion& q1, const Quaternion& q2)
 {
     float dot = Dot(q1, q2);
     if (dot > 1.0f - Mathf::Epsilon) return 0.0f;
-
-    return Mathf::Acos(Mathf::Clamp(dot, -1.0f, 1.0f)) * 2.0f;
+    return Mathf::Acos(Mathf::Clamp(dot, -1.0f, 1.0f)) * 2.0f * Mathf::Rad2Deg;
 }
 
 Quaternion Quaternion::AngleAxis(float deg, const Vector3& axis)
@@ -78,7 +78,7 @@ Quaternion Quaternion::Inverse(const Quaternion& q)
 
 Quaternion Quaternion::Serp(const Quaternion& a, const Quaternion& b, float t)
 {
-    return Quaternion::Identity();
+    return SerpUnclamped(a, b, Mathf::Clamp01(t));
 }
 
 Quaternion Quaternion::SerpUnclamped(const Quaternion& a, const Quaternion& b, float t)
@@ -104,9 +104,66 @@ Quaternion Quaternion::SerpUnclamped(const Quaternion& a, const Quaternion& b, f
     return ((a * t0) + (b * sign * t1)).Normalized();
 }
 
+void Quaternion::Set(const Quaternion& q)
+{
+    x = q.x;
+    y = q.y;
+    z = q.z;
+    w = q.w;
+}
+
+void Quaternion::Set(float x, float y, float z, float w)
+{
+    this->x = x;
+    this->y = y;
+    this->z = z;
+    this->w = w;
+}
+
+void Quaternion::Set(float xyzw)
+{
+    this->x = xyzw;
+    this->y = xyzw;
+    this->z = xyzw;
+    this->w = xyzw;
+}
+
+void Quaternion::SetIdentity()
+{
+    this->x = 0.0f;
+    this->y = 0.0f;
+    this->z = 0.0f;
+    this->w = 1.0f;
+}
+
 Quaternion Quaternion::Normalized() const
 {
     return Normalize(*this);
+}
+
+std::string Quaternion::ToString() const
+{
+    std::stringstream ss;
+    ss << this->x << ", ";
+    ss << this->y << ", ";
+    ss << this->z << ", ";
+    ss << this->w;
+    return ss.str();
+}
+
+void Quaternion::operator=(const Quaternion& v)
+{
+    Set(v);
+}
+
+float& Quaternion::operator[](const size_t index)
+{
+    if (index > 3)
+    {
+        throw std::out_of_range("Index is out of range");
+    }
+
+    return q[index];
 }
 
 Quaternion operator-(const Quaternion& q)
@@ -136,25 +193,40 @@ Quaternion operator*(const Quaternion& q1, const Quaternion& q2)
 
 Quaternion operator*(const Quaternion& q1, float scale)
 {
-    return Quaternion::Identity();
+    return Quaternion{ q1.x * scale, q1.y * scale, q1.z * scale, q1.w * scale };
 }
 
 Quaternion operator*(float scale, const Quaternion& q1)
 {
-    return Quaternion::Identity();
+    return q1 * scale;
 }
 
 Quaternion& operator*=(Quaternion& q1, const Quaternion& q2)
 {
+    float x = q1.w * q2.x + q1.x * q2.w + q1.y * q2.z - q1.z * q2.y;
+    float y = q1.w * q2.y + q1.y * q2.w + q1.z * q2.x - q1.x * q2.z;
+    float z = q1.w * q2.z + q1.z * q2.w + q1.x * q2.y - q1.y * q2.x;
+    float w = q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z;
+
+    q1.x = x;
+    q1.y = y;
+    q1.z = z;
+    q1.w = w;
+
     return q1;
 }
 
 Quaternion& operator*=(Quaternion& q1, float scale)
 {
+    q1.x *= scale;
+    q1.y *= scale;
+    q1.z *= scale;
+    q1.w *= scale;
+
     return q1;
 }
 
 std::ostream& operator<<(std::ostream& stream, const Quaternion& q)
 {
-    return stream;
+    return stream << q.ToString();
 }

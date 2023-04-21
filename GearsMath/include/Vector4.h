@@ -46,15 +46,13 @@ public:
     void Set(float x, float y, float z, float w);
     void Set(float xyzw);
     void Set0();
-
     float SqrMagnitude() const;
     float Magnitude() const;
-
-public:
     std::string ToString() const;
 
 public:
-    void operator=(const Vector4& v);
+    void operator = (const Vector4& v);
+    float& operator [] (const size_t index);
 };
 
 Vector4 operator - (const Vector4& v);

@@ -299,9 +299,14 @@ void Vector3::operator = (const Vector3& v)
     Set(v);
 }
 
-std::ostream& operator<<(std::ostream& stream, const Vector3& v)
+float& Vector3::operator[](const size_t index)
 {
-    return stream << v.ToString();
+    if (index > 2)
+    {
+        throw std::out_of_range("Index is out of range");
+    }
+
+    return xyz[index];
 }
 
 Vector3 operator-(const Vector3& v)
@@ -345,6 +350,10 @@ Vector3 operator*(const Quaternion& q, const Vector3& v)
     Vector3 res{ 0.0f, 0.0f, 0.0f };
 
     res.x = (1.0f - (yy + zz)) * v.x + (xy - wz) * v.y + (xz + wy) * v.z;
+    res.y = (1.0f - (xx + zz)) * v.y + (yz - wx) * v.z + (xy + wz) * v.x;
+    res.z = (1.0f - (xx + yy)) * v.z + (xz - wy) * v.x + (yz + wx) * v.y;
+
+    return res;
 }
 
 Vector3 operator*(const Vector3& v1, float scale)
@@ -448,4 +457,9 @@ bool operator==(const Vector3& v1, const Vector3 v2)
 bool operator!=(const Vector3& v1, const Vector3 v2)
 {
     return !(v1 == v2);
+}
+
+std::ostream& operator<<(std::ostream& stream, const Vector3& v)
+{
+    return stream << v.ToString();
 }

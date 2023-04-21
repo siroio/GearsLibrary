@@ -242,6 +242,16 @@ void Vector2::operator = (const Vector2& v)
     Set(v);
 }
 
+float& Vector2::operator[](const size_t index)
+{
+    if (index > 1)
+    {
+        throw std::out_of_range("Index is out of range");
+    }
+
+    return xy[index];
+}
+
 Vector2 operator-(const Vector2& v)
 {
     return Vector2{ -v.x, -v.y };

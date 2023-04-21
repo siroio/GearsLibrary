@@ -235,6 +235,7 @@ public:
 
 public:
     void operator = (const Vector2& v);
+    float& operator [] (const size_t index);
 };
 
 Vector2 operator - (const Vector2& v);

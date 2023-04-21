@@ -64,12 +64,9 @@ public:
     void Set(float x, float y, float z);
     void Set(float xyz);
     void Set0();
-
     float SqrMagnitude() const;
     float Magnitude() const;
-
     Vector3 Normalized() const;
-public:
     std::string ToString() const;
 
 public:

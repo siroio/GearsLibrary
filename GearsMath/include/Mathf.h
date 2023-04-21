@@ -9,6 +9,8 @@ public:
     static constexpr float PI = 3.141592653589793238462643383279f;
     static constexpr float Deg2Rad = PI / 180.0f;
     static constexpr float Rad2Deg = 180.0f / PI;
+    static constexpr float PositiveInfinity = std::numeric_limits<float>::infinity();
+    static constexpr float NegativeInfinity = -std::numeric_limits<float>::infinity();
 
     static float Inverse(float v);
 
@@ -56,6 +58,8 @@ public:
     static float MoveTowardsAngle(float current, float target, float maxDelta);
     static float SmoothStep(float from, float to, float t);
     static float Gamma(float value, float absmax, float gamma);
+
+
 };
 
 #endif // !GEAR_MATHF_H
