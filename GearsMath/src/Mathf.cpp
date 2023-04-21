@@ -175,14 +175,12 @@ float Mathf::Clamp01(float value)
     {
         return 0.0f;
     }
-    else if (value < 1.0f)
+    else if (value > 1.0f)
     {
         return 1.0f;
     }
-    else
-    {
-        return value;
-    }
+
+    return value;
 }
 
 float Mathf::Lerp(float a, float b, float t)

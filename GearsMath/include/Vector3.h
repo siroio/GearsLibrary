@@ -5,6 +5,7 @@
 #include <iosfwd>
 
 struct Vector2;
+struct Quaternion;
 
 struct Vector3
 {
@@ -79,6 +80,7 @@ Vector3 operator - (const Vector3& v);
 Vector3 operator + (const Vector3& v1, const Vector3& v2);
 Vector3 operator - (const Vector3& v1, const Vector3& v2);
 Vector3 operator * (const Vector3& v1, const Vector3& v2);
+Vector3 operator * (const Quaternion& q, const Vector3& v);
 Vector3 operator * (const Vector3& v1, float scale);
 Vector3 operator * (float scale, const Vector3& v1);
 Vector3 operator / (const Vector3& v1, const Vector3& v2);

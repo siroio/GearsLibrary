@@ -1,32 +1,9 @@
-#include <Singleton.h>
+#include <Vector2.h>
 #include <iostream>
-
-class DerivedSingleton : public Singleton<DerivedSingleton>
-{
-public:
-    void Init()
-    {
-        std::cout << "Ptr ->" << _instance.get() << std::endl;
-        std::cout << "Initializing DerivedSingleton..." << std::endl;
-    }
-
-    void Run()
-    {
-        std::cout << "Running DerivedSingleton..." << std::endl;
-    }
-
-    void Shutdown()
-    {
-        std::cout << "Shutting down DerivedSingleton..." << std::endl;
-    }
-};
 
 int main()
 {
-    DerivedSingleton::Instance().Run();
-    DerivedSingleton::Instance().Shutdown();
-
-    DerivedSingleton::Destroy();
-
-    DerivedSingleton::Instance().Run();
+    Vector2 a{ 10.0f, 30.0f };
+    Vector2 b{ 100.0f, 60.0f };
+    std::cout << a / b << std::endl;
 }

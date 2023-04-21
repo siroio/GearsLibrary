@@ -58,16 +58,16 @@ public:
     Quaternion Normalized() const;
 };
 
-Quaternion operator - (const Quaternion& v);
-Quaternion operator + (const Quaternion& v1, const Quaternion& v2);
-Quaternion operator - (const Quaternion& v1, const Quaternion& v2);
-Quaternion operator * (const Quaternion& v1, const Quaternion& v2);
-Quaternion operator * (const Quaternion& v1, float scale);
-Quaternion operator * (float scale, const Quaternion& v1);
+Quaternion operator - (const Quaternion& q);
+Quaternion operator + (const Quaternion& q1, const Quaternion& q2);
+Quaternion operator - (const Quaternion& q1, const Quaternion& q2);
+Quaternion operator * (const Quaternion& q1, const Quaternion& q2);
+Quaternion operator * (const Quaternion& q1, float scale);
+Quaternion operator * (float scale, const Quaternion& q1);
 
-Quaternion& operator *= (Quaternion& v1, const Quaternion& v2);
-Quaternion& operator *= (Quaternion& v1, float scale);
+Quaternion& operator *= (Quaternion& q1, const Quaternion& q2);
+Quaternion& operator *= (Quaternion& q1, float scale);
 
-std::ostream& operator << (std::ostream& stream, const Quaternion& v);
+std::ostream& operator << (std::ostream& stream, const Quaternion& q);
 
 #endif // !QUATERNION_H

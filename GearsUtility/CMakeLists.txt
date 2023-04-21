@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.1)
 
 # == CONFIG ==
 set(SOURCE_FOLDER 
-    ./src/CSVLoader.cpp
 )
 
 set(HEADER_FOLDER 

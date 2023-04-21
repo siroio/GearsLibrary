@@ -78,7 +78,7 @@ Quaternion Quaternion::Inverse(const Quaternion& q)
 
 Quaternion Quaternion::Serp(const Quaternion& a, const Quaternion& b, float t)
 {
-
+    return Quaternion::Identity();
 }
 
 Quaternion Quaternion::SerpUnclamped(const Quaternion& a, const Quaternion& b, float t)
@@ -126,35 +126,35 @@ Quaternion operator-(const Quaternion& q1, const Quaternion& q2)
 
 Quaternion operator*(const Quaternion& q1, const Quaternion& q2)
 {
+    float x = q1.w * q2.x + q1.x * q2.w + q1.y * q2.z - q1.z * q2.y;
+    float y = q1.w * q2.y + q1.y * q2.w + q1.z * q2.x - q1.x * q2.z;
+    float z = q1.w * q2.z + q1.z * q2.w + q1.x * q2.y - q1.y * q2.x;
+    float w = q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z;
 
-    // TODO : expression wip
-    float x = q1.x * q2.w + q1.y * q2.z - q1.z * q2.y + q1.w * q2.x;
-    float y = q1.x * q2.w + q1.y * q2.z - q1.z * q2.y + q1.w * q2.x;
-    float z = q1.x * q2.w + q1.y * q2.z - q1.z * q2.y + q1.w * q2.x;
-    float w = q1.x * q2.w + q1.y * q2.z - q1.z * q2.y + q1.w * q2.x;
+    return Quaternion{ x, y, z, w };
 }
 
 Quaternion operator*(const Quaternion& q1, float scale)
 {
-    return Quaternion();
+    return Quaternion::Identity();
 }
 
 Quaternion operator*(float scale, const Quaternion& q1)
 {
-    return Quaternion();
+    return Quaternion::Identity();
 }
 
 Quaternion& operator*=(Quaternion& q1, const Quaternion& q2)
 {
-    // TODO: return ステートメントをここに挿入します
+    return q1;
 }
 
 Quaternion& operator*=(Quaternion& q1, float scale)
 {
-    // TODO: return ステートメントをここに挿入します
+    return q1;
 }
 
 std::ostream& operator<<(std::ostream& stream, const Quaternion& q)
 {
-    // TODO: return ステートメントをここに挿入します
+    return stream;
 }

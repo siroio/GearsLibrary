@@ -277,7 +277,7 @@ Vector2 operator/(const Vector2& v1, const Vector2& v2)
     Debug_Assert(v2.x != 0.0f);
     Debug_Assert(v2.y != 0.0f);
 
-    return Vector2{ v1.x / v2.x, v1.x / v2.x };
+    return Vector2{ v1.x / v2.x, v1.y / v2.y };
 }
 
 Vector2 operator/(const Vector2& v1, float scale)

@@ -3,6 +3,7 @@
 #include <Mathf.h>
 #include <sstream>
 #include <Debugging.h>
+#include <Quaternion.h>
 
 Vector3::Vector3(float x, float y, float z) : x{ x }, y{ y }, z{ z }
 {}
@@ -321,6 +322,29 @@ Vector3 operator-(const Vector3& v1, const Vector3& v2)
 Vector3 operator*(const Vector3& v1, const Vector3& v2)
 {
     return Vector3{ v1.x * v2.x, v1.y * v2.y, v1.z * v2.z };
+}
+
+Vector3 operator*(const Quaternion& q, const Vector3& v)
+{
+    float resX = q.x * 2.0f;
+    float resY = q.y * 2.0f;
+    float resZ = q.z * 2.0f;
+
+    float xx = q.x * resX;
+    float yy = q.y * resY;
+    float zz = q.z * resZ;
+
+    float xy = q.x * resY;
+    float xz = q.x * resZ;
+    float yz = q.y * resZ;
+
+    float wx = q.w * resX;
+    float wy = q.w * resY;
+    float wz = q.w * resZ;
+
+    Vector3 res{ 0.0f, 0.0f, 0.0f };
+
+    res.x = (1.0f - (yy + zz)) * v.x + (xy - wz) * v.y + (xz + wy) * v.z;
 }
 
 Vector3 operator*(const Vector3& v1, float scale)
