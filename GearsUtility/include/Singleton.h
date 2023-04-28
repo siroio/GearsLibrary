@@ -5,6 +5,14 @@
 #include <mutex>
 
 template<typename T>
+concept HasInit = requires(T t)
+{
+    {
+        t.Init()
+    } -> std::same_as<void>;
+};
+
+template<typename T>
 class Singleton
 {
 protected:
@@ -24,8 +32,14 @@ public:
     {
         std::lock_guard<std::mutex> lock(singleton_mutex);
         if (!instance)
+        {
             instance = std::make_unique<T>();
-        return *instance;
+            if constexpr (HasInit<T>)
+            {
+                instance->Init();
+            }
+        }
+        return *instance.get();
     }
 
     static void Release()

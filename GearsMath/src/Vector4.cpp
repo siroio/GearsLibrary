@@ -4,20 +4,23 @@
 #include <sstream>
 #include <Debugging.h>
 
+Vector4::Vector4() : xyzw{ 0.0f }
+{}
+
 Vector4::Vector4(float x, float y, float z, float w) : x{ x }, y{ y }, z{ z }, w{ w }
 {}
 
-Vector4::Vector4(float xyzw) : x{ xyzw }, y{ xyzw }, z{ xyzw }, w{ xyzw }
+Vector4::Vector4(float xyzw) : xyzw{ xyzw }
 {}
 
 Vector4 Vector4::Zero()
 {
-    return { 0.0f, 0.0f, 0.0f, 0.0f };
+    return Vector4{ 0.0f, 0.0f, 0.0f, 0.0f };
 }
 
 Vector4 Vector4::One()
 {
-    return { 1.0f, 1.0f, 1.0f, 1.0f };
+    return Vector4{ 1.0f, 1.0f, 1.0f, 1.0f };
 }
 
 float Vector4::Dot(const Vector4& v1, const Vector4& v2)
@@ -65,9 +68,9 @@ Vector4 Vector4::Scale(const Vector4& a, const Vector4& b)
     return Vector4{ a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w };
 }
 
-Vector4 Vector4::Scale(const Vector4& v, float scale)
+Vector4 Vector4::Scale(const Vector4& v, float scalar)
 {
-    return Vector4{ v.x * scale, v.y * scale, v.z * scale, v.w * scale };
+    return Vector4{ v.x * scalar, v.y * scalar, v.z * scalar, v.w * scalar };
 }
 
 void Vector4::Set(const Vector4& v)
@@ -108,7 +111,7 @@ float Vector4::Magnitude() const
 
 std::string Vector4::ToString() const
 {
-    std::stringstream ss;
+    std::ostringstream ss;
     ss << this->x << ", ";
     ss << this->y << ", ";
     ss << this->z << ", ";
@@ -151,14 +154,14 @@ Vector4 operator*(const Vector4& v1, const Vector4& v2)
     return Vector4{ v1.x * v2.x, v1.y * v2.y, v1.z * v2.z, v1.w * v2.w };
 }
 
-Vector4 operator*(const Vector4& v1, float scale)
+Vector4 operator*(const Vector4& v1, float scalar)
 {
-    return Vector4{ v1.x * scale, v1.y * scale, v1.z * scale, v1.w * scale };
+    return Vector4{ v1.x * scalar, v1.y * scalar, v1.z * scalar, v1.w * scalar };
 }
 
-Vector4 operator*(float scale, const Vector4& v1)
+Vector4 operator*(float scalar, const Vector4& v1)
 {
-    return Vector4{ v1.x * scale, v1.y * scale, v1.z * scale, v1.w * scale };
+    return Vector4{ v1.x * scalar, v1.y * scalar, v1.z * scalar, v1.w * scalar };
 }
 
 Vector4 operator/(const Vector4& v1, const Vector4& v2)
@@ -171,11 +174,11 @@ Vector4 operator/(const Vector4& v1, const Vector4& v2)
     return Vector4{ v1.x / v2.x, v1.y / v2.y, v1.z / v2.z, v1.w / v2.w };
 }
 
-Vector4 operator/(const Vector4& v1, float scale)
+Vector4 operator/(const Vector4& v1, float scalar)
 {
-    Debug_Assert(scale != 0.0f);
+    Debug_Assert(scalar != 0.0f);
 
-    float m = 1.0f / scale;
+    float m = 1.0f / scalar;
     return Vector4{ v1.x * m, v1.y * m, v1.z * m, v1.z * m };
 }
 
@@ -209,12 +212,12 @@ Vector4& operator*=(Vector4& v1, const Vector4& v2)
     return v1;
 }
 
-Vector4& operator*=(Vector4& v1, float scale)
+Vector4& operator*=(Vector4& v1, float scalar)
 {
-    v1.x *= scale;
-    v1.y *= scale;
-    v1.z *= scale;
-    v1.w *= scale;
+    v1.x *= scalar;
+    v1.y *= scalar;
+    v1.z *= scalar;
+    v1.w *= scalar;
 
     return v1;
 }
@@ -234,11 +237,11 @@ Vector4& operator/=(Vector4& v1, const Vector4& v2)
     return v1;
 }
 
-Vector4& operator/=(Vector4& v1, float scale)
+Vector4& operator/=(Vector4& v1, float scalar)
 {
-    Debug_Assert(scale != 0.0f);
+    Debug_Assert(scalar != 0.0f);
 
-    float m = 1.0f / scale;
+    float m = 1.0f / scalar;
     v1.x *= m;
     v1.y += m;
     v1.z += m;
@@ -259,7 +262,7 @@ bool operator==(const Vector4& v1, const Vector4 v2)
         diff_w * diff_w
     };
 
-    return sqrMag < (Mathf::Epsilon * Mathf::Epsilon);
+    return sqrMag < (Mathf::EPSILON * Mathf::EPSILON);
 }
 
 bool operator!=(const Vector4& v1, const Vector4 v2)

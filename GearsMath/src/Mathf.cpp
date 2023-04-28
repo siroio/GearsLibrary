@@ -1,4 +1,4 @@
-#include "Mathf.h"
+#include <Mathf.h>
 #include <cmath>
 
 float Mathf::Inverse(float v)
@@ -138,7 +138,12 @@ float Mathf::Sign(float f)
 
 bool Mathf::Approximately(float a, float b)
 {
-    return Abs(b - a) < Max(0.000001f * Max(Abs(a), Abs(b)), Epsilon * 8);
+    return Abs(b - a) < Max(0.000001f * Max(Abs(a), Abs(b)), EPSILON * 8.0f);
+}
+
+bool Mathf::Tolerance(float a, float t)
+{
+    return a > 1.0f - t;
 }
 
 float Mathf::Clamp(float value, float min, float max)
@@ -273,4 +278,24 @@ float Mathf::Gamma(float value, float absmax, float gamma)
     float result = Pow(absVal / absmax, gamma) * absmax;
 
     return negative ? -result : result;
+}
+
+float Mathf::TGamma(float x)
+{
+    return std::tgammaf(x);
+}
+
+float Mathf::Hypot(float x, float y)
+{
+    return std::hypotf(x, y);
+}
+
+float Mathf::Erf(float x)
+{
+    return std::erff(x);
+}
+
+float Mathf::Erfc(float x)
+{
+    return std::erfcf(x);
 }

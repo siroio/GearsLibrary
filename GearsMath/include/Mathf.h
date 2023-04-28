@@ -1,16 +1,19 @@
 #ifndef GEAR_MATHF_H
 #define GEAR_MATHF_H
 
+#include <limits>
+
 struct Mathf
 {
 public:
-    static constexpr float Epsilon = 1e-5f;
-    static constexpr float EpsilonNormalSqrt = 1e-15f;
+    static constexpr float EPSILON = 1e-5f;
+    static constexpr float EPSILON_SRQT = 1e-5f * 1e-5f;
+    static constexpr float EPSILON_NORMAL_SQRT = 1e-15f;
     static constexpr float PI = 3.141592653589793238462643383279f;
-    static constexpr float Deg2Rad = PI / 180.0f;
-    static constexpr float Rad2Deg = 180.0f / PI;
-    static constexpr float PositiveInfinity = std::numeric_limits<float>::infinity();
-    static constexpr float NegativeInfinity = -std::numeric_limits<float>::infinity();
+    static constexpr float DEG2RAD = PI / 180.0f;
+    static constexpr float RAD2DEG = 180.0f / PI;
+    static constexpr float POSITIVE_INFINITY = std::numeric_limits<float>::infinity();
+    static constexpr float NEGATIVE_INFINITY = -std::numeric_limits<float>::infinity();
 
     static float Inverse(float v);
 
@@ -45,6 +48,7 @@ public:
 
     static float Sign(float f);
     static bool Approximately(float a, float b);
+    static bool Tolerance(float a, float t = EPSILON);
     static float Clamp(float value, float min, float max);
     static int Clamp(int value, int min, int max);
     static float Clamp01(float value);
@@ -58,8 +62,10 @@ public:
     static float MoveTowardsAngle(float current, float target, float maxDelta);
     static float SmoothStep(float from, float to, float t);
     static float Gamma(float value, float absmax, float gamma);
-
-
+    static float TGamma(float x);
+    static float Hypot(float x, float y);
+    static float Erf(float x);
+    static float Erfc(float x);
 };
 
 #endif // !GEAR_MATHF_H

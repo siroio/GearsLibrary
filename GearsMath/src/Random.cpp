@@ -1,8 +1,6 @@
-#include "Random.h"
+#include <Random.h>
 #include <random>
 #include <limits>
-
-PCG_XSH_RR Random::pcg;
 
 PCG_XSH_RR::PCG_XSH_RR(std::uint64_t seed, std::uint64_t inc)
     : state{ 0ull }, increment{ inc | 1ull }
@@ -22,6 +20,11 @@ void PCG_XSH_RR::Seed(std::uint64_t seed)
     NextInt();
     state += seed;
     NextInt();
+}
+
+void Random::Init()
+{
+    pcg.Seed(std::random_device{}());
 }
 
 void Random::Seed(std::uint64_t seed)

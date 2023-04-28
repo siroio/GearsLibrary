@@ -1,8 +1,9 @@
 ﻿#ifndef GEAR_VECTOR2_H
 #define GEAR_VECTOR2_H
 
-#include <string>
 #include <iosfwd>
+#include <string>
+#include <array>
 
 struct Vector3;
 
@@ -21,7 +22,7 @@ public:
         };
         struct
         {
-            float xy[2];
+            std::array<float, 2> xy;
         };
     };
 
@@ -31,17 +32,25 @@ public:
      * @param[in] v コピー元のベクトル
      */
     Vector2(const Vector2& v) = default;
+
+    /**
+     * @brief コンストラクタ
+     */
+    explicit Vector2();
+
     /**
      * @brief コンストラクタ
      * @param[in] x X成分の値
      * @param[in] y Y成分の値
      */
-    Vector2(float x, float y);
+    explicit Vector2(float x, float y);
+
     /**
      * @brief コンストラクタ
      * @param[in] xy X,Y成分の値が等しい値
      */
     explicit Vector2(float xy);
+
     /**
      * @brief コンストラクタ
      * @param[in] v 3次元ベクトル
@@ -196,7 +205,7 @@ public:
     static Vector2 ClampMagnitude(const Vector2& vector, float maxLength);
 
     /**
-    * @brief 2つのベクトルaとbの間で線形補間を実行します
+    * @brief 2つのベクトルaとbの間で線形補間をする
     * @param a 始点のベクトル
     * @param b 終点のベクトル
     * @param t 補間係数（0〜1の範囲）
@@ -205,7 +214,7 @@ public:
     static Vector2 Lerp(const Vector2& a, const Vector2& b, float t);
 
     /**
-    * @brief 2つのベクトルaとbの間で線形補間を実行します
+    * @brief 2つのベクトルaとbの間で線形補間をする
     * @param a 始点のベクトル
     * @param b 終点のベクトル
     * @param t 補間係数
@@ -214,11 +223,11 @@ public:
     static Vector2 LerpUnclamped(const Vector2& a, const Vector2& b, float t);
 
     /**
-    @brief 現在の位置から目標位置まで、指定された最大移動距離に応じて移動します。
-    @param current 現在の位置のベクトル
-    @param target 目標位置のベクトル
-    @param maxDistanceDelta 最大移動距離
-    @return Vector2 移動後の位置のベクトル
+    * @brief 現在の位置から目標位置まで、指定された最大移動距離に応じて移動させる
+    * @param current 現在の位置のベクトル
+    * @param target 目標位置のベクトル
+    * @param maxDistanceDelta 最大移動距離
+    * @return Vector2 移動後の位置のベクトル
     */
     static Vector2 MoveTowards(const Vector2& current, const Vector2& target, float maxDistanceDelta);
 
@@ -227,7 +236,7 @@ public:
     void Set(float x, float y);
     void Set(float xy);
     void Set0();
-    void Scale(const Vector2& scale);
+    void Scale(const Vector2& scalar);
     void Normalize();
     float SqrMagnitude() const;
     float Magnitude() const;
@@ -235,6 +244,7 @@ public:
 
 public:
     void operator = (const Vector2& v);
+    float operator [] (const size_t index) const;
     float& operator [] (const size_t index);
 };
 
@@ -242,17 +252,17 @@ Vector2 operator - (const Vector2& v);
 Vector2 operator + (const Vector2& v1, const Vector2& v2);
 Vector2 operator - (const Vector2& v1, const Vector2& v2);
 Vector2 operator * (const Vector2& v1, const Vector2& v2);
-Vector2 operator * (const Vector2& v1, float scale);
-Vector2 operator * (float scale, const Vector2& v1);
+Vector2 operator * (const Vector2& v1, float scalar);
+Vector2 operator * (float scalar, const Vector2& v1);
 Vector2 operator / (const Vector2& v1, const Vector2& v2);
-Vector2 operator / (const Vector2& v1, float scale);
+Vector2 operator / (const Vector2& v1, float scalar);
 
 Vector2& operator += (Vector2& v1, const Vector2& v2);
 Vector2& operator -= (Vector2& v1, const Vector2& v2);
 Vector2& operator *= (Vector2& v1, const Vector2& v2);
-Vector2& operator *= (Vector2& v1, float scale);
+Vector2& operator *= (Vector2& v, float scalar);
 Vector2& operator /= (Vector2& v1, const Vector2& v2);
-Vector2& operator /= (Vector2& v1, float scale);
+Vector2& operator /= (Vector2& v, float scalar);
 
 bool operator == (const Vector2& v1, const Vector2 v2);
 bool operator != (const Vector2& v1, const Vector2 v2);

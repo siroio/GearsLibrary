@@ -9,12 +9,14 @@ project(GearsLibrary
 
 # == CONFIG ==
 set(LIBRARY 
-	GearsMath 
-	GearsUtility)
+    GearsMath 
+    GearsUtility
+    GearsCore)
 
 set(LIBRARY_OUTPUT_DIRECTORY /Lib)
 
 add_executable(GearsLibrary main.cpp)
+add_subdirectory(./GearsCore)
 add_subdirectory(./GearsMath)
 add_subdirectory(./GearsUtility)
 
@@ -26,7 +28,7 @@ if(BUILD_DOCUMENTATION)
   set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile.in)
   set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
   configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
-  add_custom_target(docs ALL COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+  add_custom_target(Docs ALL COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs
                     COMMENT "Generating API documentation with Doxygen"
                     VERBATIM)

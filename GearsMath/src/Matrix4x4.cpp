@@ -1,8 +1,12 @@
-#include "Matrix4x4.h"
-#include "Vector3.h"
-#include "Quaternion.h"
-#include "Mathf.h"
-#include "Debugging.h"
+#include <Matrix4x4.h>
+#include <Debugging.h>
+#include <Quaternion.h>
+#include <Vector3.h>
+#include <Mathf.h>
+#include <sstream>
+
+Matrix4x4::Matrix4x4() : matrix{ 0.0f }
+{}
 
 Matrix4x4::Matrix4x4(float m11, float m12, float m13, float m14,
     float m21, float m22, float m23, float m24,
@@ -33,43 +37,6 @@ Matrix4x4 Matrix4x4::Identity()
         0.0f, 1.0f, 0.0f, 0.0f,
         0.0f, 0.0f, 1.0f, 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f
-    };
-}
-
-Matrix4x4 Matrix4x4::Scale(const Vector3& scale)
-{
-    return Matrix4x4
-    {
-        scale.x, 0.0f, 0.0f, 0.0f,
-        0.0f, scale.y, 0.0f, 0.0f,
-        0.0f, 0.0f, scale.z, 0.0f,
-        0.0f, 0.0f, 0.0f, 1.0f
-    };
-}
-
-Matrix4x4 Matrix4x4::Scale(float x, float y, float z)
-{
-    return Matrix4x4
-    {
-        x, 0.0f, 0.0f, 0.0f,
-        0.0f, y, 0.0f, 0.0f,
-        0.0f, 0.0f, z, 0.0f,
-        0.0f, 0.0f, 0.0f, 1.0f
-    };
-}
-
-Matrix4x4 Matrix4x4::LookAt(const Vector3& position, const Vector3& target, const Vector3& up)
-{
-    auto zaxis = (target - position).Normalized();
-    auto xaxis = Vector3::Cross(up, zaxis).Normalized();
-    auto yaxis = Vector3::Cross(zaxis, xaxis);
-
-    return Matrix4x4
-    {
-        xaxis.x, yaxis.x, zaxis.x, 0.0f,
-        xaxis.y, yaxis.y, zaxis.y, 0.0f,
-        xaxis.z, yaxis.z, zaxis.z, 0.0f,
-        -Vector3::Dot(xaxis, position), -Vector3::Dot(yaxis, position), -Vector3::Dot(zaxis, position), 1.0f
     };
 }
 
@@ -109,9 +76,46 @@ Matrix4x4 Matrix4x4::Rotate(const Quaternion& q)
     };
 }
 
+Matrix4x4 Matrix4x4::Scale(const Vector3& scalar)
+{
+    return Matrix4x4
+    {
+        scalar.x, 0.0f, 0.0f, 0.0f,
+        0.0f, scalar.y, 0.0f, 0.0f,
+        0.0f, 0.0f, scalar.z, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
+    };
+}
+
+Matrix4x4 Matrix4x4::Scale(float x, float y, float z)
+{
+    return Matrix4x4
+    {
+        x, 0.0f, 0.0f, 0.0f,
+        0.0f, y, 0.0f, 0.0f,
+        0.0f, 0.0f, z, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
+    };
+}
+
+Matrix4x4 Matrix4x4::LookAt(const Vector3& position, const Vector3& target, const Vector3& up)
+{
+    auto zaxis = (target - position).Normalized();
+    auto xaxis = Vector3::Cross(up, zaxis).Normalized();
+    auto yaxis = Vector3::Cross(zaxis, xaxis);
+
+    return Matrix4x4
+    {
+        xaxis.x, yaxis.x, zaxis.x, 0.0f,
+        xaxis.y, yaxis.y, zaxis.y, 0.0f,
+        xaxis.z, yaxis.z, zaxis.z, 0.0f,
+        -Vector3::Dot(xaxis, position), -Vector3::Dot(yaxis, position), -Vector3::Dot(zaxis, position), 1.0f
+    };
+}
+
 Matrix4x4 Matrix4x4::RotationX(float deg)
 {
-    float rad = deg * Mathf::Deg2Rad;
+    float rad = deg * Mathf::DEG2RAD;
     float cos = Mathf::Cos(rad);
     float sin = Mathf::Sin(rad);
 
@@ -126,7 +130,7 @@ Matrix4x4 Matrix4x4::RotationX(float deg)
 
 Matrix4x4 Matrix4x4::RotationY(float deg)
 {
-    float rad = deg * Mathf::Deg2Rad;
+    float rad = deg * Mathf::DEG2RAD;
     float cos = Mathf::Cos(rad);
     float sin = Mathf::Sin(rad);
 
@@ -141,7 +145,7 @@ Matrix4x4 Matrix4x4::RotationY(float deg)
 
 Matrix4x4 Matrix4x4::RotationZ(float deg)
 {
-    float rad = deg * Mathf::Deg2Rad;
+    float rad = deg * Mathf::DEG2RAD;
     float cos = Mathf::Cos(rad);
     float sin = Mathf::Sin(rad);
 
@@ -194,7 +198,7 @@ Matrix4x4 Matrix4x4::PerspectiveFOV(float fieldOfView, float aspectRatio, float 
     Debug_Assert(farDistance <= 0.0f);
     Debug_Assert(nearDistance >= farDistance);
 
-    float yScale = 1.0f / Mathf::Tan(fieldOfView * 0.5f * Mathf::Deg2Rad);
+    float yScale = 1.0f / Mathf::Tan(fieldOfView * 0.5f * Mathf::DEG2RAD);
     float xScale = yScale / aspectRatio;
 
     return Matrix4x4
@@ -371,10 +375,319 @@ Matrix4x4 Matrix4x4::Transpose() const
     return result;
 }
 
-void Matrix4x4::SetTRS(const Vector3& position, const Quaternion& rotation, const Vector3& scale)
-{}
-
-std::string Matrix4x4::ToString()
+void Matrix4x4::Set(float m11, float m12, float m13, float m14, float m21, float m22, float m23, float m24, float m31, float m32, float m33, float m34, float m41, float m42, float m43, float m44)
 {
-    return std::string();
+    this->m11 = m11; this->m12 = m12; this->m13 = m13; this->m14 = m14;
+    this->m21 = m11; this->m22 = m12; this->m23 = m13; this->m24 = m14;
+    this->m31 = m11; this->m32 = m12; this->m33 = m13; this->m34 = m14;
+    this->m41 = m11; this->m42 = m12; this->m43 = m13; this->m44 = m14;
+}
+
+void Matrix4x4::Set(const Matrix4x4& m)
+{
+    std::copy(m.matrix.begin(), m.matrix.end(), matrix.begin());
+}
+
+void Matrix4x4::SetIdentity()
+{
+    *this = Identity();
+}
+
+void Matrix4x4::SetTRS(const Vector3& translate, const Quaternion& rotation, const Vector3& scalar)
+{
+    *this = TRS(translate, rotation, scalar);
+}
+
+std::string Matrix4x4::ToString() const
+{
+    std::ostringstream ss;
+    ss << m11 << ", " << m12 << ", " << m13 << ", " << m14 << "\n";
+    ss << m21 << ", " << m22 << ", " << m23 << ", " << m24 << "\n";
+    ss << m31 << ", " << m32 << ", " << m33 << ", " << m34 << "\n";
+    ss << m41 << ", " << m42 << ", " << m43 << ", " << m44;
+    return ss.str();
+}
+
+void Matrix4x4::operator=(const Matrix4x4& m)
+{
+    Set(m);
+}
+
+Matrix4x4 operator+=(Matrix4x4& m1, const Matrix4x4& m2)
+{
+    m1.m11 += m2.m11;
+    m1.m12 += m2.m12;
+    m1.m13 += m2.m13;
+    m1.m14 += m2.m14;
+
+    m1.m21 += m2.m21;
+    m1.m22 += m2.m22;
+    m1.m23 += m2.m23;
+    m1.m24 += m2.m24;
+
+    m1.m31 += m2.m31;
+    m1.m32 += m2.m32;
+    m1.m33 += m2.m33;
+    m1.m34 += m2.m34;
+
+    m1.m41 += m2.m41;
+    m1.m42 += m2.m42;
+    m1.m43 += m2.m43;
+    m1.m44 += m2.m44;
+
+    return m1;
+}
+
+Matrix4x4 operator-=(Matrix4x4& m1, const Matrix4x4& m2)
+{
+    m1.m11 -= m2.m11;
+    m1.m12 -= m2.m12;
+    m1.m13 -= m2.m13;
+    m1.m14 -= m2.m14;
+
+    m1.m21 -= m2.m21;
+    m1.m22 -= m2.m22;
+    m1.m23 -= m2.m23;
+    m1.m24 -= m2.m24;
+
+    m1.m31 -= m2.m31;
+    m1.m32 -= m2.m32;
+    m1.m33 -= m2.m33;
+    m1.m34 -= m2.m34;
+
+    m1.m41 -= m2.m41;
+    m1.m42 -= m2.m42;
+    m1.m43 -= m2.m43;
+    m1.m44 -= m2.m44;
+
+    return m1;
+}
+
+Matrix4x4 operator*=(Matrix4x4& m1, const Matrix4x4& m2)
+{
+    Matrix4x4 result;
+
+    for (int i = 0; i < 4; ++i)
+    {
+        for (int j = 0; j < 4; ++j)
+        {
+            for (int k = 0; k < 4; ++k)
+            {
+                result.matrix[i][j] += m1.matrix[i][k] * m1.matrix[k][j];
+            }
+        }
+    }
+
+    return result;
+}
+
+Matrix4x4 operator*=(Matrix4x4& m, float scalar)
+{
+    m.m11 *= scalar;
+    m.m12 *= scalar;
+    m.m13 *= scalar;
+    m.m14 *= scalar;
+
+    m.m21 *= scalar;
+    m.m22 *= scalar;
+    m.m23 *= scalar;
+    m.m24 *= scalar;
+
+    m.m31 *= scalar;
+    m.m32 *= scalar;
+    m.m33 *= scalar;
+    m.m34 *= scalar;
+
+    m.m41 *= scalar;
+    m.m42 *= scalar;
+    m.m43 *= scalar;
+    m.m44 *= scalar;
+
+    return m;
+}
+
+Matrix4x4 operator/=(Matrix4x4& m, float scalar)
+{
+    const float scalerInv = Mathf::Inverse(scalar);
+
+    m.m11 *= scalerInv;
+    m.m12 *= scalerInv;
+    m.m13 *= scalerInv;
+    m.m14 *= scalerInv;
+
+    m.m21 *= scalerInv;
+    m.m22 *= scalerInv;
+    m.m23 *= scalerInv;
+    m.m24 *= scalerInv;
+
+    m.m31 *= scalerInv;
+    m.m32 *= scalerInv;
+    m.m33 *= scalerInv;
+    m.m34 *= scalerInv;
+
+    m.m41 *= scalerInv;
+    m.m42 *= scalerInv;
+    m.m43 *= scalerInv;
+    m.m44 *= scalerInv;
+
+    return m;
+}
+
+Matrix4x4 operator+(const Matrix4x4& m1, const Matrix4x4& m2)
+{
+    Matrix4x4 result;
+
+    result.m11 = m1.m11 + m2.m11;
+    result.m12 = m1.m12 + m2.m12;
+    result.m13 = m1.m13 + m2.m13;
+    result.m14 = m1.m14 + m2.m14;
+
+    result.m21 = m1.m21 + m2.m21;
+    result.m22 = m1.m22 + m2.m22;
+    result.m23 = m1.m23 + m2.m23;
+    result.m24 = m1.m24 + m2.m24;
+
+    result.m31 = m1.m31 + m2.m31;
+    result.m32 = m1.m32 + m2.m32;
+    result.m33 = m1.m33 + m2.m33;
+    result.m34 = m1.m34 + m2.m34;
+
+    result.m41 = m1.m41 + m2.m41;
+    result.m42 = m1.m42 + m2.m42;
+    result.m43 = m1.m43 + m2.m43;
+    result.m44 = m1.m44 + m2.m44;
+
+    return result;
+}
+
+Matrix4x4 operator-(const Matrix4x4& m1, const Matrix4x4& m2)
+{
+    Matrix4x4 result;
+
+    result.m11 = m1.m11 - m2.m11;
+    result.m12 = m1.m12 - m2.m12;
+    result.m13 = m1.m13 - m2.m13;
+    result.m14 = m1.m14 - m2.m14;
+
+    result.m21 = m1.m21 - m2.m21;
+    result.m22 = m1.m22 - m2.m22;
+    result.m23 = m1.m23 - m2.m23;
+    result.m24 = m1.m24 - m2.m24;
+
+    result.m31 = m1.m31 - m2.m31;
+    result.m32 = m1.m32 - m2.m32;
+    result.m33 = m1.m33 - m2.m33;
+    result.m34 = m1.m34 - m2.m34;
+
+    result.m41 = m1.m41 - m2.m41;
+    result.m42 = m1.m42 - m2.m42;
+    result.m43 = m1.m43 - m2.m43;
+    result.m44 = m1.m44 - m2.m44;
+
+    return result;
+}
+
+Matrix4x4 operator*(const Matrix4x4& m, float scalar)
+{
+    Matrix4x4 result;
+
+    result.m11 = m.m11 + scalar;
+    result.m12 = m.m12 + scalar;
+    result.m13 = m.m13 + scalar;
+    result.m14 = m.m14 + scalar;
+
+    result.m21 = m.m21 + scalar;
+    result.m22 = m.m22 + scalar;
+    result.m23 = m.m23 + scalar;
+    result.m24 = m.m24 + scalar;
+
+    result.m31 = m.m31 + scalar;
+    result.m32 = m.m32 + scalar;
+    result.m33 = m.m33 + scalar;
+    result.m34 = m.m34 + scalar;
+
+    result.m41 = m.m41 + scalar;
+    result.m42 = m.m42 + scalar;
+    result.m43 = m.m43 + scalar;
+    result.m44 = m.m44 + scalar;
+
+    return result;
+}
+
+Matrix4x4 operator*(float scalar, const Matrix4x4& m)
+{
+    Matrix4x4 result;
+
+    result.m11 = m.m11 * scalar;
+    result.m12 = m.m12 * scalar;
+    result.m13 = m.m13 * scalar;
+    result.m14 = m.m14 * scalar;
+
+    result.m21 = m.m21 * scalar;
+    result.m22 = m.m22 * scalar;
+    result.m23 = m.m23 * scalar;
+    result.m24 = m.m24 * scalar;
+
+    result.m31 = m.m31 * scalar;
+    result.m32 = m.m32 * scalar;
+    result.m33 = m.m33 * scalar;
+    result.m34 = m.m34 * scalar;
+
+    result.m41 = m.m41 * scalar;
+    result.m42 = m.m42 * scalar;
+    result.m43 = m.m43 * scalar;
+    result.m44 = m.m44 * scalar;
+
+    return result;
+}
+
+Matrix4x4 operator*(const Matrix4x4& m1, const Matrix4x4& m2)
+{
+    Matrix4x4 result;
+    for (int i = 0; i < 4; ++i)
+    {
+        for (int j = 0; j < 4; ++j)
+        {
+            for (int k = 0; k < 4; ++k)
+            {
+                result.matrix[i][j] += m1.matrix[i][k] * m2.matrix[k][j];
+            }
+        }
+    }
+
+    return result;
+}
+
+Matrix4x4 operator/(const Matrix4x4& m, float scalar)
+{
+    Matrix4x4 result;
+
+    const float scalarInv = Mathf::Inverse(scalar);
+
+    result.m11 = m.m11 * scalarInv;
+    result.m12 = m.m12 * scalarInv;
+    result.m13 = m.m13 * scalarInv;
+    result.m14 = m.m14 * scalarInv;
+
+    result.m21 = m.m21 * scalarInv;
+    result.m22 = m.m22 * scalarInv;
+    result.m23 = m.m23 * scalarInv;
+    result.m24 = m.m24 * scalarInv;
+
+    result.m31 = m.m31 * scalarInv;
+    result.m32 = m.m32 * scalarInv;
+    result.m33 = m.m33 * scalarInv;
+    result.m34 = m.m34 * scalarInv;
+
+    result.m41 = m.m41 * scalarInv;
+    result.m42 = m.m42 * scalarInv;
+    result.m43 = m.m43 * scalarInv;
+    result.m44 = m.m44 * scalarInv;
+
+    return result;
+}
+
+std::ostream& operator<<(std::ostream& stream, const Matrix4x4& m)
+{
+    return stream << m.ToString();
 }

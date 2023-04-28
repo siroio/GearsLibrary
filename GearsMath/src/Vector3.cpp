@@ -1,14 +1,18 @@
 #include <Vector2.h>
 #include <Vector3.h>
+#include <Matrix4x4.h>
 #include <Mathf.h>
 #include <sstream>
 #include <Debugging.h>
 #include <Quaternion.h>
 
+Vector3::Vector3() : xyz{ 0.0f }
+{}
+
 Vector3::Vector3(float x, float y, float z) : x{ x }, y{ y }, z{ z }
 {}
 
-Vector3::Vector3(float xyz) : x{ xyz }, y{ xyz }, z{ xyz }
+Vector3::Vector3(float xyz) : xyz{ xyz }
 {}
 
 Vector3::Vector3(const Vector2& v) : x{ v.x }, y{ v.y }, z{ 0.0f }
@@ -16,32 +20,42 @@ Vector3::Vector3(const Vector2& v) : x{ v.x }, y{ v.y }, z{ 0.0f }
 
 Vector3 Vector3::Zero()
 {
-    return { 0.0f, 0.0f, 0.0f };
+    return Vector3{ 0.0f, 0.0f, 0.0f };
 }
 
 Vector3 Vector3::One()
 {
-    return { 1.0f, 1.0f, 1.0f };
+    return Vector3{ 1.0f, 1.0f, 1.0f };
+}
+
+Vector3 Vector3::Forward()
+{
+    return Vector3{ 0.0f, 0.0f, 1.0f };
+}
+
+Vector3 Vector3::Back()
+{
+    return Vector3{ 0.0f, 0.0f, -1.0f };
 }
 
 Vector3 Vector3::Up()
 {
-    return { 0.0f, 1.0f, 0.0f };
+    return Vector3{ 0.0f, 1.0f, 0.0f };
 }
 
 Vector3 Vector3::Down()
 {
-    return { 0.0f, -1.0f, 0.0f };
+    return Vector3{ 0.0f, -1.0f, 0.0f };
 }
 
 Vector3 Vector3::Left()
 {
-    return { -1.0f, 0.0f, 0.0f };
+    return Vector3{ -1.0f, 0.0f, 0.0f };
 }
 
 Vector3 Vector3::Right()
 {
-    return { 1.0f, 0.0, 0.0f };
+    return Vector3{ 1.0f, 0.0, 0.0f };
 }
 
 float Vector3::Dot(const Vector3& v1, const Vector3& v2)
@@ -53,14 +67,14 @@ float Vector3::Angle(const Vector3& from, const Vector3& to)
 {
     float deno = Mathf::Sqrt(from.SqrMagnitude() * to.SqrMagnitude());
 
-    if (deno < Mathf::EpsilonNormalSqrt)
+    if (deno < Mathf::EPSILON_NORMAL_SQRT)
     {
         return 0.0f;
     }
 
     float dot = Mathf::Clamp(Dot(from, to) / deno, -1.0f, 1.0f);
 
-    return Mathf::Acos(dot) * Mathf::Rad2Deg;
+    return Mathf::Acos(dot) * Mathf::RAD2DEG;
 }
 
 float Vector3::SignedAngle(const Vector3& from, const Vector3& to, const Vector3& axis)
@@ -118,9 +132,9 @@ Vector3 Vector3::Scale(const Vector3& a, const Vector3& b)
     return Vector3{ a.x * b.x, a.y * b.y, a.z * b.z };
 }
 
-Vector3 Vector3::Scale(const Vector3& v, float scale)
+Vector3 Vector3::Scale(const Vector3& v, float scalar)
 {
-    return Vector3{ v.x * scale, v.y * scale, v.z * scale };
+    return Vector3{ v.x * scalar, v.y * scalar, v.z * scalar };
 }
 
 Vector3 Vector3::Reflect(const Vector3& inDirection, const Vector3& inNormal)
@@ -138,7 +152,7 @@ Vector3 Vector3::Project(const Vector3& vector, const Vector3& onNormal)
 {
     float sqrMag = Dot(onNormal, onNormal);
 
-    if (sqrMag < Mathf::Epsilon)
+    if (sqrMag < Mathf::EPSILON)
     {
         return Zero();
     }
@@ -158,7 +172,7 @@ Vector3 Vector3::ProjectOnPlane(const Vector3& vector, const Vector3& planeNorma
 {
     float sqrMag = Dot(planeNormal, planeNormal);
 
-    if (sqrMag < Mathf::Epsilon)
+    if (sqrMag < Mathf::EPSILON)
     {
         return vector;
     }
@@ -195,7 +209,7 @@ Vector3 Vector3::Normalize(const Vector3& v)
 {
     float mag = Magnitude(v);
 
-    if (mag > Mathf::Epsilon)
+    if (mag > Mathf::EPSILON)
     {
         return v / mag;
     }
@@ -280,6 +294,11 @@ float Vector3::Magnitude() const
     return Mathf::Sqrt(SqrMagnitude());
 }
 
+void Vector3::Normalize()
+{
+    *this = Normalize(*this);
+}
+
 Vector3 Vector3::Normalized() const
 {
     return Normalize(*this);
@@ -287,7 +306,7 @@ Vector3 Vector3::Normalized() const
 
 std::string Vector3::ToString() const
 {
-    std::stringstream ss;
+    std::ostringstream ss;
     ss << this->x << ", ";
     ss << this->y << ", ";
     ss << this->z;
@@ -297,6 +316,16 @@ std::string Vector3::ToString() const
 void Vector3::operator = (const Vector3& v)
 {
     Set(v);
+}
+
+float Vector3::operator[](const size_t index) const
+{
+    if (index > 2)
+    {
+        throw std::out_of_range("Index is out of range");
+    }
+
+    return xyz[index];
 }
 
 float& Vector3::operator[](const size_t index)
@@ -347,7 +376,7 @@ Vector3 operator*(const Quaternion& q, const Vector3& v)
     float wy = q.w * resY;
     float wz = q.w * resZ;
 
-    Vector3 res{ 0.0f, 0.0f, 0.0f };
+    Vector3 res;
 
     res.x = (1.0f - (yy + zz)) * v.x + (xy - wz) * v.y + (xz + wy) * v.z;
     res.y = (1.0f - (xx + zz)) * v.y + (yz - wx) * v.z + (xy + wz) * v.x;
@@ -356,14 +385,19 @@ Vector3 operator*(const Quaternion& q, const Vector3& v)
     return res;
 }
 
-Vector3 operator*(const Vector3& v1, float scale)
+Vector3 operator*(const Vector3& v1, float scalar)
 {
-    return Vector3{ v1.x * scale, v1.y * scale, v1.z * scale };
+    return Vector3{ v1.x * scalar, v1.y * scalar, v1.z * scalar };
 }
 
-Vector3 operator*(float scale, const Vector3& v1)
+Vector3 operator*(float scalar, const Vector3& v1)
 {
-    return Vector3{ v1.x * scale, v1.y * scale, v1.z * scale };
+    return Vector3{ v1.x * scalar, v1.y * scalar, v1.z * scalar };
+}
+
+Vector3 operator*(const Vector3& v, const Matrix4x4& m)
+{
+    return m.MultiplyPoint(v);
 }
 
 Vector3 operator/(const Vector3& v1, const Vector3& v2)
@@ -375,11 +409,11 @@ Vector3 operator/(const Vector3& v1, const Vector3& v2)
     return Vector3{ v1.x / v2.x, v1.y / v2.y, v1.z / v2.z };
 }
 
-Vector3 operator/(const Vector3& v1, float scale)
+Vector3 operator/(const Vector3& v1, float scalar)
 {
-    Debug_Assert(scale != 0.0f);
+    Debug_Assert(scalar != 0.0f);
 
-    float m = 1.0f / scale;
+    float m = 1.0f / scalar;
     return Vector3{ v1.x * m, v1.y * m, v1.z * m };
 }
 
@@ -410,13 +444,19 @@ Vector3& operator*=(Vector3& v1, const Vector3& v2)
     return v1;
 }
 
-Vector3& operator*=(Vector3& v1, float scale)
+Vector3& operator*=(Vector3& v, const Matrix4x4& m)
 {
-    v1.x += scale;
-    v1.y += scale;
-    v1.z += scale;
+    v = m.MultiplyPoint(v);
+    return v;
+}
 
-    return v1;
+Vector3& operator*=(Vector3& v, float scalar)
+{
+    v.x *= scalar;
+    v.y *= scalar;
+    v.z *= scalar;
+
+    return v;
 }
 
 Vector3& operator/=(Vector3& v1, const Vector3& v2)
@@ -432,16 +472,16 @@ Vector3& operator/=(Vector3& v1, const Vector3& v2)
     return v1;
 }
 
-Vector3& operator/=(Vector3& v1, float scale)
+Vector3& operator/=(Vector3& v, float scalar)
 {
-    Debug_Assert(scale != 0.0f);
+    Debug_Assert(scalar != 0.0f);
 
-    float m = 1.0f / scale;
-    v1.x *= m;
-    v1.y += m;
-    v1.z += m;
+    float m = 1.0f / scalar;
+    v.x *= m;
+    v.y += m;
+    v.z += m;
 
-    return v1;
+    return v;
 }
 
 bool operator==(const Vector3& v1, const Vector3 v2)
@@ -451,7 +491,7 @@ bool operator==(const Vector3& v1, const Vector3 v2)
     float diff_z = v1.z - v2.z;
     float sqrMag = diff_x * diff_x + diff_y * diff_y + diff_z * diff_z;
 
-    return sqrMag < (Mathf::Epsilon * Mathf::Epsilon);
+    return sqrMag < (Mathf::EPSILON_SRQT);
 }
 
 bool operator!=(const Vector3& v1, const Vector3 v2)

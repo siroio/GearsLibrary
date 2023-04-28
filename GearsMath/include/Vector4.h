@@ -1,8 +1,9 @@
 #ifndef GEAR_VECTOR4_H
 #define GEAR_VECTOR4_H
 
-#include <string>
 #include <iosfwd>
+#include <string>
+#include <array>
 
 struct Vector3;
 
@@ -18,13 +19,14 @@ public:
         };
         struct
         {
-            float xyzw[4];
+            std::array<float, 4> xyzw;
         };
     };
 
 public:
     Vector4(const Vector4& v) = default;
-    Vector4(float x, float y, float z, float w);
+    explicit Vector4();
+    explicit Vector4(float x, float y, float z, float w);
     explicit Vector4(float xyzw);
 
 public:
@@ -39,7 +41,7 @@ public:
     static Vector4 Min(const Vector4& lhs, const Vector4& rhs);
     static Vector4 Max(const Vector4& lhs, const Vector4& rhs);
     static Vector4 Scale(const Vector4& a, const Vector4& b);
-    static Vector4 Scale(const Vector4& v, float scale);
+    static Vector4 Scale(const Vector4& v, float scalar);
 
 public:
     void Set(const Vector4& v);
@@ -52,6 +54,7 @@ public:
 
 public:
     void operator = (const Vector4& v);
+    float operator [] (const size_t index) const;
     float& operator [] (const size_t index);
 };
 
@@ -59,17 +62,17 @@ Vector4 operator - (const Vector4& v);
 Vector4 operator + (const Vector4& v1, const Vector4& v2);
 Vector4 operator - (const Vector4& v1, const Vector4& v2);
 Vector4 operator * (const Vector4& v1, const Vector4& v2);
-Vector4 operator * (const Vector4& v1, float scale);
-Vector4 operator * (float scale, const Vector4& v1);
+Vector4 operator * (const Vector4& v1, float scalar);
+Vector4 operator * (float scalar, const Vector4& v1);
 Vector4 operator / (const Vector4& v1, const Vector4& v2);
-Vector4 operator / (const Vector4& v1, float scale);
+Vector4 operator / (const Vector4& v1, float scalar);
 
 Vector4& operator += (Vector4& v1, const Vector4& v2);
 Vector4& operator -= (Vector4& v1, const Vector4& v2);
 Vector4& operator *= (Vector4& v1, const Vector4& v2);
-Vector4& operator *= (Vector4& v1, float scale);
+Vector4& operator *= (Vector4& v1, float scalar);
 Vector4& operator /= (Vector4& v1, const Vector4& v2);
-Vector4& operator /= (Vector4& v1, float scale);
+Vector4& operator /= (Vector4& v1, float scalar);
 
 bool operator == (const Vector4& v1, const Vector4 v2);
 bool operator != (const Vector4& v1, const Vector4 v2);

@@ -4,10 +4,13 @@
 #include <Mathf.h>
 #include <sstream>
 
+Vector2::Vector2() : xy{ 0.0f }
+{}
+
 Vector2::Vector2(float x, float y) : x{ x }, y{ y }
 {}
 
-Vector2::Vector2(float xy) : x{ xy }, y{ xy }
+Vector2::Vector2(float xy) : xy{ xy }
 {}
 
 Vector2::Vector2(const Vector3& v) : x{ v.x }, y{ v.y }
@@ -15,32 +18,32 @@ Vector2::Vector2(const Vector3& v) : x{ v.x }, y{ v.y }
 
 Vector2 Vector2::Zero()
 {
-    return { 0.0f, 0.0f };
+    return Vector2{ 0.0f, 0.0f };
 }
 
 Vector2 Vector2::One()
 {
-    return { 1.0f, 1.0f };
+    return Vector2{ 1.0f, 1.0f };
 }
 
 Vector2 Vector2::Up()
 {
-    return { 0.0f, 1.0f };
+    return Vector2{ 0.0f, 1.0f };
 }
 
 Vector2 Vector2::Down()
 {
-    return { 0.0f, -1.0f };
+    return Vector2{ 0.0f, -1.0f };
 }
 
 Vector2 Vector2::Left()
 {
-    return { -1.0f, 0.0f };
+    return Vector2{ -1.0f, 0.0f };
 }
 
 Vector2 Vector2::Right()
 {
-    return { 1.0f, 0.0f };
+    return Vector2{ 1.0f, 0.0f };
 }
 
 float Vector2::Dot(const Vector2& v1, const Vector2& v2)
@@ -52,14 +55,14 @@ float Vector2::Angle(const Vector2& from, const Vector2& to)
 {
     float deno = Mathf::Sqrt(from.SqrMagnitude() * to.SqrMagnitude());
 
-    if (deno < Mathf::EpsilonNormalSqrt)
+    if (deno < Mathf::EPSILON_NORMAL_SQRT)
     {
         return 0.0f;
     }
 
     float dot = Mathf::Clamp(Dot(from, to) / deno, -1.0f, 1.0f);
 
-    return Mathf::Acos(dot) * Mathf::Rad2Deg;
+    return Mathf::Acos(dot) * Mathf::RAD2DEG;
 }
 
 float Vector2::SignedAngle(const Vector2& from, const Vector2& to)
@@ -126,7 +129,7 @@ Vector2 Vector2::Direction(const Vector2& from, const Vector2& to)
 Vector2 Vector2::Normalize(const Vector2& v)
 {
     float mag = Magnitude(v);
-    if (mag > Mathf::Epsilon)
+    if (mag > Mathf::EPSILON)
     {
         return v / mag;
     }
@@ -205,10 +208,10 @@ void Vector2::Set0()
     Set(0.0f);
 }
 
-void Vector2::Scale(const Vector2& scale)
+void Vector2::Scale(const Vector2& scalar)
 {
-    x *= scale.x;
-    y *= scale.y;
+    x *= scalar.x;
+    y *= scalar.y;
 }
 
 void Vector2::Normalize()
@@ -230,7 +233,7 @@ float Vector2::Magnitude() const
 
 std::string Vector2::ToString() const
 {
-    std::stringstream ss;
+    std::ostringstream ss;
     ss << this->x << ", ";
     ss << this->y;
     return ss.str();
@@ -272,14 +275,14 @@ Vector2 operator*(const Vector2& v1, const Vector2& v2)
     return Vector2{ v1.x * v2.x, v1.y * v2.y };
 }
 
-Vector2 operator*(const Vector2& v1, float scale)
+Vector2 operator*(const Vector2& v1, float scalar)
 {
-    return Vector2{ v1.x * scale, v1.y * scale };
+    return Vector2{ v1.x * scalar, v1.y * scalar };
 }
 
-Vector2 operator*(float scale, const Vector2& v1)
+Vector2 operator*(float scalar, const Vector2& v1)
 {
-    return Vector2{ v1.x * scale, v1.y * scale };
+    return Vector2{ v1.x * scalar, v1.y * scalar };
 }
 
 Vector2 operator/(const Vector2& v1, const Vector2& v2)
@@ -290,10 +293,10 @@ Vector2 operator/(const Vector2& v1, const Vector2& v2)
     return Vector2{ v1.x / v2.x, v1.y / v2.y };
 }
 
-Vector2 operator/(const Vector2& v1, float scale)
+Vector2 operator/(const Vector2& v1, float scalar)
 {
-    Debug_Assert(scale != 0.0f);
-    float m = 1.0f / scale;
+    Debug_Assert(scalar != 0.0f);
+    float m = 1.0f / scalar;
     return Vector2{ v1.x * m, v1.x * m };
 }
 
@@ -321,12 +324,12 @@ Vector2& operator*=(Vector2& v1, const Vector2& v2)
     return v1;
 }
 
-Vector2& operator*=(Vector2& v1, float scale)
+Vector2& operator*=(Vector2& v, float scalar)
 {
-    v1.x -= scale;
-    v1.y -= scale;
+    v.x *= scalar;
+    v.y *= scalar;
 
-    return v1;
+    return v;
 }
 
 Vector2& operator/=(Vector2& v1, const Vector2& v2)
@@ -340,15 +343,15 @@ Vector2& operator/=(Vector2& v1, const Vector2& v2)
     return v1;
 }
 
-Vector2& operator/=(Vector2& v1, float scale)
+Vector2& operator/=(Vector2& v, float scalar)
 {
-    Debug_Assert(scale != 0.0f);
+    Debug_Assert(scalar != 0.0f);
 
-    float m = 1.0f / scale;
-    v1.x *= m;
-    v1.y += m;
+    float m = 1.0f / scalar;
+    v.x *= m;
+    v.y += m;
 
-    return v1;
+    return v;
 }
 
 bool operator==(const Vector2& v1, const Vector2 v2)
@@ -357,7 +360,7 @@ bool operator==(const Vector2& v1, const Vector2 v2)
     float diff_y = v1.y - v2.y;
     float sqrMag = diff_x * diff_x + diff_y * diff_y;
 
-    return sqrMag < (Mathf::Epsilon * Mathf::Epsilon);
+    return sqrMag < (Mathf::EPSILON_SRQT);
 }
 
 bool operator!=(const Vector2& v1, const Vector2 v2)

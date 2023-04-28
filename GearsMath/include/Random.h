@@ -1,7 +1,8 @@
 #ifndef GEAR_RANDOM_H
 #define GEAR_RANDOM_H
 
-#include<cstdint>
+#include <cstdint>
+#include <Singleton.h>
 
 struct PCG_XSH_RR
 {
@@ -16,16 +17,17 @@ public:
     double NextDouble();
 };
 
-class Random
+class Random : public Singleton<Random>
 {
 private:
-    static PCG_XSH_RR pcg;
+    PCG_XSH_RR pcg{};
 
 public:
-    static void Seed(std::uint64_t seed);
-    static int Next();
-    static float Nextf();
-    static int Range(int min, int max);
-    static float Range(float min, float max);
+    void Init();
+    void Seed(std::uint64_t seed);
+    int Next();
+    float Nextf();
+    int Range(int min, int max);
+    float Range(float min, float max);
 };
 #endif // !GEAR_RANDOM_H
