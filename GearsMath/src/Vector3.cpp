@@ -360,28 +360,25 @@ Vector3 operator*(const Vector3& v1, const Vector3& v2)
 
 Vector3 operator*(const Quaternion& q, const Vector3& v)
 {
-    float resX = q.x * 2.0f;
-    float resY = q.y * 2.0f;
-    float resZ = q.z * 2.0f;
+    float x = q.x * 2.0f;
+    float y = q.y * 2.0f;
+    float z = q.z * 2.0f;
 
-    float xx = q.x * resX;
-    float yy = q.y * resY;
-    float zz = q.z * resZ;
+    float xx = q.x * x;
+    float yy = q.y * y;
+    float zz = q.z * z;
 
-    float xy = q.x * resY;
-    float xz = q.x * resZ;
-    float yz = q.y * resZ;
-
-    float wx = q.w * resX;
-    float wy = q.w * resY;
-    float wz = q.w * resZ;
+    float xy = q.x * y;
+    float xz = q.x * z;
+    float yz = q.y * z;
+    float wx = q.w * x;
+    float wy = q.w * y;
+    float wz = q.w * z;
 
     Vector3 res;
-
     res.x = (1.0f - (yy + zz)) * v.x + (xy - wz) * v.y + (xz + wy) * v.z;
-    res.y = (1.0f - (xx + zz)) * v.y + (yz - wx) * v.z + (xy + wz) * v.x;
-    res.z = (1.0f - (xx + yy)) * v.z + (xz - wy) * v.x + (yz + wx) * v.y;
-
+    res.y = (xy + wz) * v.x + (1.0f - (xx + zz)) * v.y + (yz - wx) * v.z;
+    res.z = (xz - wy) * v.x + (yz + wx) * v.y + (1.0f - (xx + yy)) * v.z;
     return res;
 }
 

@@ -28,26 +28,26 @@ public:
 
 public:
     /**
-    @brief 回転なしのクォータニオンを返す
-    @return 回転なしのクォータニオン
+     * @brief 回転なしのクォータニオンを返す
+     * @return 回転なしのクォータニオン
     */
     static Quaternion Identity();
 
     /**
-    @brief 2つの回転間の角度を返す
-    @param q1
-    @param q2
-    @return q1からq2の角度
+     * @brief 2つの回転間の角度を返す
+     * @param q1
+     * @param q2
+     * @return q1からq2の角度
     */
     static float Angle(const Quaternion& q1, const Quaternion& q2);
 
     /**
-    @brief axis の周りを deg 度回転するクォータニオンを作成する
-    @param deg 回転角度
-    @param axis 回転軸
-    @return 回転後のクォータニオン
+     * @brief axis の周りを angle 度回転するクォータニオンを作成する
+     * @param angle 回転角度
+     * @param axis 回転軸
+     * @return 回転後のクォータニオン
     */
-    static Quaternion AngleAxis(float deg, const Vector3& axis);
+    static Quaternion AngleAxis(float angle, const Vector3& axis);
 
     static float Dot(const Quaternion& q1, const Quaternion& q2);
     static Quaternion Normalize(const Quaternion& q);
@@ -92,8 +92,8 @@ Quaternion operator * (float scalar, const Quaternion& q1);
 Quaternion& operator *= (Quaternion& q1, const Quaternion& q2);
 Quaternion& operator *= (Quaternion& q1, float scalar);
 
-bool operator == (const Quaternion& q1, const Quaternion q2);
-bool operator != (const Quaternion& q1, const Quaternion q2);
+bool operator == (const Quaternion& q1, const Quaternion& q2);
+bool operator != (const Quaternion& q1, const Quaternion& q2);
 
 std::ostream& operator << (std::ostream& stream, const Quaternion& q);
 

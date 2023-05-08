@@ -1,31 +1,65 @@
 #ifndef GEAR_RANDOM_H
 #define GEAR_RANDOM_H
-
-#include <cstdint>
 #include <Singleton.h>
+#include <Mathf.h>
+#include <random>
 
-struct PCG_XSH_RR
+namespace
+{
+    constexpr uint64_t MULTIPLIER = 6364136223846793005u;
+    constexpr uint64_t INCREMENT = 1442695040888963407u;
+    constexpr float DIVIDE = 1.0f / 4294967295.0;
+}
+
+class Pcg32Fast
 {
 private:
-    std::uint64_t state;
-    const std::uint64_t increment;
+    uint64_t state;
 
 public:
-    explicit PCG_XSH_RR(std::uint64_t seed = 0, std::uint64_t inc = 6364136223846793005ull);
-    void Seed(std::uint64_t seed);
-    std::uint32_t NextInt();
-    double NextDouble();
+    constexpr explicit Pcg32Fast(uint64_t seed)
+    {
+        Seed(seed);
+    }
+
+    constexpr void Seed(uint64_t seed = 0x853c49e6748fea9bull)
+    {
+        state = 0;
+        (*this)();
+        state += seed;
+        (*this)();
+    }
+
+    constexpr float operator ()(float mean, float stddev)
+    {
+        float u1 = (*this)() * DIVIDE;
+        float u2 = (*this)() * DIVIDE;
+
+        float r = Mathf::Sqrt(-2.0f * Mathf::Log(u1));
+        float theta = 2.0f * Mathf::PI * u2;
+        float z1 = r * Mathf::Cos(theta);
+        float z2 = r * Mathf::Sin(theta);
+        return z1 * stddev + mean;
+    }
+
+    constexpr uint32_t operator ()()
+    {
+        uint64_t oldstate = state;
+        state = oldstate * MULTIPLIER + INCREMENT;
+        uint32_t xorshifted = static_cast<uint32_t>(((oldstate >> 18u) ^ oldstate) >> 27u);
+        uint32_t rot = oldstate >> 59u;
+        return (xorshifted >> rot) | (xorshifted << (-static_cast<int>(rot) & 31));
+    }
 };
 
 class Random : public Singleton<Random>
 {
-private:
-    PCG_XSH_RR pcg{};
+public:
+    Pcg32Fast rand{ std::random_device{}() };
 
 public:
-    void Init();
-    void Seed(std::uint64_t seed);
-    int Next();
+    void Seed(uint64_t seed);
+    uint32_t Next();
     float Nextf();
     int Range(int min, int max);
     float Range(float min, float max);

@@ -124,6 +124,16 @@ void Vector4::operator=(const Vector4& v)
     Set(v);
 }
 
+float Vector4::operator[](const size_t index) const
+{
+    if (index > 3)
+    {
+        throw std::out_of_range("Index is out of range");
+    }
+
+    return xyzw[index];
+}
+
 float& Vector4::operator[](const size_t index)
 {
     if (index > 3)

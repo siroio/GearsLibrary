@@ -16,22 +16,15 @@ Quaternion Quaternion::Identity()
 
 float Quaternion::Angle(const Quaternion& q1, const Quaternion& q2)
 {
-    float dot = Dot(q1, q2);
-    if (dot > 1.0f - Mathf::EPSILON) return 0.0f;
-    return Mathf::Acos(Mathf::Clamp(dot, -1.0f, 1.0f)) * 2.0f * Mathf::RAD2DEG;
+    float dot = Mathf::Min(Dot(q1, q2), 1.0f);
+    return Mathf::Tolerance(dot) ? 0.0f : Mathf::Acos(dot) * 2.0f * Mathf::RAD2DEG;
 }
 
-Quaternion Quaternion::AngleAxis(float deg, const Vector3& axis)
+Quaternion Quaternion::AngleAxis(float angle, const Vector3& axis)
 {
-    float rad = deg * Mathf::DEG2RAD;
-    float len = Mathf::Inverse(axis.Magnitude());
-    auto norm = axis.Normalized();
-
-    const float r = rad / 2.0f;
-    float s = Mathf::Sin(r);
-    float c = Mathf::Cos(r);
-
-    return Quaternion{ deg * (axis.x * len), deg * (axis.y * len), deg * (axis.z * len), c };
+    float rad = angle * 0.5f * Mathf::DEG2RAD;
+    float sin = Mathf::Sin(rad) / axis.Magnitude();
+    return Quaternion{ axis.x * sin, axis.y * sin, axis.z * sin, Mathf::Cos(rad) };
 }
 
 float Quaternion::Dot(const Quaternion& q1, const Quaternion& q2)
@@ -53,7 +46,7 @@ Quaternion Quaternion::Normalize(const Quaternion& q)
 
 Quaternion Quaternion::Euler(float x, float y, float z)
 {
-    auto v = Vector3{ x / 2.0f, y / 2.0f, z / 2.0f };
+    auto v = Vector3{ x * 0.5f, y * 0.5f, z * 0.5f };
     float xSin = Mathf::Sin(v.x);
     float xCos = Mathf::Cos(v.x);
     float ySin = Mathf::Sin(v.y);
@@ -187,7 +180,7 @@ Quaternion Quaternion::LookRotation(const Vector3& view)
 
 Quaternion Quaternion::RotateTowards(const Quaternion& from, const Quaternion& to, float maxDegreesDelta)
 {
-    float angle = Quaternion::Angle(from, to);
+    float angle = Angle(from, to);
     if (angle == 0.0f) return to;
     return SerpUnclamped(from, to, Mathf::Min(1.0f, maxDegreesDelta / angle));
 }
@@ -392,12 +385,12 @@ Quaternion& operator*=(Quaternion& q1, float scalar)
     return q1;
 }
 
-bool operator==(const Quaternion& q1, const Quaternion q2)
+bool operator==(const Quaternion& q1, const Quaternion& q2)
 {
     return Mathf::Tolerance(Quaternion::Dot(q1, q2));
 }
 
-bool operator!=(const Quaternion& q1, const Quaternion q2)
+bool operator!=(const Quaternion& q1, const Quaternion& q2)
 {
     return !(q1 == q2);
 }
