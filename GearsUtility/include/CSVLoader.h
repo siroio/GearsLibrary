@@ -1,5 +1,5 @@
-#ifndef GEAR_CSV_LOADER_H
-#define GEAR_CSV_LOADER_H
+#ifndef GEARS_CSV_LOADER_H
+#define GEARS_CSV_LOADER_H
 
 #include <mutex>
 #include <vector>
@@ -16,4 +16,4 @@ public:
     std::vector<std::vector<std::string>> Load();
 };
 
-#endif // !GEAR_CSV_LOADER_H
+#endif // !GEARS_CSV_LOADER_H

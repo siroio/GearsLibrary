@@ -1,5 +1,5 @@
-#ifndef GEAR_DEBUGGING
-#define GEAR_DEBUGGING
+#ifndef GEARS_DEBUGGING
+#define GEARS_DEBUGGING
 
 #ifdef _DEBUG
 
@@ -15,4 +15,4 @@
 
 #endif // _DEBUG
 
-#endif // !GEAR_DEBUGGING
+#endif // !GEARS_DEBUGGING

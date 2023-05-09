@@ -5,18 +5,23 @@ option(BUILD_DOCUMENTATION "Build Doxygen documentation" ON)
 project(GearsLibrary
 		VERSION 1.0.0
 		DESCRIPTION "DirectX12 Game Library"
-		LANGUAGES CXX)
+		LANGUAGES CXX
+)
 
 # == CONFIG ==
 set(LIBRARY 
+    GearsCore
+    GearsComponent
     GearsMath 
     GearsUtility
-    GearsCore)
+)
 
-set(LIBRARY_OUTPUT_DIRECTORY /Lib)
+SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON) 
+set(LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Lib)
 
 add_executable(GearsLibrary main.cpp)
 add_subdirectory(./GearsCore)
+add_subdirectory(./GearsComponent)
 add_subdirectory(./GearsMath)
 add_subdirectory(./GearsUtility)
 

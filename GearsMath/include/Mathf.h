@@ -1,5 +1,5 @@
-#ifndef GEAR_MATHF_H
-#define GEAR_MATHF_H
+#ifndef GEARS_MATHF_H
+#define GEARS_MATHF_H
 
 #include <limits>
 
@@ -68,4 +68,4 @@ public:
     static float Erfc(float x);
 };
 
-#endif // !GEAR_MATHF_H
+#endif // !GEARS_MATHF_H

@@ -29,3 +29,5 @@ echo ビルドが正常に終了しました。
 if %IS_PAUSE% equ True (
   pause
 )
+
+pause

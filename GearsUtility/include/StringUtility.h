@@ -1,5 +1,5 @@
-#ifndef GEAR_STRING_UTILITY_H
-#define GEAR_STRING_UTILITY_H
+#ifndef GEARS_STRING_UTILITY_H
+#define GEARS_STRING_UTILITY_H
 
 #include <string_view>
 #include <string>
@@ -148,4 +148,4 @@ namespace StringUtility
     };
 };
 
-#endif // !GEAR_STRING_UTILITY_H
+#endif // !GEARS_STRING_UTILITY_H

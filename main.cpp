@@ -1,24 +1,28 @@
-#include <Random.h>
-#include <iostream>
-#include <fstream>
-#include <limits>
+// テスト用実行cpp
 
+#include <iostream>
+#include <Random.h>
+#include <Game.h>
 using namespace std;
+
+class MyClass : public Game
+{
+    virtual void Start() override
+    {
+        for (size_t i = 0; i < 100; i++)
+        {
+            printf("%d \n", Random::Instance().Range(0, 10));
+        }
+    }
+
+    virtual void End() override
+    {
+        cout << "END" << endl;
+    }
+};
+
 
 auto main() -> int
 {
-    for (int i = 0; i < 100; i++)
-    {
-        cout << Random::Instance().rand(0, 1) << "\n";
-    }
-    //std::ofstream file{ "random.tsv" };
-    //for (size_t i = 0; i < 1000 * 1000; ++i)
-    //{
-    //    Random::Instance().Next();
-    //    // 各分布法に基いて乱数を生成
-    //    double r1 = Random::Instance().Range(-1.0f, 1.0f);
-    //    double r2 = Random::Instance().Range(1.0f, 0.5f);
-
-    //    file << r1 << "\t" << r2 << "\n";
-    //}
+    MyClass{}.Run();
 }

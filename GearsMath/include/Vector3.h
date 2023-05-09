@@ -1,5 +1,5 @@
-#ifndef GEAR_VECTOR3_H
-#define GEAR_VECTOR3_H
+#ifndef GEARS_VECTOR3_H
+#define GEARS_VECTOR3_H
 
 #include <iosfwd>
 #include <string>
@@ -103,4 +103,4 @@ bool operator != (const Vector3& v1, const Vector3 v2);
 
 std::ostream& operator << (std::ostream& stream, const Vector3& v);
 
-#endif // !GEAR_VECTOR3_H
+#endif // !GEARS_VECTOR3_H

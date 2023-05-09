@@ -19,7 +19,7 @@ float Random::Nextf()
 
 int Random::Range(int min, int max)
 {
-    return rand();
+    return (rand() % (max - min)) + min;
 }
 
 float Random::Range(float min, float max)

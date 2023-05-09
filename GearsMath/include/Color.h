@@ -1,5 +1,5 @@
-#ifndef GEAR_COLOR_H
-#define GEAR_COLOR_H
+#ifndef GEARS_COLOR_H
+#define GEARS_COLOR_H
 
 #include <iosfwd>
 #include <string>
@@ -40,4 +40,4 @@ public:
 
 std::ostream& operator << (std::ostream& stream, const Color& color);
 
-#endif // !GEAR_COLOR_H
+#endif // !GEARS_COLOR_H

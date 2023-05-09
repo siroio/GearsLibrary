@@ -1,5 +1,5 @@
-#ifndef GEAR_RANDOM_H
-#define GEAR_RANDOM_H
+#ifndef GEARS_RANDOM_H
+#define GEARS_RANDOM_H
 #include <Singleton.h>
 #include <Mathf.h>
 #include <random>
@@ -8,7 +8,7 @@ namespace
 {
     constexpr uint64_t MULTIPLIER = 6364136223846793005u;
     constexpr uint64_t INCREMENT = 1442695040888963407u;
-    constexpr float DIVIDE = 1.0f / 4294967295.0;
+    constexpr float DIVIDE = static_cast<float>(1.0f / 4294967295.0);
 }
 
 class Pcg32Fast
@@ -28,18 +28,6 @@ public:
         (*this)();
         state += seed;
         (*this)();
-    }
-
-    constexpr float operator ()(float mean, float stddev)
-    {
-        float u1 = (*this)() * DIVIDE;
-        float u2 = (*this)() * DIVIDE;
-
-        float r = Mathf::Sqrt(-2.0f * Mathf::Log(u1));
-        float theta = 2.0f * Mathf::PI * u2;
-        float z1 = r * Mathf::Cos(theta);
-        float z2 = r * Mathf::Sin(theta);
-        return z1 * stddev + mean;
     }
 
     constexpr uint32_t operator ()()
@@ -64,4 +52,4 @@ public:
     int Range(int min, int max);
     float Range(float min, float max);
 };
-#endif // !GEAR_RANDOM_H
+#endif // !GEARS_RANDOM_H

@@ -1,5 +1,5 @@
-#ifndef GEAR_MATRIX4X4_H
-#define GEAR_MATRIX4X4_H
+#ifndef GEARS_MATRIX4X4_H
+#define GEARS_MATRIX4X4_H
 
 #include <iosfwd>
 #include <string>
@@ -97,4 +97,4 @@ Matrix4x4 operator / (const Matrix4x4& m, float scalar);
 
 std::ostream& operator << (std::ostream& stream, const Matrix4x4& m);
 
-#endif // !GEAR_RANDOM_H
+#endif // !GEARS_RANDOM_H

@@ -1,5 +1,5 @@
-#ifndef GEAR_SINGLETON_H
-#define GEAR_SINGLETON_H
+#ifndef GEARS_SINGLETON_H
+#define GEARS_SINGLETON_H
 
 #include <memory>
 #include <mutex>
@@ -42,4 +42,4 @@ public:
     }
 };
 
-#endif // !GEAR_SINGLETON_H
+#endif // !GEARS_SINGLETON_H
