@@ -10,8 +10,8 @@ namespace GLib::Internal::Interface
         virtual ~IOrderFunc() = default;
     public:
         virtual ReturnType Call(const Args&... args) = 0;
-        virtual bool IsDelete() = 0;
-        virtual int Order() = 0;
+        virtual bool IsDelete() const = 0;
+        virtual int Order() const = 0;
     };
 }
 
