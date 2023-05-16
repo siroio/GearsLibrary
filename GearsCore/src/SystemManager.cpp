@@ -3,18 +3,20 @@
 
 bool SystemManager::Initialize()
 {
-    auto& initilizeFunctions = systemFunctions[FunctionType::Initilialize];
+    auto& initilizeFunctions = systemFunctions[FunctionType::Initialize];
     std::sort(initilizeFunctions.begin(), initilizeFunctions.end(), [](const FunctionVariant& lhs, const FunctionVariant& rhs)
     {
         return std::get<1>(lhs)->Order() < std::get<1>(rhs)->Order();
     });
 
-    for (const auto& init : systemFunctions[FunctionType::Initilialize])
+    for (const auto& initFunc : systemFunctions[FunctionType::Initialize])
     {
-        if (!std::get<1>(init)->Call()) return false;
+        const auto& func = std::get<1>(initFunc);
+        if (!func) return false;
+        func->Call();
     }
 
-    systemFunctions.erase(FunctionType::Initilialize);
+    systemFunctions.erase(FunctionType::Initialize);
 
     for (auto& [type, funcList] : systemFunctions)
     {
@@ -29,39 +31,39 @@ bool SystemManager::Initialize()
 
 void SystemManager::Update()
 {
-    CallFunc(FunctionType::Update);
+    Execute(FunctionType::Update);
 }
 
 void SystemManager::BeginDraw()
 {
-    CallFunc(FunctionType::BeginDraw);
+    Execute(FunctionType::BeginDraw);
 }
 
 void SystemManager::Draw()
 {
-    CallFunc(FunctionType::Draw);
+    Execute(FunctionType::Draw);
 }
 
 void SystemManager::DebugDraw()
 {
-    CallFunc(FunctionType::DrawDebug);
+    Execute(FunctionType::DebugDraw);
 }
 
 void SystemManager::EndDraw()
 {
-    CallFunc(FunctionType::EndDraw);
+    Execute(FunctionType::EndDraw);
 }
 
 void SystemManager::Finalize()
 {
-    CallFunc(FunctionType::Finalize);
+    Execute(FunctionType::Finalize);
 }
 
-void SystemManager::CallFunc(FunctionType type)
+void SystemManager::Execute(FunctionType type)
 {
     for (const auto& func : systemFunctions[type])
     {
-        if (func.index() == 0) return;
+        if (func.index() != 0) continue;
         std::get<0>(func)->Call();
     }
 }

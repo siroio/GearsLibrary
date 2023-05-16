@@ -12,8 +12,12 @@ protected:
 
 public:
     int Run();
-    static void Exit();
+    inline static void Exit()
+    {
+        isExit = true;
+    }
 private:
+    void AddSystem();
     bool Initialize();
     void Update();
     void Draw();

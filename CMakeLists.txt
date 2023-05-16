@@ -16,7 +16,7 @@ set(LIBRARY
     GearsUtility
 )
 
-SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON) 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Lib)
 
 add_executable(GearsLibrary main.cpp)

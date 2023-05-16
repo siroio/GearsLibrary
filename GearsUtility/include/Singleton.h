@@ -3,43 +3,72 @@
 
 #include <memory>
 #include <mutex>
+#include <WeakPtr.h>
 
-template<typename T>
-class Singleton
+namespace GLib::Utility
 {
-private:
-    inline static std::unique_ptr<T> instance;
-    inline static std::mutex singleton_mutex;
-
-protected:
-    Singleton() = default;
-    virtual ~Singleton() = default;
-
-public:
-    Singleton(const Singleton&) = delete;
-    Singleton& operator=(const Singleton&) = delete;
-    Singleton(Singleton&&) = delete;
-    Singleton& operator=(Singleton&&) = delete;
-
-public:
-    static T& Instance()
+    template<typename T>
+    class SingletonPtr
     {
-        std::scoped_lock lock(singleton_mutex);
-        if (!instance)
-        {
-            instance = std::make_unique<T>();
-        }
-        return *instance;
-    }
+    private:
+        static inline std::shared_ptr<T> instance;
+        static inline std::mutex singleton_mutex;
 
-    static void Release()
-    {
-        std::scoped_lock lock(singleton_mutex);
-        if (instance)
+    protected:
+        SingletonPtr() = default;
+        virtual ~SingletonPtr() = default;
+
+    public:
+        SingletonPtr(const SingletonPtr&) = delete;
+        SingletonPtr& operator=(const SingletonPtr&) = delete;
+        SingletonPtr(SingletonPtr&&) = delete;
+        SingletonPtr& operator=(SingletonPtr&&) = delete;
+
+    public:
+        static inline GLib::Utility::WeakPtr<T> Instance()
         {
-            instance.reset();
+            std::scoped_lock lock(singleton_mutex);
+            if (!instance)
+            {
+                instance = std::make_shared<T>();
+            }
+            return GLib::Utility::WeakPtr<T>{ instance };
         }
-    }
+
+        static inline void Release()
+        {
+            std::scoped_lock lock(singleton_mutex);
+            if (instance)
+            {
+                instance.reset();
+            }
+        }
+    };
+
+    template<typename T>
+    class Singleton
+    {
+    private:
+        static inline std::mutex singleton_mutex;
+
+    protected:
+        Singleton() = default;
+        virtual ~Singleton() = default;
+
+    public:
+        Singleton(const Singleton&) = delete;
+        Singleton& operator=(const Singleton&) = delete;
+        Singleton(Singleton&&) = delete;
+        Singleton& operator=(Singleton&&) = delete;
+
+    public:
+        static inline T& Instance()
+        {
+            std::scoped_lock lock(singleton_mutex);
+            static T instance;
+            return instance;
+        }
+    };
 };
 
 #endif // !GEARS_SINGLETON_H

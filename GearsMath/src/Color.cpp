@@ -1,6 +1,5 @@
 #include <Color.h>
 #include <sstream>
-#include <span>
 
 Color::Color() : rgba{ 0.0f }
 {}

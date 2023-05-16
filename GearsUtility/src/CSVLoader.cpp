@@ -25,7 +25,7 @@ std::vector<std::vector<std::string>> CSVLoader::Load()
     std::string line;
     while (std::getline(file, line))
     {
-        std::vector<std::string> row = StringUtility::Split(line, ',');
+        std::vector<std::string> row = GLib::Utility::Split(line, ',');
         result.push_back(row);
     }
 

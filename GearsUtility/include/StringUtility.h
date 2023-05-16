@@ -6,7 +6,7 @@
 #include <vector>
 #include <memory>
 
-namespace StringUtility
+namespace GLib::Utility
 {
     /**
     * @brief •¶Žš—ñ‚ð•ªŠ„‚µ‚Ä•Ô‚·

@@ -6,9 +6,11 @@ set(SOURCE_FOLDER
 )
 
 set(HEADER_FOLDER 
-    ./include/StringUtility.h
     ./include/Debugging.h
+    ./include/WeakPtr.h
+    ./include/ComPtr.h
     ./include/Singleton.h
+    ./include/StringUtility.h
     ./include/CSVLoader.h
 )
 

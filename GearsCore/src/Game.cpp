@@ -1,9 +1,29 @@
 #include <Game.h>
 #include <SystemManager.h>
 #include <d3d12.h>
+#include <Internal/ISystem.h>
+#include <SystemManager.h>
+
+namespace
+{
+    auto& systemManager = SystemManager::Instance();
+}
+
+class TestManager :
+    public SingletonPtr<TestManager>,
+    public Interface::ISystem
+{
+public:
+    bool Initialize()
+    {
+        puts("テスト用マネージャークラスのInitializeが呼ばれました。");
+        return true;
+    }
+};
 
 int Game::Run()
 {
+    AddSystem();
     if (!Initialize()) return -1;
 
     Start();
@@ -25,21 +45,32 @@ int Game::Run()
     return 0;
 }
 
-void Game::Exit()
+void Game::AddSystem()
 {
-    isExit = true;
+    SystemManager::AddSystem<TestManager>();
 }
 
 bool Game::Initialize()
 {
-    return true;
+    return systemManager.Initialize();
 }
 
 void Game::Update()
-{}
+{
+    systemManager.Update();
+}
 
 void Game::Draw()
-{}
+{
+    systemManager.BeginDraw();
+    systemManager.Draw();
+#if _DEBUG
+    systemManager.DebugDraw();
+#endif
+    systemManager.EndDraw();
+}
 
 void Game::Finalize()
-{}
+{
+    systemManager.Finalize();
+}
