@@ -25,14 +25,14 @@ namespace GLib::Utility
         SingletonPtr& operator=(SingletonPtr&&) = delete;
 
     public:
-        static inline GLib::Utility::WeakPtr<T> Instance()
+        static inline WeakPtr<T> Instance()
         {
             std::scoped_lock lock(singleton_mutex);
             if (!instance)
             {
                 instance = std::make_shared<T>();
             }
-            return GLib::Utility::WeakPtr<T>{ instance };
+            return WeakPtr<T>{ instance };
         }
 
         static inline void Release()
