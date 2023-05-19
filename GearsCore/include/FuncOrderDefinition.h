@@ -3,12 +3,12 @@
 
 #include <Internal/FuncOrder.h>
 
-FuncOrder(Initialize)
-FuncOrder(Update)
-FuncOrder(BeginDraw)
-FuncOrder(Draw)
-FuncOrder(DebugDraw)
-FuncOrder(EndDraw)
-FuncOrder(Finalize)
+FUNC_ORDER(Initialize)
+FUNC_ORDER(Update)
+FUNC_ORDER(BeginDraw)
+FUNC_ORDER(Draw)
+FUNC_ORDER(DebugDraw)
+FUNC_ORDER(EndDraw)
+FUNC_ORDER(Finalize)
 
 #endif // !GEARS_FUNC_ORDER_DEFINITION_H

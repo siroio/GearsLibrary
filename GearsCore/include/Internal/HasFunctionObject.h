@@ -5,9 +5,9 @@
 #include <Internal/IOrderFunc.h>
 #include <WeakPtr.h>
 
-#define HasFuncObject(FuncName)                                                                                         \
+#define HAS_FUNC_OBJECT(FuncName)                                                                                       \
                                                                                                                         \
-HasFunction(##FuncName##)                                                                                               \
+HAS_FUNCTION(##FuncName##)                                                                                              \
                                                                                                                         \
 namespace GLib::Internal::Function                                                                                      \
 {                                                                                                                       \
@@ -31,11 +31,10 @@ namespace GLib::Internal::Function                                              
                                                                                                                         \
         virtual int Order() override                                                                                    \
         {                                                                                                               \
-            return FuncOrder(instance.get().get());                                                                     \
+            return FUNC_ORDER(instance.get().get());                                                                    \
         }                                                                                                               \
                                                                                                                         \
     private:                                                                                                            \
-                                                                                                                        \
         template<typename U = T> requires Has##FuncName##Func<U, ReturnType, Args...>                                   \
         ReturnType Run(const Args&... args)                                                                             \
         {                                                                                                               \
@@ -53,11 +52,11 @@ namespace GLib::Internal::Function                                              
         {}                                                                                                              \
                                                                                                                         \
         template<typename U = T> requires std::derived_from<U, Interface::I##FuncName##Order>                           \
-        int FuncOrder(U* self)                                                                                          \
+        int FUNC_ORDER(U* self)                                                                                         \
         {                                                                                                               \
             return self->##FuncName##Order();                                                                           \
         }                                                                                                               \
-        int FuncOrder(...)                                                                                              \
+        int FUNC_ORDER(...)                                                                                             \
         {                                                                                                               \
             return 0;                                                                                                   \
         }                                                                                                               \

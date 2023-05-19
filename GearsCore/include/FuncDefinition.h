@@ -3,15 +3,15 @@
 
 #include <Internal/HasFunctionObject.h>
 
-HasFuncObject(Initialize);
-HasFuncObject(BeginDraw);
-HasFuncObject(DebugDraw);
-HasFuncObject(EndDraw);
-HasFuncObject(Finalize);
+HAS_FUNC_OBJECT(Initialize);
+HAS_FUNC_OBJECT(BeginDraw);
+HAS_FUNC_OBJECT(DebugDraw);
+HAS_FUNC_OBJECT(EndDraw);
+HAS_FUNC_OBJECT(Finalize);
 
-HasFuncObject(Start);
-HasFuncObject(Update);
-HasFuncObject(LateUpdate);
-HasFuncObject(Draw);
+HAS_FUNC_OBJECT(Start);
+HAS_FUNC_OBJECT(Update);
+HAS_FUNC_OBJECT(LateUpdate);
+HAS_FUNC_OBJECT(Draw);
 
 #endif // !GEARS_FUNC_DEFINITION_H

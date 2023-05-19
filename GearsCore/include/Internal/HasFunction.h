@@ -3,7 +3,7 @@
 
 #include <concepts>
 
-#define HasFunction(FuncName)                                           \
+#define HAS_FUNCTION(FuncName)                                           \
 namespace GLib::Internal                                                \
 {                                                                       \
     template<typename T, typename ReturnType = void, typename... Args>  \
