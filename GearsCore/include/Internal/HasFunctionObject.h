@@ -39,7 +39,6 @@ namespace GLib::Internal::Function                                              
         template<typename U = T> requires Has##FuncName##Func<U, ReturnType, Args...>                                   \
         ReturnType Run(const Args&... args)                                                                             \
         {                                                                                                               \
-                                                                                                                        \
             return instance->##FuncName##(args...);                                                                     \
         }                                                                                                               \
                                                                                                                         \
