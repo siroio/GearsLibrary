@@ -1,5 +1,5 @@
 #ifndef GEARS_ISYSTEM_H
-#define GEARS_ISYTEM_H
+#define GEARS_ISYSTEM_H
 
 namespace GLib::Internal::Interface
 {

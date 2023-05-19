@@ -3,6 +3,7 @@
 #include <d3d12.h>
 #include <Internal/ISystem.h>
 #include <SystemManager.h>
+#include <GameObjectManager.h>
 
 namespace
 {
@@ -50,6 +51,7 @@ int Game::Run()
 void Game::AddSystem()
 {
     SystemManager::AddSystem<TestManager>();
+    SystemManager::AddSystem<GameObjectManager>();
 }
 
 bool Game::Initialize()

@@ -3,22 +3,22 @@
 
 bool SystemManager::Initialize()
 {
-    auto& initilizeFunctions = systemFunctions[FunctionType::Initialize];
+    auto& initilizeFunctions = systemFunctions_[FunctionType::Initialize];
     std::sort(initilizeFunctions.begin(), initilizeFunctions.end(), [](const FunctionVariant& lhs, const FunctionVariant& rhs)
     {
         return std::get<1>(lhs)->Order() < std::get<1>(rhs)->Order();
     });
 
-    for (const auto& initFunc : systemFunctions[FunctionType::Initialize])
+    for (const auto& initFunc : systemFunctions_[FunctionType::Initialize])
     {
         const auto& func = std::get<1>(initFunc);
         if (!func) return false;
         func->Call();
     }
 
-    systemFunctions.erase(FunctionType::Initialize);
+    systemFunctions_.erase(FunctionType::Initialize);
 
-    for (auto& [type, funcList] : systemFunctions)
+    for (auto& [type, funcList] : systemFunctions_)
     {
         std::sort(funcList.begin(), funcList.end(), [](const FunctionVariant& lhs, const FunctionVariant& rhs)
         {
@@ -61,7 +61,7 @@ void SystemManager::Finalize()
 
 void SystemManager::Execute(FunctionType type)
 {
-    for (const auto& func : systemFunctions[type])
+    for (const auto& func : systemFunctions_[type])
     {
         if (func.index() != 0) continue;
         std::get<0>(func)->Call();

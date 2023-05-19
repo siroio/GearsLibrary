@@ -7,7 +7,7 @@
 
 namespace GLib::Utility
 {
-    template<typename T>
+    template<class T>
     class SingletonPtr
     {
     private:
@@ -45,7 +45,7 @@ namespace GLib::Utility
         }
     };
 
-    template<typename T>
+    template<class T>
     class Singleton
     {
     private:

@@ -12,11 +12,11 @@ HAS_FUNCTION(##FuncName##)                                                      
 namespace GLib::Internal::Function                                                                                      \
 {                                                                                                                       \
                                                                                                                         \
-    template<typename T, typename ReturnType, typename... Args>                                                         \
+    template<class T, class ReturnType, class... Args>                                                         \
     class Has##FuncName##Object : public Interface::IOrderFunc<ReturnType, Args...>                                     \
     {                                                                                                                   \
     public:                                                                                                             \
-        Has##FuncName##Object(const Utility::WeakPtr<T>&ptr) : instance{ ptr }                                          \
+        Has##FuncName##Object(const Utility::WeakPtr<T>&ptr) : instance_{ ptr }                                         \
         {}                                                                                                              \
                                                                                                                         \
         virtual ReturnType Call(const Args&... args) override                                                           \
@@ -26,43 +26,43 @@ namespace GLib::Internal::Function                                              
                                                                                                                         \
         virtual bool IsDelete() override                                                                                \
         {                                                                                                               \
-            return instance.expired();                                                                                  \
+            return instance_.expired();                                                                                 \
         }                                                                                                               \
                                                                                                                         \
         virtual int Order() override                                                                                    \
         {                                                                                                               \
-            return FUNC_ORDER(instance.get().get());                                                                    \
+            return FuncOrder(instance_.get().get());                                                                    \
         }                                                                                                               \
                                                                                                                         \
     private:                                                                                                            \
-        template<typename U = T> requires Has##FuncName##Func<U, ReturnType, Args...>                                   \
+        template<class U = T> requires Has##FuncName##Func<U, ReturnType, Args...>                                   \
         ReturnType Run(const Args&... args)                                                                             \
         {                                                                                                               \
-            return instance->##FuncName##(args...);                                                                     \
+            return instance_->##FuncName##(args...);                                                                    \
         }                                                                                                               \
                                                                                                                         \
-        template<typename U = T> requires !Has##FuncName##Func<U, ReturnType, Args...>                                  \
+        template<class U = T> requires !Has##FuncName##Func<U, ReturnType, Args...>                                  \
         ReturnType Run(...)                                                                                             \
         {                                                                                                               \
             return ReturnType{};                                                                                        \
         }                                                                                                               \
                                                                                                                         \
-        template<typename U = T> requires !Has##FuncName##Func<U, ReturnType, Args...> && !std::is_void_v<ReturnType>   \
+        template<class U = T> requires !Has##FuncName##Func<U, ReturnType, Args...> && !std::is_void_v<ReturnType>   \
         ReturnType Run(...)                                                                                             \
         {}                                                                                                              \
                                                                                                                         \
-        template<typename U = T> requires std::derived_from<U, Interface::I##FuncName##Order>                           \
-        int FUNC_ORDER(U* self)                                                                                         \
+        template<class U = T> requires std::derived_from<U, Interface::I##FuncName##Order>                           \
+        int FuncOrder(U* self)                                                                                          \
         {                                                                                                               \
             return self->##FuncName##Order();                                                                           \
         }                                                                                                               \
-        int FUNC_ORDER(...)                                                                                             \
+        int FuncOrder(...)                                                                                              \
         {                                                                                                               \
             return 0;                                                                                                   \
         }                                                                                                               \
                                                                                                                         \
     private:                                                                                                            \
-        Utility::WeakPtr<T> instance{ nullptr };                                                                        \
+        Utility::WeakPtr<T> instance_{ nullptr };                                                                       \
     };                                                                                                                  \
 }                                                                                                                       \
 

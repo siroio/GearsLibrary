@@ -5,22 +5,23 @@
 #include <Game.h>
 #include <WeakPtr.h>
 #include <cassert>
-
+#include <GameObjectManager.h>
+#include <FuncOrderDefinition.h>
+#include <Internal/IOrderFunc.h>
+#include <FuncDefinition.h>
 using namespace std;
+using namespace GLib;
 
 class MyClass : public Game
 {
     virtual void Start() override
-    {
-        cout << "START" << endl;
-    }
+    {}
 
     virtual void End() override
     {
         cout << "END" << endl;
     }
 };
-
 
 auto main() -> int
 {

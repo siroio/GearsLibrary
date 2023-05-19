@@ -11,22 +11,21 @@ namespace GLib::Internal                                                \
         {                                                               \
         protected:                                                      \
             I##FuncName##Order() = default;                             \
-            ~I##FuncName##Order() = default;                            \
+            virtual ~I##FuncName##Order() = default;                    \
         public:                                                         \
             virtual int FuncName##Order() = 0;                          \
         };                                                              \
-                                                                        \
     }                                                                   \
                                                                         \
     namespace Function                                                  \
     {                                                                   \
-        template<int Order>                                             \
-        class FuncName##Order : public Interface::I##FuncName##Order    \
+        template<int order>                                             \
+        class FuncName##SetOrder : public Interface::I##FuncName##Order \
         {                                                               \
         public:                                                         \
             virtual int FuncName##Order() override                      \
             {                                                           \
-                return Order;                                           \
+                return order;                                           \
             }                                                           \
         };                                                              \
     }                                                                   \

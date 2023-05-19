@@ -11,6 +11,7 @@ project(GearsLibrary
 # == CONFIG ==
 set(LIBRARY 
     GearsCore
+    GearsObject
     GearsComponent
     GearsMath 
     GearsUtility
@@ -21,6 +22,7 @@ set(LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Lib)
 
 add_executable(GearsLibrary main.cpp)
 add_subdirectory(./GearsCore)
+add_subdirectory(./GearsObject)
 add_subdirectory(./GearsComponent)
 add_subdirectory(./GearsMath)
 add_subdirectory(./GearsUtility)
