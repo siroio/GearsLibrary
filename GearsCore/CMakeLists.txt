@@ -8,11 +8,11 @@ set(SOURCE_FOLDER
 
 set(HEADER_FOLDER
     ./include/Internal/IOrderFunc.h
-    ./include/Internal/FUNC_ORDER.h
+    ./include/Internal/FuncOrder.h
     ./include/Internal/HasFunction.h
     ./include/Internal/HasFunctionObject.h
     ./include/Internal/ISystem.h
-    ./include/FUNC_ORDERDefinition.h
+    ./include/FuncOrderDefinition.h
     ./include/FuncDefinition.h
     ./include/SystemManager.h
 	./include/Game.h

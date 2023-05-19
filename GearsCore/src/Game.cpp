@@ -7,6 +7,8 @@
 namespace
 {
     auto& systemManager = SystemManager::Instance();
+    using namespace GLib::Utility;
+    using namespace GLib::Internal;
 }
 
 class TestManager :
