@@ -26,7 +26,7 @@ public:
 
 int Game::Run()
 {
-    AddSystem();
+    RegisterSystem();
     if (!Initialize()) return -1;
 
     Start();
@@ -48,7 +48,7 @@ int Game::Run()
     return 0;
 }
 
-void Game::AddSystem()
+void Game::RegisterSystem()
 {
     SystemManager::AddSystem<TestManager>();
     SystemManager::AddSystem<GameObjectManager>();

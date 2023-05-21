@@ -5,7 +5,7 @@
 #include <Singleton.h>
 #include <FuncOrderDefinition.h>
 #include <GameObjectPtr.h>
-#include <list>
+#include <deque>
 #include <string_view>
 
 class GameObjectManager :
@@ -22,11 +22,11 @@ public:
     static GameObjectPtr CreateActor();
     static GameObjectPtr CreateActor(std::string_view name);
     static GameObjectPtr Find(std::string_view name);
-    static std::list<GameObjectPtr> FindGameObjectsWithTag(std::string_view tag);
+    static std::deque<GameObjectPtr> FindGameObjectsWithTag(std::string_view tag);
     static GameObjectPtr FindGameObjectWithTag(std::string_view tag);
 
 private:
-    static inline std::list<std::shared_ptr<GameObject>> gameObjects_;
+    static inline std::deque<std::shared_ptr<GameObject>> gameObjects_;
 };
 
 #endif // !GEARS_GAME_OBJECT_MANAGER_H

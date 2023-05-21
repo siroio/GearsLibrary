@@ -2,13 +2,20 @@
 #include <Internal/IGameObject.h>
 #include <GameObject.h>
 #include <WeakPtr.h>
+#include <algorithm>
+#include <iterator>
 
 void GameObjectManager::Update()
 {
-    gameObjects_.remove_if([](const std::shared_ptr<GameObject>& gameObject)
+    gameObjects_.erase(std::remove_if(gameObjects_.begin(), gameObjects_.end(), [](const std::shared_ptr<GameObject>& gameObject)
     {
-        return false;
-    });
+        return gameObject->IsDead();
+    }), gameObjects_.end());
+
+    for (const auto& gameObject : gameObjects_)
+    {
+        gameObject->RemoveDeadComponents();
+    }
 }
 
 void GameObjectManager::DebugDraw()
@@ -20,11 +27,17 @@ void GameObjectManager::Finalize()
 }
 
 void GameObjectManager::ResetActorList()
-{}
+{
+    for (const auto& gameObject : gameObjects_)
+    {
+        if (gameObject->DontDestroyOnLoad()) continue;
+        gameObject->Destroy();
+    }
+}
 
 GameObjectPtr GameObjectManager::CreateActor()
 {
-    return CreateActor("Game Object");
+    return CreateActor("GameObject");
 }
 
 GameObjectPtr GameObjectManager::CreateActor(std::string_view name)
@@ -38,18 +51,32 @@ GameObjectPtr GameObjectManager::CreateActor(std::string_view name)
 
 GameObjectPtr GameObjectManager::Find(std::string_view name)
 {
-    for (auto&& go : gameObjects_)
+    const auto& it = std::find_if(gameObjects_.begin(), gameObjects_.end(), [name](const std::shared_ptr<GameObject>& gameObject)
     {
-        return GameObjectPtr();
-    }
+        return gameObject->Name() == name;
+    });
+
+    return it != gameObjects_.end() ? GameObjectPtr{ *it } : GameObjectPtr{ nullptr };
 }
 
-std::list<GameObjectPtr> GameObjectManager::FindGameObjectsWithTag(std::string_view tag)
+std::deque<GameObjectPtr> GameObjectManager::FindGameObjectsWithTag(std::string_view tag)
 {
-    return std::list<GameObjectPtr>();
+    std::deque<GameObjectPtr> result;
+
+    std::copy_if(gameObjects_.begin(), gameObjects_.end(), std::back_inserter(result), [tag](const std::shared_ptr<GameObject>& gameObject)
+    {
+        return gameObject->Tag() == tag;
+    });
+
+    return result;
 }
 
 GameObjectPtr GameObjectManager::FindGameObjectWithTag(std::string_view tag)
 {
-    return GameObjectPtr();
+    const auto& it = std::find_if(gameObjects_.begin(), gameObjects_.end(), [tag](const std::shared_ptr<GameObject>& gameObject)
+    {
+        return gameObject->Tag() == tag;
+    });
+
+    return it != gameObjects_.end() ? GameObjectPtr{ *it } : GameObjectPtr{ nullptr };
 }

@@ -12,7 +12,7 @@ HAS_FUNCTION(##FuncName##)                                                      
 namespace GLib::Internal::Function                                                                                      \
 {                                                                                                                       \
                                                                                                                         \
-    template<class T, class ReturnType, class... Args>                                                         \
+    template<class T, class ReturnType, class... Args>                                                                  \
     class Has##FuncName##Object : public Interface::IOrderFunc<ReturnType, Args...>                                     \
     {                                                                                                                   \
     public:                                                                                                             \
@@ -35,23 +35,23 @@ namespace GLib::Internal::Function                                              
         }                                                                                                               \
                                                                                                                         \
     private:                                                                                                            \
-        template<class U = T> requires Has##FuncName##Func<U, ReturnType, Args...>                                   \
+        template<class U = T> requires Has##FuncName##Func<U, ReturnType, Args...>                                      \
         ReturnType Run(const Args&... args)                                                                             \
         {                                                                                                               \
             return instance_->##FuncName##(args...);                                                                    \
         }                                                                                                               \
                                                                                                                         \
-        template<class U = T> requires !Has##FuncName##Func<U, ReturnType, Args...>                                  \
+        template<class U = T> requires !Has##FuncName##Func<U, ReturnType, Args...>                                     \
         ReturnType Run(...)                                                                                             \
         {                                                                                                               \
             return ReturnType{};                                                                                        \
         }                                                                                                               \
                                                                                                                         \
-        template<class U = T> requires !Has##FuncName##Func<U, ReturnType, Args...> && !std::is_void_v<ReturnType>   \
+        template<class U = T> requires !Has##FuncName##Func<U, ReturnType, Args...> && !std::is_void_v<ReturnType>      \
         ReturnType Run(...)                                                                                             \
         {}                                                                                                              \
                                                                                                                         \
-        template<class U = T> requires std::derived_from<U, Interface::I##FuncName##Order>                           \
+        template<class U = T> requires std::derived_from<U, Interface::I##FuncName##Order>                              \
         int FuncOrder(U* self)                                                                                          \
         {                                                                                                               \
             return self->##FuncName##Order();                                                                           \

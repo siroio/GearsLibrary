@@ -54,7 +54,7 @@ namespace GLib::Utility
             return ptr_.expired();
         }
 
-        std::uintptr_t getId()
+        std::uintptr_t getId() const
         {
             return reinterpret_cast<std::uintptr_t>(get().get());
         }

@@ -6,7 +6,7 @@
 #define HAS_FUNCTION(FuncName)                                          \
 namespace GLib::Internal                                                \
 {                                                                       \
-    template<class T, class ReturnType = void, class... Args>  \
+    template<class T, class ReturnType = void, class... Args>           \
     concept Has##FuncName##Func = requires (T* t, Args... args)         \
     {                                                                   \
         {                                                               \

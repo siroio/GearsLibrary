@@ -7,7 +7,7 @@ namespace GLib::Internal::Interface
     {
     protected:
         IGameObject() = default;
-        ~IGameObject() = default;
+        virtual ~IGameObject() = default;
 
     public:
         virtual void Initialize() = 0;

@@ -17,7 +17,7 @@ public:
         isExit = true;
     }
 private:
-    void AddSystem();
+    void RegisterSystem();
     bool Initialize();
     void Update();
     void Draw();
