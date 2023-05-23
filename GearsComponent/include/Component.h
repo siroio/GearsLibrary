@@ -17,7 +17,7 @@ public:
     void Active(bool active);
     const GameObjectPtr& GameObject() const;
     void Destroy();
-    bool IsDead();
+    bool IsDead() const;
 
 private:
     virtual void SetGameObject(const GameObjectPtr& gameObject) override;

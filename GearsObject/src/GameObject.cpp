@@ -1,4 +1,5 @@
 #include <GameObject.h>
+#include <Component.h>
 #include <Transform.h>
 
 GameObject::GameObject(std::string_view name) : name_{ name }
@@ -23,13 +24,28 @@ void GameObject::Initialize()
 {}
 
 void GameObject::RemoveComponents()
-{}
+{
+    components_.clear();
+}
 
 void GameObject::RemoveDeadComponents()
-{}
+{
+    std::erase_if(components_, [](const GLib::Utility::WeakPtr<Component>& component)
+    {
+        return component->IsDead();
+    });
+}
 
 void GameObject::Destroy()
-{}
+{
+    isActive_ = false;
+    isDead_ = true;
+
+    for (const auto& component : components_)
+    {
+        component->Destroy();
+    }
+}
 
 bool GameObject::DontDestroyOnLoad() const
 {

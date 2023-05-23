@@ -1,6 +1,9 @@
 #include <Internal/ComponentFunctionList.h>
 #include <Component.h>
 
+class CameraBase
+{};
+
 void GLib::Internal::ComponentFunctionList::Update()
 {
     for (auto it = addedFunction_.begin(); it != addedFunction_.end();)
@@ -27,7 +30,6 @@ void GLib::Internal::ComponentFunctionList::Update()
             it = addedFunction_.erase(it);
             return;
         }
-
         ++it;
     }
 }
@@ -62,7 +64,7 @@ void GLib::Internal::ComponentFunctionList::ExecuteClear(FunctionType type, cons
 
 void GLib::Internal::ComponentFunctionList::Remove(FunctionType type)
 {
-    std::remove_if(functions_[type].begin(), functions_[type].end(), [](const auto& variant)
+    std::erase_if(functions_[type], [](const auto& variant)
     {
         return std::visit([&variant](auto& v)
         {

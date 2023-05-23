@@ -6,6 +6,7 @@
 #include <memory>
 #include <deque>
 #include <Internal/IGameObject.h>
+#include <Internal/ComponentManager.h>
 #include <GameObjectManager.h>
 
 class Component;
@@ -86,13 +87,21 @@ private:
 template<class T, class... Args> requires IsComponent<T>
 inline GLib::Utility::WeakPtr<T> GameObject::AddComponent(Args&& ...args)
 {
-    return GLib::Utility::WeakPtr<T>();
+    auto component = GLib::Internal::ComponentManager::Instance()->AddComponent<T>(weak_from_this(), args...);
+    components_.push_back(component);
+    return GLib::Utility::WeakPtr<T>(component);
 }
 
 template<class T> requires IsComponent<T>
 inline GLib::Utility::WeakPtr<T> GameObject::GetComponent() const
 {
-    return GLib::Utility::WeakPtr<T>();
+    for (const auto& component : components_)
+    {
+        if (typeid(T) != typeid(*(component.get()))) continue;
+        return GLib::Utility::WeakPtr<T>(std::dynamic_pointer_cast<T>(component));
+    }
+
+    return GLib::Utility::WeakPtr<T>{ nullptr };
 }
 
 template<class T> requires IsComponent<T>
@@ -110,7 +119,8 @@ inline GLib::Utility::WeakPtr<T> GameObject::GetComponentInParent() const
 template<class T> requires IsComponent<T>
 inline std::deque<GLib::Utility::WeakPtr<T>> GameObject::GetComponents() const
 {
-    return std::list<GLib::Utility::WeakPtr<T>>();
+    std::deque<GLib::Utility::WeakPtr<T>> result;
+    std::ranges::copy_if();
 }
 
 template<class T> requires IsComponent<T>

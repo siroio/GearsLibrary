@@ -82,7 +82,7 @@ namespace GLib::Internal
             const auto& info = std::get<index>(variant);
             if (info.component->Active())
             {
-                info.function->Call(arg...);
+                info.function->Call(args...);
             }
         }
     }
@@ -92,7 +92,7 @@ namespace GLib::Internal
     {
         addedFunction_.push_back({
                 FunctionType::Start,
-                FunctionInfo<void>{ component, std::make_shared<Function::HasStartObject<T, void>>{ component } }
+                FunctionInfo<void>{ component, std::make_shared<Function::HasStartObject<T, void>>(component) }
             });
     }
 
@@ -101,7 +101,7 @@ namespace GLib::Internal
     {
         addedFunction_.push_back({
                 FunctionType::Update,
-                FunctionInfo<void>{ component, std::make_shared<Function::HasUpdateObject<T, void>>{ component } }
+                FunctionInfo<void>{ component, std::make_shared<Function::HasUpdateObject<T, void>>(component) }
             });
     }
 
@@ -110,7 +110,7 @@ namespace GLib::Internal
     {
         addedFunction_.push_back({
                 FunctionType::LateUpdate,
-                FunctionInfo<void>{ component, std::make_shared<Function::HasLateUpdateObject<T, void>>{ component } }
+                FunctionInfo<void>{ component, std::make_shared<Function::HasLateUpdateObject<T, void>>(component) }
             });
     }
 }

@@ -7,10 +7,10 @@
 
 void GameObjectManager::Update()
 {
-    gameObjects_.erase(std::remove_if(gameObjects_.begin(), gameObjects_.end(), [](const std::shared_ptr<GameObject>& gameObject)
+    std::erase_if(gameObjects_, [](const std::shared_ptr<GameObject>& gameObject)
     {
         return gameObject->IsDead();
-    }), gameObjects_.end());
+    });
 
     for (const auto& gameObject : gameObjects_)
     {
