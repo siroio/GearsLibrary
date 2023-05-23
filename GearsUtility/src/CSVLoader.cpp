@@ -2,10 +2,9 @@
 
 #include <vector>
 #include <fstream>
-#include <string>
 #include <StringUtility.h>
 
-CSVLoader::CSVLoader(const char* path)
+CSVLoader::CSVLoader(std::string_view path)
 {
     this->path = path;
 }
@@ -13,7 +12,7 @@ CSVLoader::CSVLoader(const char* path)
 CSVLoader::~CSVLoader()
 {}
 
-std::vector<std::vector<std::string>> CSVLoader::Load()
+std::vector<std::vector<std::string>> CSVLoader::Load() noexcept(false)
 {
     std::ifstream file(path);
     if (!file.is_open())
@@ -21,7 +20,7 @@ std::vector<std::vector<std::string>> CSVLoader::Load()
         throw std::runtime_error("failed to open file: " + path);
     }
 
-    std::vector<std::vector<std::string>> result;
+    strings result;
     std::string line;
     while (std::getline(file, line))
     {

@@ -4,7 +4,6 @@
 #include <string_view>
 #include <string>
 #include <vector>
-#include <memory>
 
 namespace GLib::Utility
 {
@@ -13,7 +12,7 @@ namespace GLib::Utility
     * @param str •¶š—ñ
     * @param delim ‹æØ‚è•¶š
     */
-    static std::vector<std::string> Split(std::string_view str, char delim)
+    static constexpr std::vector<std::string> Split(std::string_view str, char delim)
     {
 
         std::vector<std::string> tokens;

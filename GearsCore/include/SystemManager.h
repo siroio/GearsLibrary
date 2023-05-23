@@ -3,6 +3,7 @@
 #include <iostream>
 #include <Singleton.h>
 #include <Internal/IFunc.h>
+#include <Internal/SystemFunctionType.h>
 #include <FuncDefinition.h>
 #include <unordered_map>
 #include <vector>
@@ -25,17 +26,6 @@ class SystemManager : public GLib::Utility::Singleton<SystemManager>
         std::shared_ptr<GLib::Internal::Interface::IFunc<void>>,
         std::shared_ptr<GLib::Internal::Interface::IFunc<bool>>>;
 
-    enum class FunctionType
-    {
-        Initialize,
-        Update,
-        BeginDraw,
-        Draw,
-        DebugDraw,
-        EndDraw,
-        Finalize,
-    };
-
 public:
     bool Initialize();
     void Update();
@@ -52,107 +42,100 @@ public:
     {}
 
 private:
-    void Execute(FunctionType type);
+    void Execute(SystemFunctionType type);
 
     template<class T> requires GLib::Internal::HasInitializeFunc<T, bool>
     void AddInitialize(const GLib::Utility::WeakPtr<T>& instance);
-    template<class T>
     void AddInitialize(...)
     {}
 
-    template<class T> requires GLib::Internal::HasUpdateFunc<T>
+    template<class T> requires GLib::Internal::HasUpdateFunc<T, void>
     void AddUpdate(const GLib::Utility::WeakPtr<T>& instance);
-    template<class T>
     void AddUpdate(...)
     {}
 
-    template<class T> requires GLib::Internal::HasBeginDrawFunc<T>
+    template<class T> requires GLib::Internal::HasBeginDrawFunc<T, void>
     void AddBeginDraw(const GLib::Utility::WeakPtr<T>& instance);
-    template<class T>
     void AddBeginDraw(...)
     {}
 
-    template<class T> requires GLib::Internal::HasDrawFunc<T>
+    template<class T> requires GLib::Internal::HasDrawFunc<T, void>
     void AddDraw(const GLib::Utility::WeakPtr<T>& instance);
-    template<class T>
     void AddDraw(...)
     {}
 
-    template<class T> requires GLib::Internal::HasDebugDrawFunc<T>
+    template<class T> requires GLib::Internal::HasDebugDrawFunc<T, void>
     void AddDebugDraw(const GLib::Utility::WeakPtr<T>& instance);
-    template<class T>
     void AddDebugDraw(...)
     {}
 
-    template<class T> requires GLib::Internal::HasEndDrawFunc<T>
+    template<class T> requires GLib::Internal::HasEndDrawFunc<T, void>
     void AddEndDraw(const GLib::Utility::WeakPtr<T>& instance);
-    template<class T>
     void AddEndDraw(...)
     {}
 
-    template<class T> requires GLib::Internal::HasFinalizeFunc<T>
+    template<class T> requires GLib::Internal::HasFinalizeFunc<T, void>
     void AddFinalize(const GLib::Utility::WeakPtr<T>& instance);
-    template<class T>
     void AddFinalize(...)
     {}
 
 private:
-    std::unordered_map<FunctionType, std::vector<FunctionVariant>> systemFunctions_;
+    std::unordered_map<SystemFunctionType, std::vector<FunctionVariant>> systemFunctions_;
 };
 
 template<class T> requires HasSingletonSystem<T>
 inline void SystemManager::AddSystem()
 {
     GLib::Utility::WeakPtr<T> instance = T::Instance();
-    Instance().AddInitialize<T>(instance);
-    Instance().AddUpdate<T>(instance);
-    Instance().AddBeginDraw<T>(instance);
-    Instance().AddDraw<T>(instance);
-    Instance().AddDebugDraw<T>(instance);
-    Instance().AddEndDraw<T>(instance);
-    Instance().AddFinalize<T>(instance);
+    Instance().AddInitialize(instance);
+    Instance().AddUpdate(instance);
+    Instance().AddBeginDraw(instance);
+    Instance().AddDraw(instance);
+    Instance().AddDebugDraw(instance);
+    Instance().AddEndDraw(instance);
+    Instance().AddFinalize(instance);
 }
 
 template<class T> requires GLib::Internal::HasInitializeFunc<T, bool>
 inline void SystemManager::AddInitialize(const GLib::Utility::WeakPtr<T>& instance)
 {
-    systemFunctions_[FunctionType::Initialize].push_back(std::make_shared<GLib::Internal::Function::HasInitializeObject<T, bool>>(instance));
+    systemFunctions_[SystemFunctionType::Initialize].push_back(std::make_shared<GLib::Internal::Function::HasInitializeObject<T, bool>>(instance));
 }
 
-template<class T> requires GLib::Internal::HasUpdateFunc<T>
+template<class T> requires GLib::Internal::HasUpdateFunc<T, void>
 inline void SystemManager::AddUpdate(const GLib::Utility::WeakPtr<T>& instance)
 {
-    systemFunctions_[FunctionType::Update].push_back(std::make_shared<GLib::Internal::Function::HasUpdateObject<T, void>>(instance));
+    systemFunctions_[SystemFunctionType::Update].push_back(std::make_shared<GLib::Internal::Function::HasUpdateObject<T, void>>(instance));
 }
 
-template<class T> requires GLib::Internal::HasBeginDrawFunc<T>
+template<class T> requires GLib::Internal::HasBeginDrawFunc<T, void>
 inline void SystemManager::AddBeginDraw(const GLib::Utility::WeakPtr<T>& instance)
 {
-    systemFunctions_[FunctionType::BeginDraw].push_back(std::make_shared<GLib::Internal::Function::HasBeginDrawObject<T, void>>(instance));
+    systemFunctions_[SystemFunctionType::BeginDraw].push_back(std::make_shared<GLib::Internal::Function::HasBeginDrawObject<T, void>>(instance));
 }
 
-template<class T> requires GLib::Internal::HasDrawFunc<T>
+template<class T> requires GLib::Internal::HasDrawFunc<T, void>
 inline void SystemManager::AddDraw(const GLib::Utility::WeakPtr<T>& instance)
 {
-    systemFunctions_[FunctionType::Draw].push_back(std::make_shared<GLib::Internal::Function::HasDrawObject<T, void>>(instance));
+    systemFunctions_[SystemFunctionType::Draw].push_back(std::make_shared<GLib::Internal::Function::HasDrawObject<T, void>>(instance));
 }
 
-template<class T> requires GLib::Internal::HasDebugDrawFunc<T>
+template<class T> requires GLib::Internal::HasDebugDrawFunc<T, void>
 inline void SystemManager::AddDebugDraw(const GLib::Utility::WeakPtr<T>& instance)
 {
-    systemFunctions_[FunctionType::DebugDraw].push_back(std::make_shared<GLib::Internal::Function::HasDebugDrawObject<T, void>>(instance));
+    systemFunctions_[SystemFunctionType::DebugDraw].push_back(std::make_shared<GLib::Internal::Function::HasDebugDrawObject<T, void>>(instance));
 }
 
-template<class T> requires GLib::Internal::HasEndDrawFunc<T>
+template<class T> requires GLib::Internal::HasEndDrawFunc<T, void>
 inline void SystemManager::AddEndDraw(const GLib::Utility::WeakPtr<T>& instance)
 {
-    systemFunctions_[FunctionType::EndDraw].push_back(std::make_shared<GLib::Internal::Function::HasEndDrawObject<T, void>>(instance));
+    systemFunctions_[SystemFunctionType::EndDraw].push_back(std::make_shared<GLib::Internal::Function::HasEndDrawObject<T, void>>(instance));
 }
 
-template<class T> requires GLib::Internal::HasFinalizeFunc<T>
+template<class T> requires GLib::Internal::HasFinalizeFunc<T, void>
 inline void SystemManager::AddFinalize(const GLib::Utility::WeakPtr<T>& instance)
 {
-    systemFunctions_[FunctionType::Finalize].push_back(std::make_shared<GLib::Internal::Function::HasFinalizeObject<T, void>>(instance));
+    systemFunctions_[SystemFunctionType::Finalize].push_back(std::make_shared<GLib::Internal::Function::HasFinalizeObject<T, void>>(instance));
 }
 
 #endif // !GEARS_SYSTEMMNAGER_H

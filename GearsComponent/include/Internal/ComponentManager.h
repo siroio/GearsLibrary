@@ -48,6 +48,7 @@ namespace GLib::Internal
     template<class ...Args>
     inline void ComponentManager::ExecuteNormalFunction()
     {}
+
     template<class ...Args>
     inline void ComponentManager::ExecuteEventFunction()
     {}

@@ -59,12 +59,12 @@ namespace GLib::Utility
             return reinterpret_cast<std::uintptr_t>(get().get());
         }
 
-        std::shared_ptr<T> operator -> ()
+        std::shared_ptr<T> operator -> () const
         {
             return get();
         }
 
-        T& operator * ()
+        T& operator * () const
         {
             return *get();
         }

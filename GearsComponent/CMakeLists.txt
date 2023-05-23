@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.1)
 
 # == CONFIG ==
 set(SOURCE_FOLDER 
+    ./src/Internal/ComponentFunctionList.cpp
 	./src/Internal/ComponentManager.cpp
     ./src/Component.cpp
     ./src/Transform.cpp
