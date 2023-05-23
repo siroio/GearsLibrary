@@ -9,6 +9,8 @@ set(SOURCE_FOLDER
 
 set(HEADER_FOLDER 
     ./include/Internal/IComponent.h
+    ./include/Internal/ComponentFunctionInfo.h
+    ./include/Internal/ComponentFunctionList.h
     ./include/Internal/ComponentFunctionType.h
     ./include/Internal/ComponentManager.h
     ./include/Component.h

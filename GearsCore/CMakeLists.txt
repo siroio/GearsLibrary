@@ -7,7 +7,7 @@ set(SOURCE_FOLDER
 )
 
 set(HEADER_FOLDER
-    ./include/Internal/IOrderFunc.h
+    ./include/Internal/IFunc.h
     ./include/Internal/FuncOrder.h
     ./include/Internal/HasFunction.h
     ./include/Internal/HasFunctionObject.h

@@ -1,7 +1,7 @@
 #ifndef GEARS_FUNC_ORDER_H
 #define GEARS_FUNC_ORDER_H
 
-#define FUNC_ORDER(FuncName)                                             \
+#define FUNC_ORDER(FuncName)                                            \
                                                                         \
 namespace GLib::Internal                                                \
 {                                                                       \

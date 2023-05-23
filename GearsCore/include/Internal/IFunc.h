@@ -4,10 +4,10 @@
 namespace GLib::Internal::Interface
 {
     template<class ReturnType, class... Args>
-    class IOrderFunc
+    class IFunc
     {
     protected:
-        virtual ~IOrderFunc() = default;
+        virtual ~IFunc() = default;
     public:
         virtual ReturnType Call(const Args&... args) = 0;
         virtual bool IsDelete() = 0;

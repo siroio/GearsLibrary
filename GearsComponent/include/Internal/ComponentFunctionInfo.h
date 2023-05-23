@@ -1,0 +1,9 @@
+#ifndef GEARS_COMPONENT_FUNCTION_INFO_H
+#define GEARS_COMPONENT_FUNCTION_INFO_H
+
+namespace GLib::Internal
+{
+
+}
+
+#endif // !GEARS_COMPONENT_FUNCTION_INFO_H

@@ -2,7 +2,7 @@
 #define GEARS_HAS_FUNCTION_OBJECT_H
 
 #include <Internal/HasFunction.h>
-#include <Internal/IOrderFunc.h>
+#include <Internal/IFunc.h>
 #include <WeakPtr.h>
 
 #define HAS_FUNC_OBJECT(FuncName)                                                                                       \
@@ -13,7 +13,7 @@ namespace GLib::Internal::Function                                              
 {                                                                                                                       \
                                                                                                                         \
     template<class T, class ReturnType, class... Args>                                                                  \
-    class Has##FuncName##Object : public Interface::IOrderFunc<ReturnType, Args...>                                     \
+    class Has##FuncName##Object : public Interface::IFunc<ReturnType, Args...>                                     \
     {                                                                                                                   \
     public:                                                                                                             \
         Has##FuncName##Object(const Utility::WeakPtr<T>&ptr) : instance_{ ptr }                                         \

@@ -2,7 +2,7 @@
 #define GEARS_SYSTEMMANAGER_H
 #include <iostream>
 #include <Singleton.h>
-#include <Internal/IOrderFunc.h>
+#include <Internal/IFunc.h>
 #include <FuncDefinition.h>
 #include <unordered_map>
 #include <vector>
@@ -22,8 +22,8 @@ std::derived_from<T, GLib::Utility::SingletonPtr<T>>;
 class SystemManager : public GLib::Utility::Singleton<SystemManager>
 {
     using FunctionVariant = std::variant<
-        std::shared_ptr<GLib::Internal::Interface::IOrderFunc<void>>,
-        std::shared_ptr<GLib::Internal::Interface::IOrderFunc<bool>>>;
+        std::shared_ptr<GLib::Internal::Interface::IFunc<void>>,
+        std::shared_ptr<GLib::Internal::Interface::IFunc<bool>>>;
 
     enum class FunctionType
     {

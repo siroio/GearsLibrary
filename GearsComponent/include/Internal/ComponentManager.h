@@ -44,6 +44,13 @@ namespace GLib::Internal
 
         return component;
     }
+
+    template<class ...Args>
+    inline void ComponentManager::ExecuteNormalFunction()
+    {}
+    template<class ...Args>
+    inline void ComponentManager::ExecuteEventFunction()
+    {}
 }
 
 #endif // !GEARS_COMPONENT_H

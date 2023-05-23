@@ -67,4 +67,6 @@ bool GameObject::IsDead() const
 }
 
 const GLib::Utility::WeakPtr<Transform>& GameObject::Transform() const
-{}
+{
+    return transform_;
+}

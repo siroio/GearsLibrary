@@ -7,7 +7,7 @@
 #include <cassert>
 #include <GameObjectManager.h>
 #include <FuncOrderDefinition.h>
-#include <Internal/IOrderFunc.h>
+#include <Internal/IFunc.h>
 #include <FuncDefinition.h>
 using namespace std;
 using namespace GLib;

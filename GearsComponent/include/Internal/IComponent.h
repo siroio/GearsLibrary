@@ -3,8 +3,11 @@
 
 class GameObject;
 
-template<class T>
-class WeakPtr;
+namespace GLib::Utility
+{
+    template<class T>
+    class WeakPtr;
+}
 
 namespace GLib::Internal::Interface
 {
