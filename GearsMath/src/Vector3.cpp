@@ -58,6 +58,15 @@ Vector3 Vector3::Right()
     return Vector3{ 1.0f, 0.0, 0.0f };
 }
 
+Vector3 Vector3::Divide(const Vector3& v1, const Vector3 v2, float threshold)
+{
+    return Vector3{
+        Mathf::Abs(v2.x) <= threshold ? 0.0f : v1.x / v2.x,
+        Mathf::Abs(v2.y) <= threshold ? 0.0f : v1.y / v2.y,
+        Mathf::Abs(v2.z) <= threshold ? 0.0f : v1.z / v2.z
+    };
+}
+
 float Vector3::Dot(const Vector3& v1, const Vector3& v2)
 {
     return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;

@@ -3,6 +3,7 @@
 
 #include <Internal/ISystem.h>
 #include <Internal/IComponent.h>
+#include <Internal/ComponentFunctionList.h>
 #include <Singleton.h>
 #include <GameObjectPtr.h>
 
@@ -25,17 +26,17 @@ namespace GLib::Internal
         std::shared_ptr<ComponentType> AddComponent(const GameObjectPtr& gameObject, Args&&... args);
 
         template<class... Args>
-        void ExecuteNormalFunction();
+        void ExecuteNormalFunction(ComponentFunctionType type, Args&&... args);
 
         template<class... Args>
         void ExecuteEventFunction();
 
     private:
-
+        ComponentFunctionList normalFunction_;
     };
 
     template<class ComponentType, class ...Args>
-    inline std::shared_ptr<ComponentType> ComponentManager::AddComponent(const GameObjectPtr& gameObject, Args && ...args)
+    inline std::shared_ptr<ComponentType> ComponentManager::AddComponent(const GameObjectPtr& gameObject, Args&& ...args)
     {
         auto component = std::make_shared<ComponentType>(args...);
         std::static_pointer_cast<Interface::IComponent>(component)->SetGameObject(gameObject);
@@ -46,8 +47,10 @@ namespace GLib::Internal
     }
 
     template<class ...Args>
-    inline void ComponentManager::ExecuteNormalFunction()
-    {}
+    inline void ComponentManager::ExecuteNormalFunction(ComponentFunctionType type, Args&&... args)
+    {
+        normalFunction_.Execute(type, args);
+    }
 
     template<class ...Args>
     inline void ComponentManager::ExecuteEventFunction()

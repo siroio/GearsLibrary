@@ -5,7 +5,7 @@ set(SOURCE_FOLDER
     ./src/Internal/ComponentFunctionList.cpp
 	./src/Internal/ComponentManager.cpp
     ./src/Component.cpp
-    ./src/Transform.cpp
+    ./src/Components/Transform.cpp
 )
 
 set(HEADER_FOLDER 
@@ -15,7 +15,7 @@ set(HEADER_FOLDER
     ./include/Internal/ComponentFunctionType.h
     ./include/Internal/ComponentManager.h
     ./include/Component.h
-    ./include/Transform.h
+    ./include/Components/Transform.h
 )
 
 set(LIB_NAME GearsComponent)

@@ -1,5 +1,6 @@
 #ifndef GEARS_SYSTEMMANAGER_H
 #define GEARS_SYSTEMMANAGER_H
+
 #include <iostream>
 #include <Singleton.h>
 #include <Internal/IFunc.h>

@@ -7,6 +7,9 @@
 
 namespace GLib::Utility
 {
+    /**
+     * @brief ポインタ版Singleton
+     */
     template<class T>
     class SingletonPtr
     {
@@ -25,6 +28,9 @@ namespace GLib::Utility
         SingletonPtr& operator=(SingletonPtr&&) = delete;
 
     public:
+        /**
+         * @brief インスタンスの取得
+         */
         static inline WeakPtr<T> Instance()
         {
             std::scoped_lock lock(singleton_mutex);
@@ -35,6 +41,9 @@ namespace GLib::Utility
             return WeakPtr<T>{ instance };
         }
 
+        /**
+         * @brief インスタンスの解放
+         */
         static inline void Release()
         {
             std::scoped_lock lock(singleton_mutex);
@@ -45,6 +54,9 @@ namespace GLib::Utility
         }
     };
 
+    /**
+     * @brief 通常のSingletonクラス
+     */
     template<class T>
     class Singleton
     {
@@ -62,6 +74,9 @@ namespace GLib::Utility
         Singleton& operator=(Singleton&&) = delete;
 
     public:
+        /**
+         * @brief インスタンスの取得
+         */
         static inline T& Instance()
         {
             std::scoped_lock lock(singleton_mutex);

@@ -1,6 +1,6 @@
 #include <GameObject.h>
 #include <Component.h>
-#include <Transform.h>
+#include <Components/Transform.h>
 
 GameObject::GameObject(std::string_view name) : name_{ name }
 {}
@@ -8,16 +8,6 @@ GameObject::GameObject(std::string_view name) : name_{ name }
 GameObject::~GameObject()
 {
     RemoveComponents();
-}
-
-bool GameObject::IsAcive() const
-{
-    return isActive_;
-}
-
-void GameObject::Active(bool active)
-{
-    isActive_ = active;
 }
 
 void GameObject::Initialize()
@@ -56,6 +46,17 @@ void GameObject::DontDestroyOnLoad(bool dontDestroyOnLoad)
 {
     isDontDestroyOnLoad_ = dontDestroyOnLoad;
 }
+
+bool GameObject::Active() const
+{
+    return isActive_;
+}
+
+void GameObject::Active(bool active)
+{
+    isActive_ = active;
+}
+
 
 void GameObject::Name(std::string_view name)
 {

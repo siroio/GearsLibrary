@@ -3,6 +3,7 @@
 
 #include <concepts>
 #include <string_view>
+#include <algorithm>
 #include <memory>
 #include <deque>
 #include <Internal/IGameObject.h>
@@ -32,10 +33,6 @@ public:
     explicit GameObject(std::string_view name);
 
     ~GameObject();
-
-    bool IsAcive() const;
-
-    void Active(bool active);
 
     template<class T, class... Args> requires IsComponent<T>
     GLib::Utility::WeakPtr<T> AddComponent(Args&&... args);
@@ -67,6 +64,10 @@ public:
     bool DontDestroyOnLoad() const;
 
     void DontDestroyOnLoad(bool dontDestroyOnLoad);
+
+    bool Active() const;
+
+    void Active(bool active);
 
     void Name(std::string_view name);
 
@@ -120,7 +121,12 @@ template<class T> requires IsComponent<T>
 inline std::deque<GLib::Utility::WeakPtr<T>> GameObject::GetComponents() const
 {
     std::deque<GLib::Utility::WeakPtr<T>> result;
-    std::ranges::copy_if();
+    std::ranges::copy_if(components_.begin(), components_.end(), result, [](const std::shared_ptr<Component> component)
+    {
+        return typeid(T) == typeid(*(component.get()));
+    });
+
+    return result;
 }
 
 template<class T> requires IsComponent<T>

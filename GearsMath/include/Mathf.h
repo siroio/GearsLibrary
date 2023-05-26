@@ -3,7 +3,7 @@
 
 #include <limits>
 
-struct Mathf
+class Mathf
 {
 public:
     static constexpr float EPSILON = 1e-5f;
@@ -15,10 +15,42 @@ public:
     static constexpr float POSITIVE_INFINITY = std::numeric_limits<float>::infinity();
     static constexpr float NEGATIVE_INFINITY = -std::numeric_limits<float>::infinity();
 
-    static float Inverse(float v);
+    /**
+     * @brief v‚Ì‹t”‚ğ•Ô‚·
+     *
+     * @param v
+     * @return float
+     */
+    static constexpr float Inverse(float v)
+    {
+        return 1.0f / v;
+    }
 
-    static float Sin(float f);
+    /**
+     * @brief f‚Ìsin‚ğ•Ô‚·
+     *
+     * @param f
+     * @return float
+     */
+    static float Sin(float f)
+    {
+        return sinf(f);
+    }
+
+    /**
+     * @brief f‚Ìcos‚ğ•Ô‚·
+     *
+     * @param f
+     * @return float
+     */
     static float Cos(float f);
+
+    /**
+     * @brief f‚Ìtan‚ğ•Ô‚·
+     *
+     * @param f
+     * @return float
+     */
     static float Tan(float f);
 
     static float Asin(float f);

@@ -1,5 +1,4 @@
 // テスト用実行cpp
-
 #include <iostream>
 #include <Random.h>
 #include <Game.h>

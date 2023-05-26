@@ -51,7 +51,7 @@ GameObjectPtr GameObjectManager::CreateActor(std::string_view name)
 
 GameObjectPtr GameObjectManager::Find(std::string_view name)
 {
-    const auto& it = std::find_if(gameObjects_.begin(), gameObjects_.end(), [name](const std::shared_ptr<GameObject>& gameObject)
+    const auto& it = std::ranges::find_if(gameObjects_.begin(), gameObjects_.end(), [name](const std::shared_ptr<GameObject>& gameObject)
     {
         return gameObject->Name() == name;
     });
@@ -63,7 +63,7 @@ std::deque<GameObjectPtr> GameObjectManager::FindGameObjectsWithTag(std::string_
 {
     std::deque<GameObjectPtr> result;
 
-    std::copy_if(gameObjects_.begin(), gameObjects_.end(), std::back_inserter(result), [tag](const std::shared_ptr<GameObject>& gameObject)
+    std::ranges::copy_if(gameObjects_.begin(), gameObjects_.end(), std::back_inserter(result), [tag](const std::shared_ptr<GameObject>& gameObject)
     {
         return gameObject->Tag() == tag;
     });
@@ -73,7 +73,7 @@ std::deque<GameObjectPtr> GameObjectManager::FindGameObjectsWithTag(std::string_
 
 GameObjectPtr GameObjectManager::FindGameObjectWithTag(std::string_view tag)
 {
-    const auto& it = std::find_if(gameObjects_.begin(), gameObjects_.end(), [tag](const std::shared_ptr<GameObject>& gameObject)
+    const auto& it = std::ranges::find_if(gameObjects_.begin(), gameObjects_.end(), [tag](const std::shared_ptr<GameObject>& gameObject)
     {
         return gameObject->Tag() == tag;
     });

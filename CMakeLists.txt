@@ -9,6 +9,9 @@ project(GearsLibrary
 )
 
 # == CONFIG ==
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/.editorconfig ${CMAKE_CURRENT_BINARY_DIR}/.editorconfig COPYONLY)
+
 set(LIBRARY 
     GearsCore
     GearsObject
@@ -19,6 +22,7 @@ set(LIBRARY
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Lib)
+add_definitions(-DUNICODE -D_UNICODE)
 
 add_executable(GearsLibrary main.cpp)
 add_subdirectory(./GearsCore)

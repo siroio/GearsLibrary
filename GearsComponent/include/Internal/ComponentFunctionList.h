@@ -16,7 +16,6 @@ namespace GLib::Utility
 
 class CameraBase;
 
-
 namespace GLib::Internal
 {
     class ComponentFunctionList
