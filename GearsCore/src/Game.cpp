@@ -4,6 +4,7 @@
 #include <Internal/ISystem.h>
 #include <SystemManager.h>
 #include <GameObjectManager.h>
+#include <Internal/ComponentManager.h>
 
 namespace
 {
@@ -52,6 +53,7 @@ void Game::RegisterSystem()
 {
     SystemManager::AddSystem<TestManager>();
     SystemManager::AddSystem<GameObjectManager>();
+    SystemManager::AddSystem<ComponentManager>();
 }
 
 bool Game::Initialize()

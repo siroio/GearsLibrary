@@ -20,7 +20,7 @@ namespace GLib::Internal                                                \
     namespace Function                                                  \
     {                                                                   \
         template<int order>                                             \
-        class FuncName##SetOrder : public Interface::I##FuncName##Order \
+        class FuncName##OrderSet : public Interface::I##FuncName##Order \
         {                                                               \
         public:                                                         \
             virtual int FuncName##Order() override                      \

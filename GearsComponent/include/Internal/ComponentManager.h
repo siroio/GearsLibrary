@@ -1,11 +1,13 @@
 #ifndef GEARS_COMPONENT_MANAGER_H
 #define GEARS_COMPONENT_MANAGER_H
 
+#include <GameObjectPtr.h>
+#include <FuncOrderDefinition.h>
+#include <Internal/FuncOrderConstant.h>
 #include <Internal/ISystem.h>
 #include <Internal/IComponent.h>
 #include <Internal/ComponentFunctionList.h>
 #include <Singleton.h>
-#include <GameObjectPtr.h>
 
 namespace GLib::Internal
 {
@@ -16,7 +18,9 @@ namespace GLib::Internal
 
     class ComponentManager :
         public Interface::ISystem,
-        public GLib::Utility::SingletonPtr<ComponentManager>
+        public GLib::Utility::SingletonPtr<ComponentManager>,
+        public GLib::Internal::Function::UpdateOrderSet<GLib::Constant::Order::Update::COMPONENT>,
+        public GLib::Internal::Function::FinalizeOrderSet<GLib::Constant::Order::Finalize::COMPONENT>
     {
     public:
         void Update();

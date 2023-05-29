@@ -13,6 +13,7 @@ set(HEADER_FOLDER
     ./include/Internal/HasFunctionObject.h
     ./include/Internal/ISystem.h
     ./include/Internal/SystemFunctionType.h
+    ./include/Internal/FuncOrderConstant.h
     ./include/FuncOrderDefinition.h
     ./include/FuncDefinition.h
     ./include/SystemManager.h

@@ -5,6 +5,9 @@
 
 class Mathf
 {
+private:
+    Mathf() = delete;
+
 public:
     static constexpr float EPSILON = 1e-5f;
     static constexpr float EPSILON_SRQT = 1e-5f * 1e-5f;
