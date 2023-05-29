@@ -32,10 +32,7 @@ public:
      * @param f
      * @return float
      */
-    static float Sin(float f)
-    {
-        return sinf(f);
-    }
+    static float Sin(float f);
 
     /**
      * @brief f‚Ìcos‚ð•Ô‚·

@@ -13,7 +13,7 @@ namespace GLib::Internal::Function                                              
 {                                                                                                                       \
                                                                                                                         \
     template<class T, class ReturnType, class... Args>                                                                  \
-    class Has##FuncName##Object : public Interface::IFunc<ReturnType, Args...>                                     \
+    class Has##FuncName##Object : public Interface::IFunc<ReturnType, Args...>                                          \
     {                                                                                                                   \
     public:                                                                                                             \
         Has##FuncName##Object(const Utility::WeakPtr<T>&ptr) : instance_{ ptr }                                         \
