@@ -74,6 +74,6 @@ private:
     Quaternion local_rotation_{ Quaternion::Identity() };
     Vector3 local_scale_{ Vector3::One() };
     GLib::Utility::WeakPtr<Transform> parent_{ nullptr };
-    std::list < GLib::Utility::WeakPtr<Transform>> children_;
+    std::list<GLib::Utility::WeakPtr<Transform>> children_;
 };
 #endif // !GEARS_TRANSFORM_H
