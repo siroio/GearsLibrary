@@ -14,4 +14,13 @@ HAS_FUNC_OBJECT(Update);
 HAS_FUNC_OBJECT(LateUpdate);
 HAS_FUNC_OBJECT(Draw);
 
+/* Event Function */
+HAS_FUNC_OBJECT(OnTriggerEnter);
+HAS_FUNC_OBJECT(OnTriggerStay);
+HAS_FUNC_OBJECT(OnTriggerExit);
+
+HAS_FUNC_OBJECT(OnCollisionEnter);
+HAS_FUNC_OBJECT(OnCollisionStay);
+HAS_FUNC_OBJECT(OnCollisionExit);
+
 #endif // !GEARS_FUNC_DEFINITION_H

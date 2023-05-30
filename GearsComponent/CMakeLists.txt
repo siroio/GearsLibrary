@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.1)
 # == CONFIG ==
 set(SOURCE_FOLDER 
     ./src/Internal/ComponentFunctionList.cpp
+    ./src/Internal/ComponentEventFunctionList.cpp
 	./src/Internal/ComponentManager.cpp
     ./src/Component.cpp
     ./src/Components/Transform.cpp
@@ -12,6 +13,7 @@ set(HEADER_FOLDER
     ./include/Internal/IComponent.h
     ./include/Internal/ComponentFunctionInfo.h
     ./include/Internal/ComponentFunctionList.h
+    ./include/Internal/ComponentEventFunctionList.h
     ./include/Internal/ComponentFunctionType.h
     ./include/Internal/ComponentManager.h
     ./include/Component.h

@@ -39,7 +39,7 @@ namespace GLib::Internal
         void AddFunction(const std::shared_ptr<T>& component);
 
     private:
-        void Remove(FunctionType);
+        void Remove(FunctionType type);
 
         template<size_t index, class... Args>
         void ExecuteFromVariant(FunctionType type, const Args&... args);

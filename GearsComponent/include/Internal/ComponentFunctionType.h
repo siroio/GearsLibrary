@@ -7,12 +7,12 @@ enum class ComponentFunctionType
     Update,
     LateUpdate,
 
-    OnCollisionEnter,
-    OnCollisionStay,
-    OnCollisionExit,
     OnTriggerEnter,
     OnTriggerStay,
     OnTriggerExit,
+    OnCollisionEnter,
+    OnCollisionStay,
+    OnCollisionExit,
     ReceiveEvent,
 };
 

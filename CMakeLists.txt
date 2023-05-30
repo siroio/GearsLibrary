@@ -10,8 +10,6 @@ project(GearsLibrary
 
 # == CONFIG ==
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/.editorconfig ${CMAKE_CURRENT_BINARY_DIR}/.editorconfig COPYONLY)
-
 set(LIBRARY 
     GearsCore
     GearsObject
@@ -19,6 +17,13 @@ set(LIBRARY
     GearsMath 
     GearsUtility
 )
+
+foreach(lib ${LIBRARY})
+    set(library_path "${CMAKE_CURRENT_BINARY_DIR}/${lib}")
+    if(EXISTS ${library_path} AND IS_DIRECTORY ${library_path})
+        configure_file(${CMAKE_CURRENT_SOURCE_DIR}/.editorconfig ${library_path}/.editorconfig COPYONLY)
+    endif()
+endforeach()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Lib)
