@@ -19,11 +19,15 @@ namespace GLib::Internal
         class IComponent;
     }
 
-    class ComponentManager :
+    class ComponentManager final :
         public Interface::ISystem,
         public GLib::Utility::SingletonPtr<ComponentManager>,
         public GLib::Internal::Function::UpdateOrderSet<GLib::Constant::Order::Update::COMPONENT>
     {
+    private:
+        friend GLib::Utility::WeakPtr<ComponentManager> GLib::Utility::SingletonPtr<ComponentManager>::Instance();
+        ComponentManager() = default;
+
     public:
         void Update();
         void Finalize();

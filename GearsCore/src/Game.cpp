@@ -12,10 +12,14 @@ namespace
     using namespace GLib::Internal;
 }
 
-class TestManager :
+class TestManager final :
     public SingletonPtr<TestManager>,
     public Interface::ISystem
 {
+private:
+    friend WeakPtr<TestManager> SingletonPtr<TestManager>::Instance();
+    TestManager() = default;
+
 public:
     bool Initialize()
     {

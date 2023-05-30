@@ -27,6 +27,9 @@ class SystemManager : public GLib::Utility::Singleton<SystemManager>
         std::shared_ptr<GLib::Internal::Interface::IFunc<void>>,
         std::shared_ptr<GLib::Internal::Interface::IFunc<bool>>>;
 
+    friend SystemManager& GLib::Utility::Singleton<SystemManager>::Instance();
+    SystemManager() = default;
+
 public:
     bool Initialize();
     void Update();

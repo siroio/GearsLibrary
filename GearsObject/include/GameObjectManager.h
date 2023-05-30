@@ -8,10 +8,14 @@
 #include <deque>
 #include <string_view>
 
-class GameObjectManager :
+class GameObjectManager final :
     public GLib::Internal::Interface::ISystem,
     public GLib::Utility::SingletonPtr<GameObjectManager>
 {
+private:
+    friend GLib::Utility::WeakPtr<GameObjectManager> GLib::Utility::SingletonPtr<GameObjectManager>::Instance();
+    GameObjectManager() = default;
+
 public:
     void Update();
     void DebugDraw();

@@ -13,7 +13,7 @@ namespace GLib::Utility
     template<class T>
     class SingletonPtr
     {
-    private:
+    protected:
         static inline std::shared_ptr<T> instance;
         static inline std::mutex singleton_mutex;
 
@@ -21,7 +21,6 @@ namespace GLib::Utility
         SingletonPtr() = default;
         virtual ~SingletonPtr() = default;
 
-    public:
         SingletonPtr(const SingletonPtr&) = delete;
         SingletonPtr& operator=(const SingletonPtr&) = delete;
         SingletonPtr(SingletonPtr&&) = delete;
@@ -60,14 +59,12 @@ namespace GLib::Utility
     template<class T>
     class Singleton
     {
-    private:
+    protected:
         static inline std::mutex singleton_mutex;
 
     protected:
         Singleton() = default;
         virtual ~Singleton() = default;
-
-    public:
         Singleton(const Singleton&) = delete;
         Singleton& operator=(const Singleton&) = delete;
         Singleton(Singleton&&) = delete;
@@ -77,7 +74,7 @@ namespace GLib::Utility
         /**
          * @brief インスタンスの取得
          */
-        static inline T& Instance()
+        static T& Instance()
         {
             std::scoped_lock lock(singleton_mutex);
             static T instance;

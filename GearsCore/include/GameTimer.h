@@ -17,6 +17,8 @@ class GameTimer final :
     using timePoint = clock::time_point;
     using duration = std::chrono::duration<float>;
 
+private:
+    friend GLib::Utility::WeakPtr<GameTimer> GLib::Utility::SingletonPtr<GameTimer>::Instance();
     GameTimer() = default;
 
 public:
