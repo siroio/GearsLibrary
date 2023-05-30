@@ -17,7 +17,6 @@ class GameTimer final :
     using timePoint = clock::time_point;
     using duration = std::chrono::duration<float>;
 
-private:
     GameTimer() = default;
 
 public:

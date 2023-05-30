@@ -36,7 +36,7 @@ namespace GLib::Utility
             std::scoped_lock lock(singleton_mutex);
             if (!instance)
             {
-                instance = std::make_shared<T>();
+                instance = std::shared_ptr<T>{ new T() };
             }
             return WeakPtr<T>{ instance };
         }
