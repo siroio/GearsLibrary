@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.1)
 # == CONFIG ==
 set(SOURCE_FOLDER 
     ./src/SystemManager.cpp
+    ./src/GameTimer.cpp
 	./src/Game.cpp
 )
 
@@ -17,6 +18,7 @@ set(HEADER_FOLDER
     ./include/FuncOrderDefinition.h
     ./include/FuncDefinition.h
     ./include/SystemManager.h
+    ./include/GameTimer.h
 	./include/Game.h
 )
 

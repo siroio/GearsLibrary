@@ -22,8 +22,7 @@ namespace GLib::Internal
     class ComponentManager :
         public Interface::ISystem,
         public GLib::Utility::SingletonPtr<ComponentManager>,
-        public GLib::Internal::Function::UpdateOrderSet<GLib::Constant::Order::Update::COMPONENT>,
-        public GLib::Internal::Function::FinalizeOrderSet<GLib::Constant::Order::Finalize::COMPONENT>
+        public GLib::Internal::Function::UpdateOrderSet<GLib::Constant::Order::Update::COMPONENT>
     {
     public:
         void Update();

@@ -1,11 +1,10 @@
 #include <Game.h>
-#include <SystemManager.h>
 #include <d3d12.h>
 #include <Internal/ISystem.h>
 #include <SystemManager.h>
 #include <GameObjectManager.h>
 #include <Internal/ComponentManager.h>
-
+#include <GameTimer.h>
 namespace
 {
     auto& systemManager = SystemManager::Instance();
@@ -22,6 +21,12 @@ public:
     {
         puts("テスト用マネージャークラスのInitializeが呼ばれました。");
         return true;
+    }
+
+    void Update()
+    {
+        system("cls");
+        std::cout << GameTimer::DeltaTime() << std::endl;
     }
 };
 
@@ -54,6 +59,7 @@ void Game::RegisterSystem()
     SystemManager::AddSystem<TestManager>();
     SystemManager::AddSystem<GameObjectManager>();
     SystemManager::AddSystem<ComponentManager>();
+    SystemManager::AddSystem<GameTimer>();
 }
 
 bool Game::Initialize()
