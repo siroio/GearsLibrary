@@ -1,4 +1,5 @@
 #include <Color.h>
+#include <Mathf.h>
 #include <sstream>
 
 Color::Color() : rgba{ 0.0f }
@@ -9,6 +10,16 @@ Color::Color(float r, float g, float b, float a = 1.0f) : r{ r }, g{ g }, b{ b }
 
 Color::Color(float rgba) : rgba{ rgba }
 {}
+
+Color Color::Lerp(const Color& a, const Color& b, float t)
+{
+    return LerpUnclamped(a, b, Mathf::Clamp01(t));
+}
+
+Color Color::LerpUnclamped(const Color& a, const Color& b, float t)
+{
+    return a + ((b - a) * t);
+}
 
 void Color::Set(const Color& v)
 {
@@ -62,6 +73,120 @@ float& Color::operator[](const size_t index)
         throw std::out_of_range("Index is out of range");
     }
     return rgba[index];
+}
+
+Color& operator+=(Color& c1, const Color& c2)
+{
+    c1.r += c2.r;
+    c1.g += c2.g;
+    c1.b += c2.b;
+    c1.a += c2.a;
+    return c1;
+}
+
+Color& operator-=(Color& c1, const Color& c2)
+{
+    c1.r -= c2.r;
+    c1.g -= c2.g;
+    c1.b -= c2.b;
+    c1.a -= c2.a;
+    return c1;
+}
+
+Color& operator*=(Color& c1, const Color& c2)
+{
+    c1.r *= c2.r;
+    c1.g *= c2.g;
+    c1.b *= c2.b;
+    c1.a *= c2.a;
+    return c1;
+}
+
+Color& operator*=(Color& color, float scaler)
+{
+    color.r *= scaler;
+    color.g *= scaler;
+    color.b *= scaler;
+    color.a *= scaler;
+    return color;
+}
+
+Color& operator*=(float scaler, Color& color)
+{
+    color.r *= scaler;
+    color.g *= scaler;
+    color.b *= scaler;
+    color.a *= scaler;
+    return color;
+}
+
+Color& operator/=(Color& color, float scaler)
+{
+    color.r /= scaler;
+    color.g /= scaler;
+    color.b /= scaler;
+    color.a /= scaler;
+    return color;
+}
+
+Color operator+(Color& c1, const Color& c2)
+{
+    return Color{
+        c1.r + c2.r,
+        c1.g + c2.g,
+        c1.b + c2.b,
+        c1.a + c2.a
+    };
+}
+
+Color operator-(const Color& c1, const Color& c2)
+{
+    return Color{
+        c1.r - c2.r,
+        c1.g - c2.g,
+        c1.b - c2.b,
+        c1.a - c2.a
+    };
+}
+
+Color operator*(const Color& c1, const Color& c2)
+{
+    return Color{
+        c1.r * c2.r,
+        c1.g * c2.g,
+        c1.b * c2.b,
+        c1.a * c2.a
+    };
+}
+
+Color operator*(const Color& color, float scaler)
+{
+    return Color{
+        color.r * scaler,
+        color.g * scaler,
+        color.b * scaler,
+        color.a * scaler
+    };
+}
+
+Color operator*(float scaler, const Color& color)
+{
+    return Color{
+        color.r * scaler,
+        color.g * scaler,
+        color.b * scaler,
+        color.a * scaler
+    };
+}
+
+Color operator/(const Color& color, float scaler)
+{
+    return Color{
+        color.r / scaler,
+        color.g / scaler,
+        color.b / scaler,
+        color.a / scaler
+    };
 }
 
 std::ostream& operator<<(std::ostream& stream, const Color& color)

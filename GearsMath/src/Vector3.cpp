@@ -408,17 +408,11 @@ Vector3 operator*(const Vector3& v, const Matrix4x4& m)
 
 Vector3 operator/(const Vector3& v1, const Vector3& v2)
 {
-    Debug_Assert(v2.x != 0.0f);
-    Debug_Assert(v2.y != 0.0f);
-    Debug_Assert(v2.z != 0.0f);
-
     return Vector3{ v1.x / v2.x, v1.y / v2.y, v1.z / v2.z };
 }
 
 Vector3 operator/(const Vector3& v1, float scalar)
 {
-    Debug_Assert(scalar != 0.0f);
-
     float m = 1.0f / scalar;
     return Vector3{ v1.x * m, v1.y * m, v1.z * m };
 }
@@ -467,10 +461,6 @@ Vector3& operator*=(Vector3& v, float scalar)
 
 Vector3& operator/=(Vector3& v1, const Vector3& v2)
 {
-    Debug_Assert(v2.x != 0.0f);
-    Debug_Assert(v2.y != 0.0f);
-    Debug_Assert(v2.z != 0.0f);
-
     v1.x /= v2.x;
     v1.y /= v2.y;
     v1.z /= v2.z;
@@ -480,8 +470,6 @@ Vector3& operator/=(Vector3& v1, const Vector3& v2)
 
 Vector3& operator/=(Vector3& v, float scalar)
 {
-    Debug_Assert(scalar != 0.0f);
-
     float m = 1.0f / scalar;
     v.x *= m;
     v.y += m;

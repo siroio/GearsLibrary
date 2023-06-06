@@ -171,10 +171,6 @@ Matrix4x4 Matrix4x4::TRS(const Vector3& p, const Quaternion& q, const Vector3& s
 
 Matrix4x4 Matrix4x4::Perspective(float width, float height, float nearDistance, float farDistance)
 {
-    Debug_Assert(nearDistance <= 0.0f);
-    Debug_Assert(farDistance <= 0.0f);
-    Debug_Assert(nearDistance >= farDistance);
-
     float Depth = nearDistance - farDistance;
 
     float m11 = 2.0f * nearDistance / width;
@@ -193,11 +189,6 @@ Matrix4x4 Matrix4x4::Perspective(float width, float height, float nearDistance, 
 
 Matrix4x4 Matrix4x4::PerspectiveFOV(float fieldOfView, float aspectRatio, float nearDistance, float farDistance)
 {
-    Debug_Assert(fieldOfView <= 0.0f || fieldOfView >= Mathf::PI);
-    Debug_Assert(nearDistance <= 0.0f);
-    Debug_Assert(farDistance <= 0.0f);
-    Debug_Assert(nearDistance >= farDistance);
-
     float yScale = 1.0f / Mathf::Tan(fieldOfView * 0.5f * Mathf::DEG2RAD);
     float xScale = yScale / aspectRatio;
 

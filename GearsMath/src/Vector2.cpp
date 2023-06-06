@@ -297,15 +297,11 @@ Vector2 operator*(float scalar, const Vector2& v1)
 
 Vector2 operator/(const Vector2& v1, const Vector2& v2)
 {
-    Debug_Assert(v2.x != 0.0f);
-    Debug_Assert(v2.y != 0.0f);
-
     return Vector2{ v1.x / v2.x, v1.y / v2.y };
 }
 
 Vector2 operator/(const Vector2& v1, float scalar)
 {
-    Debug_Assert(scalar != 0.0f);
     float m = 1.0f / scalar;
     return Vector2{ v1.x * m, v1.x * m };
 }
@@ -344,9 +340,6 @@ Vector2& operator*=(Vector2& v, float scalar)
 
 Vector2& operator/=(Vector2& v1, const Vector2& v2)
 {
-    Debug_Assert(v2.x != 0.0f);
-    Debug_Assert(v2.y != 0.0f);
-
     v1.x /= v2.x;
     v1.y /= v2.y;
 
@@ -355,8 +348,6 @@ Vector2& operator/=(Vector2& v1, const Vector2& v2)
 
 Vector2& operator/=(Vector2& v, float scalar)
 {
-    Debug_Assert(scalar != 0.0f);
-
     float m = 1.0f / scalar;
     v.x *= m;
     v.y += m;

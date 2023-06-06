@@ -41,7 +41,6 @@ public:
 
     template<class T> requires HasSingletonSystem<T>
     static void AddSystem();
-    template<class T>
     static void AddSystem()
     {}
 
