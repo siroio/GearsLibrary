@@ -6,7 +6,6 @@
 #include <FuncOrderDefinition.h>
 #include <Singleton.h>
 #include <WeakPtr.h>
-
 #include <unordered_map>
 #include <memory>
 #include <string>
@@ -15,13 +14,16 @@ namespace GLib::Scene
 {
     class Scene;
 
+    /**
+     * @brief シーン管理クラス
+     */
     class SceneManager :
         public GLib::Internal::Interface::ISystem,
-        public GLib::Utility::SingletonPtr<SceneManager>,
+        public GLib::SingletonPtr<SceneManager>,
         public GLib::Internal::Function::UpdateOrderSet<GLib::Constant::Order::Update::SCENE>
     {
         SceneManager() = default;
-        friend GLib::Utility::WeakPtr<SceneManager> GLib::Utility::SingletonPtr<SceneManager>::Instance();
+        friend GLib::WeakPtr<SceneManager> GLib::SingletonPtr<SceneManager>::Instance();
 
     public:
         void Update();
@@ -30,7 +32,7 @@ namespace GLib::Scene
          * @brief シーンの登録
          */
         template<class SceneType>
-        static void Register(SceneType Scene);
+        static void Register();
 
         /**
          * @brief シーンの読み込み
@@ -40,13 +42,13 @@ namespace GLib::Scene
         static void LoadScene(const std::string& name);
 
     private:
-        static std::unordered_map<std::string, std::shared_ptr<Scene>> scenes_;
-        static GLib::Utility::WeakPtr<Scene> current_;
-        static GLib::Utility::WeakPtr<Scene> next_;
+        static inline std::unordered_map<std::string, std::shared_ptr<Scene>> scenes_;
+        static inline GLib::WeakPtr<Scene> current_;
+        static inline GLib::WeakPtr<Scene> next_;
     };
 
     template<class SceneType>
-    inline void SceneManager::Register(SceneType Scene)
+    inline void SceneManager::Register()
     {
         std::string name = typeid(SceneType).name();
         std::size_t start = name.find(' ');

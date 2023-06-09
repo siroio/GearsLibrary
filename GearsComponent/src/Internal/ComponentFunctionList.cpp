@@ -45,7 +45,7 @@ void GLib::Internal::ComponentFunctionList::Execute(FunctionType type)
     ExecuteFromVariant<0>(type);
 }
 
-void GLib::Internal::ComponentFunctionList::Execute(FunctionType type, const GLib::Utility::WeakPtr<CameraBase>& camera)
+void GLib::Internal::ComponentFunctionList::Execute(FunctionType type, const GLib::WeakPtr<CameraBase>& camera)
 {
     ExecuteFromVariant<1>(type, camera);
 }
@@ -56,7 +56,7 @@ void GLib::Internal::ComponentFunctionList::ExecuteClear(FunctionType type)
     functions_.clear();
 }
 
-void GLib::Internal::ComponentFunctionList::ExecuteClear(FunctionType type, const GLib::Utility::WeakPtr<CameraBase>& camera)
+void GLib::Internal::ComponentFunctionList::ExecuteClear(FunctionType type, const GLib::WeakPtr<CameraBase>& camera)
 {
     Execute(type, camera);
     functions_.clear();

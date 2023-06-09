@@ -5,12 +5,13 @@ set(SOURCE_FILE
     ./src/CSVLoader.cpp
 )
 
-set(HEADER_FILE 
-    ./include/Debugging.h
+set(HEADER_FILE
+    ./include/Logger.h
     ./include/WeakPtr.h
     ./include/ComPtr.h
     ./include/Singleton.h
     ./include/StringUtility.h
+    ./include/TimeUtility.h
     ./include/CSVLoader.h
 )
 

@@ -44,7 +44,7 @@ GameObjectPtr GameObjectManager::CreateActor(std::string_view name)
 {
     std::shared_ptr<GameObject> gameObject = std::make_shared<GameObject>(name);
     gameObjects_.push_back(gameObject);
-    GLib::Utility::WeakPtr<GLib::Internal::Interface::IGameObject> iGameObj{ gameObject };
+    GLib::WeakPtr<GLib::Internal::Interface::IGameObject> iGameObj{ gameObject };
     iGameObj->Initialize();
     return GameObjectPtr{ gameObject };
 }

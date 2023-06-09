@@ -1,6 +1,9 @@
 #ifndef GEARS_COMPONENT_FUNCTION_TYPE_H
 #define GEARS_COMPONENT_FUNCTION_TYPE_H
 
+/**
+ * @brief コンポーネントの関数
+ */
 enum class ComponentFunctionType
 {
     Start,

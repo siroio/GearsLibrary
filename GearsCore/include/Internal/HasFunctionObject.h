@@ -5,6 +5,9 @@
 #include <Internal/IFunc.h>
 #include <WeakPtr.h>
 
+/**
+ * @brief 特定の関数を持ったオブジェクトの定義作成
+ */
 #define HAS_FUNC_OBJECT(FuncName)                                                                                       \
                                                                                                                         \
 HAS_FUNCTION(##FuncName##)                                                                                              \
@@ -16,7 +19,7 @@ namespace GLib::Internal::Function                                              
     class Has##FuncName##Object : public Interface::IFunc<ReturnType, Args...>                                          \
     {                                                                                                                   \
     public:                                                                                                             \
-        Has##FuncName##Object(const Utility::WeakPtr<T>&ptr) : instance_{ ptr }                                         \
+        Has##FuncName##Object(const WeakPtr<T>&ptr) : instance_{ ptr }                                                  \
         {}                                                                                                              \
                                                                                                                         \
         virtual ReturnType Call(const Args&... args) override                                                           \
@@ -62,7 +65,7 @@ namespace GLib::Internal::Function                                              
         }                                                                                                               \
                                                                                                                         \
     private:                                                                                                            \
-        Utility::WeakPtr<T> instance_{ nullptr };                                                                       \
+        WeakPtr<T> instance_{ nullptr };                                                                                \
     };                                                                                                                  \
 }                                                                                                                       \
 

@@ -3,6 +3,9 @@
 
 namespace GLib::Internal::Interface
 {
+    /**
+     * @brief 関数管理用インターフェース
+     */
     template<class ReturnType, class... Args>
     class IFunc
     {

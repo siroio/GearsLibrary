@@ -96,7 +96,7 @@ public:
     static Vector2 Right();
 
     /**
-     * @brief 2つのベクトルのドット積を返します
+     * @brief 2つのベクトルのドット積を返す
      * @param v1 ドット積を取りたいベクトル1
      * @param v2 ドット積を取りたいベクトル2
      * @return float ベクトル1とベクトル2のドット積
@@ -104,7 +104,7 @@ public:
     static float Dot(const Vector2& v1, const Vector2& v2);
 
     /**
-     * @brief 2つのベクトルのなす角度を返します
+     * @brief 2つのベクトルのなす角度を返す
      * @param from 角度を計算する始点ベクトル
      * @param to 角度を計算する終点ベクトル
      * @return float ベクトルfromとベクトルtoのなす角度（ラジアン）
@@ -112,7 +112,7 @@ public:
     static float Angle(const Vector2& from, const Vector2& to);
 
     /**
-     * @brief 2つのベクトルのなす角度を符号付きで返します
+     * @brief 2つのベクトルのなす角度を符号付きで返す
      * @param from 角度を計算する始点ベクトル
      * @param to 角度を計算する終点ベクトル
      * @return float ベクトルfromとベクトルtoのなす角度（ラジアン）
@@ -120,7 +120,7 @@ public:
     static float SignedAngle(const Vector2& from, const Vector2& to);
 
     /**
-     * @brief 2つのベクトル間の距離を返します
+     * @brief 2つのベクトル間の距離を返す
      * @param a 距離を計算するベクトル1
      * @param b 距離を計算するベクトル2
      * @return float ベクトルaとベクトルbの間の距離
@@ -128,21 +128,21 @@ public:
     static float Distance(const Vector2& a, const Vector2& b);
 
     /**
-     * @brief ベクトルの大きさの2乗を返します
+     * @brief ベクトルの大きさの2乗を返す
      * @param vector 大きさの2乗を求めたいベクトル
      * @return float ベクトルの大きさの2乗
     */
     static float SqrMagnitude(const Vector2& vector);
 
     /**
-     * @brief ベクトルの大きさを返します
+     * @brief ベクトルの大きさを返す
      * @param vector 大きさを求めたいベクトル
      * @return float ベクトルの大きさ
     */
     static float Magnitude(const Vector2& vector);
 
     /**
-     * @brief 2つのベクトルのうち、各要素が小さい方を返します
+     * @brief 2つのベクトルのうち、各要素が小さい方を返す
      * @param lhs 最小値を求めるベクトル1
      * @param rhs 最小値を求めるベクトル2
      * @return Vector2 各要素が小さい方のベクトル
@@ -236,32 +236,52 @@ public:
      * @param v 設定するVector2の値
     */
     void Set(const Vector2& v);
+
     /**
      * @brief Vector2の値を設定する
      * @param x 設定するxの値
      * @param y 設定するyの値
     */
     void Set(float x, float y);
+
     /**
      * @brief Vector2の値を設定する
      * @param xy 設定するxyの値
     */
     void Set(float xy);
+
     /**
      * @brief Vector2の値に0を設定する
     */
     void Set0();
+
     /**
      * @brief ベクトルを指定したスカラー倍する
      * @param scalar スカラー値
     */
     void Scale(const Vector2& scalar);
+
     /**
      * @brief ベクトルを正規化する
     */
     void Normalize();
+
+    /**
+     * @brief ベクトルの大きさの2乗を返す
+     * @return float ベクトルの大きさの2乗
+     */
     float SqrMagnitude() const;
+
+    /**
+     * @brief ベクトルの大きさを返す
+     * @return float ベクトルの大きさ
+     */
     float Magnitude() const;
+
+    /**
+     * @brief 文字列で返す
+     * @return std::string
+     */
     std::string ToString() const;
 
 public:

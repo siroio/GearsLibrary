@@ -5,17 +5,22 @@
 #include <string_view>
 #include <algorithm>
 #include <memory>
-#include <deque>
+#include <list>
+
 #include <Internal/IGameObject.h>
 #include <Internal/ComponentManager.h>
 #include <GameObjectManager.h>
 
+#include <Components/Transform.h>
+
 class Component;
-class Transform;
 
 template<class T>
 concept IsComponent = std::derived_from<T, Component>;
 
+/**
+ * @brief オブジェクトクラス
+ */
 class GameObject final :
     public GLib::Internal::Interface::IGameObject,
     public std::enable_shared_from_this<GameObject>
@@ -26,8 +31,8 @@ private:
     bool isDontDestroyOnLoad_{ false };
     std::string name_{ "" };
     std::string tag_{ "" };
-    std::deque<std::shared_ptr<Component>> components_;
-    GLib::Utility::WeakPtr<Transform> transform_{ nullptr };
+    std::list<std::shared_ptr<Component>> components_;
+    GLib::WeakPtr<Transform> transform_{ nullptr };
 
 public:
     explicit GameObject(std::string_view name);
@@ -35,25 +40,25 @@ public:
     ~GameObject();
 
     template<class T, class... Args> requires IsComponent<T>
-    GLib::Utility::WeakPtr<T> AddComponent(Args&&... args);
+    GLib::WeakPtr<T> AddComponent(Args&&... args);
 
     template<class T> requires IsComponent<T>
-    GLib::Utility::WeakPtr<T> GetComponent() const;
+    GLib::WeakPtr<T> GetComponent() const;
 
     template<class T> requires IsComponent<T>
-    GLib::Utility::WeakPtr<T> GetComponentInChildren() const;
+    GLib::WeakPtr<T> GetComponentInChildren() const;
 
     template<class T> requires IsComponent<T>
-    GLib::Utility::WeakPtr<T> GetComponentInParent() const;
+    GLib::WeakPtr<T> GetComponentInParent() const;
 
     template<class T> requires IsComponent<T>
-    std::deque<GLib::Utility::WeakPtr<T>> GetComponents() const;
+    std::list<GLib::WeakPtr<T>> GetComponents() const;
 
     template<class T> requires IsComponent<T>
-    GLib::Utility::WeakPtr<T> GetComponentsInChildren() const;
+    GLib::WeakPtr<T> GetComponentsInChildren() const;
 
     template<class T> requires IsComponent<T>
-    GLib::Utility::WeakPtr<T> GetComponentsInParent() const;
+    GLib::WeakPtr<T> GetComponentsInParent() const;
 
     void RemoveComponents();
 
@@ -79,48 +84,62 @@ public:
 
     bool IsDead() const;
 
-    const GLib::Utility::WeakPtr<Transform>& Transform() const;
+    const GLib::WeakPtr<Transform>& Transform() const;
 
 private:
     virtual void Initialize() override;
 };
 
 template<class T, class... Args> requires IsComponent<T>
-inline GLib::Utility::WeakPtr<T> GameObject::AddComponent(Args&& ...args)
+inline GLib::WeakPtr<T> GameObject::AddComponent(Args&& ...args)
 {
     auto component = GLib::Internal::ComponentManager::Instance()->AddComponent<T>(weak_from_this(), args...);
     components_.push_back(component);
-    return GLib::Utility::WeakPtr<T>(component);
+    return GLib::WeakPtr<T>(component);
 }
 
 template<class T> requires IsComponent<T>
-inline GLib::Utility::WeakPtr<T> GameObject::GetComponent() const
+inline GLib::WeakPtr<T> GameObject::GetComponent() const
 {
     for (const auto& component : components_)
     {
         if (typeid(T) != typeid(*(component.get()))) continue;
-        return GLib::Utility::WeakPtr<T>(std::dynamic_pointer_cast<T>(component));
+        return GLib::WeakPtr<T>(std::dynamic_pointer_cast<T>(component));
     }
 
-    return GLib::Utility::WeakPtr<T>{ nullptr };
+    return GLib::WeakPtr<T>{ nullptr };
 }
 
 template<class T> requires IsComponent<T>
-inline GLib::Utility::WeakPtr<T> GameObject::GetComponentInChildren() const
+inline GLib::WeakPtr<T> GameObject::GetComponentInChildren() const
 {
-    return GLib::Utility::WeakPtr<T>();
+    GLib::WeakPtr<T> component = GetComponent<T>();
+    if (!component.expired()) return component;
+    for (const auto& child : transform_->Children())
+    {
+        component = child->GameObject()->GetComponentInChildren<T>();
+        if (!component.expired()) return component;
+    }
+
+    return GLib::WeakPtr<T>{ nullptr };
 }
 
 template<class T> requires IsComponent<T>
-inline GLib::Utility::WeakPtr<T> GameObject::GetComponentInParent() const
+inline GLib::WeakPtr<T> GameObject::GetComponentInParent() const
 {
-    return GLib::Utility::WeakPtr<T>();
+    GLib::WeakPtr<T> component = GetComponent<T>();
+    if (!component.expired()) return component;
+
+    GLib::WeakPtr<class Transform> parent = transform_->Parent();
+    if (!parent.expired()) return parent->GameObject()->GetComponentInParent<T>();
+
+    return GLib::WeakPtr<T>{ nullptr };
 }
 
 template<class T> requires IsComponent<T>
-inline std::deque<GLib::Utility::WeakPtr<T>> GameObject::GetComponents() const
+inline std::list<GLib::WeakPtr<T>> GameObject::GetComponents() const
 {
-    std::deque<GLib::Utility::WeakPtr<T>> result;
+    std::list<GLib::WeakPtr<T>> result;
     std::ranges::copy_if(components_.begin(), components_.end(), result, [](const std::shared_ptr<Component> component)
     {
         return typeid(T) == typeid(*(component.get()));
@@ -130,15 +149,31 @@ inline std::deque<GLib::Utility::WeakPtr<T>> GameObject::GetComponents() const
 }
 
 template<class T> requires IsComponent<T>
-inline GLib::Utility::WeakPtr<T> GameObject::GetComponentsInChildren() const
+inline GLib::WeakPtr<T> GameObject::GetComponentsInChildren() const
 {
-    return GLib::Utility::WeakPtr<T>();
+    std::list<GLib::WeakPtr<T>> components = GetComponents<T>();
+
+    for (const auto& child : transform_->Children())
+    {
+        std::list<GLib::WeakPtr<T>> childComponents = child->GameObject()->GetComponentsInChildren<T>();
+        components.splice(components.end(), std::move(childComponents));
+    }
+
+    return components;
 }
 
 template<class T> requires IsComponent<T>
-inline GLib::Utility::WeakPtr<T> GameObject::GetComponentsInParent() const
+inline GLib::WeakPtr<T> GameObject::GetComponentsInParent() const
 {
-    return GLib::Utility::WeakPtr<T>();
+    std::list<GLib::WeakPtr<T>> components = GetComponents<T>();
+    GLib::WeakPtr<class Transform> parent = transform_->Parent();
+    if (!parent.expired())
+    {
+        std::list<GLib::WeakPtr<T>> parentComponents = parent->GameObject()->GetComponentsInParent();
+        components.splice(components.end(), std::move(parentComponents));
+    }
+
+    return components;
 }
 
 #endif // !GEARS_GAME_OBJECT_H

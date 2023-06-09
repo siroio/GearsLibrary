@@ -1,5 +1,5 @@
 #ifndef GEARS_SCENE_H
-#define GEARS_SECNE_H
+#define GEARS_SCENE_H
 
 namespace GLib::Scene
 {

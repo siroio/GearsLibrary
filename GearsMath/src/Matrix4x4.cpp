@@ -1,5 +1,4 @@
 #include <Matrix4x4.h>
-#include <Debugging.h>
 #include <Quaternion.h>
 #include <Vector3.h>
 #include <Mathf.h>

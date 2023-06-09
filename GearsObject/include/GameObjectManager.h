@@ -8,12 +8,15 @@
 #include <deque>
 #include <string_view>
 
+/**
+ * @brief ゲームオブジェクト管理クラス
+ */
 class GameObjectManager final :
     public GLib::Internal::Interface::ISystem,
-    public GLib::Utility::SingletonPtr<GameObjectManager>
+    public GLib::SingletonPtr<GameObjectManager>
 {
 private:
-    friend GLib::Utility::WeakPtr<GameObjectManager> GLib::Utility::SingletonPtr<GameObjectManager>::Instance();
+    friend GLib::WeakPtr<GameObjectManager> GLib::SingletonPtr<GameObjectManager>::Instance();
     GameObjectManager() = default;
 
 public:
@@ -23,10 +26,39 @@ public:
     void ResetActorList();
 
 public:
+
+    /**
+     * @brief GameObjectの作成
+     * @return GameObjectPtr
+     */
     static GameObjectPtr CreateActor();
+
+    /**
+     * @brief GameObjectの作成
+     * @param name
+     * @return GameObjectPtr
+     */
     static GameObjectPtr CreateActor(std::string_view name);
+
+    /**
+     * @brief GameObjectの検索
+     * @param name
+     * @return GameObjectPtr
+     */
     static GameObjectPtr Find(std::string_view name);
+
+    /**
+     * @brief GameObjectのTagで検索
+     * @param tag
+     * @return std::deque<GameObjectPtr>
+     */
     static std::deque<GameObjectPtr> FindGameObjectsWithTag(std::string_view tag);
+
+    /**
+     * @brief GameObjectのTagで検索
+     * @param tag
+     * @return GameObjectPtr
+     */
     static GameObjectPtr FindGameObjectWithTag(std::string_view tag);
 
 private:

@@ -1,6 +1,9 @@
 #ifndef FUNC_ORDER_CONSTANT_H
 #define FUNC_ORDER_CONSTANT_H
 
+/**
+ * @brief ŠeŠÖ”‚ÌÀs‡˜‚ğ§Œä‚·‚é‚½‚ß‚Ì’è”
+ */
 namespace GLib::Constant::Order
 {
     namespace Update

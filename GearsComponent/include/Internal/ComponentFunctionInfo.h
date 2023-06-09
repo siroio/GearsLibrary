@@ -17,12 +17,12 @@ namespace GLib::Internal
     struct ComponentFunctionInfo
     {
         ComponentFunctionInfo(
-            const GLib::Utility::WeakPtr<Component>& component,
+            const GLib::WeakPtr<Component>& component,
             const std::shared_ptr<Interface::IFunc<ReturnType, Args...>>& function)
             : component{ component }, function{ function }
         {}
 
-        GLib::Utility::WeakPtr<Component> component;
+        GLib::WeakPtr<Component> component;
         std::shared_ptr<Interface::IFunc<ReturnType, Args...>> function;
     };
 }

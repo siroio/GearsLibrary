@@ -1,15 +1,16 @@
 #include <Game.h>
 #include <d3d12.h>
-#include <Internal/ISystem.h>
 #include <SystemManager.h>
 #include <GameObjectManager.h>
-#include <Internal/ComponentManager.h>
+#include <SceneManager.h>
 #include <GameTimer.h>
+
+#include <Internal/ISystem.h>
+#include <Internal/ComponentManager.h>
+
 namespace
 {
     auto& systemManager = SystemManager::Instance();
-    using namespace GLib::Utility;
-    using namespace GLib::Internal;
 }
 
 int Game::Run()
@@ -39,7 +40,8 @@ int Game::Run()
 void Game::RegisterSystem()
 {
     SystemManager::AddSystem<GameObjectManager>();
-    SystemManager::AddSystem<ComponentManager>();
+    SystemManager::AddSystem<GLib::Internal::ComponentManager>();
+    SystemManager::AddSystem<GLib::Scene::SceneManager>();
     SystemManager::AddSystem<GameTimer>();
 }
 

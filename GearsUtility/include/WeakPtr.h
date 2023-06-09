@@ -4,8 +4,11 @@
 #include <memory>
 #include <concepts>
 
-namespace GLib::Utility
+namespace GLib
 {
+    /**
+     * @brief std::weakptr ラッパークラス
+     */
     template<class T>
     class WeakPtr
     {

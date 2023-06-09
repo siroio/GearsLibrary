@@ -3,6 +3,9 @@
 
 namespace GLib::Internal::Interface
 {
+    /**
+     * @brief ゲームオブジェクトインターフェース
+     */
     class IGameObject
     {
     protected:

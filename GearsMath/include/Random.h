@@ -9,9 +9,11 @@ namespace
     constexpr uint64_t MULTIPLIER = 6364136223846793005u;
     constexpr uint64_t INCREMENT = 1442695040888963407u;
     constexpr float DIVIDE = static_cast<float>(1.0f / 4294967295.0);
-    using namespace GLib::Utility;
 }
 
+/**
+ * @brief Permuted congruential generator 乱数生成器
+ */
 class Pcg32Fast
 {
 private:
@@ -41,7 +43,10 @@ public:
     }
 };
 
-class Random : public Singleton<Random>
+/**
+ * @brief 乱数生成 ラッパークラス
+ */
+class Random : public GLib::Singleton<Random>
 {
 private:
     Pcg32Fast rand{ std::random_device{}() };

@@ -6,7 +6,9 @@
 #include <Quaternion.h>
 #include <list>
 
-
+/**
+ * @brief Transformコンポーネント
+ */
 class Transform : public Component
 {
 public:
@@ -45,7 +47,7 @@ public:
     void LocalScale(const Vector3& scale);
     void LocalEulerAngles(const Vector3& angles);
 
-    void LookAt(const GLib::Utility::WeakPtr<Transform>& target, const Vector3& up = Vector3::Up());
+    void LookAt(const GLib::WeakPtr<Transform>& target, const Vector3& up = Vector3::Up());
     void LookAt(const Vector3& target, const Vector3& up = Vector3::Up());
     void Rotate(const Vector3& angles, Space relativeTo = Space::Self);
     void Rotate(const Vector3& axis, float angle, Space relativeTo = Space::Self);
@@ -63,17 +65,21 @@ public:
     Vector3 InverseTransformVector(const Vector3& vector) const;
     Vector3 InverseTransformDirection(const Vector3& direction) const;
 
-    void Parent(GLib::Utility::WeakPtr<Transform> parent);
-    GLib::Utility::WeakPtr<Transform> Parent() const;
-    void AddChild(const GLib::Utility::WeakPtr<Transform> child);
-    void RemoveChild(const GLib::Utility::WeakPtr<Transform> child);
+    void Parent(GLib::WeakPtr<Transform> parent);
+    GLib::WeakPtr<Transform> Parent() const;
+    const std::list<GLib::WeakPtr<Transform>>& Children() const;
     void ClearChildren();
+
+private:
+    void AddChild(const GLib::WeakPtr<Transform> child);
+    void RemoveChild(const GLib::WeakPtr<Transform> child);
+
 
 private:
     Vector3 local_position_{ Vector3::Zero() };
     Quaternion local_rotation_{ Quaternion::Identity() };
     Vector3 local_scale_{ Vector3::One() };
-    GLib::Utility::WeakPtr<Transform> parent_{ nullptr };
-    std::list<GLib::Utility::WeakPtr<Transform>> children_;
+    GLib::WeakPtr<Transform> parent_{ nullptr };
+    std::list<GLib::WeakPtr<Transform>> children_;
 };
 #endif // !GEARS_TRANSFORM_H

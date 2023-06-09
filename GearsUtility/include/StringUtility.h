@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-namespace GLib::Utility
+namespace GLib
 {
     /**
     * @brief •¶Žš—ñ‚ð•ªŠ„‚µ‚Ä•Ô‚·

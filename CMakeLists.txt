@@ -14,6 +14,7 @@ set(LIBRARY
     GearsCore
     GearsObject
     GearsComponent
+    GearsScene
     GearsMath 
     GearsUtility
 )
@@ -46,6 +47,6 @@ if(BUILD_DOCUMENTATION)
   configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
   add_custom_target(Docs ALL COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs
-                    COMMENT "Generating API documentation with Doxygen"
+                    COMMENT "Generating Libraray documentation with Doxygen"
                     VERBATIM)
 endif()

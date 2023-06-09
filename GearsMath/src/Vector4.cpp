@@ -2,7 +2,6 @@
 #include <Vector3.h>
 #include <Mathf.h>
 #include <sstream>
-#include <Debugging.h>
 
 Vector4::Vector4() : xyzw{ 0.0f }
 {}

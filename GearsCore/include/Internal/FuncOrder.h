@@ -1,6 +1,9 @@
 #ifndef GEARS_FUNC_ORDER_H
 #define GEARS_FUNC_ORDER_H
 
+/**
+ * @brief ä÷êîÇÃé¿çsèáê∂ê¨
+ */
 #define FUNC_ORDER(FuncName)                                            \
                                                                         \
 namespace GLib::Internal                                                \

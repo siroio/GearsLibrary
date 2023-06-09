@@ -11,7 +11,9 @@ GameObject::~GameObject()
 }
 
 void GameObject::Initialize()
-{}
+{
+    transform_ = AddComponent<class Transform>();
+}
 
 void GameObject::RemoveComponents()
 {
@@ -20,7 +22,7 @@ void GameObject::RemoveComponents()
 
 void GameObject::RemoveDeadComponents()
 {
-    std::erase_if(components_, [](const GLib::Utility::WeakPtr<Component>& component)
+    std::erase_if(components_, [](const GLib::WeakPtr<Component>& component)
     {
         return component->IsDead();
     });
@@ -83,7 +85,7 @@ bool GameObject::IsDead() const
     return isDead_;
 }
 
-const GLib::Utility::WeakPtr<Transform>& GameObject::Transform() const
+const GLib::WeakPtr<Transform>& GameObject::Transform() const
 {
     return transform_;
 }

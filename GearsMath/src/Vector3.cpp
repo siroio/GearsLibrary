@@ -3,7 +3,6 @@
 #include <Matrix4x4.h>
 #include <Mathf.h>
 #include <sstream>
-#include <Debugging.h>
 #include <Quaternion.h>
 
 Vector3::Vector3() : xyz{ 0.0f }
