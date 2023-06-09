@@ -12,28 +12,6 @@ namespace
     using namespace GLib::Internal;
 }
 
-class TestManager final :
-    public SingletonPtr<TestManager>,
-    public Interface::ISystem
-{
-private:
-    friend WeakPtr<TestManager> SingletonPtr<TestManager>::Instance();
-    TestManager() = default;
-
-public:
-    bool Initialize()
-    {
-        puts("テスト用マネージャークラスのInitializeが呼ばれました。");
-        return true;
-    }
-
-    void Update()
-    {
-        system("cls");
-        std::cout << GameTimer::DeltaTime() << std::endl;
-    }
-};
-
 int Game::Run()
 {
     RegisterSystem();
@@ -60,7 +38,6 @@ int Game::Run()
 
 void Game::RegisterSystem()
 {
-    SystemManager::AddSystem<TestManager>();
     SystemManager::AddSystem<GameObjectManager>();
     SystemManager::AddSystem<ComponentManager>();
     SystemManager::AddSystem<GameTimer>();

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
 
 # == CONFIG ==
-set(SOURCE_FOLDER 
+set(SOURCE_FILE 
     ./src/Mathf.cpp
     ./src/Vector2.cpp 
     ./src/Vector3.cpp
@@ -12,7 +12,7 @@ set(SOURCE_FOLDER
     ./src/Random.cpp
 )
 
-set(HEADER_FOLDER 
+set(HEADER_FILE 
     ./include/Mathf.h
     ./include/Vector2.h
     ./include/Vector3.h
@@ -25,7 +25,7 @@ set(HEADER_FOLDER
 
 set(LIB_NAME GearsMath)
 
-add_library(${LIB_NAME} STATIC ${SOURCE_FOLDER} ${HEADER_FOLDER})
+add_library(${LIB_NAME} STATIC ${SOURCE_FILE} ${HEADER_FILE})
 target_compile_features(${LIB_NAME} PRIVATE cxx_std_20)
 target_include_directories(${LIB_NAME} PUBLIC ./include)
 target_link_libraries(${LIB_NAME} GearsUtility)

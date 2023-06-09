@@ -16,6 +16,7 @@ public:
     {
         isExit = true;
     }
+
 private:
     void RegisterSystem();
     bool Initialize();

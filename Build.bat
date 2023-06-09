@@ -2,7 +2,7 @@
 @chcp 65001 > nul
 
 set BUILD_DIR=Build
-set IS_PAUSE=Flase
+set IS_PAUSE=true
 
 if not exist %BUILD_DIR%\nul (
   echo %BUILD_DIR%フォルダが存在しないため、作成します。
@@ -26,8 +26,6 @@ if errorlevel 1 (
 )
 
 echo ビルドが正常に終了しました。
-if %IS_PAUSE% equ True (
+if %IS_PAUSE% == true (
   pause
 )
-
-pause

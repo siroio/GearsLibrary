@@ -25,7 +25,6 @@ foreach(lib ${LIBRARY})
     endif()
 endforeach()
 
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Lib)
 add_definitions(-DUNICODE -D_UNICODE)
 
@@ -33,6 +32,7 @@ add_executable(GearsLibrary main.cpp)
 add_subdirectory(./GearsCore)
 add_subdirectory(./GearsObject)
 add_subdirectory(./GearsComponent)
+add_subdirectory(./GearsScene)
 add_subdirectory(./GearsMath)
 add_subdirectory(./GearsUtility)
 

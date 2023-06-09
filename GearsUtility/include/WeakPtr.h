@@ -17,6 +17,8 @@ namespace GLib::Utility
         {}
         WeakPtr(const WeakPtr<T>& ptr) : ptr_{ ptr.ptr_ }
         {}
+        WeakPtr(std::nullptr_t null) : ptr_{ std::shared_ptr<T>{ null } }
+        {}
 
         // ダウンキャスト
         template <class Base> requires std::derived_from<T, Base>
