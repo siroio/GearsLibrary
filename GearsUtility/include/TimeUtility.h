@@ -2,6 +2,7 @@
 #define GEARS_TIME_UTILITY_H
 
 #include <chrono>
+#include <sstream>
 
 namespace GLib
 {
@@ -37,11 +38,25 @@ namespace GLib
                 localTime.tm_hour,
                 localTime.tm_min,
                 localTime.tm_sec
-        };
+            };
 
             return result;
-    }
-};
+        }
+
+        /**
+         * @brief Œ»İ‚Ì‚ğ•¶š—ñ‚Åæ“¾
+         * @return [hh:mm:ss]
+         */
+        static inline std::string CurrentTimeStr()
+        {
+            const auto time = GLib::TimeUtility::CurrentTime();
+            std::ostringstream ss{};
+            ss << "[" << std::setfill('0') << std::setw(2) << time.hours
+                << ":" << std::setfill('0') << std::setw(2) << time.minutes
+                << ":" << std::setfill('0') << std::setw(2) << time.seconds << "]";
+            return ss.str();
+        }
+    };
 }
 
 #endif // !GEARS_TIME_UTILITY_H

@@ -1,6 +1,7 @@
 #ifndef GEARS_MATHF_H
 #define GEARS_MATHF_H
 
+#include <numbers>
 #include <limits>
 
 class Mathf
@@ -12,7 +13,9 @@ public:
     static constexpr float EPSILON = 1e-5f;
     static constexpr float EPSILON_SRQT = 1e-5f * 1e-5f;
     static constexpr float EPSILON_NORMAL_SQRT = 1e-15f;
-    static constexpr float PI = 3.141592653589793238462643383279f;
+    static constexpr float PI = std::numbers::pi_v<float>;
+    static constexpr float INV_PI = std::numbers::inv_pi_v<float>;
+    static constexpr float PHI = std::numbers::phi_v<float>;
     static constexpr float DEG2RAD = PI / 180.0f;
     static constexpr float RAD2DEG = 180.0f / PI;
     static constexpr float POSITIVE_INFINITY = std::numeric_limits<float>::infinity();

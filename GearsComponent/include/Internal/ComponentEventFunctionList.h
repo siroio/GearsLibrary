@@ -9,7 +9,7 @@
 #include <Internal/ComponentFunctionType.h>
 #include <FuncDefinition.h>
 
-namespace GLib::Utility
+namespace GLib
 {
     template<class T>
     class WeakPtr;

@@ -1,17 +1,18 @@
 #ifndef GEARS_LOGGER_H
 #define GEARS_LOGGER_H
 
-#include <cassert>
-#include <string>
 #include <string_view>
 #include <iostream>
-
+#include <cstdarg>
+#include <format>
 #include <TimeUtility.h>
 
 class Debug final
 {
 private:
     Debug() = default;
+    Debug(const Debug&) = delete;
+    Debug& operator = (const Debug&) = delete;
 
 public:
     enum class LogLevel
@@ -30,38 +31,59 @@ public:
 #endif
     }
 
-    static inline void Assert(bool expression)
-    {
 #ifdef _DEBUG
+
+    /**
+     * @brief メッセージ指定なしassert
+     */
+    static void Assert(bool expression)
+    {
         if (expression) return;
         Log("Assertion Error.", LogLevel::Error);
-#endif
     }
 
-    static inline void Assert(bool expression, std::string_view message)
+    /**
+     * @brief メッセージ指定ありassert
+     */
+    static void Assert(bool expression, std::string_view message)
     {
-#ifdef _DEBUG
         if (expression) return;
         Log(message, LogLevel::Error);
-#endif
     }
 
+    /**
+     * @brief メッセージ出力
+     */
     static void Log(std::string_view message, LogLevel loglevel = LogLevel::Info)
     {
-        auto time = GLib::TimeUtility::CurrentTime();
-        std::cout
-            << "[" << std::setfill('0') << std::setw(2) << time.hours
-            << ":" << std::setfill('0') << std::setw(2) << time.minutes
-            << ":" << std::setfill('0') << std::setw(2) << time.seconds << "]";
-
+        std::cout << GLib::TimeUtility::CurrentTimeStr();
         switch (loglevel)
         {
             case LogLevel::Info: std::cout << "[INFO] " << message << std::endl; break;
             case LogLevel::Warn: std::cout << "[WARN] " << message << std::endl; break;
             case LogLevel::Error: std::cout << "[ERROR] " << message << std::endl; break;
         }
-
     }
+
+    /**
+     * @brief フォーマット指定で出力
+     */
+    static void Format(const char* format, ...)
+    {
+        std::cout << GLib::TimeUtility::CurrentTimeStr() << " ";
+        va_list args;
+        va_start(args, format);
+        vprintf(format, args);
+        va_end(args);
+    }
+#else
+    static void Assert(...)
+    {}
+    static void Log(...)
+    {}
+    static void format(...)
+    {}
+#endif
 
 };
 

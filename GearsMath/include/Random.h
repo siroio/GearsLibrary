@@ -52,10 +52,39 @@ private:
     Pcg32Fast rand{ std::random_device{}() };
 
 public:
+
+    /**
+     * @brief シード値の設定
+     * @param seed
+     */
     void Seed(uint64_t seed);
+
+    /**
+     * @brief 乱数を生成
+     * @return
+     */
     uint32_t Next();
+
+    /**
+     * @brief 小数点の乱数を生成
+     * @return
+     */
     float Nextf();
+
+    /**
+     * @brief min ~ max範囲で乱数を生成
+     * @param min
+     * @param max
+     * @return
+     */
     int Range(int min, int max);
+
+    /**
+     * @brief min ~ max範囲で小数点の乱数を生成
+     * @param min
+     * @param max
+     * @return
+     */
     float Range(float min, float max);
 };
 #endif // !GEARS_RANDOM_H

@@ -29,7 +29,7 @@ public:
 public:
     /**
      * @brief コピーコンストラクタ
-     * @param[in] v コピー元のベクトル
+     * @param v コピー元のベクトル
     */
     Vector2(const Vector2& v) = default;
 
@@ -40,20 +40,20 @@ public:
 
     /**
      * @brief コンストラクタ
-     * @param[in] x X成分の値
-     * @param[in] y Y成分の値
+     * @param x X成分の値
+     * @param y Y成分の値
     */
     explicit Vector2(float x, float y);
 
     /**
      * @brief コンストラクタ
-     * @param[in] xy X,Y成分の値が等しい値
+     * @param xy X,Y成分の値が等しい値
     */
     explicit Vector2(float xy);
 
     /**
      * @brief コンストラクタ
-     * @param[in] v 3次元ベクトル
+     * @param v 3次元ベクトル
      * @details v.z成分は無視される
     */
     explicit Vector2(const Vector3& v);

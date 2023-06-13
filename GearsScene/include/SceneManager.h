@@ -26,6 +26,10 @@ namespace GLib::Scene
         friend GLib::WeakPtr<SceneManager> GLib::SingletonPtr<SceneManager>::Instance();
 
     public:
+
+        /**
+         * @brief シーンのロード
+         */
         void Update();
 
         /**
