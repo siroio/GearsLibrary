@@ -4,7 +4,8 @@ cmake_minimum_required(VERSION 3.1)
 set(SOURCE_FILE 
     ./src/SystemManager.cpp
     ./src/GameTimer.cpp
-	./src/Game.cpp
+    ./src/Window.cpp
+    ./src/Game.cpp
 )
 
 set(HEADER_FILE
@@ -19,7 +20,8 @@ set(HEADER_FILE
     ./include/FuncDefinition.h
     ./include/SystemManager.h
     ./include/GameTimer.h
-	./include/Game.h
+    ./include/Window.h
+    ./include/Game.h
 )
 
 set(LIB_NAME GearsCore)

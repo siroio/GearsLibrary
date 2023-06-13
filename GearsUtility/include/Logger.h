@@ -7,6 +7,7 @@
 #include <iostream>
 
 #include <TimeUtility.h>
+#include <source_location>
 
 class Debug final
 {
@@ -63,6 +64,6 @@ public:
 
     }
 
-};
+    };
 
 #endif // !GEARS_LOGGER_H
