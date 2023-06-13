@@ -31,14 +31,14 @@ public:
      * @brief GameObject‚Ìì¬
      * @return GameObjectPtr
      */
-    static GameObjectPtr CreateActor();
+    static GameObjectPtr Instatiate();
 
     /**
      * @brief GameObject‚Ìì¬
      * @param name
      * @return GameObjectPtr
      */
-    static GameObjectPtr CreateActor(std::string_view name);
+    static GameObjectPtr Instatiate(std::string_view name);
 
     /**
      * @brief GameObject‚ÌŒŸõ

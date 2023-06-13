@@ -25,15 +25,6 @@ class GameObject final :
     public GLib::Internal::Interface::IGameObject,
     public std::enable_shared_from_this<GameObject>
 {
-private:
-    bool isDead_{ false };
-    bool isActive_{ false };
-    bool isDontDestroyOnLoad_{ false };
-    std::string name_{ "" };
-    std::string tag_{ "" };
-    std::list<std::shared_ptr<Component>> components_;
-    GLib::WeakPtr<Transform> transform_{ nullptr };
-
 public:
     explicit GameObject(std::string_view name);
 
@@ -88,6 +79,15 @@ public:
 
 private:
     virtual void Initialize() override;
+
+private:
+    bool isDead_{ false };
+    bool isActive_{ false };
+    bool isDontDestroyOnLoad_{ false };
+    std::string name_{ "" };
+    std::string tag_{ "" };
+    std::list<std::shared_ptr<Component>> components_;
+    GLib::WeakPtr<class Transform> transform_{ nullptr };
 };
 
 template<class T, class... Args> requires IsComponent<T>
@@ -95,7 +95,7 @@ inline GLib::WeakPtr<T> GameObject::AddComponent(Args&& ...args)
 {
     auto component = GLib::Internal::ComponentManager::Instance()->AddComponent<T>(weak_from_this(), args...);
     components_.push_back(component);
-    return GLib::WeakPtr<T>(component);
+    return GLib::WeakPtr<T>{ component };
 }
 
 template<class T> requires IsComponent<T>
@@ -140,10 +140,12 @@ template<class T> requires IsComponent<T>
 inline std::list<GLib::WeakPtr<T>> GameObject::GetComponents() const
 {
     std::list<GLib::WeakPtr<T>> result;
-    std::ranges::copy_if(components_.begin(), components_.end(), result, [](const std::shared_ptr<Component> component)
+
+    for (const auto& component : components_)
     {
-        return typeid(T) == typeid(*(component.get()));
-    });
+        if (typeid(T) != typeid(*(component.get()))) continue;
+        result.push_back(GLib::WeakPtr<T>{ std::dynamic_pointer_cast<T>(component) });
+    }
 
     return result;
 }

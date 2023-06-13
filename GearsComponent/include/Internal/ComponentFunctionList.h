@@ -67,9 +67,9 @@ namespace GLib::Internal
     template<class T> requires std::derived_from<T, Component>
     inline void ComponentFunctionList::AddFunction(const std::shared_ptr<T>& component)
     {
-        AddStart(component);
-        AddUpdate(component);
-        AddLateUpdate(component);
+        this->AddStart(component);
+        this->AddUpdate(component);
+        this->AddLateUpdate(component);
     }
 
     template<size_t index, class ...Args>

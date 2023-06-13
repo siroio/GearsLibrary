@@ -35,12 +35,12 @@ void GameObjectManager::ResetActorList()
     }
 }
 
-GameObjectPtr GameObjectManager::CreateActor()
+GameObjectPtr GameObjectManager::Instatiate()
 {
-    return CreateActor("GameObject");
+    return Instatiate("GameObject");
 }
 
-GameObjectPtr GameObjectManager::CreateActor(std::string_view name)
+GameObjectPtr GameObjectManager::Instatiate(std::string_view name)
 {
     std::shared_ptr<GameObject> gameObject = std::make_shared<GameObject>(name);
     gameObjects_.push_back(gameObject);

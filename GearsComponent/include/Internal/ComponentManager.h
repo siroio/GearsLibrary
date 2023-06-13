@@ -49,12 +49,12 @@ namespace GLib::Internal
         std::unordered_map<std::uintptr_t, ComponentEventFunctionList> eventFunction_;
     };
 
-    template<class ComponentType, class ...Args>
+    template<class ComponentType, class... Args>
     inline std::shared_ptr<ComponentType> ComponentManager::AddComponent(const GameObjectPtr& gameObject, Args&& ...args)
     {
-        auto component = std::make_shared<ComponentType>(args...);
+        std::shared_ptr<ComponentType> component = std::make_shared<ComponentType>(std::forward<Args>(args)...);
         std::static_pointer_cast<Interface::IComponent>(component)->SetGameObject(gameObject);
-
+        normalFunction_.AddFunction(component);
         std::uintptr_t ptr = gameObject.getId();
 
         if (eventFunction_.find(ptr) == eventFunction_.end())
@@ -71,13 +71,13 @@ namespace GLib::Internal
         return component;
     }
 
-    template<class ...Args>
+    template<class... Args>
     inline void ComponentManager::ExecuteNormalFunction(ComponentFunctionType type, const Args&... args)
     {
-        normalFunction_.Execute(type, args);
+        normalFunction_.Execute(type, args...);
     }
 
-    template<class ...Args>
+    template<class... Args>
     inline void ComponentManager::ExecuteEventFunction(const GameObjectPtr& gameObject, ComponentFunctionType type, const Args&... args)
     {
         const std::uintptr_t ptr = gameObject.getId();
