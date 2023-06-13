@@ -29,8 +29,9 @@ bool GLib::Window::Initialize()
 {
     // 作成済みかチェック
     if (windowHandle_ != NULL) return false;
+    if (FAILED(CoInitializeEx(0, COINIT_MULTITHREADED))) return false;
 
-    WNDCLASS wc{};
+    WNDCLASSEX wc{};
     wc.hInstance = instanceHandle_ = GetModuleHandle(nullptr);
     wc.lpfnWndProc = (WNDPROC)windowProc_;
 #ifdef UNICODE
@@ -47,6 +48,8 @@ bool GLib::Window::Initialize()
 #else
     RECT rect{ 0, 0, static_cast<LONG>(windowSize_.x), static_cast<LONG>(windowSize_.y) };
 #endif
+
+    RegisterClassEx(&wc);
     AdjustWindowRect(&rect, style, false);
 
     // ウィンドウ作成

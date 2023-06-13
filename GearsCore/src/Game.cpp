@@ -20,7 +20,7 @@ int Game::Run()
 
     Start();
 
-    MSG msg = {};
+    MSG msg{};
     while (msg.message != WM_QUIT && !isExit)
     {
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))

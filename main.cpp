@@ -27,6 +27,7 @@ class MyGame : public Game
     {
         Debug::Log("GAME STARTED. . . . .");
         GLib::Scene::SceneManager::Register<TestScene>();
+        Debug::Format("Hello World!");
     }
 
     virtual void End() override

@@ -1,19 +1,18 @@
 #ifndef GEARS_LOGGER_H
 #define GEARS_LOGGER_H
 
-#include <cassert>
-#include <string>
 #include <string_view>
 #include <iostream>
-
-#include <TimeUtility.h>
-#include <source_location>
 #include <cstdarg>
+#include <format>
+#include <TimeUtility.h>
 
 class Debug final
 {
 private:
     Debug() = default;
+    Debug(const Debug&) = delete;
+    Debug& operator = (const Debug&) = delete;
 
 public:
     enum class LogLevel
@@ -57,12 +56,7 @@ public:
      */
     static void Log(std::string_view message, LogLevel loglevel = LogLevel::Info)
     {
-        const auto time = GLib::TimeUtility::CurrentTime();
-        std::cout
-            << "[" << std::setfill('0') << std::setw(2) << time.hours
-            << ":" << std::setfill('0') << std::setw(2) << time.minutes
-            << ":" << std::setfill('0') << std::setw(2) << time.seconds << "]";
-
+        std::cout << GLib::TimeUtility::CurrentTimeStr();
         switch (loglevel)
         {
             case LogLevel::Info: std::cout << "[INFO] " << message << std::endl; break;
@@ -74,18 +68,13 @@ public:
     /**
      * @brief フォーマット指定で出力
      */
-    static void format(const char* format, ...)
+    static void Format(const char* format, ...)
     {
-        const auto time = GLib::TimeUtility::CurrentTime();
-        std::cout
-            << "[" << std::setfill('0') << std::setw(2) << time.hours
-            << ":" << std::setfill('0') << std::setw(2) << time.minutes
-            << ":" << std::setfill('0') << std::setw(2) << time.seconds << "]";
-
-        va_list valist;
-        va_start(valist, format);
-        vprintf(format, valist);
-        va_end(valist);
+        std::cout << GLib::TimeUtility::CurrentTimeStr() << " ";
+        va_list args;
+        va_start(args, format);
+        vprintf(format, args);
+        va_end(args);
     }
 #else
     static void Assert(...)
