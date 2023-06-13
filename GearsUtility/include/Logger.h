@@ -8,6 +8,7 @@
 
 #include <TimeUtility.h>
 #include <source_location>
+#include <cstdarg>
 
 class Debug final
 {
@@ -31,25 +32,32 @@ public:
 #endif
     }
 
-    static inline void Assert(bool expression)
-    {
 #ifdef _DEBUG
+
+    /**
+     * @brief メッセージ指定なしassert
+     */
+    static void Assert(bool expression)
+    {
         if (expression) return;
         Log("Assertion Error.", LogLevel::Error);
-#endif
     }
 
-    static inline void Assert(bool expression, std::string_view message)
+    /**
+     * @brief メッセージ指定ありassert
+     */
+    static void Assert(bool expression, std::string_view message)
     {
-#ifdef _DEBUG
         if (expression) return;
         Log(message, LogLevel::Error);
-#endif
     }
 
+    /**
+     * @brief メッセージ出力
+     */
     static void Log(std::string_view message, LogLevel loglevel = LogLevel::Info)
     {
-        auto time = GLib::TimeUtility::CurrentTime();
+        const auto time = GLib::TimeUtility::CurrentTime();
         std::cout
             << "[" << std::setfill('0') << std::setw(2) << time.hours
             << ":" << std::setfill('0') << std::setw(2) << time.minutes
@@ -61,9 +69,33 @@ public:
             case LogLevel::Warn: std::cout << "[WARN] " << message << std::endl; break;
             case LogLevel::Error: std::cout << "[ERROR] " << message << std::endl; break;
         }
-
     }
 
-    };
+    /**
+     * @brief フォーマット指定で出力
+     */
+    static void format(const char* format, ...)
+    {
+        const auto time = GLib::TimeUtility::CurrentTime();
+        std::cout
+            << "[" << std::setfill('0') << std::setw(2) << time.hours
+            << ":" << std::setfill('0') << std::setw(2) << time.minutes
+            << ":" << std::setfill('0') << std::setw(2) << time.seconds << "]";
+
+        va_list valist;
+        va_start(valist, format);
+        vprintf(format, valist);
+        va_end(valist);
+    }
+#else
+    static void Assert(...)
+    {}
+    static void Log(...)
+    {}
+    static void format(...)
+    {}
+#endif
+
+};
 
 #endif // !GEARS_LOGGER_H

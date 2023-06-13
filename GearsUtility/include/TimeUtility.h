@@ -37,11 +37,11 @@ namespace GLib
                 localTime.tm_hour,
                 localTime.tm_min,
                 localTime.tm_sec
-        };
+            };
 
             return result;
-    }
-};
+        }
+    };
 }
 
 #endif // !GEARS_TIME_UTILITY_H
