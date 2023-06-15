@@ -81,7 +81,7 @@ public:
     {}
     static void Log(...)
     {}
-    static void format(...)
+    static void Format(...)
     {}
 #endif
 
