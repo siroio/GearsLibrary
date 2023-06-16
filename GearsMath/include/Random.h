@@ -4,21 +4,11 @@
 #include <Mathf.h>
 #include <random>
 
-namespace
-{
-    constexpr uint64_t MULTIPLIER = 6364136223846793005u;
-    constexpr uint64_t INCREMENT = 1442695040888963407u;
-    constexpr float DIVIDE = static_cast<float>(1.0f / 4294967295.0);
-}
-
 /**
- * @brief Permuted congruential generator —”¶¬Ší
+ * @brief Permuted Congruential Generator —”¶¬Ší
  */
 class Pcg32Fast
 {
-private:
-    uint64_t state;
-
 public:
     constexpr explicit Pcg32Fast(uint64_t seed)
     {
@@ -41,6 +31,14 @@ public:
         uint32_t rot = oldstate >> 59u;
         return (xorshifted >> rot) | (xorshifted << (-static_cast<int>(rot) & 31));
     }
+
+public:
+    static inline uint64_t MULTIPLIER = 6364136223846793005u;
+    static inline uint64_t INCREMENT = 1442695040888963407u;
+    static inline float DIVIDE = static_cast<float>(1.0f / 4294967295.0);
+
+private:
+    uint64_t state;
 };
 
 /**

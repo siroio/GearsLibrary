@@ -29,7 +29,7 @@ bool Component::IsDead() const
 
 void Component::SetGameObject(const GameObjectPtr& gameObject)
 {
-    if (gameObject.expired())
+    if (gameObject_.expired())
     {
         gameObject_ = gameObject;
     }

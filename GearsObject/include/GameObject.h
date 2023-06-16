@@ -82,7 +82,7 @@ private:
 
 private:
     bool isDead_{ false };
-    bool isActive_{ false };
+    bool isActive_{ true };
     bool isDontDestroyOnLoad_{ false };
     std::string name_{ "" };
     std::string tag_{ "" };

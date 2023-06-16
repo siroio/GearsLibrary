@@ -111,6 +111,11 @@ float Mathf::Round(float f)
     return roundf(f);
 }
 
+float Mathf::Mod(float a, float b)
+{
+    return std::fmod(a, b);
+}
+
 int Mathf::CeilToInt(float f)
 {
     return static_cast<int>(ceilf(f));

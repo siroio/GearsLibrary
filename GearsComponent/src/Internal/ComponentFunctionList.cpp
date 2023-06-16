@@ -8,28 +8,27 @@ void GLib::Internal::ComponentFunctionList::Update()
     for (auto it = addedFunction_.begin(); it != addedFunction_.end();)
     {
         // 期限を確認
-        bool expired = std::visit([](const auto& v)
+        if (std::visit([](const auto& v)
         {
             return v.component.expired();
-        }, it->second);
-        if (expired)
+        }, it->second))
         {
             it = addedFunction_.erase(it);
-            return;
         }
 
         // アクティブを確認
-        bool active = std::visit([](const auto& v)
+        else if (std::visit([](const auto& v)
         {
             return v.component->Active();
-        }, it->second);
-        if (active)
+        }, it->second))
         {
             functions_[it->first].push_back(it->second);
             it = addedFunction_.erase(it);
-            return;
         }
-        ++it;
+        else
+        {
+            ++it;
+        }
     }
 }
 
@@ -52,13 +51,13 @@ void GLib::Internal::ComponentFunctionList::Execute(FunctionType type, const GLi
 void GLib::Internal::ComponentFunctionList::ExecuteClear(FunctionType type)
 {
     Execute(type);
-    functions_.clear();
+    functions_[type].clear();
 }
 
 void GLib::Internal::ComponentFunctionList::ExecuteClear(FunctionType type, const GLib::WeakPtr<CameraBase>& camera)
 {
     Execute(type, camera);
-    functions_.clear();
+    functions_[type].clear();
 }
 
 void GLib::Internal::ComponentFunctionList::Remove(FunctionType type)

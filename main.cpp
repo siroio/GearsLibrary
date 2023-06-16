@@ -8,6 +8,7 @@
 #include <GameObject.h>
 #include <GameObjectManager.h>
 #include <Component.h>
+#include <Random.h>
 using namespace std;
 
 class TestComponent : public Component
@@ -15,20 +16,13 @@ class TestComponent : public Component
 public:
     void Start()
     {
-        Debug::Log("Start");
+        Debug::Log("Start TestComponent");
     }
+
     void Update()
-    {
-        frameCount++;
-        system("cls");
-        Debug::Log("Test Update" + frameCount);
-    }
-    void LateUpdate()
-    {
-        Debug::Log("up");
-    }
+    {}
 private:
-    int frameCount = 0;
+    float timer = 0;
 };
 
 class TestScene : public GLib::Scene::Scene
@@ -39,7 +33,9 @@ public:
         Debug::Log("Scene Loaded...");
         auto go = GameObjectManager::Instatiate("TestObject");
         Debug::Log(go->Name());
-        go->AddComponent<TestComponent>();
+        auto ptr = go->AddComponent<TestComponent>();
+        Debug::Log(ptr->GameObject()->Name());
+        Debug::Log(ptr->Active() ? "true" : "false");
     }
 
     virtual void End() override

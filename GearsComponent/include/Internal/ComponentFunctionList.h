@@ -7,6 +7,7 @@
 #include <Internal/ComponentFunctionInfo.h>
 #include <Internal/ComponentFunctionType.h>
 #include <FuncDefinition.h>
+#include <string>
 
 namespace GLib
 {
@@ -67,9 +68,9 @@ namespace GLib::Internal
     template<class T> requires std::derived_from<T, Component>
     inline void ComponentFunctionList::AddFunction(const std::shared_ptr<T>& component)
     {
-        this->AddStart(component);
-        this->AddUpdate(component);
-        this->AddLateUpdate(component);
+        AddStart(component);
+        AddUpdate(component);
+        AddLateUpdate(component);
     }
 
     template<size_t index, class ...Args>
@@ -89,28 +90,27 @@ namespace GLib::Internal
     template<class T> requires HasStartFunc<T, void>
     inline void ComponentFunctionList::AddStart(const std::shared_ptr<T>& component)
     {
-        addedFunction_.push_back({
-                FunctionType::Start,
-                FunctionInfo<void>{ component, std::make_shared<Function::HasStartObject<T, void>>(component) }
-            });
+        addedFunction_.emplace_back(FunctionType::Start,
+            FunctionInfo<void>{ component, std::make_shared<Function::HasStartObject<T, void>>(component)}
+        );
     }
 
     template<class T> requires HasUpdateFunc<T, void>
     inline void ComponentFunctionList::AddUpdate(const std::shared_ptr<T>& component)
     {
-        addedFunction_.push_back({
-                FunctionType::Update,
-                FunctionInfo<void>{ component, std::make_shared<Function::HasUpdateObject<T, void>>(component) }
-            });
+        addedFunction_.emplace_back(
+            FunctionType::Update,
+            FunctionInfo<void>{ component, std::make_shared<Function::HasUpdateObject<T, void>>(component) }
+        );
     }
 
     template<class T> requires HasLateUpdateFunc<T, void>
     inline void ComponentFunctionList::AddLateUpdate(const std::shared_ptr<T>& component)
     {
-        addedFunction_.push_back({
-                FunctionType::LateUpdate,
-                FunctionInfo<void>{ component, std::make_shared<Function::HasLateUpdateObject<T, void>>(component) }
-            });
+        addedFunction_.emplace_back(
+            FunctionType::LateUpdate,
+            FunctionInfo<void>{ component, std::make_shared<Function::HasLateUpdateObject<T, void>>(component) }
+        );
     }
 }
 

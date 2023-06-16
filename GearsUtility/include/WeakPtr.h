@@ -54,7 +54,7 @@ namespace GLib
             return ptr;
         }
 
-        bool expired() const
+        bool expired() const noexcept
         {
             return ptr_.expired();
         }

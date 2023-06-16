@@ -32,7 +32,7 @@ namespace GLib
          */
         static inline WeakPtr<T> Instance()
         {
-            std::scoped_lock lock(singleton_mutex);
+            std::lock_guard lock(singleton_mutex);
             if (!instance)
             {
                 instance = std::shared_ptr<T>{ new T() };
@@ -45,7 +45,7 @@ namespace GLib
          */
         static inline void Release()
         {
-            std::scoped_lock lock(singleton_mutex);
+            std::lock_guard lock(singleton_mutex);
             if (instance)
             {
                 instance.reset();
@@ -76,7 +76,7 @@ namespace GLib
          */
         static T& Instance()
         {
-            std::scoped_lock lock(singleton_mutex);
+            std::lock_guard lock(singleton_mutex);
             static T instance;
             return instance;
         }

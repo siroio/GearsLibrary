@@ -1,6 +1,7 @@
 #include <SceneManager.h>
 #include <Scene.h>
 #include <GameObjectManager.h>
+#include <Logger.h>
 
 namespace
 {
@@ -21,7 +22,7 @@ void GLib::Scene::SceneManager::LoadScene(const std::string& name)
 {
     if (scenes_.find(name) == scenes_.end())
     {
-        //TODO: ERROR HANDLE
+        Debug::Log("Scene " + name + " was not found.");
         return;
     }
     next_ = scenes_[name];

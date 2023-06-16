@@ -6,19 +6,19 @@
 
 namespace GLib
 {
-    struct Time
-    {
-        int hours;
-        int minutes;
-        int seconds;
-    };
-
     /**
      * @brief ŠÔŒnUtility
      */
     class TimeUtility
     {
     public:
+        struct Time
+        {
+            int hours;
+            int minutes;
+            int seconds;
+        };
+
         /**
          * @brief Œ»İ‚Ì‚ğ ŠÔ:•ª:•b‚Åæ“¾
          * @return Time
@@ -41,7 +41,7 @@ namespace GLib
             };
 
             return result;
-        }
+    }
 
         /**
          * @brief Œ»İ‚Ì‚ğ•¶š—ñ‚Åæ“¾
@@ -56,7 +56,7 @@ namespace GLib
                 << ":" << std::setfill('0') << std::setw(2) << time.seconds << "]";
             return ss.str();
         }
-    };
+};
 }
 
 #endif // !GEARS_TIME_UTILITY_H

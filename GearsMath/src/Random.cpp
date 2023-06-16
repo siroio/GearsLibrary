@@ -14,7 +14,7 @@ uint32_t Random::Next()
 
 float Random::Nextf()
 {
-    return static_cast<float>(rand() * DIVIDE);
+    return static_cast<float>(rand() * Pcg32Fast::DIVIDE);
 }
 
 int Random::Range(int min, int max)
@@ -24,5 +24,5 @@ int Random::Range(int min, int max)
 
 float Random::Range(float min, float max)
 {
-    return static_cast<float>((min + (max - min) * (rand() * DIVIDE)));
+    return static_cast<float>((min + (max - min) * (rand() * Pcg32Fast::DIVIDE)));
 }

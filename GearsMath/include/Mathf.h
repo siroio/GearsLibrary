@@ -20,6 +20,7 @@ public:
     static constexpr float RAD2DEG = 180.0f / PI;
     static constexpr float POSITIVE_INFINITY = std::numeric_limits<float>::infinity();
     static constexpr float NEGATIVE_INFINITY = -std::numeric_limits<float>::infinity();
+    static constexpr float QNAN = std::numeric_limits<float>::quiet_NaN();
 
     /**
      * @brief vÇÃãtêîÇï‘Ç∑
@@ -77,6 +78,7 @@ public:
     static float Ceil(float f);
     static float Floor(float f);
     static float Round(float f);
+    static float Mod(float a, float b);
     static int CeilToInt(float f);
     static int FloorToInt(float f);
     static int RoundToInt(float f);
