@@ -12,7 +12,7 @@ void GLib::Scene::SceneManager::Update()
 {
     if (next_.expired()) return;
     if (!current_.expired()) current_->End();
-    gameObjectManager->ResetActorList();
+    gameObjectManager->ResetGameObjects();
     current_ = next_;
     next_ = nullptr;
     current_->Start();

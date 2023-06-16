@@ -8,6 +8,7 @@ set(SOURCE_FILE
     ./src/Vector4.cpp
     ./src/Quaternion.cpp
     ./src/Matrix4x4.cpp
+    ./src/Matrix3x3.cpp
     ./src/Color.cpp
     ./src/Random.cpp
 )
@@ -19,6 +20,7 @@ set(HEADER_FILE
     ./include/Vector4.h
     ./include/Quaternion.h
     ./include/Matrix4x4.h
+    ./include/Matrix3x3.h
     ./include/Color.h
     ./include/Random.h
 )

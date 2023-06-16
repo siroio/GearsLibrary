@@ -26,7 +26,7 @@ void GameObjectManager::Finalize()
     gameObjects_.clear();
 }
 
-void GameObjectManager::ResetActorList()
+void GameObjectManager::ResetGameObjects()
 {
     for (const auto& gameObject : gameObjects_)
     {

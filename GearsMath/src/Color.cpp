@@ -2,15 +2,6 @@
 #include <Mathf.h>
 #include <sstream>
 
-Color::Color() : rgba{ 0.0f }
-{}
-
-Color::Color(float r, float g, float b, float a = 1.0f) : r{ r }, g{ g }, b{ b }, a{ a }
-{}
-
-Color::Color(float rgba) : rgba{ rgba }
-{}
-
 Color Color::Lerp(const Color& a, const Color& b, float t)
 {
     return LerpUnclamped(a, b, Mathf::Clamp01(t));
@@ -64,6 +55,15 @@ std::string Color::ToString() const
 void Color::operator=(const Color& c)
 {
     Set(c);
+}
+
+float Color::operator[](const size_t index) const
+{
+    if (index > 3)
+    {
+        throw std::out_of_range("Index is out of range");
+    }
+    return rgba[index];
 }
 
 float& Color::operator[](const size_t index)

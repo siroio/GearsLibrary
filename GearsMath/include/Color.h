@@ -14,17 +14,25 @@ public:
         {
             float  r, g, b, a;
         };
-        struct
-        {
-            std::array<float, 4> rgba;
-        };
+        std::array<float, 4> rgba;
     };
 
 public:
     Color(const Color& color) = default;
-    explicit Color();
-    explicit Color(float r, float g, float b, float a);
-    explicit Color(float rgba);
+
+    constexpr explicit Color() : rgba{ 0.0f }
+    {}
+
+    constexpr explicit Color(float r, float g, float b, float a = 1.0f) : r{ r }, g{ g }, b{ b }, a{ a }
+    {
+        rgba[0] = r;
+        rgba[1] = g;
+        rgba[2] = b;
+        rgba[3] = a;
+    };
+
+    constexpr explicit Color(float rgba) : rgba{ rgba }
+    {}
 
 public:
     static Color Lerp(const Color& a, const Color& b, float t);
@@ -39,6 +47,7 @@ public:
 
 public:
     void operator = (const Color& c);
+    float operator [] (const size_t index) const;
     float& operator[] (const size_t index);
 };
 

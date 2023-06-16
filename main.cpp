@@ -35,7 +35,7 @@ public:
         Debug::Log(go->Name());
         auto ptr = go->AddComponent<TestComponent>();
         Debug::Log(ptr->GameObject()->Name());
-        Debug::Log(ptr->Active() ? "true" : "false");
+        Debug::Log("ActiveStatus: " + std::to_string(ptr->Active()));
     }
 
     virtual void End() override

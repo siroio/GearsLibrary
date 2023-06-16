@@ -23,7 +23,7 @@ public:
     void Update();
     void DebugDraw();
     void Finalize();
-    void ResetActorList();
+    void ResetGameObjects();
 
 public:
 
