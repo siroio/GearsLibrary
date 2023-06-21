@@ -9,6 +9,7 @@ namespace GLib::Constant::Order
     namespace Update
     {
         /* UPDATE ORDER */
+
         constexpr int INPUT = -100;
         constexpr int TIME = INPUT + 1;
         constexpr int SCENE = TIME + 1;

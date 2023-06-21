@@ -24,12 +24,7 @@ public:
     {}
 
     constexpr explicit Color(float r, float g, float b, float a = 1.0f) : r{ r }, g{ g }, b{ b }, a{ a }
-    {
-        rgba[0] = r;
-        rgba[1] = g;
-        rgba[2] = b;
-        rgba[3] = a;
-    };
+    {}
 
     constexpr explicit Color(float rgba) : rgba{ rgba }
     {}

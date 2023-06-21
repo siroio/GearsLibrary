@@ -25,9 +25,15 @@ public:
 
 public:
     Vector4(const Vector4& v) = default;
-    explicit Vector4();
-    explicit Vector4(float x, float y, float z, float w);
-    explicit Vector4(float xyzw);
+
+    explicit Vector4() : xyzw{ 0.0f }
+    {}
+
+    explicit Vector4(float x, float y, float z, float w) : x{ x }, y{ y }, z{ z }, w{ w }
+    {}
+
+    explicit Vector4(float xyzw) : xyzw{ xyzw }
+    {}
 
 public:
     static Vector4 Zero();

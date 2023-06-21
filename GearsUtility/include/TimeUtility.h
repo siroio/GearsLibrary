@@ -17,6 +17,14 @@ namespace GLib
             int hours;
             int minutes;
             int seconds;
+
+            Time() = default;
+
+            Time(int hours, int minutes, int seconds)
+                : hours(hours), minutes(minutes), seconds(seconds)
+            {}
+
+            bool operator == (const Time& other) const = default;
         };
 
         /**
@@ -33,15 +41,12 @@ namespace GLib
 #else
             localtime_r(&currentTime_t, &localTime);
 #endif
-            Time result
-            {
+            return Time{
                 localTime.tm_hour,
                 localTime.tm_min,
                 localTime.tm_sec
             };
-
-            return result;
-    }
+        }
 
         /**
          * @brief Œ»İ‚Ì‚ğ•¶š—ñ‚Åæ“¾
@@ -56,7 +61,7 @@ namespace GLib
                 << ":" << std::setfill('0') << std::setw(2) << time.seconds << "]";
             return ss.str();
         }
-};
+    };
 }
 
 #endif // !GEARS_TIME_UTILITY_H

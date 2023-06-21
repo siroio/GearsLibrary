@@ -1,5 +1,12 @@
 #include <Window.h>
 #include <Vector2.h>
+#ifdef _WIN32
+#ifdef _DEBUG
+#include <crtdbg.h>
+#endif
+#endif
+
+
 
 namespace
 {
@@ -30,6 +37,13 @@ bool GLib::Window::Initialize()
     // 作成済みかチェック
     if (windowHandle_ != NULL) return false;
     if (FAILED(CoInitializeEx(0, COINIT_MULTITHREADED))) return false;
+
+#ifdef _WIN32
+#ifdef _DEBUG
+    // メモリリーク検出
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif
+#endif
 
     WNDCLASSEX wc{};
     wc.hInstance = instanceHandle_ = GetModuleHandle(nullptr);

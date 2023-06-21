@@ -3,15 +3,6 @@
 #include <Mathf.h>
 #include <sstream>
 
-Vector4::Vector4() : xyzw{ 0.0f }
-{}
-
-Vector4::Vector4(float x, float y, float z, float w) : x{ x }, y{ y }, z{ z }, w{ w }
-{}
-
-Vector4::Vector4(float xyzw) : xyzw{ xyzw }
-{}
-
 Vector4 Vector4::Zero()
 {
     return Vector4{ 0.0f, 0.0f, 0.0f, 0.0f };

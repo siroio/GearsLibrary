@@ -4,41 +4,6 @@
 #include <Mathf.h>
 #include <sstream>
 
-Matrix4x4::Matrix4x4() : matrix{ 0.0f }
-{}
-
-Matrix4x4::Matrix4x4(float m11, float m12, float m13, float m14,
-    float m21, float m22, float m23, float m24,
-    float m31, float m32, float m33, float m34,
-    float m41, float m42, float m43, float m44)
-    : m11{ m11 }, m12{ m12 }, m13{ m13 }, m14{ m14 },
-    m21{ m21 }, m22{ m22 }, m23{ m23 }, m24{ m24 },
-    m31{ m31 }, m32{ m32 }, m33{ m33 }, m34{ m34 },
-    m41{ m41 }, m42{ m42 }, m43{ m43 }, m44{ m44 }
-{}
-
-Matrix4x4 Matrix4x4::Zero()
-{
-    return Matrix4x4
-    {
-        0.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 0.0f
-    };
-}
-
-Matrix4x4 Matrix4x4::Identity()
-{
-    return Matrix4x4
-    {
-        1.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 1.0f
-    };
-}
-
 Matrix4x4 Matrix4x4::Translate(const Vector3& v)
 {
     return Matrix4x4
@@ -331,8 +296,7 @@ Matrix4x4 Matrix4x4::Inverse() const
         return *this;
     }
     float invDet = 1.0f / det;
-    return Matrix4x4
-    {
+    return Matrix4x4{
         (m22 * b5 - m23 * b4 + m24 * b3) * invDet,
         (-m12 * b5 + m13 * b4 - m14 * b3) * invDet,
         (m42 * a5 - m43 * a4 + m44 * a3) * invDet,
@@ -398,9 +362,14 @@ std::string Matrix4x4::ToString() const
     return ss.str();
 }
 
-void Matrix4x4::operator=(const Matrix4x4& m)
+std::array<float, 4> Matrix4x4::operator[](const size_t index) const
 {
-    Set(m);
+    return matrix[index];
+}
+
+std::array<float, 4>& Matrix4x4::operator[](const size_t index)
+{
+    return matrix[index];
 }
 
 Matrix4x4 operator+=(Matrix4x4& m1, const Matrix4x4& m2)
@@ -455,7 +424,7 @@ Matrix4x4 operator-=(Matrix4x4& m1, const Matrix4x4& m2)
 
 Matrix4x4 operator*=(Matrix4x4& m1, const Matrix4x4& m2)
 {
-    Matrix4x4 result;
+    Matrix4x4 result{};
 
     for (int i = 0; i < 4; ++i)
     {
@@ -463,12 +432,12 @@ Matrix4x4 operator*=(Matrix4x4& m1, const Matrix4x4& m2)
         {
             for (int k = 0; k < 4; ++k)
             {
-                result.matrix[i][j] += m1.matrix[i][k] * m1.matrix[k][j];
+                result[i][j] += m1[i][k] * m2[k][j];
             }
         }
     }
-
-    return result;
+    m1 = result;
+    return m1;
 }
 
 Matrix4x4 operator*=(Matrix4x4& m, float scalar)

@@ -29,17 +29,45 @@ public:
     };
 
 public:
-    Matrix4x4(const Matrix4x4& m) = default;
-    explicit Matrix4x4();
-    explicit Matrix4x4(
-        float m11, float m12, float m13, float m14,
+    Matrix4x4(const Matrix4x4&) = default;
+
+    constexpr explicit Matrix4x4() : matrix{ 0.0f }
+    {}
+
+    constexpr explicit Matrix4x4(float m11, float m12, float m13, float m14,
         float m21, float m22, float m23, float m24,
         float m31, float m32, float m33, float m34,
-        float m41, float m42, float m43, float m44);
+        float m41, float m42, float m43, float m44)
+        : m11{ m11 }, m12{ m12 }, m13{ m13 }, m14{ m14 },
+        m21{ m21 }, m22{ m22 }, m23{ m23 }, m24{ m24 },
+        m31{ m31 }, m32{ m32 }, m33{ m33 }, m34{ m34 },
+        m41{ m41 }, m42{ m42 }, m43{ m43 }, m44{ m44 }
+    {}
 
 public:
-    static Matrix4x4 Zero();
-    static Matrix4x4 Identity();
+    static constexpr Matrix4x4 Zero()
+    {
+        return Matrix4x4
+        {
+            0.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, 0.0f
+        };
+    }
+
+    static constexpr Matrix4x4 Identity()
+    {
+        return Matrix4x4
+        {
+            1.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, 1.0f
+        };
+    }
+
+public:
     static Matrix4x4 Translate(const Vector3& v);
     static Matrix4x4 Rotate(const Quaternion& q);
     static Matrix4x4 Scale(const Vector3& scalar);
@@ -79,7 +107,8 @@ public:
     std::string ToString() const;
 
 public:
-    void operator = (const Matrix4x4& v);
+    std::array<float, 4> operator [] (const size_t index) const;
+    std::array<float, 4>& operator [] (const size_t index);
 };
 
 Matrix4x4 operator += (Matrix4x4& m1, const Matrix4x4& m2);
