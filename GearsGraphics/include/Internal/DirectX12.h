@@ -61,6 +61,14 @@ namespace Glib::Internal::Graphics
         static void BackGroundColor(const Color& color);
 
     private:
+        /**
+         * @brief スワップチェーンの作成
+         */
+        bool CreateSwapChain();
+
+        /**
+         * @brief デバッグレイヤーの有効化
+         */
         void EnableDebugLayer();
     };
 }
