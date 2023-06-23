@@ -21,7 +21,6 @@ set(LIBRARY
     DirectXTex
 )
 set(DirectXTexDir ${CMAKE_CURRENT_SOURCE_DIR}/Modules/DirectXTex)
-
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # .editorconfigÇÃÉRÉsÅ[
@@ -82,6 +81,7 @@ add_subdirectory(./GearsUtility)
 add_subdirectory(${DirectXTexDir} EXCLUDE_FROM_ALL)
 target_compile_features(GearsLibrary PRIVATE cxx_std_20)
 target_link_libraries(GearsLibrary ${LIBRARY})
+set_target_properties(DirectXTex PROPERTIES FOLDER Modules)
 
 if(BUILD_DOCUMENTATION)
   find_package(Doxygen REQUIRED)
