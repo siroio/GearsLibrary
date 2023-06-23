@@ -16,7 +16,7 @@ float GameTimer::DeltaTime()
 
 void GameTimer::TimeScale(float timeScale)
 {
-    if (timeScale < 0.0f) timeScale = 0.0f;
+    timeScale_ = timeScale < 0.0f ? 0.0f : timeScale;
 }
 
 float GameTimer::UnscaledDeltaTime()

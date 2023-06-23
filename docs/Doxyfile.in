@@ -663,7 +663,10 @@ WARN_LOGFILE           =
 
 INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/GearsCore/include \
                         @CMAKE_CURRENT_SOURCE_DIR@/GearsComponent/include\
+                        @CMAKE_CURRENT_SOURCE_DIR@/GearsGraphics/include\
                         @CMAKE_CURRENT_SOURCE_DIR@/GearsMath/include\
+                        @CMAKE_CURRENT_SOURCE_DIR@/GearsObject/include\
+                        @CMAKE_CURRENT_SOURCE_DIR@/GearsScene/include\
                         @CMAKE_CURRENT_SOURCE_DIR@/GearsUtility/include\
 
 # This tag can be used to specify the character encoding of the source files

@@ -1,24 +1,20 @@
 #include <Window.h>
 #include <Vector2.h>
-#ifdef _WIN32
 #ifdef _DEBUG
 #include <crtdbg.h>
 #endif
-#endif
-
-
 
 namespace
 {
-    HINSTANCE instanceHandle_;
+    HINSTANCE hInstance_;
     HWND windowHandle_;
-    Glib::WndProc windowProc_ = WndProc;
+    Glib::WndProc windowProc_ = WindowProcedure;
     std::string windowName_{ "GameWindow" };
     Vector2 windowSize_{ 1240.0f, 720.0f };
     Vector2 windowDebugSize_{ 1240.0f, 720.0f };
 }
 
-LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
@@ -27,7 +23,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             CoUninitialize();
             break;
         default:
-            return(DefWindowProc(hwnd, msg, wParam, lParam));
+            return(DefWindowProc(hwnd, msg, wparam, lparam));
     }
     return 0;
 }
@@ -36,26 +32,22 @@ bool Glib::Window::Initialize()
 {
     // 作成済みかチェック
     if (windowHandle_ != NULL) return false;
-    if (FAILED(CoInitializeEx(0, COINIT_MULTITHREADED))) return false;
-
-#ifdef _WIN32
+    if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED))) return false;
 #ifdef _DEBUG
     // メモリリーク検出
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
-#endif
-
     WNDCLASSEX wc{};
-    wc.hInstance = instanceHandle_ = GetModuleHandle(nullptr);
+    wc.cbSize = sizeof(WNDCLASSEX);
+    wc.hInstance = hInstance_ = GetModuleHandle(nullptr);
     wc.lpfnWndProc = (WNDPROC)windowProc_;
+    // ウィンドウの名前
 #ifdef UNICODE
     std::wstring wstr{ windowName_.begin(), windowName_.end() };
     wc.lpszClassName = wstr.c_str();
 #else
-    wc.lpszClassName windowName_.c_str();
+    wc.lpszClassName = windowName_.c_str();
 #endif
-
-    auto style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 
 #ifdef _DEBUG
     RECT rect{ 0, 0, static_cast<LONG>(windowDebugSize_.x), static_cast<LONG>(windowDebugSize_.y) };
@@ -64,20 +56,20 @@ bool Glib::Window::Initialize()
 #endif
 
     RegisterClassEx(&wc);
-    AdjustWindowRect(&rect, style, false);
+    AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
 
     // ウィンドウ作成
     windowHandle_ = CreateWindow(
         wc.lpszClassName,
         wc.lpszClassName,
-        style,
+        WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT,
         CW_USEDEFAULT,
         rect.right - rect.left,
         rect.bottom - rect.top,
         nullptr,
         nullptr,
-        instanceHandle_,
+        hInstance_,
         nullptr
     );
 
@@ -88,7 +80,7 @@ bool Glib::Window::Initialize()
 
 HINSTANCE Glib::Window::InstanceHandle()
 {
-    return instanceHandle_;
+    return hInstance_;
 }
 
 HWND Glib::Window::WindowHandle()

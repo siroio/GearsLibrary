@@ -26,6 +26,7 @@ set(HEADER_FILE
 )
 
 set(LIB_NAME GearsMath)
+create_filter()
 
 add_library(${LIB_NAME} STATIC ${SOURCE_FILE} ${HEADER_FILE})
 target_compile_features(${LIB_NAME} PRIVATE cxx_std_20)

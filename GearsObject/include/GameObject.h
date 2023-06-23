@@ -19,29 +19,53 @@ template<class T>
 concept IsComponent = std::derived_from<T, Component>;
 
 /**
- * @brief オブジェクトクラス
+ * @brief ゲームオブジェクトクラス
  */
 class GameObject final :
     public Glib::Internal::Interface::IGameObject,
     public std::enable_shared_from_this<GameObject>
 {
 public:
+    /**
+     * @brief ゲームオブジェクトを生成
+     * @param オブジェクト名
+     */
     explicit GameObject(std::string_view name);
 
     ~GameObject();
 
+    /**
+     * @brief コンポーネントの追加
+     * @return コンポーネント
+     */
     template<class T, class... Args> requires IsComponent<T>
     Glib::WeakPtr<T> AddComponent(Args&&... args);
 
+    /**
+     * @brief コンポーネントの取得
+     * @return コンポーネント
+     */
     template<class T> requires IsComponent<T>
     Glib::WeakPtr<T> GetComponent() const;
 
+    /**
+     * @brief 親子関係にある子オブジェクトからコンポーネントを取得
+     * @return コンポーネント
+     */
     template<class T> requires IsComponent<T>
     Glib::WeakPtr<T> GetComponentInChildren() const;
 
+    /**
+     * @brief 親子関係にある親オブジェクトからコンポーネントを取得
+     * @return コンポーネント
+     */
     template<class T> requires IsComponent<T>
     Glib::WeakPtr<T> GetComponentInParent() const;
 
+    /**
+     * @brief ゲームオブジェクトのすべてのコンポーネントを返します
+     * @return コンポーネント一覧
+     */
     template<class T> requires IsComponent<T>
     std::list<Glib::WeakPtr<T>> GetComponents() const;
 

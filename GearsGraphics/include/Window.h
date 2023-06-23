@@ -1,12 +1,12 @@
 #ifndef GEARS_WINDOW_H
 #define GEARS_WINDOW_H
 
-#include <windows.h>
+#include <Windows.h>
 #include <string>
 #include <Singleton.h>
 
 struct Vector2;
-LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 namespace Glib
 {

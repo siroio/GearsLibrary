@@ -21,7 +21,7 @@ namespace Glib::Scene
     class SceneManager :
         public Glib::Internal::Interface::ISystem,
         public Glib::SingletonPtr<SceneManager>,
-        public Glib::Internal::Function::UpdateOrderSet<Glib::Constant::Order::Update::SCENE>
+        public Glib::Internal::Function::UpdateOrderSet<Glib::Internal::Order::Update::SCENE>
     {
         SceneManager() = default;
         friend Glib::WeakPtr<SceneManager> Glib::SingletonPtr<SceneManager>::Instance();

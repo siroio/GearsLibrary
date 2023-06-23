@@ -10,21 +10,34 @@
 class GameTimer final :
     public Glib::SingletonPtr<GameTimer>,
     public Glib::Internal::Interface::ISystem,
-    public Glib::Internal::Function::UpdateOrderSet<Glib::Constant::Order::Update::TIME>
+    public Glib::Internal::Function::UpdateOrderSet<Glib::Internal::Order::Update::TIME>
 {
-
+private:
     using clock = std::chrono::high_resolution_clock;
     using timePoint = clock::time_point;
     using duration = std::chrono::duration<float>;
-
-private:
     friend Glib::WeakPtr<GameTimer> Glib::SingletonPtr<GameTimer>::Instance();
     GameTimer() = default;
 
 public:
     void Update();
+
+    /**
+     * @brief 直前のフレームと今のフレーム間で経過した時間
+     * @return 秒
+     */
     static float DeltaTime();
-    static void TimeScale(float timeScale);
+
+    /**
+     * @brief タイムスケールの変更
+     * @param timeScale
+     */
+    static void TimeScale(float timeScale = 1.0f);
+
+    /**
+     * @brief 直前のフレームと今のフレーム間で経過した時間 *タイムスケールの影響を受けない
+     * @return 秒
+     */
     static float UnscaledDeltaTime();
 
 private:

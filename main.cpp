@@ -9,6 +9,9 @@
 #include <GameObjectManager.h>
 #include <Component.h>
 #include <Random.h>
+#include <wtypes.h>
+#include <Vector2.h>
+#include <tchar.h>
 using namespace std;
 
 class TestComponent : public Component
@@ -20,9 +23,10 @@ public:
     }
 
     void Update()
-    {}
+    {
+
+    }
 private:
-    float timer = 0;
 };
 
 class TestScene : public Glib::Scene::Scene
@@ -59,7 +63,7 @@ class MyGame : public Game
     }
 };
 
-auto main() -> int
+int main()
 {
     MyGame{}.Run();
 }

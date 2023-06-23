@@ -7,6 +7,7 @@
 
 #include <Internal/ISystem.h>
 #include <Internal/ComponentManager.h>
+#include <Internal/DirectX12.h>
 
 namespace
 {
@@ -39,6 +40,7 @@ int Game::Run()
 
 void Game::RegisterSystem()
 {
+    SystemManager::AddSystem<Glib::Internal::Graphics::DirectX12>();
     SystemManager::AddSystem<GameObjectManager>();
     SystemManager::AddSystem<Glib::Internal::ComponentManager>();
     SystemManager::AddSystem<Glib::Scene::SceneManager>();
