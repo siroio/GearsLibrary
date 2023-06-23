@@ -1,6 +1,6 @@
-[submodule "doxygen-awesome-css"]
-	path = doxygen-awesome-css
-	url = https://github.com/jothepro/doxygen-awesome-css.git
-[submodule "DirectXTex"]
-	path = DirectXTex
+[submodule "Modules/DirectXTex"]
+	path = Modules/DirectXTex
 	url = https://github.com/microsoft/DirectXTex.git
+[submodule "Modules/doxygen-awesome-css"]
+	path = Modules/doxygen-awesome-css
+	url = https://github.com/jothepro/doxygen-awesome-css.git

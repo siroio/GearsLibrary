@@ -20,7 +20,7 @@ set(LIBRARY
     GearsUtility
     DirectXTex
 )
-set(DirectXTexDir ${CMAKE_CURRENT_SOURCE_DIR}/DirectXTex)
+set(DirectXTexDir ${CMAKE_CURRENT_SOURCE_DIR}/Modules/DirectXTex)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 

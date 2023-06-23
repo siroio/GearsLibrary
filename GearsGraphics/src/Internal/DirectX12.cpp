@@ -12,6 +12,8 @@ namespace
 bool Glib::Internal::Graphics::DirectX12::Initialize()
 {
     if (!window_.Initialize()) return false;
+
+
     return true;
 }
 
@@ -30,4 +32,7 @@ const Color& Glib::Internal::Graphics::DirectX12::BackGroundColor()
 }
 
 void Glib::Internal::Graphics::DirectX12::BackGroundColor(const Color& color)
+{}
+
+void Glib::Internal::Graphics::DirectX12::EnableDebugLayer()
 {}

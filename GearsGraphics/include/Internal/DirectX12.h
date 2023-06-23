@@ -5,8 +5,15 @@
 #include <Internal/ISystem.h>
 #include <FuncOrderDefinition.h>
 #include <Internal/FuncOrderConstant.h>
+#include <d3dx12.h>
 
 struct Color;
+struct ID3D12Device;
+struct ID3D12GraphicsCommandList;
+struct ID3D12CommandQueue;
+struct IDXGIFactory6;
+struct D3D12_GRAPHICS_PIPELINE_STATE_DESC;
+struct D3D12_RESOURCE_DESC;
 
 namespace Glib::Internal::Graphics
 {
@@ -52,6 +59,9 @@ namespace Glib::Internal::Graphics
          * @param îwåiêF
          */
         static void BackGroundColor(const Color& color);
+
+    private:
+        void EnableDebugLayer();
     };
 }
 
