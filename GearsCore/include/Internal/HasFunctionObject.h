@@ -12,7 +12,7 @@
                                                                                                                         \
 HAS_FUNCTION(##FuncName##)                                                                                              \
                                                                                                                         \
-namespace GLib::Internal::Function                                                                                      \
+namespace Glib::Internal::Function                                                                                      \
 {                                                                                                                       \
                                                                                                                         \
     template<class T, class ReturnType, class... Args>                                                                  \

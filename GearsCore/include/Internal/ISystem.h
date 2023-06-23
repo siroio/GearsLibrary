@@ -1,7 +1,7 @@
 #ifndef GEARS_ISYSTEM_H
 #define GEARS_ISYSTEM_H
 
-namespace GLib::Internal::Interface
+namespace Glib::Internal::Interface
 {
     /**
      * @brief 内部システム用インターフェース

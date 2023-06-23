@@ -4,7 +4,7 @@
 /**
  * @brief ŠeŠÖ”‚ÌÀs‡˜‚ğ§Œä‚·‚é‚½‚ß‚Ì’è”
  */
-namespace GLib::Constant::Order
+namespace Glib::Constant::Order
 {
     namespace Update
     {

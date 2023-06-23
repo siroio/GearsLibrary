@@ -1,7 +1,7 @@
 #ifndef GEARS_SCENE_H
 #define GEARS_SCENE_H
 
-namespace GLib::Scene
+namespace Glib::Scene
 {
     /**
      * @brief シーンクラス

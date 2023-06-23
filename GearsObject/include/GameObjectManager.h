@@ -12,11 +12,11 @@
  * @brief ゲームオブジェクト管理クラス
  */
 class GameObjectManager final :
-    public GLib::Internal::Interface::ISystem,
-    public GLib::SingletonPtr<GameObjectManager>
+    public Glib::Internal::Interface::ISystem,
+    public Glib::SingletonPtr<GameObjectManager>
 {
 private:
-    friend GLib::WeakPtr<GameObjectManager> GLib::SingletonPtr<GameObjectManager>::Instance();
+    friend Glib::WeakPtr<GameObjectManager> Glib::SingletonPtr<GameObjectManager>::Instance();
     GameObjectManager() = default;
 
 public:

@@ -6,7 +6,7 @@
  */
 #define FUNC_ORDER(FuncName)                                            \
                                                                         \
-namespace GLib::Internal                                                \
+namespace Glib::Internal                                                \
 {                                                                       \
     namespace Interface                                                 \
     {                                                                   \

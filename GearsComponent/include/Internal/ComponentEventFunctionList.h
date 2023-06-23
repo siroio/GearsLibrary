@@ -9,7 +9,7 @@
 #include <Internal/ComponentFunctionType.h>
 #include <FuncDefinition.h>
 
-namespace GLib
+namespace Glib
 {
     template<class T>
     class WeakPtr;
@@ -17,7 +17,7 @@ namespace GLib
 
 class EventParamt;
 
-namespace GLib::Internal
+namespace Glib::Internal
 {
     class ComponentEventFunctionList
     {

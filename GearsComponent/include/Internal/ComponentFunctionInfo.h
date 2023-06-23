@@ -5,7 +5,7 @@
 
 class Component;
 
-namespace GLib::Internal
+namespace Glib::Internal
 {
     namespace Interface
     {
@@ -17,12 +17,12 @@ namespace GLib::Internal
     struct ComponentFunctionInfo
     {
         ComponentFunctionInfo(
-            const GLib::WeakPtr<Component>& component,
+            const Glib::WeakPtr<Component>& component,
             const std::shared_ptr<Interface::IFunc<ReturnType, Args...>>& function)
             : component{ component }, function{ function }
         {}
 
-        GLib::WeakPtr<Component> component;
+        Glib::WeakPtr<Component> component;
         std::shared_ptr<Interface::IFunc<ReturnType, Args...>> function;
     };
 }

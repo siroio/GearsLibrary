@@ -4,7 +4,7 @@
 #include <concepts>
 
 #define HAS_FUNCTION(FuncName)                                          \
-namespace GLib::Internal                                                \
+namespace Glib::Internal                                                \
 {                                                                       \
     template<class T, class ReturnType, class... Args>                  \
     concept Has##FuncName##Func = requires (T* t, Args... args)         \

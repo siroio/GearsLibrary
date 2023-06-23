@@ -1,7 +1,7 @@
 #ifndef GEARS_IORDERFUNC_H
 #define GEARS_IORDERFUNC_H
 
-namespace GLib::Internal::Interface
+namespace Glib::Internal::Interface
 {
     /**
      * @brief 関数管理用インターフェース

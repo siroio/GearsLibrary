@@ -9,7 +9,7 @@
 #include <FuncDefinition.h>
 #include <string>
 
-namespace GLib
+namespace Glib
 {
     template<class T>
     class WeakPtr;
@@ -17,24 +17,24 @@ namespace GLib
 
 class CameraBase;
 
-namespace GLib::Internal
+namespace Glib::Internal
 {
     class ComponentFunctionList
     {
         template<class ReturnType, class... Args>
         using FunctionInfo = ComponentFunctionInfo<ReturnType, Args...>;
 
-        using FunctionVariant = std::variant<FunctionInfo<void>, FunctionInfo<void, GLib::WeakPtr<CameraBase>>>;
+        using FunctionVariant = std::variant<FunctionInfo<void>, FunctionInfo<void, Glib::WeakPtr<CameraBase>>>;
         using FunctionType = ComponentFunctionType;
     public:
         void Update();
         void Clear();
 
         void Execute(FunctionType type);
-        void Execute(FunctionType type, const GLib::WeakPtr<CameraBase>& camera);
+        void Execute(FunctionType type, const Glib::WeakPtr<CameraBase>& camera);
 
         void ExecuteClear(FunctionType type);
-        void ExecuteClear(FunctionType type, const GLib::WeakPtr<CameraBase>& camera);
+        void ExecuteClear(FunctionType type, const Glib::WeakPtr<CameraBase>& camera);
 
         template<class T> requires std::derived_from<T, Component>
         void AddFunction(const std::shared_ptr<T>& component);

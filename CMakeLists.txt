@@ -12,10 +12,11 @@ project(GearsLibrary
 
 set(LIBRARY 
     GearsCore
+    GearsGraphics
     GearsObject
     GearsComponent
     GearsScene
-    GearsMath 
+    GearsMath
     GearsUtility
 )
 
@@ -31,6 +32,7 @@ add_definitions(-DUNICODE -D_UNICODE)
 
 add_executable(GearsLibrary main.cpp)
 add_subdirectory(./GearsCore)
+add_subdirectory(./GearsGraphics)
 add_subdirectory(./GearsObject)
 add_subdirectory(./GearsComponent)
 add_subdirectory(./GearsScene)

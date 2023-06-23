@@ -146,7 +146,7 @@ void Transform::LocalEulerAngles(const Vector3& angles)
     LocalRotation(Quaternion::Euler(angles));
 }
 
-void Transform::LookAt(const GLib::WeakPtr<Transform>& target, const Vector3& up)
+void Transform::LookAt(const Glib::WeakPtr<Transform>& target, const Vector3& up)
 {
     LookAt(target->Position(), up);
 }
@@ -232,7 +232,7 @@ Vector3 Transform::InverseTransformDirection(const Vector3& direction) const
     return Quaternion::Inverse(Rotation()) * direction;
 }
 
-void Transform::Parent(GLib::WeakPtr<Transform> parent)
+void Transform::Parent(Glib::WeakPtr<Transform> parent)
 {
     if (parent == weak_from_this()) return;
     if (!parent.expired())
@@ -254,22 +254,22 @@ void Transform::Parent(GLib::WeakPtr<Transform> parent)
     }
 }
 
-GLib::WeakPtr<Transform> Transform::Parent() const
+Glib::WeakPtr<Transform> Transform::Parent() const
 {
     return parent_;
 }
 
-void Transform::AddChild(const GLib::WeakPtr<Transform> child)
+void Transform::AddChild(const Glib::WeakPtr<Transform> child)
 {
     children_.push_back(child);
 }
 
-void Transform::RemoveChild(const GLib::WeakPtr<Transform> child)
+void Transform::RemoveChild(const Glib::WeakPtr<Transform> child)
 {
     children_.remove(child);
 }
 
-const std::list<GLib::WeakPtr<Transform>>& Transform::Children() const
+const std::list<Glib::WeakPtr<Transform>>& Transform::Children() const
 {
     return children_;
 }

@@ -5,7 +5,7 @@
 #include <mutex>
 #include <WeakPtr.h>
 
-namespace GLib
+namespace Glib
 {
     /**
      * @brief ƒ|ƒCƒ“ƒ^”ÅSingleton

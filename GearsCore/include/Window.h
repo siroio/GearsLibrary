@@ -8,7 +8,7 @@
 struct Vector2;
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-namespace GLib
+namespace Glib
 {
     using WndProc = LRESULT(*)(HWND, UINT, WPARAM, LPARAM);
 

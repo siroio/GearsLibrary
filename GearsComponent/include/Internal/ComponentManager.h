@@ -12,7 +12,7 @@
 
 #include <unordered_map>
 
-namespace GLib::Internal
+namespace Glib::Internal
 {
     namespace Interface
     {
@@ -24,11 +24,11 @@ namespace GLib::Internal
      */
     class ComponentManager final :
         public Interface::ISystem,
-        public GLib::SingletonPtr<ComponentManager>,
-        public GLib::Internal::Function::UpdateOrderSet<GLib::Constant::Order::Update::COMPONENT>
+        public Glib::SingletonPtr<ComponentManager>,
+        public Glib::Internal::Function::UpdateOrderSet<Glib::Constant::Order::Update::COMPONENT>
     {
     private:
-        friend GLib::WeakPtr<ComponentManager> GLib::SingletonPtr<ComponentManager>::Instance();
+        friend Glib::WeakPtr<ComponentManager> Glib::SingletonPtr<ComponentManager>::Instance();
         ComponentManager() = default;
 
     public:

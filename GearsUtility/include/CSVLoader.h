@@ -6,7 +6,7 @@
 #include <string>
 #include <string_view>
 
-namespace GLib
+namespace Glib
 {
     class CSVLoader
     {

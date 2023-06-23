@@ -1,7 +1,7 @@
 #ifndef GEARS_IGAME_OBJECT_H
 #define GEARS_IGAME_OBJECT_H
 
-namespace GLib::Internal::Interface
+namespace Glib::Internal::Interface
 {
     /**
      * @brief ゲームオブジェクトインターフェース

@@ -12,7 +12,7 @@ namespace
 {
     HINSTANCE instanceHandle_;
     HWND windowHandle_;
-    GLib::WndProc windowProc_ = WndProc;
+    Glib::WndProc windowProc_ = WndProc;
     std::string windowName_{ "GameWindow" };
     Vector2 windowSize_{ 1240.0f, 720.0f };
     Vector2 windowDebugSize_{ 1240.0f, 720.0f };
@@ -32,7 +32,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
-bool GLib::Window::Initialize()
+bool Glib::Window::Initialize()
 {
     // 作成済みかチェック
     if (windowHandle_ != NULL) return false;
@@ -86,49 +86,49 @@ bool GLib::Window::Initialize()
     return true;
 }
 
-HINSTANCE GLib::Window::InstanceHandle()
+HINSTANCE Glib::Window::InstanceHandle()
 {
     return instanceHandle_;
 }
 
-HWND GLib::Window::WindowHandle()
+HWND Glib::Window::WindowHandle()
 {
     return windowHandle_;
 }
 
-void GLib::Window::WndProc(GLib::WndProc proc)
+void Glib::Window::WndProc(Glib::WndProc proc)
 {
     windowProc_ = proc;
 }
 
-std::string& GLib::Window::WindowName()
+std::string& Glib::Window::WindowName()
 {
     return windowName_;
 }
 
-void GLib::Window::WindowName(const std::string& name)
+void Glib::Window::WindowName(const std::string& name)
 {
     if (windowHandle_ != NULL) return;
     windowName_ = name;
 }
 
-const Vector2& GLib::Window::WindowSize()
+const Vector2& Glib::Window::WindowSize()
 {
     return windowSize_;
 }
 
-void GLib::Window::WindowSize(const Vector2& size)
+void Glib::Window::WindowSize(const Vector2& size)
 {
     if (windowHandle_ != NULL) return;
     windowSize_ = size;
 }
 
-const Vector2& GLib::Window::WindowDebugSize()
+const Vector2& Glib::Window::WindowDebugSize()
 {
     return windowDebugSize_;
 }
 
-void GLib::Window::WindowDebugSize(const Vector2& size)
+void Glib::Window::WindowDebugSize(const Vector2& size)
 {
     if (windowHandle_ != NULL) return;
     windowDebugSize_ = size;

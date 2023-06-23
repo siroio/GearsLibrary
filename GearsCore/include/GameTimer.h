@@ -8,9 +8,9 @@
 #include <chrono>
 
 class GameTimer final :
-    public GLib::SingletonPtr<GameTimer>,
-    public GLib::Internal::Interface::ISystem,
-    public GLib::Internal::Function::UpdateOrderSet<GLib::Constant::Order::Update::TIME>
+    public Glib::SingletonPtr<GameTimer>,
+    public Glib::Internal::Interface::ISystem,
+    public Glib::Internal::Function::UpdateOrderSet<Glib::Constant::Order::Update::TIME>
 {
 
     using clock = std::chrono::high_resolution_clock;
@@ -18,7 +18,7 @@ class GameTimer final :
     using duration = std::chrono::duration<float>;
 
 private:
-    friend GLib::WeakPtr<GameTimer> GLib::SingletonPtr<GameTimer>::Instance();
+    friend Glib::WeakPtr<GameTimer> Glib::SingletonPtr<GameTimer>::Instance();
     GameTimer() = default;
 
 public:

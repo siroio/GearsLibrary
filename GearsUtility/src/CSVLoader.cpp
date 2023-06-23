@@ -4,7 +4,7 @@
 #include <fstream>
 #include <StringUtility.h>
 
-namespace GLib
+namespace Glib
 {
     CSVLoader::CSVLoader(std::string_view path)
     {
@@ -26,7 +26,7 @@ namespace GLib
         std::string line;
         while (std::getline(file, line))
         {
-            std::vector<std::string> row = GLib::Split(line, ',');
+            std::vector<std::string> row = Glib::Split(line, ',');
             result.push_back(row);
         }
 

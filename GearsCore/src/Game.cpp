@@ -40,8 +40,8 @@ int Game::Run()
 void Game::RegisterSystem()
 {
     SystemManager::AddSystem<GameObjectManager>();
-    SystemManager::AddSystem<GLib::Internal::ComponentManager>();
-    SystemManager::AddSystem<GLib::Scene::SceneManager>();
+    SystemManager::AddSystem<Glib::Internal::ComponentManager>();
+    SystemManager::AddSystem<Glib::Scene::SceneManager>();
     SystemManager::AddSystem<GameTimer>();
 }
 

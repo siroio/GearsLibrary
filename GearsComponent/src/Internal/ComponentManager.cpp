@@ -1,6 +1,6 @@
 #include <Internal/ComponentManager.h>
 
-void GLib::Internal::ComponentManager::Update()
+void Glib::Internal::ComponentManager::Update()
 {
     normalFunction_.Update();
     normalFunction_.ExecuteClear(ComponentFunctionType::Start);
@@ -8,7 +8,7 @@ void GLib::Internal::ComponentManager::Update()
     normalFunction_.Execute(ComponentFunctionType::LateUpdate);
 }
 
-void GLib::Internal::ComponentManager::Finalize()
+void Glib::Internal::ComponentManager::Finalize()
 {
     normalFunction_.Clear();
     eventFunction_.clear();

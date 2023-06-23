@@ -3,13 +3,13 @@
 
 class GameObject;
 
-namespace GLib
+namespace Glib
 {
     template<class T>
     class WeakPtr;
 }
 
-namespace GLib::Internal::Interface
+namespace Glib::Internal::Interface
 {
     /**
      * @brief コンポーネントインターフェース
@@ -20,7 +20,7 @@ namespace GLib::Internal::Interface
         virtual ~IComponent() = default;
 
     public:
-        virtual void SetGameObject(const GLib::WeakPtr<GameObject>& gameObject) = 0;
+        virtual void SetGameObject(const Glib::WeakPtr<GameObject>& gameObject) = 0;
     };
 }
 

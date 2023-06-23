@@ -55,7 +55,7 @@ public:
      */
     static void Log(std::string_view message, LogLevel loglevel = LogLevel::Info)
     {
-        std::cout << GLib::TimeUtility::CurrentTimeStr();
+        std::cout << Glib::TimeUtility::CurrentTimeStr();
         switch (loglevel)
         {
             case LogLevel::Info: std::cout << "[INFO] " << message << std::endl; break;
@@ -69,7 +69,7 @@ public:
      */
     static void Format(const char* format, ...)
     {
-        std::cout << GLib::TimeUtility::CurrentTimeStr() << " ";
+        std::cout << Glib::TimeUtility::CurrentTimeStr() << " ";
         va_list args;
         va_start(args, format);
         vprintf(format, args);

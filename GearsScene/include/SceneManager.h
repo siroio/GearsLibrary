@@ -11,7 +11,7 @@
 #include <string>
 #include <StringUtility.h>
 
-namespace GLib::Scene
+namespace Glib::Scene
 {
     class Scene;
 
@@ -19,12 +19,12 @@ namespace GLib::Scene
      * @brief シーン管理クラス
      */
     class SceneManager :
-        public GLib::Internal::Interface::ISystem,
-        public GLib::SingletonPtr<SceneManager>,
-        public GLib::Internal::Function::UpdateOrderSet<GLib::Constant::Order::Update::SCENE>
+        public Glib::Internal::Interface::ISystem,
+        public Glib::SingletonPtr<SceneManager>,
+        public Glib::Internal::Function::UpdateOrderSet<Glib::Constant::Order::Update::SCENE>
     {
         SceneManager() = default;
-        friend GLib::WeakPtr<SceneManager> GLib::SingletonPtr<SceneManager>::Instance();
+        friend Glib::WeakPtr<SceneManager> Glib::SingletonPtr<SceneManager>::Instance();
 
     public:
 
@@ -48,8 +48,8 @@ namespace GLib::Scene
 
     private:
         static inline std::unordered_map<std::string, std::shared_ptr<Scene>> scenes_;
-        static inline GLib::WeakPtr<Scene> current_;
-        static inline GLib::WeakPtr<Scene> next_;
+        static inline Glib::WeakPtr<Scene> current_;
+        static inline Glib::WeakPtr<Scene> next_;
     };
 
     template<class SceneType>

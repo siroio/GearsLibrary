@@ -4,7 +4,7 @@
 #include <memory>
 #include <concepts>
 
-namespace GLib
+namespace Glib
 {
     /**
      * @brief std::weakptr ラッパークラス

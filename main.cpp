@@ -25,7 +25,7 @@ private:
     float timer = 0;
 };
 
-class TestScene : public GLib::Scene::Scene
+class TestScene : public Glib::Scene::Scene
 {
 public:
     virtual void Start() override
@@ -49,8 +49,8 @@ class MyGame : public Game
     virtual void Start() override
     {
         Debug::Log("GAME STARTED. . . . .");
-        GLib::Scene::SceneManager::Register<TestScene>();
-        GLib::Scene::SceneManager::LoadScene("TestScene");
+        Glib::Scene::SceneManager::Register<TestScene>();
+        Glib::Scene::SceneManager::LoadScene("TestScene");
     }
 
     virtual void End() override

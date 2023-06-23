@@ -4,7 +4,7 @@
 #include <chrono>
 #include <sstream>
 
-namespace GLib
+namespace Glib
 {
     /**
      * @brief ŽžŠÔŒnUtility
@@ -54,7 +54,7 @@ namespace GLib
          */
         static inline std::string CurrentTimeStr()
         {
-            const auto time = GLib::TimeUtility::CurrentTime();
+            const auto time = Glib::TimeUtility::CurrentTime();
             std::ostringstream ss{};
             ss << "[" << std::setfill('0') << std::setw(2) << time.hours
                 << ":" << std::setfill('0') << std::setw(2) << time.minutes

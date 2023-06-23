@@ -3,7 +3,7 @@
 
 class CameraBase;
 
-void GLib::Internal::ComponentFunctionList::Update()
+void Glib::Internal::ComponentFunctionList::Update()
 {
     for (auto it = addedFunction_.begin(); it != addedFunction_.end();)
     {
@@ -32,35 +32,35 @@ void GLib::Internal::ComponentFunctionList::Update()
     }
 }
 
-void GLib::Internal::ComponentFunctionList::Clear()
+void Glib::Internal::ComponentFunctionList::Clear()
 {
     addedFunction_.clear();
     functions_.clear();
 }
 
-void GLib::Internal::ComponentFunctionList::Execute(FunctionType type)
+void Glib::Internal::ComponentFunctionList::Execute(FunctionType type)
 {
     ExecuteFromVariant<0>(type);
 }
 
-void GLib::Internal::ComponentFunctionList::Execute(FunctionType type, const GLib::WeakPtr<CameraBase>& camera)
+void Glib::Internal::ComponentFunctionList::Execute(FunctionType type, const Glib::WeakPtr<CameraBase>& camera)
 {
     ExecuteFromVariant<1>(type, camera);
 }
 
-void GLib::Internal::ComponentFunctionList::ExecuteClear(FunctionType type)
+void Glib::Internal::ComponentFunctionList::ExecuteClear(FunctionType type)
 {
     Execute(type);
     functions_[type].clear();
 }
 
-void GLib::Internal::ComponentFunctionList::ExecuteClear(FunctionType type, const GLib::WeakPtr<CameraBase>& camera)
+void Glib::Internal::ComponentFunctionList::ExecuteClear(FunctionType type, const Glib::WeakPtr<CameraBase>& camera)
 {
     Execute(type, camera);
     functions_[type].clear();
 }
 
-void GLib::Internal::ComponentFunctionList::Remove(FunctionType type)
+void Glib::Internal::ComponentFunctionList::Remove(FunctionType type)
 {
     std::erase_if(functions_[type], [](const auto& variant)
     {

@@ -2,9 +2,11 @@ cmake_minimum_required(VERSION 3.1)
 
 # == CONFIG ==
 set(SOURCE_FILE 
+	./src/DirectX12.cpp
 )
 
 set(HEADER_FILE 
+	./include/DirectX12.h
 )
 
 set(LIB_NAME GearsGraphics)

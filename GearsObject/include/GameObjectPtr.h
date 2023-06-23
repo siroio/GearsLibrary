@@ -3,6 +3,6 @@
 #include <WeakPtr.h>
 
 class GameObject;
-using GameObjectPtr = GLib::WeakPtr<GameObject>;
+using GameObjectPtr = Glib::WeakPtr<GameObject>;
 
 #endif // !GEARS_GAME_OBJECT_PTR_H

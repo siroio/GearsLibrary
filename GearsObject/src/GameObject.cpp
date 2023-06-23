@@ -22,7 +22,7 @@ void GameObject::RemoveComponents()
 
 void GameObject::RemoveDeadComponents()
 {
-    std::erase_if(components_, [](const GLib::WeakPtr<Component>& component)
+    std::erase_if(components_, [](const Glib::WeakPtr<Component>& component)
     {
         return component->IsDead();
     });
@@ -85,7 +85,7 @@ bool GameObject::IsDead() const
     return isDead_;
 }
 
-const GLib::WeakPtr<Transform>& GameObject::Transform() const
+const Glib::WeakPtr<Transform>& GameObject::Transform() const
 {
     return transform_;
 }

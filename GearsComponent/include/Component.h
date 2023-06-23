@@ -8,7 +8,7 @@
  * @brief コンポーネント基底クラス
  */
 class Component :
-    public GLib::Internal::Interface::IComponent,
+    public Glib::Internal::Interface::IComponent,
     public std::enable_shared_from_this<Component>
 {
 protected:

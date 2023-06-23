@@ -44,7 +44,7 @@ private:
 /**
  * @brief 乱数生成 ラッパークラス
  */
-class Random : public GLib::Singleton<Random>
+class Random : public Glib::Singleton<Random>
 {
 private:
     Pcg32Fast rand{ std::random_device{}() };
