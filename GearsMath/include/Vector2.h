@@ -36,31 +36,27 @@ public:
     /**
      * @brief コンストラクタ
     */
-    explicit constexpr Vector2() : xy{ 0.0f }
-    {}
+    explicit Vector2();
 
     /**
      * @brief コンストラクタ
      * @param x X成分の値
      * @param y Y成分の値
     */
-    explicit constexpr Vector2(float x, float y) : x{ x }, y{ y }
-    {}
+    explicit Vector2(float x, float y);
 
     /**
      * @brief コンストラクタ
      * @param xy X,Y成分の値が等しい値
     */
-    explicit constexpr Vector2(float xy) : xy{ xy }
-    {}
+    explicit Vector2(float xy);
 
     /**
      * @brief コンストラクタ
      * @param v 3次元ベクトル
      * @details v.z成分は無視される
     */
-    explicit constexpr Vector2(const Vector3& v) : x{ v.x }, y{ v.y }
-    {}
+    explicit Vector2(const Vector3& v);
 
 public:
     /**

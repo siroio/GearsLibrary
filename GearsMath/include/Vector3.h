@@ -28,18 +28,10 @@ public:
 
 public:
     Vector3(const Vector3& v) = default;
-
-    explicit constexpr Vector3() : xyz{ 0.0f }
-    {}
-
-    explicit constexpr Vector3(float x, float y, float z) : x{ x }, y{ y }, z{ z }
-    {}
-
-    explicit constexpr Vector3(float xyz) : xyz{ xyz }
-    {}
-
-    explicit constexpr Vector3(const Vector2& v) : x{ v.x }, y{ v.y }, z{ 0.0f }
-    {}
+    explicit Vector3();
+    explicit Vector3(float x, float y, float z);
+    explicit Vector3(float xyz);
+    explicit Vector3(const Vector2& v);
 
 public:
     static Vector3 Zero();

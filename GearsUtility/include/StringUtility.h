@@ -29,6 +29,23 @@ namespace GLib
 
         return tokens;
     }
+
+    /**
+     * @brief 指定したクラスの名前を取得
+     * @return クラス名
+     */
+    template<class T>
+    static constexpr std::string Nameof()
+    {
+        std::string name = typeid(T).name();
+        std::size_t start = name.find(' ');
+        if (start != std::string::npos) name = name.substr(start + 1);
+
+        std::size_t end = name.rfind("::");
+        if (end != std::string::npos) name = name.substr(end + 2);
+
+        return name;
+    }
 };
 
 #endif // !GEARS_STRING_UTILITY_H

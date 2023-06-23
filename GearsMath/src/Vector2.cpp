@@ -3,6 +3,18 @@
 #include <Mathf.h>
 #include <sstream>
 
+Vector2::Vector2() : xy{ 0.0f }
+{}
+
+Vector2::Vector2(float x, float y) : x{ x }, y{ y }
+{}
+
+Vector2::Vector2(float xy) : xy{ xy }
+{}
+
+Vector2::Vector2(const Vector3& v) : x{ v.x }, y{ v.y }
+{}
+
 Vector2 Vector2::Zero()
 {
     return Vector2{ 0.0f, 0.0f };

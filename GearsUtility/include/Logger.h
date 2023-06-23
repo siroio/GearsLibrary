@@ -32,7 +32,6 @@ public:
     }
 
 #ifdef _DEBUG
-
     /**
      * @brief メッセージ指定なしassert
      */
@@ -84,7 +83,6 @@ public:
     static void Format(...)
     {}
 #endif
-
 };
 
 #endif // !GEARS_LOGGER_H

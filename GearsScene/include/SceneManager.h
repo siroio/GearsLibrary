@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <memory>
 #include <string>
+#include <StringUtility.h>
 
 namespace GLib::Scene
 {
@@ -54,14 +55,7 @@ namespace GLib::Scene
     template<class SceneType>
     inline void SceneManager::Register()
     {
-        std::string name = typeid(SceneType).name();
-        std::size_t start = name.find(' ');
-        if (start != std::string::npos) name = name.substr(start + 1);
-
-        std::size_t end = name.rfind("::");
-        if (end != std::string::npos) name = name.substr(end + 2);
-
-        scenes_.emplace(name, std::make_shared<SceneType>());
+        scenes_.emplace(Nameof<SceneType>(), std::make_shared<SceneType>());
     }
 }
 

@@ -1,7 +1,38 @@
+#include "Matrix3x3.h"
 #include <Matrix3x3.h>
 #include <Vector2.h>
 #include <Mathf.h>
 #include <sstream>
+
+Matrix3x3::Matrix3x3() : matrix{ 0 }
+{}
+
+Matrix3x3::Matrix3x3(
+    float m11, float m12, float m13,
+    float m21, float m22, float m23,
+    float m31, float m32, float m33) :
+    m11{ m11 }, m12{ m12 }, m13{ m13 },
+    m21{ m21 }, m22{ m22 }, m23{ m23 },
+    m31{ m31 }, m32{ m32 }, m33{ m33 }
+{}
+
+Matrix3x3 Matrix3x3::Zero()
+{
+    return Matrix3x3{
+            0.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f
+    };
+}
+
+Matrix3x3 Matrix3x3::Identity()
+{
+    return Matrix3x3{
+            1.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 1.0f
+    };
+}
 
 Matrix3x3 Matrix3x3::Translate(const Vector2& v)
 {
@@ -39,7 +70,7 @@ Matrix3x3 Matrix3x3::Scale(float x, float y)
     };
 }
 
-void Matrix3x3::Set(float m11, float m12, float m13, float m14, float m21, float m22, float m23, float m24, float m31, float m32, float m33, float m34, float m41, float m42, float m43, float m44)
+void Matrix3x3::Set(float m11, float m12, float m13, float m21, float m22, float m23, float m31, float m32, float m33)
 {
     this->m11 = m11; this->m12 = m12; this->m13 = m13;
     this->m11 = m21; this->m22 = m22; this->m23 = m23;
