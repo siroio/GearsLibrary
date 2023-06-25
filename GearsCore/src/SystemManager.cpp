@@ -12,9 +12,9 @@ bool SystemManager::Initialize()
 
     for (const auto& initFunc : systemFunctions_[SystemFunctionType::Initialize])
     {
+        if (initFunc.index() != 1) continue;
         const auto& func = std::get<1>(initFunc);
-        if (!func) return false;
-        func->Call();
+        if (!func->Call()) return false;
     }
 
     systemFunctions_.erase(SystemFunctionType::Initialize);
