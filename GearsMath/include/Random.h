@@ -1,5 +1,6 @@
 #ifndef GEARS_RANDOM_H
 #define GEARS_RANDOM_H
+
 #include <Singleton.h>
 #include <Mathf.h>
 #include <random>

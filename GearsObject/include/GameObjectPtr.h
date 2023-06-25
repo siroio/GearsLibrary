@@ -1,4 +1,5 @@
 #ifndef GEARS_GAME_OBJECT_PTR_H
+#define GEARS_GAME_OBJECT_PTR_H
 
 #include <WeakPtr.h>
 
