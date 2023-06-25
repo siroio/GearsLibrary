@@ -18,10 +18,11 @@ public:
     static constexpr float PHI = std::numbers::phi_v<float>;
     static constexpr float DEG2RAD = PI / 180.0f;
     static constexpr float RAD2DEG = 180.0f / PI;
+    static constexpr float MAX = std::numeric_limits<float>::max();
+    static constexpr float MIN = std::numeric_limits<float>::min();
     static constexpr float POSITIVE_INFINITY = std::numeric_limits<float>::infinity();
     static constexpr float NEGATIVE_INFINITY = -std::numeric_limits<float>::infinity();
     static constexpr float QNAN = std::numeric_limits<float>::quiet_NaN();
-
     /**
      * @brief vÇÃãtêîÇï‘Ç∑
      *
