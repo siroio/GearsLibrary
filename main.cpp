@@ -8,10 +8,6 @@
 #include <GameObject.h>
 #include <GameObjectManager.h>
 #include <Component.h>
-#include <Random.h>
-#include <wtypes.h>
-#include <Vector2.h>
-#include <tchar.h>
 using namespace std;
 
 class TestComponent : public Component

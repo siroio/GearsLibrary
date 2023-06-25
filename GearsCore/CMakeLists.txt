@@ -20,6 +20,7 @@ set(HEADER_FILE
     ./include/SystemManager.h
     ./include/GameTimer.h
     ./include/Game.h
+    ./include/Glib.h
 )
 
 set(LIB_NAME GearsCore)

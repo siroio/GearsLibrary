@@ -5,7 +5,6 @@
 #include <Internal/ISystem.h>
 #include <FuncOrderDefinition.h>
 #include <Internal/FuncOrderConstant.h>
-#include <d3dx12.h>
 
 struct Color;
 struct ID3D12Device;
@@ -61,6 +60,12 @@ namespace Glib::Internal::Graphics
         static void BackGroundColor(const Color& color);
 
     private:
+
+        /**
+         * @brief デバイスの初期化
+        */
+        bool InitDevice();
+
         /**
          * @brief スワップチェーンの作成
          */

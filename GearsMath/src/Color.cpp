@@ -1,6 +1,19 @@
 #include <Color.h>
+#include <Vector4.h>
 #include <Mathf.h>
 #include <sstream>
+
+Color::Color(const Vector4& vector) : r{ vector.x }, g{ vector.y }, b{ vector.z }, a{ vector.w }
+{}
+
+Color::Color() : rgba{ 0.0f }
+{}
+
+Color::Color(float r, float g, float b, float a) : r{ r }, g{ g }, b{ b }, a{ a }
+{}
+
+Color::Color(float rgba) : rgba{ rgba }
+{}
 
 Color Color::Lerp(const Color& a, const Color& b, float t)
 {
@@ -129,7 +142,7 @@ Color& operator/=(Color& color, float scaler)
     return color;
 }
 
-Color operator+(Color& c1, const Color& c2)
+Color operator+(const Color& c1, const Color& c2)
 {
     return Color{
         c1.r + c2.r,
@@ -192,4 +205,49 @@ Color operator/(const Color& color, float scaler)
 std::ostream& operator<<(std::ostream& stream, const Color& color)
 {
     return stream << color.ToString();
+}
+
+Color Color::Black()
+{
+    return Color{ 0.0f, 0.0f, 0.0f, 1.0f };
+}
+
+Color Color::White()
+{
+    return Color{ 1.0f, 1.0f, 1.0f, 1.0f };
+}
+
+Color Color::Red()
+{
+    return Color{ 1.0f, 0.0f, 0.0f, 1.0f };
+}
+
+Color Color::Green()
+{
+    return Color{ 0.0f, 1.0f, 0.0f, 1.0f };
+}
+
+Color Color::Blue()
+{
+    return Color{ 0.0f, 0.0f, 1.0f, 1.0f };
+}
+
+Color Color::Yellow()
+{
+    return Color{ 1.0f, 0.92f, 0.016f, 1.0f };
+}
+
+Color Color::Cyan()
+{
+    return Color{ 0, 1, 1, 1 };
+}
+
+Color Color::Grey()
+{
+    return Color{ 0.5, 0.5, 0.5, 1 };
+}
+
+Color Color::Magenta()
+{
+    return Color{ 1, 0, 1, 1 };
 }

@@ -1,14 +1,59 @@
 cmake_minimum_required(VERSION 3.1)
 set(CMAKE_CXX_STANDARD 20)
+
 option(BUILD_DOCUMENTATION "Build Doxygen documentation" ON)
 
+# グローバルプロジェクトの設定
 project(GearsLibrary
-		VERSION 1.0.0
-		DESCRIPTION "DirectX12 Game Library"
-		LANGUAGES CXX
+        VERSION 1.0.0
+        DESCRIPTION "DirectX12 Game Library"
+        LANGUAGES CXX
 )
 
-# == CONFIG ==
+# == 関数とマクロの定義 ==
+
+function(get_files_in_directory DIRECTORY EXTENSION VARIABLE)
+    file(GLOB ${VARIABLE}
+        "${DIRECTORY}/*.${EXTENSION}"
+    )
+endfunction()
+
+function(create_groups FILES_VAR)
+    foreach(file ${${FILES_VAR}})
+        foreach(dir ${CMAKE_CURRENT_LIST_DIR})
+            # ファイルの相対パスを計算
+            file(RELATIVE_PATH relative ${CMAKE_CURRENT_LIST_DIR} ${file})
+
+            # 相対パスを階層ごとに分割
+            string(REGEX MATCHALL "[^/]+" filters "${relative}")
+            list(LENGTH filters output_length)
+            math(EXPR iteration "${output_length} - 2")
+
+            # ルートディレクトリの場合は処理をスキップ
+            if(${iteration} LESS 0)
+                continue()
+            endif()
+
+            set(group_string "")
+            foreach(i RANGE 0 ${iteration})
+                list(GET filters ${i} g)
+                set(group_string "${group_string}\\${g}")
+            endforeach()
+
+            # SOURCE_GROUPを使用してフィルタを作成
+            source_group("${group_string}" FILES ${file})
+        endforeach()
+    endforeach()
+endfunction()
+
+macro(create_filter)
+    file(GLOB_RECURSE HEADER_FILES "include/*.h" "include/*.hpp")
+    file(GLOB_RECURSE SOURCE_FILES "src/*.cpp")
+    create_groups(HEADER_FILES)
+    create_groups(SOURCE_FILES)
+endmacro()
+
+# == グローバル設定 ==
 
 set(LIBRARY 
     GearsCore
@@ -18,9 +63,19 @@ set(LIBRARY
     GearsScene
     GearsMath
     GearsUtility
-    DirectXTex
 )
-set(DirectXTexDir ${CMAKE_CURRENT_SOURCE_DIR}/Modules/DirectXTex)
+
+set(DirectX12_LIBS
+    DirectXTex
+    d3d12
+    d3dcompiler
+    dxgi
+    dxguid
+    dinput8
+    xinput
+    xaudio2
+)
+
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # .editorconfigのコピー
@@ -31,46 +86,21 @@ foreach(lib ${LIBRARY})
     endif()
 endforeach()
 
-# 関数を定義する
-function(create_groups FILES_VAR)
-  foreach(file ${${FILES_VAR}})
-    foreach(dir ${CMAKE_CURRENT_LIST_DIR})
-      # ファイルの相対パスを計算
-      file(RELATIVE_PATH relative ${CMAKE_CURRENT_LIST_DIR} ${file})
+# == プロジェクト構成 ==
 
-      # 相対パスを階層ごとに分割
-      string(REGEX MATCHALL "[^/]+" filters "${relative}")
-      list(LENGTH filters output_length)
-      math(EXPR iteration "${output_length} - 2")
-
-      # ルートディレクトリの場合は処理をスキップ
-      if(${iteration} LESS 0)
-        continue()
-      endif()
-
-      set(group_string "")
-      foreach(i RANGE 0 ${iteration})
-        list(GET filters ${i} g)
-        set(group_string "${group_string}\\${g}")
-      endforeach()
-
-      # SOURCE_GROUPを使用してフィルタを作成
-      source_group("${group_string}" FILES ${file})
-    endforeach()
-  endforeach()
-endfunction()
-
-macro(create_filter)
-  file(GLOB_RECURSE HEADER_FILES "include/*.h" "include/*.hpp")
-  file(GLOB_RECURSE SOURCE_FILES "src/*.cpp")
-  create_groups(HEADER_FILES)
-  create_groups(SOURCE_FILES)
-endmacro()
-
+# Libフォルダが存在しない場合は作成
 set(LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Lib)
+if(NOT EXISTS ${LIBRARY_OUTPUT_DIRECTORY})
+    file(MAKE_DIRECTORY ${LIBRARY_OUTPUT_DIRECTORY})
+endif()
+
+# 文字コードをUNICODEに設定
 add_definitions(-UNICODE -D_UNICODE)
 
+# メインの実行可能ファイル
 add_executable(GearsLibrary main.cpp)
+
+# サブディレクトリの追加
 add_subdirectory(./GearsCore)
 add_subdirectory(./GearsGraphics)
 add_subdirectory(./GearsObject)
@@ -78,18 +108,35 @@ add_subdirectory(./GearsComponent)
 add_subdirectory(./GearsScene)
 add_subdirectory(./GearsMath)
 add_subdirectory(./GearsUtility)
-add_subdirectory(${DirectXTexDir} EXCLUDE_FROM_ALL)
-target_compile_features(GearsLibrary PRIVATE cxx_std_20)
-target_link_libraries(GearsLibrary ${LIBRARY})
-set_target_properties(DirectXTex PROPERTIES FOLDER Modules)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Modules/DirectXTex)
 
+# メインの実行可能ファイルの設定
+target_compile_features(GearsLibrary PRIVATE cxx_std_20)
+target_link_libraries(GearsLibrary ${LIBRARY} ${DirectX12_LIBS})
+
+# プロジェクトのフィルタ設定
+set_target_properties(DirectXTex PROPERTIES FOLDER Modules)
+set_target_properties(texassemble PROPERTIES FOLDER ExternalTools)
+set_target_properties(texconv PROPERTIES FOLDER ExternalTools)
+set_target_properties(texdiag PROPERTIES FOLDER ExternalTools)
+set_target_properties(ddsview PROPERTIES FOLDER ExternalTools)
+
+# ドキュメントのビルドオプション
 if(BUILD_DOCUMENTATION)
-  find_package(Doxygen REQUIRED)
-  set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/Docs/Doxyfile.in)
-  set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
-  configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
-  add_custom_target(Docs ALL COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
-                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Docs
-                    COMMENT "Generating Libraray documentation with Doxygen"
-                    VERBATIM)
+    find_package(Doxygen REQUIRED)
+    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/Docs/Doxyfile.in)
+    set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+    configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+    add_custom_target(Docs ALL COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+                      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Docs
+                      COMMENT "Generating Libraray documentation with Doxygen"
+                      VERBATIM)
 endif()
+
+# Libフォルダに.libファイルを出力する
+foreach(lib ${LIBRARY})
+    if(TARGET ${lib})
+        set_target_properties(${lib} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${LIBRARY_OUTPUT_DIRECTORY})
+        set_target_properties(${lib} PROPERTIES DEBUG_POSTFIX d)
+    endif()
+endforeach()

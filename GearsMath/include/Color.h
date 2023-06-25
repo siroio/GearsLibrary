@@ -5,6 +5,8 @@
 #include <string>
 #include <array>
 
+struct Vector4;
+
 struct Color
 {
 public:
@@ -19,21 +21,40 @@ public:
 
 public:
     Color(const Color& color) = default;
-
-    constexpr explicit Color() : rgba{ 0.0f }
-    {}
-
-    constexpr explicit Color(float r, float g, float b, float a = 1.0f) : r{ r }, g{ g }, b{ b }, a{ a }
-    {}
-
-    constexpr explicit Color(float rgba) : rgba{ rgba }
-    {}
+    Color(const Vector4& vector);
+    explicit Color();
+    explicit Color(float r, float g, float b, float a = 1.0f);
+    explicit Color(float rgba);
 
 public:
     static Color Lerp(const Color& a, const Color& b, float t);
     static Color LerpUnclamped(const Color& a, const Color& b, float t);
+    static Color Gamma(float r, float g, float b, float a = 1.0f);
+    static Color Gamma(const Color& color);
+    static Color GrayScale(float r, float g, float b, float a = 1.0f);
+    static Color GrayScale(const Color& color);
+    static Color Linear(float r, float g, float b, float a = 1.0f);
+    static Color Linear(const Color& color);
+    static Color MaxColor(float r, float g, float b, float a = 1.0f);
+    static Color MaxColor(const Color& color);
+    static Color HSVToRGB(float h, float s, float v);
+    static Color RGBToHSV(float r, float g, float b);
+    static Color RGBToHSV(const Color& color);
+    static Color Black();
+    static Color White();
+    static Color Red();
+    static Color Green();
+    static Color Blue();
+    static Color Yellow();
+    static Color Cyan();
+    static Color Grey();
+    static Color Magenta();
 
 public:
+    void Gamma() const;
+    void GrayScale() const;
+    void Linear() const;
+    void MaxColor() const;
     void Set(const Color& v);
     void Set(float r, float g, float b, float a);
     void Set(float rgba);
