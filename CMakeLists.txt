@@ -147,7 +147,7 @@ if(BUILD_DOCUMENTATION)
 endif()
 
 # Libフォルダに.libファイルを出力する
-foreach(lib ${LIBRARY})
+foreach(lib ${LIBRARY} ${EXTERNAL_LIBS})
     if(TARGET ${lib})
         set_target_properties(${lib} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${LIBRARY_OUTPUT_DIRECTORY})
         set_target_properties(${lib} PROPERTIES DEBUG_POSTFIX d)
