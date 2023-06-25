@@ -1,31 +1,38 @@
 #include <Internal/DirectX12.h>
 #include <Window.h>
-#include <ComPtr.h>
 #include <Color.h>
 #include <Vector2.h>
 #include <d3dx12.h>
 #include <dxgi1_6.h>
+#include <string>
+#include <array>
 
 //TODO: imple DirectX12 class
-//TODO: pragmaでライブラリをリンクするヘッダ作成
 namespace
 {
-    ComPtr<ID3D12Device> device_;
-
-    /* スワップチェーン */
-    ComPtr<IDXGISwapChain4> swapChain_;
-
-    /* コマンドキュー */
-    ComPtr<ID3D12CommandQueue> commandQueue_;
+    /* デバイス */
+    ComPtr<ID3D12Device> device_{ nullptr };
 
     /* ファクトリー */
-    ComPtr<IDXGIFactory6> factory_;
+    ComPtr<IDXGIFactory6> dxgiFactory_{ nullptr };
+
+    /* スワップチェーン */
+    ComPtr<IDXGISwapChain4> swapChain_{ nullptr };
+
+    /* コマンドアロケーター */
+    ComPtr<ID3D12CommandAllocator> cmdAllocator_{ nullptr };
+
+    /* コマンドリスト */
+    ComPtr<ID3D12GraphicsCommandList> cmdList_{ nullptr };
+
+    /* コマンドキュー */
+    ComPtr<ID3D12CommandQueue> cmdQueue_{ nullptr };
+
+    /* 背景色 */
+    Color backGroundColor_ = Color::Cyan();
 
     /* ウィンドウ */
     Glib::Window& window_ = Glib::Window::Instance();
-
-    /* 背景色 */
-    Color backGroundColor_;
 }
 
 bool Glib::Internal::Graphics::DirectX12::Initialize()
@@ -34,12 +41,12 @@ bool Glib::Internal::Graphics::DirectX12::Initialize()
     EnableDebugLayer();
     // ファクトリーの作成
 #ifdef _DEBUG
-    if (FAILED(CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(factory_.ReleaseAndGetAddressOf())))) return false;
+    if (FAILED(CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(dxgiFactory_.ReleaseAndGetAddressOf())))) return false;
 #else
-    if (FAILED(CreateDXGIFactory1(IID_PPV_ARGS(factory_.ReleaseAndGetAddressOf())))) return false;
+    if (FAILED(CreateDXGIFactory1(IID_PPV_ARGS(dxgiFactory_.ReleaseAndGetAddressOf())))) return false;
 #endif
-
     if (!InitDevice()) return false;
+    if (!InitCommand()) return false;
     if (!CreateSwapChain()) return false;
     return true;
 }
@@ -53,17 +60,85 @@ void Glib::Internal::Graphics::DirectX12::EndDraw()
 void Glib::Internal::Graphics::DirectX12::Finalize()
 {}
 
+ComPtr<ID3D12Device> Glib::Internal::Graphics::DirectX12::Device() const
+{
+    return device_;
+}
+
+ComPtr<ID3D12GraphicsCommandList> Glib::Internal::Graphics::DirectX12::CommandList() const
+{
+    return cmdList_;
+}
+
+ComPtr<ID3D12CommandQueue> Glib::Internal::Graphics::DirectX12::CommandQueue() const
+{
+    return cmdQueue_;
+}
+
 const Color& Glib::Internal::Graphics::DirectX12::BackGroundColor()
 {
     return backGroundColor_;
 }
 
 void Glib::Internal::Graphics::DirectX12::BackGroundColor(const Color& color)
-{}
+{
+    backGroundColor_ = color;
+}
 
 bool Glib::Internal::Graphics::DirectX12::InitDevice()
 {
-    return false;
+    D3D_FEATURE_LEVEL levels[]{
+        D3D_FEATURE_LEVEL_12_1,
+        D3D_FEATURE_LEVEL_12_0,
+        D3D_FEATURE_LEVEL_11_1,
+        D3D_FEATURE_LEVEL_11_0,
+    };
+
+    ComPtr<IDXGIAdapter> adapter{ nullptr };
+    ComPtr<IDXGIAdapter> nvidiaAdapter{ nullptr };
+    ComPtr<IDXGIAdapter> maxVMAdapter{ nullptr };
+    size_t videoMemroySize{};
+    for (UINT i = 0; dxgiFactory_->EnumAdapters(i, adapter.ReleaseAndGetAddressOf()) != DXGI_ERROR_NOT_FOUND; ++i)
+    {
+        DXGI_ADAPTER_DESC adptDesc{};
+        adapter->GetDesc(&adptDesc);
+        std::wstring strDesc = adptDesc.Description;
+        if (strDesc.find(L"NVIDIA") != std::string::npos)
+        {
+            nvidiaAdapter = adapter;
+        }
+        else if (adptDesc.DedicatedVideoMemory > videoMemroySize)
+        {
+            maxVMAdapter = adapter;
+            videoMemroySize = adptDesc.DedicatedVideoMemory;
+        }
+    }
+
+    adapter = nvidiaAdapter != nullptr ? nvidiaAdapter : maxVMAdapter;
+
+    for (auto&& level : levels)
+    {
+        auto result = SUCCEEDED(D3D12CreateDevice(adapter.Get(), level, IID_PPV_ARGS(device_.ReleaseAndGetAddressOf())));
+        if (result == S_OK) break;
+    }
+
+    return device_ != nullptr;
+}
+
+bool Glib::Internal::Graphics::DirectX12::InitCommand()
+{
+    auto result = device_->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(cmdAllocator_.ReleaseAndGetAddressOf()));
+    if (FAILED(result)) return false;
+    result = device_->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, cmdAllocator_.Get(), nullptr, IID_PPV_ARGS(cmdList_.ReleaseAndGetAddressOf()));
+    if (FAILED(result)) return false;
+
+    D3D12_COMMAND_QUEUE_DESC cmdQueueDesc{};
+    cmdQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+    cmdQueueDesc.NodeMask = 0;
+    cmdQueueDesc.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
+    cmdQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+    result = device_->CreateCommandQueue(&cmdQueueDesc, IID_PPV_ARGS(cmdQueue_.ReleaseAndGetAddressOf()));
+    return !FAILED(result);
 }
 
 bool Glib::Internal::Graphics::DirectX12::CreateSwapChain()
@@ -74,7 +149,6 @@ bool Glib::Internal::Graphics::DirectX12::CreateSwapChain()
     const auto& windowSize = Window::WindowSize();
 #endif
 
-    // スワップチェーン作成
     DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
     swapChainDesc.Width = static_cast<unsigned int>(windowSize.x);
     swapChainDesc.Height = static_cast<unsigned int>(windowSize.y);
@@ -89,8 +163,8 @@ bool Glib::Internal::Graphics::DirectX12::CreateSwapChain()
     swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
     swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-    return SUCCEEDED(factory_->CreateSwapChainForHwnd(
-        commandQueue_.Get(),
+    return SUCCEEDED(dxgiFactory_->CreateSwapChainForHwnd(
+        cmdQueue_.Get(),
         window_.WindowHandle(),
         &swapChainDesc,
         nullptr,
@@ -102,8 +176,8 @@ bool Glib::Internal::Graphics::DirectX12::CreateSwapChain()
 void Glib::Internal::Graphics::DirectX12::EnableDebugLayer()
 {
 #ifdef _DEBUG
-    ComPtr<ID3D12Debug> debugController;
-    if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
+    ComPtr<ID3D12Debug> debugController{ nullptr };
+    if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(debugController.ReleaseAndGetAddressOf()))))
     {
         debugController->EnableDebugLayer();
     }

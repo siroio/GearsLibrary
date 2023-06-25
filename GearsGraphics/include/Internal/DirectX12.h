@@ -5,12 +5,13 @@
 #include <Internal/ISystem.h>
 #include <FuncOrderDefinition.h>
 #include <Internal/FuncOrderConstant.h>
+#include <ComPtr.h>
 
 struct Color;
 struct ID3D12Device;
+struct IDXGIFactory6;
 struct ID3D12GraphicsCommandList;
 struct ID3D12CommandQueue;
-struct IDXGIFactory6;
 struct D3D12_GRAPHICS_PIPELINE_STATE_DESC;
 struct D3D12_RESOURCE_DESC;
 
@@ -48,6 +49,21 @@ namespace Glib::Internal::Graphics
         void Finalize();
 
         /**
+         * @brief デバイスを取得
+        */
+        ComPtr<ID3D12Device> Device() const;
+
+        /**
+         * @brief コマンドリストを取得
+        */
+        ComPtr<ID3D12GraphicsCommandList> CommandList() const;
+
+        /**
+         * @brief コマンドキューを取得
+        */
+        ComPtr<ID3D12CommandQueue> CommandQueue() const;
+
+        /**
          * @brief 背景色の取得
          * @return 背景色
          */
@@ -65,6 +81,11 @@ namespace Glib::Internal::Graphics
          * @brief デバイスの初期化
         */
         bool InitDevice();
+
+        /**
+         * @brief コマンドの初期化
+        */
+        bool InitCommand();
 
         /**
          * @brief スワップチェーンの作成
