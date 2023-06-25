@@ -65,8 +65,7 @@ set(LIBRARY
     GearsUtility
 )
 
-set(DirectX12_LIBS
-    DirectXTex
+set(DIRECTX12_LIBS
     d3d12
     d3dcompiler
     dxgi
@@ -75,6 +74,13 @@ set(DirectX12_LIBS
     xinput
     xaudio2
 )
+
+set(EXTERNAL_LIBS
+    DirectXTex
+    nlohmann_json
+)
+
+set(IMGUI_PATH ./Modules/ImGui)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -94,6 +100,9 @@ if(NOT EXISTS ${LIBRARY_OUTPUT_DIRECTORY})
     file(MAKE_DIRECTORY ${LIBRARY_OUTPUT_DIRECTORY})
 endif()
 
+# nlohmann_json ビルドテストをオフ
+set(JSON_BuildTests OFF CACHE INTERNAL "")
+
 # 文字コードをUNICODEに設定
 add_definitions(-UNICODE -D_UNICODE)
 
@@ -108,11 +117,15 @@ add_subdirectory(./GearsComponent)
 add_subdirectory(./GearsScene)
 add_subdirectory(./GearsMath)
 add_subdirectory(./GearsUtility)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Modules/DirectXTex)
+add_subdirectory(./Modules/DirectXTex)
+add_subdirectory(./Modules/json)
+
+# ImGui 追加
+include_directories(IMGUI_PATH)
 
 # メインの実行可能ファイルの設定
 target_compile_features(GearsLibrary PRIVATE cxx_std_20)
-target_link_libraries(GearsLibrary ${LIBRARY} ${DirectX12_LIBS})
+target_link_libraries(GearsLibrary ${LIBRARY} ${DIRECTX12_LIBS} ${EXTERNAL_LIBS})
 
 # プロジェクトのフィルタ設定
 set_target_properties(DirectXTex PROPERTIES FOLDER Modules)
