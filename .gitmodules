@@ -4,3 +4,9 @@
 [submodule "Modules/doxygen-awesome-css"]
 	path = Modules/doxygen-awesome-css
 	url = https://github.com/jothepro/doxygen-awesome-css.git
+[submodule "Modules/ImGui"]
+	path = Modules/ImGui
+	url = https://github.com/ocornut/imgui
+[submodule "Modules/json"]
+	path = Modules/json
+	url = https://github.com/nlohmann/json
