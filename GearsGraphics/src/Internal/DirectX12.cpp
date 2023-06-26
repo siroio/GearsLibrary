@@ -6,6 +6,7 @@
 #include <dxgi1_6.h>
 #include <string>
 #include <array>
+#include <vector>
 
 //TODO: imple DirectX12 class
 namespace
@@ -28,10 +29,28 @@ namespace
     /* コマンドキュー */
     ComPtr<ID3D12CommandQueue> cmdQueue_{ nullptr };
 
+    /* フェンス */
+    ComPtr<ID3D12Fence> fence_{ nullptr };
+
+    /* フェンス値 */
+    UINT64 fenceValue_{ 0 };
+
+    /* バックバッファ */
+    std::vector<ComPtr<ID3D12Resource>> backBuffers;
+
+    /* RTV ヒープ */
+    ComPtr<ID3D12DescriptorHeap> rtvHeap{ nullptr };
+
+    /* シザー矩形 */
+    D3D12_RECT scissorRect{};
+
+    /* ビューポート */
+    D3D12_VIEWPORT viewPort{};
+
     /* 背景色 */
     Color backGroundColor_ = Color::Cyan();
 
-    /* ウィンドウ */
+    /* Windowインスタンス */
     Glib::Window& window_ = Glib::Window::Instance();
 }
 
@@ -48,17 +67,97 @@ bool Glib::Internal::Graphics::DirectX12::Initialize()
     if (!InitDevice()) return false;
     if (!InitCommand()) return false;
     if (!CreateSwapChain()) return false;
+    if (!CreateBackBuffer()) return false;
+
+    D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+    rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+    rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+
+    DXGI_SWAP_CHAIN_DESC swcDesc{};
+    swapChain_->GetDesc(&swcDesc);
+    backBuffers.resize(swcDesc.BufferCount);
+    for (UINT idx = 0; idx < swcDesc.BufferCount; ++idx)
+    {
+        if (FAILED(swapChain_->GetBuffer(idx, IID_PPV_ARGS(backBuffers[idx].ReleaseAndGetAddressOf()))))
+            return false;
+        D3D12_CPU_DESCRIPTOR_HANDLE handle = rtvHeap->GetCPUDescriptorHandleForHeapStart();
+        handle.ptr += static_cast<UINT_PTR>(idx) * device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+        device_->CreateRenderTargetView(backBuffers[idx].Get(), &rtvDesc, handle);
+    }
+
+    if (FAILED(device_->CreateFence(fenceValue_, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(fence_.ReleaseAndGetAddressOf())))) return false;
+
+#ifdef _DEBUG
+    const auto& windowSize = Window::WindowSize();
+#else
+    const auto& windowSize = Window::WindowDebugSize();
+#endif
+
+    // ビューポート設定
+    viewPort.Width = windowSize.x;
+    viewPort.Height = windowSize.y;
+    viewPort.TopLeftX = 0;
+    viewPort.TopLeftY = 0;
+    viewPort.MaxDepth = 1.0f;
+    viewPort.MinDepth = 0.0f;
+
+    // シザー矩形設定
+    scissorRect.left = 0;
+    scissorRect.top = 0;
+    scissorRect.right = scissorRect.left + static_cast<long>(windowSize.x);
+    scissorRect.bottom = scissorRect.top + static_cast<long>(windowSize.y);
+
     return true;
 }
 
 void Glib::Internal::Graphics::DirectX12::BeginDraw()
-{}
+{
+    auto bbIdx = swapChain_->GetCurrentBackBufferIndex();
+
+    auto barrierDesc = CD3DX12_RESOURCE_BARRIER::Transition(
+        backBuffers[bbIdx].Get(),
+        D3D12_RESOURCE_STATE_PRESENT,
+        D3D12_RESOURCE_STATE_RENDER_TARGET
+    );
+
+    cmdList_->ResourceBarrier(1, &barrierDesc);
+
+    auto rtvH = rtvHeap->GetCPUDescriptorHandleForHeapStart();
+    rtvH.ptr += static_cast<ULONG_PTR>(bbIdx) * device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+    cmdList_->OMSetRenderTargets(1, &rtvH, true, nullptr);
+    cmdList_->ClearRenderTargetView(rtvH, &backGroundColor_[0], 0, nullptr);
+}
 
 void Glib::Internal::Graphics::DirectX12::EndDraw()
-{}
+{
+    auto bbIdx = swapChain_->GetCurrentBackBufferIndex();
+    auto barrierDesc = CD3DX12_RESOURCE_BARRIER::Transition(
+        backBuffers[bbIdx].Get(),
+        D3D12_RESOURCE_STATE_RENDER_TARGET,
+        D3D12_RESOURCE_STATE_PRESENT
+    );
+    cmdList_->ResourceBarrier(1, &barrierDesc);
+    ExecuteCommandList();
+    swapChain_->Present(1, 0);
+}
 
 void Glib::Internal::Graphics::DirectX12::Finalize()
-{}
+{
+    WaitGPU();
+    window_.Finalize();
+}
+
+void Glib::Internal::Graphics::DirectX12::ExecuteCommandList()
+{
+    cmdList_->Close();
+    ID3D12CommandList* cmdLists[]{ cmdList_.Get() };
+    cmdQueue_->ExecuteCommandLists(1, cmdLists);
+    WaitGPU();
+
+    cmdAllocator_->Reset();
+    cmdList_->Reset(cmdAllocator_.Get(), nullptr);
+}
 
 ComPtr<ID3D12Device> Glib::Internal::Graphics::DirectX12::Device() const
 {
@@ -127,11 +226,15 @@ bool Glib::Internal::Graphics::DirectX12::InitDevice()
 
 bool Glib::Internal::Graphics::DirectX12::InitCommand()
 {
+    // アロケーターの作成
     auto result = device_->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(cmdAllocator_.ReleaseAndGetAddressOf()));
     if (FAILED(result)) return false;
+
+    // リストの作成
     result = device_->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, cmdAllocator_.Get(), nullptr, IID_PPV_ARGS(cmdList_.ReleaseAndGetAddressOf()));
     if (FAILED(result)) return false;
 
+    // キューの作成
     D3D12_COMMAND_QUEUE_DESC cmdQueueDesc{};
     cmdQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
     cmdQueueDesc.NodeMask = 0;
@@ -146,12 +249,12 @@ bool Glib::Internal::Graphics::DirectX12::CreateSwapChain()
 #ifdef _DEBUG
     const auto& windowSize = Window::WindowSize();
 #else
-    const auto& windowSize = Window::WindowSize();
+    const auto& windowSize = Window::WindowDebugSize();
 #endif
 
     DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
-    swapChainDesc.Width = static_cast<unsigned int>(windowSize.x);
-    swapChainDesc.Height = static_cast<unsigned int>(windowSize.y);
+    swapChainDesc.Width = static_cast<UINT>(windowSize.x);
+    swapChainDesc.Height = static_cast<UINT>(windowSize.y);
     swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     swapChainDesc.Stereo = false;
     swapChainDesc.SampleDesc.Count = 1;
@@ -173,6 +276,18 @@ bool Glib::Internal::Graphics::DirectX12::CreateSwapChain()
     ));
 }
 
+bool Glib::Internal::Graphics::DirectX12::CreateBackBuffer()
+{
+    // バックバッファ用ヒープの設定
+    D3D12_DESCRIPTOR_HEAP_DESC heapDesc{};
+    heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+    heapDesc.NodeMask = 0;
+    heapDesc.NumDescriptors = 2;
+    heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+    // ヒープの作成
+    return SUCCEEDED(device_->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(rtvHeap.ReleaseAndGetAddressOf())));
+}
+
 void Glib::Internal::Graphics::DirectX12::EnableDebugLayer()
 {
 #ifdef _DEBUG
@@ -182,4 +297,19 @@ void Glib::Internal::Graphics::DirectX12::EnableDebugLayer()
         debugController->EnableDebugLayer();
     }
 #endif
+}
+
+void Glib::Internal::Graphics::DirectX12::WaitGPU()
+{
+    cmdQueue_->Signal(fence_.Get(), ++fenceValue_);
+    if (fence_->GetCompletedValue() != fenceValue_)
+    {
+        auto event = CreateEvent(nullptr, false, false, nullptr);
+        fence_->SetEventOnCompletion(fenceValue_, event);
+        if (event != 0)
+        {
+            WaitForSingleObject(event, INFINITE);
+            CloseHandle(event);
+        }
+    }
 }

@@ -6,6 +6,7 @@
 
 namespace
 {
+    WNDCLASSEX windowClass_;
     HINSTANCE hInstance_;
     HWND windowHandle_;
     Glib::WndProc windowProc_ = WindowProcedure;
@@ -37,14 +38,13 @@ bool Glib::Window::Initialize()
     // メモリリーク検出
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
-    WNDCLASSEX wc{};
-    wc.cbSize = sizeof(WNDCLASSEX);
-    wc.hInstance = hInstance_ = GetModuleHandle(nullptr);
-    wc.lpfnWndProc = (WNDPROC)windowProc_;
+    windowClass_.cbSize = sizeof(WNDCLASSEX);
+    windowClass_.hInstance = hInstance_ = GetModuleHandle(nullptr);
+    windowClass_.lpfnWndProc = (WNDPROC)windowProc_;
     // ウィンドウの名前
 #ifdef UNICODE
     std::wstring wstr{ windowName_.begin(), windowName_.end() };
-    wc.lpszClassName = wstr.c_str();
+    windowClass_.lpszClassName = wstr.c_str();
 #else
     wc.lpszClassName = windowName_.c_str();
 #endif
@@ -55,13 +55,13 @@ bool Glib::Window::Initialize()
     RECT rect{ 0, 0, static_cast<LONG>(windowSize_.x), static_cast<LONG>(windowSize_.y) };
 #endif
 
-    RegisterClassEx(&wc);
+    RegisterClassEx(&windowClass_);
     AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
 
     // ウィンドウ作成
     windowHandle_ = CreateWindow(
-        wc.lpszClassName,
-        wc.lpszClassName,
+        windowClass_.lpszClassName,
+        windowClass_.lpszClassName,
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT,
         CW_USEDEFAULT,
@@ -76,6 +76,11 @@ bool Glib::Window::Initialize()
     if (windowHandle_ == NULL) return false;
     ShowWindow(windowHandle_, SW_SHOW);
     return true;
+}
+
+void Glib::Window::Finalize()
+{
+    UnregisterClass(windowClass_.lpszClassName, windowClass_.hInstance);
 }
 
 HINSTANCE Glib::Window::InstanceHandle()

@@ -49,6 +49,11 @@ namespace Glib::Internal::Graphics
         void Finalize();
 
         /**
+         * @brief コマンドリストの実行
+        */
+        void ExecuteCommandList();
+
+        /**
          * @brief デバイスを取得
         */
         ComPtr<ID3D12Device> Device() const;
@@ -93,9 +98,19 @@ namespace Glib::Internal::Graphics
         bool CreateSwapChain();
 
         /**
+         * @brief バックバッファの作成
+        */
+        bool CreateBackBuffer();
+
+        /**
          * @brief デバッグレイヤーの有効化
          */
         void EnableDebugLayer();
+
+        /**
+         * @brief GPUの処理待機
+        */
+        void WaitGPU();
     };
 }
 

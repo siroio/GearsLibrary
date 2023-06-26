@@ -25,6 +25,11 @@ namespace Glib
         bool Initialize();
 
         /**
+         * @brief Windowの終了
+        */
+        void Finalize();
+
+        /**
          * @brief インスタンスハンドルの取得
          */
         static HINSTANCE InstanceHandle();
