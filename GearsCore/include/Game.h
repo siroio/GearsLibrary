@@ -35,10 +35,30 @@ public:
     }
 
 private:
+
+    /**
+     * @brief システムの登録
+    */
     void RegisterSystem();
+
+    /**
+     * @brief 初期化
+    */
     bool Initialize();
+
+    /**
+     * @brief 更新
+    */
     void Update();
+
+    /**
+     * @brief 描画
+    */
     void Draw();
+
+    /**
+     * @brief 終了処理
+    */
     void Finalize();
 
 private:
