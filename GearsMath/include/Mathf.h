@@ -23,6 +23,7 @@ public:
     static constexpr float POSITIVE_INFINITY = std::numeric_limits<float>::infinity();
     static constexpr float NEGATIVE_INFINITY = -std::numeric_limits<float>::infinity();
     static constexpr float QNAN = std::numeric_limits<float>::quiet_NaN();
+
     /**
      * @brief v‚Ì‹t”‚ğ•Ô‚·
      *
