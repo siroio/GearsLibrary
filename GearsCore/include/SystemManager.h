@@ -17,12 +17,15 @@ namespace Glib::Internal::Interface
     class ISystem;
 }
 
-/**
- * @brief システム判定用
- */
-template<class T>
-concept HasSingletonSystem = std::derived_from<T, Glib::Internal::Interface::ISystem>&&
-std::derived_from<T, Glib::SingletonPtr<T>>;
+namespace Glib::Internal::Concept
+{
+    /**
+     * @brief システム判定用
+     */
+    template<class T>
+    concept HasSingletonSystem = std::derived_from<T, Glib::Internal::Interface::ISystem>&&
+        std::derived_from<T, Glib::SingletonPtr<T>>;
+}
 
 /**
  * @brief システム管理クラス
@@ -45,7 +48,7 @@ public:
     void EndDraw();
     void Finalize();
 
-    template<class T> requires HasSingletonSystem<T>
+    template<class T> requires Glib::Internal::Concept::HasSingletonSystem<T>
     static void AddSystem();
     static void AddSystem()
     {}
@@ -92,7 +95,7 @@ private:
     std::unordered_map<SystemFunctionType, std::vector<FunctionVariant>> systemFunctions_;
 };
 
-template<class T> requires HasSingletonSystem<T>
+template<class T> requires Glib::Internal::Concept::HasSingletonSystem<T>
 inline void SystemManager::AddSystem()
 {
     Glib::WeakPtr<T> instance = T::Instance();
