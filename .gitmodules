@@ -10,3 +10,6 @@
 [submodule "Modules/json"]
 	path = Modules/json
 	url = https://github.com/nlohmann/json
+[submodule "Modules/PhysX"]
+	path = Modules/PhysX
+	url = https://github.com/NVIDIA-Omniverse/PhysX.git
