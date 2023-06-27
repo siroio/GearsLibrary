@@ -8,6 +8,7 @@
 #include <GameObject.h>
 #include <GameObjectManager.h>
 #include <Component.h>
+#include <MsgBox.h>
 using namespace std;
 
 class TestComponent : public Component

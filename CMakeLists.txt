@@ -12,11 +12,6 @@ project(GearsLibrary
 
 # == 関数とマクロの定義 ==
 
-function(get_files_in_directory DIRECTORY EXTENSION VARIABLE)
-    file(GLOB ${VARIABLE}
-        "${DIRECTORY}/*.${EXTENSION}"
-    )
-endfunction()
 
 function(create_groups FILES_VAR)
     foreach(file ${${FILES_VAR}})
@@ -63,6 +58,7 @@ set(LIBRARY
     GearsScene
     GearsMath
     GearsUtility
+    GearsDebug
 )
 
 set(DIRECTX12_LIBS
@@ -79,8 +75,6 @@ set(EXTERNAL_LIBS
     DirectXTex
     nlohmann_json
 )
-
-set(IMGUI_PATH ./Modules/ImGui)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -117,15 +111,18 @@ add_subdirectory(./GearsComponent)
 add_subdirectory(./GearsScene)
 add_subdirectory(./GearsMath)
 add_subdirectory(./GearsUtility)
+add_subdirectory(./GearsDebug)
 add_subdirectory(./Modules/DirectXTex)
 add_subdirectory(./Modules/json)
-
-# ImGui 追加
-include_directories(IMGUI_PATH)
 
 # メインの実行可能ファイルの設定
 target_compile_features(GearsLibrary PRIVATE cxx_std_20)
 target_link_libraries(GearsLibrary ${LIBRARY} ${DIRECTX12_LIBS} ${EXTERNAL_LIBS})
+
+# imgui 設定
+set(IMGUI_SOURCE ./Modules/ImGui)
+set(IMGUI_BACKEND ${IMGUI_SOURCE}/backends)
+target_include_directories(GearsDebug PRIVATE ${IMGUI_SOURCE} ${IMGUI_BACKEND})
 
 # プロジェクトのフィルタ設定
 set_target_properties(DirectXTex PROPERTIES FOLDER Modules)

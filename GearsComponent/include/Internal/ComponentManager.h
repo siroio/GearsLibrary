@@ -59,7 +59,7 @@ namespace Glib::Internal
 
         if (eventFunction_.find(ptr) == eventFunction_.end())
         {
-            ComponentEventFunctionList list = {};
+            ComponentEventFunctionList list{};
             list.AddFunction(component);
             if (!list.Empty()) eventFunction_[ptr] = list;
         }

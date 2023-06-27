@@ -69,7 +69,7 @@ bool Glib::Internal::Graphics::DirectX12::Initialize()
     if (!CreateSwapChain()) return false;
     if (!CreateBackBuffer()) return false;
 
-    D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+    D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
     rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
     rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
@@ -126,7 +126,8 @@ void Glib::Internal::Graphics::DirectX12::BeginDraw()
     rtvH.ptr += static_cast<ULONG_PTR>(bbIdx) * device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
     cmdList_->OMSetRenderTargets(1, &rtvH, true, nullptr);
-    cmdList_->ClearRenderTargetView(rtvH, &backGroundColor_[0], 0, nullptr);
+    float color[]{ backGroundColor_[0], backGroundColor_[1], backGroundColor_[2], backGroundColor_[3] };
+    cmdList_->ClearRenderTargetView(rtvH, color, 0, nullptr);
 }
 
 void Glib::Internal::Graphics::DirectX12::EndDraw()

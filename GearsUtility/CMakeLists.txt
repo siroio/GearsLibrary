@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.1)
 # == CONFIG ==
 set(SOURCE_FILE 
     ./src/CSVLoader.cpp
+    ./src/MsgBox.cpp
 )
 
 set(HEADER_FILE
@@ -13,6 +14,7 @@ set(HEADER_FILE
     ./include/StringUtility.h
     ./include/TimeUtility.h
     ./include/CSVLoader.h
+    ./include/MsgBox.h
     ./include/Json.h
     ./include/Jsonfwd.h
 )
