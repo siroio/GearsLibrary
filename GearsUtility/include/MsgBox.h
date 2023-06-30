@@ -7,6 +7,10 @@ namespace Glib
 {
     class MsgBox
     {
+    private:
+        MsgBox() = default;
+        ~MsgBox() = default;
+
     public:
         enum class RESULT
         {
