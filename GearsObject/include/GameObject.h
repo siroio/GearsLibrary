@@ -61,26 +61,50 @@ public:
     Glib::WeakPtr<T> GetComponentInParent() const;
 
     /**
-     * @brief ゲームオブジェクトのすべてのコンポーネントを返します
+     * @brief ゲームオブジェクトのすべてのコンポーネントをすべて取得
      * @return コンポーネント一覧
      */
     template<class T> requires IsComponent<T>
     std::list<Glib::WeakPtr<T>> GetComponents() const;
 
+    /**
+     * @brief 親子関係にある子オブジェクトからコンポーネントをすべて取得
+     * @return コンポーネント一覧
+     */
     template<class T> requires IsComponent<T>
     Glib::WeakPtr<T> GetComponentsInChildren() const;
 
+    /**
+     * @brief 親子関係にある親オブジェクトからコンポーネントをすべて取得
+     * @return コンポーネント一覧
+     */
     template<class T> requires IsComponent<T>
     Glib::WeakPtr<T> GetComponentsInParent() const;
 
+    /**
+     * @brief コンポーネントの削除
+     */
     void RemoveComponents();
 
+    /**
+     * @brief 死亡したコンポーネントの削除
+     */
     void RemoveDeadComponents();
 
+    /**
+     * @brief ゲームオブジェクトの削除
+     */
     void Destroy();
 
+    /**
+     * @brief ゲームオブジェクトが削除されないか
+     */
     bool DontDestroyOnLoad() const;
 
+    /**
+     * @brief ゲームオブジェクトのDestroyを防ぐ
+     * @param dontDestroyOnLoad
+     */
     void DontDestroyOnLoad(bool dontDestroyOnLoad);
 
     bool Active() const;
