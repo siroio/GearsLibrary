@@ -1,6 +1,4 @@
-#ifndef GEARS_GAME_OBJECT_MANAGER_H
-#define GEARS_GAME_OBJECT_MANAGER_H
-
+#pragma once
 #include <Internal/ISystem.h>
 #include <Singleton.h>
 #include <FuncOrderDefinition.h>
@@ -64,5 +62,3 @@ public:
 private:
     static inline std::deque<std::shared_ptr<GameObject>> gameObjects_;
 };
-
-#endif // !GEARS_GAME_OBJECT_MANAGER_H

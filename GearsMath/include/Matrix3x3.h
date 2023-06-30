@@ -1,6 +1,4 @@
-#ifndef GEARS_MATRIX3X3_H
-#define GEARS_MATRIX3X3_H
-
+#pragma once
 #include <array>
 #include <string>
 
@@ -43,8 +41,8 @@ public:
 
 public:
     void Set(float m11, float m12, float m13,
-        float m21, float m22, float m23,
-        float m31, float m32, float m33);
+             float m21, float m22, float m23,
+             float m31, float m32, float m33);
     void Set(const Matrix3x3& m);
     void SetIdentity();
     std::string ToString() const;
@@ -68,5 +66,3 @@ Matrix3x3 operator * (const Matrix3x3& m1, const Matrix3x3& m2);
 Matrix3x3 operator / (const Matrix3x3& m, float scalar);
 
 std::ostream& operator << (std::ostream& stream, const Matrix3x3& m);
-
-#endif // !GEARS_MATRIX3X3_H

@@ -1,6 +1,4 @@
-#ifndef GEARS_COMPONENT_EVENT_FUNCTION_LIST
-#define GEARS_COMPONENT_EVENT_FUNCTION_LIST
-
+#pragma once
 #include <variant>
 #include <deque>
 #include <unordered_map>
@@ -147,5 +145,3 @@ namespace Glib::Internal
         );
     }
 }
-
-#endif // !GEARS_COMPONENT_EVENT_FUNCTION_LIST

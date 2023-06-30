@@ -1,6 +1,4 @@
-#ifndef GEARS_LOGGER_H
-#define GEARS_LOGGER_H
-
+#pragma once
 #include <string_view>
 #include <iostream>
 #include <cstdarg>
@@ -84,5 +82,3 @@ public:
     {}
 #endif
 };
-
-#endif // !GEARS_LOGGER_H

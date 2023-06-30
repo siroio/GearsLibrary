@@ -1,6 +1,4 @@
-#ifndef GEARS_STRING_UTILITY_H
-#define GEARS_STRING_UTILITY_H
-
+#pragma once
 #include <string_view>
 #include <string>
 #include <vector>
@@ -35,7 +33,7 @@ namespace Glib
      * @return ƒNƒ‰ƒX–¼
      */
     template<class T>
-    static constexpr std::string Nameof()
+    static constexpr std::string nameof()
     {
         std::string name = typeid(T).name();
         std::size_t start = name.find(' ');
@@ -47,5 +45,3 @@ namespace Glib
         return name;
     }
 };
-
-#endif // !GEARS_STRING_UTILITY_H

@@ -1,6 +1,4 @@
-#ifndef GEARS_FUNC_DEFINITION_H
-#define GEARS_FUNC_DEFINITION_H
-
+#pragma once
 #include <Internal/HasFunctionObject.h>
 
 HAS_FUNC_OBJECT(Initialize);
@@ -22,5 +20,3 @@ HAS_FUNC_OBJECT(OnTriggerExit);
 HAS_FUNC_OBJECT(OnCollisionEnter);
 HAS_FUNC_OBJECT(OnCollisionStay);
 HAS_FUNC_OBJECT(OnCollisionExit);
-
-#endif // !GEARS_FUNC_DEFINITION_H

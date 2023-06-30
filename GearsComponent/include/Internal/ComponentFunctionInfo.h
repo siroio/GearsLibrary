@@ -1,6 +1,4 @@
-#ifndef GEARS_COMPONENT_FUNCTION_INFO_H
-#define GEARS_COMPONENT_FUNCTION_INFO_H
-
+#pragma once
 #include <WeakPtr.h>
 
 class Component;
@@ -26,5 +24,3 @@ namespace Glib::Internal
         std::shared_ptr<Interface::IFunc<ReturnType, Args...>> function;
     };
 }
-
-#endif // !GEARS_COMPONENT_FUNCTION_INFO_H

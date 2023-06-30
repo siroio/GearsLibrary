@@ -1,6 +1,4 @@
-#ifndef GEARS_TIME_UTILITY_H
-#define GEARS_TIME_UTILITY_H
-
+#pragma once
 #include <chrono>
 #include <sstream>
 
@@ -63,5 +61,3 @@ namespace Glib
         }
     };
 }
-
-#endif // !GEARS_TIME_UTILITY_H

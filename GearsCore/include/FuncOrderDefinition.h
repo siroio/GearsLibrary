@@ -1,6 +1,4 @@
-#ifndef GEARS_FUNC_ORDER_DEFINITION_H
-#define GEARS_FUNC_ORDER_DEFINITION_H
-
+#pragma once
 #include <Internal/FuncOrder.h>
 
 FUNC_ORDER(Initialize)
@@ -10,5 +8,3 @@ FUNC_ORDER(Draw)
 FUNC_ORDER(DebugDraw)
 FUNC_ORDER(EndDraw)
 FUNC_ORDER(Finalize)
-
-#endif // !GEARS_FUNC_ORDER_DEFINITION_H

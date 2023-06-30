@@ -1,6 +1,4 @@
-#ifndef GEARS_WEAKPTR_H
-#define GEARS_WEAKPTR_H
-
+#pragma once
 #include <memory>
 #include <concepts>
 
@@ -100,5 +98,3 @@ namespace Glib
         std::weak_ptr<T> ptr_;
     };
 }
-
-#endif // !GEARS_WEAKPTR_H

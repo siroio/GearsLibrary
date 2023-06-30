@@ -1,6 +1,4 @@
-#ifndef GEARS_VECTOR3_H
-#define GEARS_VECTOR3_H
-
+#pragma once
 #include <iosfwd>
 #include <string>
 #include <array>
@@ -104,5 +102,3 @@ bool operator == (const Vector3& v1, const Vector3 v2);
 bool operator != (const Vector3& v1, const Vector3 v2);
 
 std::ostream& operator << (std::ostream& stream, const Vector3& v);
-
-#endif // !GEARS_VECTOR3_H

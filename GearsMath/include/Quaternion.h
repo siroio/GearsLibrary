@@ -1,6 +1,4 @@
-#ifndef QUATERNION_H
-#define QUATERNION_H
-
+#pragma once
 #include <iosfwd>
 #include <string>
 #include <array>
@@ -96,5 +94,3 @@ bool operator == (const Quaternion& q1, const Quaternion& q2);
 bool operator != (const Quaternion& q1, const Quaternion& q2);
 
 std::ostream& operator << (std::ostream& stream, const Quaternion& q);
-
-#endif // !QUATERNION_H

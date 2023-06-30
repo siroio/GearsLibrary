@@ -1,6 +1,4 @@
-#ifndef GEARS_MATHF_H
-#define GEARS_MATHF_H
-
+#pragma once
 #include <numbers>
 #include <limits>
 
@@ -106,5 +104,3 @@ public:
     static float Erf(float x);
     static float Erfc(float x);
 };
-
-#endif // !GEARS_MATHF_H

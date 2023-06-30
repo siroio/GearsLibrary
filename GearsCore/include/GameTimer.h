@@ -1,6 +1,4 @@
-#ifndef GEARS_GAME_TIMER_H
-#define GEARS_GAME_TIMER_H
-
+#pragma once
 #include <Singleton.h>
 #include <FuncOrderDefinition.h>
 #include <Internal/ISystem.h>
@@ -47,5 +45,3 @@ private:
     static inline float timeScale_{ 1.0f };
     timePoint prevTime_{ clock::now() };
 };
-
-#endif // !GEARS_GAME_TIMER_H

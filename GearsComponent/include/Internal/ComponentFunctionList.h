@@ -1,6 +1,4 @@
-#ifndef GEARS_COMPONENT_FUNCTION_LIST_H
-#define GEARS_COMPONENT_FUNCTION_LIST_H
-
+#pragma once
 #include <variant>
 #include <deque>
 #include <unordered_map>
@@ -91,7 +89,7 @@ namespace Glib::Internal
     inline void ComponentFunctionList::AddStart(const std::shared_ptr<T>& component)
     {
         addedFunction_.emplace_back(FunctionType::Start,
-            FunctionInfo<void>{ component, std::make_shared<Function::HasStartObject<T, void>>(component)}
+                                    FunctionInfo<void>{ component, std::make_shared<Function::HasStartObject<T, void>>(component)}
         );
     }
 
@@ -113,5 +111,3 @@ namespace Glib::Internal
         );
     }
 }
-
-#endif // !GEARS_COMPONENT_FUNCTION_LIST_H

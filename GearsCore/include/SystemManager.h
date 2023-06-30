@@ -1,6 +1,4 @@
-#ifndef GEARS_SYSTEMMANAGER_H
-#define GEARS_SYSTEMMANAGER_H
-
+#pragma once
 #include <iostream>
 #include <Singleton.h>
 #include <Internal/IFunc.h>
@@ -149,5 +147,3 @@ inline void SystemManager::AddFinalize(const Glib::WeakPtr<T>& instance)
 {
     systemFunctions_[SystemFunctionType::Finalize].push_back(std::make_shared<Glib::Internal::Function::HasFinalizeObject<T, void>>(instance));
 }
-
-#endif // !GEARS_SYSTEMMNAGER_H

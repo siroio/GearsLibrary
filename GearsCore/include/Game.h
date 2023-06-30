@@ -1,6 +1,4 @@
-#ifndef GEARS_GAME_H
-#define GEARS_GAME_H
-
+#pragma once
 /**
  * @brief メインのゲームクラス
  */
@@ -64,5 +62,3 @@ private:
 private:
     inline static bool isExit{ false };
 };
-
-#endif // !GEARS_GAME_H

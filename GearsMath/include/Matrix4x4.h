@@ -1,6 +1,4 @@
-#ifndef GEARS_MATRIX4X4_H
-#define GEARS_MATRIX4X4_H
-
+#pragma once
 #include <iosfwd>
 #include <string>
 #include <array>
@@ -72,9 +70,9 @@ public:
     Matrix4x4 Transpose() const;
 
     void Set(float m11, float m12, float m13, float m14,
-        float m21, float m22, float m23, float m24,
-        float m31, float m32, float m33, float m34,
-        float m41, float m42, float m43, float m44);
+             float m21, float m22, float m23, float m24,
+             float m31, float m32, float m33, float m34,
+             float m41, float m42, float m43, float m44);
     void Set(const Matrix4x4& m);
     void SetIdentity();
     void SetTRS(const Vector3& translate, const Quaternion& rotation, const Vector3& scalar);
@@ -99,5 +97,3 @@ Matrix4x4 operator * (const Matrix4x4& m1, const Matrix4x4& m2);
 Matrix4x4 operator / (const Matrix4x4& m, float scalar);
 
 std::ostream& operator << (std::ostream& stream, const Matrix4x4& m);
-
-#endif // !GEARS_RANDOM_H

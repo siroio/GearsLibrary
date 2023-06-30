@@ -1,5 +1,4 @@
-#ifndef GEARS_SCENE_H
-#define GEARS_SCENE_H
+#pragma once
 
 namespace Glib::Scene
 {
@@ -26,5 +25,3 @@ namespace Glib::Scene
         virtual void End() = 0;
     };
 }
-
-#endif // !GEARS_SCENE_H

@@ -1,6 +1,4 @@
-#ifndef GEARS_DIRECTX_12_H
-#define GEARS_DIRECTX_12_H
-
+#pragma once
 #include <Singleton.h>
 #include <Internal/ISystem.h>
 #include <FuncOrderDefinition.h>
@@ -113,5 +111,3 @@ namespace Glib::Internal::Graphics
         void WaitGPU();
     };
 }
-
-#endif // !GEARS_DIRECTX_12_H

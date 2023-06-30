@@ -1,6 +1,4 @@
-﻿#ifndef GEARS_VECTOR2_H
-#define GEARS_VECTOR2_H
-
+﻿#pragma once
 #include <iosfwd>
 #include <string>
 #include <array>
@@ -310,5 +308,3 @@ bool operator == (const Vector2& v1, const Vector2 v2);
 bool operator != (const Vector2& v1, const Vector2 v2);
 
 std::ostream& operator << (std::ostream& stream, const Vector2& v);
-
-#endif // !GEARS_VECTOR2_H

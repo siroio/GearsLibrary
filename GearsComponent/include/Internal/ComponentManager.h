@@ -1,6 +1,4 @@
-#ifndef GEARS_COMPONENT_MANAGER_H
-#define GEARS_COMPONENT_MANAGER_H
-
+#pragma once
 #include <GameObjectPtr.h>
 #include <FuncOrderDefinition.h>
 #include <Internal/FuncOrderConstant.h>
@@ -85,5 +83,3 @@ namespace Glib::Internal
         eventFunction_[ptr].Execute(type, args...);
     }
 }
-
-#endif // !GEARS_COMPONENT_H

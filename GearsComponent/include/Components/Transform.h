@@ -1,6 +1,4 @@
-#ifndef GEARS_TRANSFORM_H
-#define GEARS_TRANSFORM_H
-
+#pragma once
 #include <Component.h>
 #include <Vector3.h>
 #include <Quaternion.h>
@@ -82,4 +80,3 @@ private:
     Glib::WeakPtr<Transform> parent_{ nullptr };
     std::list<Glib::WeakPtr<Transform>> children_;
 };
-#endif // !GEARS_TRANSFORM_H

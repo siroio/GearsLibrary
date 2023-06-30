@@ -1,6 +1,4 @@
-#ifndef GEARS_SINGLETON_H
-#define GEARS_SINGLETON_H
-
+#pragma once
 #include <memory>
 #include <mutex>
 #include <WeakPtr.h>
@@ -82,5 +80,3 @@ namespace Glib
         }
     };
 };
-
-#endif // !GEARS_SINGLETON_H

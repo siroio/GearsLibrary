@@ -1,6 +1,4 @@
-#ifndef GEARS_ICOMPONENT_H
-#define GEARS_ICOMPONENT_H
-
+#pragma once
 class GameObject;
 
 namespace Glib
@@ -23,5 +21,3 @@ namespace Glib::Internal::Interface
         virtual void SetGameObject(const Glib::WeakPtr<GameObject>& gameObject) = 0;
     };
 }
-
-#endif // !GEARS_ICOMPONENT_H

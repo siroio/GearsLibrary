@@ -1,5 +1,4 @@
 #pragma once
-
 #include <FuncOrderDefinition.h>
 #include <Internal/ISystem.h>
 #include <Singleton.h>

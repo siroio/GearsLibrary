@@ -1,6 +1,4 @@
-#ifndef GEARS_SCENE_MANAGER_H
-#define GEARS_SCENE_MANAGER_H
-
+#pragma once
 #include <Internal/ISystem.h>
 #include <Internal/FuncOrderConstant.h>
 #include <FuncOrderDefinition.h>
@@ -55,8 +53,6 @@ namespace Glib::Scene
     template<class SceneType>
     inline void SceneManager::Register()
     {
-        scenes_.emplace(Nameof<SceneType>(), std::make_shared<SceneType>());
+        scenes_.emplace(nameof<SceneType>(), std::make_shared<SceneType>());
     }
 }
-
-#endif // !GEARS_SCENE_MANAGER_H

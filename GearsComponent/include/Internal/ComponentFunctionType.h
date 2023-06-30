@@ -1,5 +1,4 @@
-#ifndef GEARS_COMPONENT_FUNCTION_TYPE_H
-#define GEARS_COMPONENT_FUNCTION_TYPE_H
+#pragma once
 
 /**
  * @brief コンポーネントの関数
@@ -18,5 +17,3 @@ enum class ComponentFunctionType
     OnCollisionExit,
     ReceiveEvent,
 };
-
-#endif // GEARS_COMPONENT_FUNCTION_TYPE_H

@@ -1,6 +1,4 @@
-#ifndef GEARS_CSV_LOADER_H
-#define GEARS_CSV_LOADER_H
-
+#pragma once
 #include <mutex>
 #include <vector>
 #include <string>
@@ -25,5 +23,3 @@ namespace Glib
         strings Load() noexcept(false);
     };
 }
-
-#endif // !GEARS_CSV_LOADER_H

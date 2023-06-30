@@ -1,6 +1,4 @@
-#ifndef GEARS_GAME_OBJECT_H
-#define GEARS_GAME_OBJECT_H
-
+#pragma once
 #include <concepts>
 #include <string_view>
 #include <algorithm>
@@ -201,5 +199,3 @@ inline Glib::WeakPtr<T> GameObject::GetComponentsInParent() const
 
     return components;
 }
-
-#endif // !GEARS_GAME_OBJECT_H

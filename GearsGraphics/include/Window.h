@@ -1,6 +1,4 @@
-#ifndef GEARS_WINDOW_H
-#define GEARS_WINDOW_H
-
+#pragma once
 #include <Windows.h>
 #include <string>
 #include <Singleton.h>
@@ -78,5 +76,3 @@ namespace Glib
         static void WindowDebugSize(const Vector2& size);
     };
 }
-
-#endif // !GEARS_WINDOW_H

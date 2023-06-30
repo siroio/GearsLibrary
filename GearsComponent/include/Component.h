@@ -1,6 +1,4 @@
-#ifndef GEARS_COMPONENT_H
-#define GEARS_COMPONENT_H
-
+#pragma once
 #include <Internal/IComponent.h>
 #include <GameObjectPtr.h>
 
@@ -30,5 +28,3 @@ private:
     bool isDead_{ false };
     GameObjectPtr gameObject_{ nullptr };
 };
-
-#endif // !GEARS_COMPONENT_H

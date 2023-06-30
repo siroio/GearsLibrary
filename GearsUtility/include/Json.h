@@ -1,7 +1,3 @@
-#ifndef GEARS_JSON_H
-#define GEARS_JSON_H
-
+#pragma once
 #include <nlohmann/json.hpp>
 using namespace nlohmann;
-
-#endif // !GEARS_JSON_H

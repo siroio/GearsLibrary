@@ -1,5 +1,4 @@
-#ifndef GEARS_LIBRARY_H
-#define GEARS_LIBRARY_H
+#pragma once
 
 /* DIRECTX12 LIB */
 #pragma comment(lib, "d3d12.lib")
@@ -31,5 +30,3 @@
 #pragma comment(lib, "GearsUtility.lib")
 #pragma comment(lib, "DirectXTex.lib")
 #endif // _DEBUG
-
-#endif // !GEARS_LIBRARY_H

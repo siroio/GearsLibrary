@@ -1,6 +1,4 @@
-#ifndef GEARS_RANDOM_H
-#define GEARS_RANDOM_H
-
+#pragma once
 #include <Singleton.h>
 #include <Mathf.h>
 #include <random>
@@ -86,4 +84,3 @@ public:
      */
     float Range(float min, float max);
 };
-#endif // !GEARS_RANDOM_H
