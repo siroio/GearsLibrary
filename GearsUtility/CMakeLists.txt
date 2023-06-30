@@ -17,6 +17,7 @@ set(HEADER_FILE
     ./include/MsgBox.h
     ./include/Json.h
     ./include/Jsonfwd.h
+    ./include/BitFlag.h
 )
 
 set(LIB_NAME GearsUtility)
