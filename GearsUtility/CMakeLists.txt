@@ -18,6 +18,7 @@ set(HEADER_FILE
     ./include/Json.h
     ./include/Jsonfwd.h
     ./include/BitFlag.h
+    ./include/ObjectPool.h
 )
 
 set(LIB_NAME GearsUtility)

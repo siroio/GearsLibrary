@@ -59,7 +59,7 @@ bool Glib::Internal::Graphics::DirectX12::Initialize()
     if (!window_.Initialize()) return false;
     EnableDebugLayer();
     // ファクトリーの作成
-#ifdef _DEBUG
+#if defined(DEBUG) || defined(_DEBUG)
     if (FAILED(CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(dxgiFactory_.ReleaseAndGetAddressOf())))) return false;
 #else
     if (FAILED(CreateDXGIFactory1(IID_PPV_ARGS(dxgiFactory_.ReleaseAndGetAddressOf())))) return false;
@@ -87,7 +87,7 @@ bool Glib::Internal::Graphics::DirectX12::Initialize()
 
     if (FAILED(device_->CreateFence(fenceValue_, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(fence_.ReleaseAndGetAddressOf())))) return false;
 
-#ifdef _DEBUG
+#if defined(DEBUG) || defined(_DEBUG)
     const auto& windowSize = Window::WindowSize();
 #else
     const auto& windowSize = Window::WindowDebugSize();
@@ -247,7 +247,7 @@ bool Glib::Internal::Graphics::DirectX12::InitCommand()
 
 bool Glib::Internal::Graphics::DirectX12::CreateSwapChain()
 {
-#ifdef _DEBUG
+#if defined(DEBUG) || defined(_DEBUG)
     const auto& windowSize = Window::WindowSize();
 #else
     const auto& windowSize = Window::WindowDebugSize();
@@ -291,7 +291,7 @@ bool Glib::Internal::Graphics::DirectX12::CreateBackBuffer()
 
 void Glib::Internal::Graphics::DirectX12::EnableDebugLayer()
 {
-#ifdef _DEBUG
+#if defined(DEBUG) || defined(_DEBUG)
     ComPtr<ID3D12Debug> debugController{ nullptr };
     if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(debugController.ReleaseAndGetAddressOf()))))
     {

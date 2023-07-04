@@ -3,12 +3,14 @@ cmake_minimum_required(VERSION 3.1)
 # == CONFIG ==
 set(SOURCE_FILE 
 	./src/Internal/DirectX12.cpp
+	./src/Internal/DescriptorPool.cpp
     ./src/Window.cpp
 )
 
 set(HEADER_FILE 
 	./include/Internal/DirectX12.h
     ./include/Internal/d3dx12Inc.h
+    ./include/Internal/DescriptorPool.h
     ./include/Window.h
 )
 

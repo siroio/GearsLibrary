@@ -8,7 +8,7 @@
 #include <GameObject.h>
 #include <GameObjectManager.h>
 #include <Component.h>
-#include <MsgBox.h>
+#include <ObjectPool.h>
 using namespace std;
 
 class TestComponent : public Component
@@ -60,7 +60,14 @@ class MyGame : public Game
     }
 };
 
+struct TEXXXX
+{
+    TEXXXX() = default;
+    int val;
+};
+
 int main()
 {
-    MyGame{}.Run();
+
+    Glib::ObjectPool<TEXXXX> pool;
 }

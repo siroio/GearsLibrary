@@ -1,6 +1,6 @@
 #include <Window.h>
 #include <Vector2.h>
-#ifdef _DEBUG
+#if defined(DEBUG) || defined(_DEBUG)
 #include <crtdbg.h>
 #endif
 
@@ -34,7 +34,7 @@ bool Glib::Window::Initialize()
     // 作成済みかチェック
     if (windowHandle_ != NULL) return false;
     if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED))) return false;
-#ifdef _DEBUG
+#if defined(DEBUG) || defined(_DEBUG)
     // メモリリーク検出
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
@@ -49,7 +49,7 @@ bool Glib::Window::Initialize()
     wc.lpszClassName = windowName_.c_str();
 #endif
 
-#ifdef _DEBUG
+#if defined(DEBUG) || defined(_DEBUG)
     RECT rect{ 0, 0, static_cast<LONG>(windowDebugSize_.x), static_cast<LONG>(windowDebugSize_.y) };
 #else
     RECT rect{ 0, 0, static_cast<LONG>(windowSize_.x), static_cast<LONG>(windowSize_.y) };

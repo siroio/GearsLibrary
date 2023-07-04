@@ -107,20 +107,52 @@ public:
      */
     void DontDestroyOnLoad(bool dontDestroyOnLoad);
 
+    /**
+     * @brief ゲームオブジェクトがアクティブか
+     * @return bool
+     */
     bool Active() const;
 
+    /**
+     * @brief ゲームオブジェクトのアクティブを設定
+     * @param active
+     */
     void Active(bool active);
 
+    /**
+     * @brief ゲームオブジェクトの名前を設定
+     * @param name
+     */
     void Name(std::string_view name);
 
+    /**
+     * @brief ゲームオブジェクトの名前を変更
+     * @return name
+     */
     std::string_view Name() const;
 
+    /**
+     * @brief ゲームオブジェクトのタグを設定
+     * @param tag
+     */
     void Tag(std::string_view tag);
 
+    /**
+     * @brief ゲームオブジェクトのタグを取得
+     * @return tag
+     */
     std::string_view Tag() const;
 
+    /**
+     * @brief ゲームオブジェクトが死亡状態か
+     * @return bool
+     */
     bool IsDead() const;
 
+    /**
+     * @brief ゲームオブジェクトのトランスフォームを取得
+     * @return
+     */
     const Glib::WeakPtr<Transform>& Transform() const;
 
 private:
