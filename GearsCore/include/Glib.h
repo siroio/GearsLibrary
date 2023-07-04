@@ -1,4 +1,5 @@
 #pragma once
+/* Linker Header File  */
 
 /* DIRECTX12 LIB */
 #pragma comment(lib, "d3d12.lib")
@@ -9,7 +10,7 @@
 #pragma comment(lib, "xinput.lib")
 #pragma comment(lib, "xaudio2.lib")
 
-#ifdef _DEBUG
+#if defined(DEBUG) || defined(_DEBUG)
 /* DEBUG BUILD LIB */
 #pragma comment(lib, "GearsCored.lib")
 #pragma comment(lib, "GearsComponentd.lib")
