@@ -1,5 +1,7 @@
 #pragma once
+#include <vector>
 #include <list>
+#include <unordered_set>
 #include <memory>
 #include <mutex>
 #include <functional>
@@ -10,18 +12,26 @@ namespace Glib
     class ObjectPool
     {
     public:
+        using InitializeCallBack = std::function<void(size_t, T*)>;
+
         /* コンストラクタ */
-        ObjectPool(size_t capacity = 32);
+        ObjectPool();
+        ObjectPool(size_t count);
+
+        /**
+         * @brief 初期化
+        */
+        bool Init(size_t count);
 
         /**
          * @brief オブジェクトの取得
          */
-        std::shared_ptr<T> Get();
+        T* Get();
 
         /**
          * @brief オブジェクトの返却
          */
-        void Release(std::shared_ptr<T>& resource);
+        void Release(T*& resource);
 
         /**
          * @brief プールの削除
@@ -29,40 +39,21 @@ namespace Glib
         void Clear();
 
         /**
-         * @brief 容量の変更
-         */
-        void Capacity(size_t capacity);
-
-        /**
-         * @brief プールの容量
-         */
-        size_t Capacity() const;
-
-        /**
-         * @brief プールを拡張するか
-         */
-        bool AutoExpand() const;
-
-        /**
-         * @brief プールの拡張を切り替え
-         */
-        void AutoExpand(bool expand);
-
-        /**
-         * @brief 使えるオブジェクトの数
+         * @brief オブジェクトの総数
          */
         size_t Count() const;
 
         /**
-         * @brief プールが使えるか
-         */
-        bool PoolEnable() const;
+         * @brief コールバック関数の設定
+         * @param callback
+        */
+        void SetInitializeCallBack(InitializeCallBack callback);
 
     private:
         /**
-         * @brief リソースの追加
+         * @brief オブジェクトの追加
          */
-        void AddResource();
+        void AddObject(size_t index);
 
     private:
         ObjectPool(const ObjectPool<T>&) = delete;
@@ -71,112 +62,107 @@ namespace Glib
     private:
         /* メンバ変数 */
 
-        size_t capacity_{ 32 };
-        bool autoExpand_{ true };
+        bool initialized{ false };
         std::mutex mutex_;
 
         /* プールリスト */
 
-        std::list<std::shared_ptr<T>> pool_;
-        std::list<std::shared_ptr<T>> used_;
-        std::list<std::shared_ptr<T>> free_;
+        std::vector<std::unique_ptr<T>> objects_;
+        std::list<T*> availableObjects_;
+        std::unordered_set<uintptr_t> borrowedObjects_;
+        InitializeCallBack callback_;
     };
 
     template<class T>
-    inline ObjectPool<T>::ObjectPool(size_t capacity) :
-        capacity_{ capacity }
+    inline ObjectPool<T>::ObjectPool()
+    {
+        Init(32);
+    }
+
+    template<class T>
+    inline ObjectPool<T>::ObjectPool(size_t count)
+    {
+        Init(count);
+    }
+
+    template<class T>
+    inline bool ObjectPool<T>::Init(size_t count)
     {
         std::lock_guard lock{ mutex_ };
-        for (size_t i = 0; i < capacity_; i++)
+        if (initialized) return false;
+        objects_.reserve(count);
+        availableObjects_.reserve(count);
+        for (size_t i = 0; i < count; i++)
         {
-            // 初期化
-            AddResource();
+            AddObject(i);
         }
+        initialized = true;
+        return true;
     }
 
     template<class T>
-    inline std::shared_ptr<T> ObjectPool<T>::Get()
+    inline T* ObjectPool<T>::Get()
     {
-        std::lock_guard<std::mutex> lock{ mutex_ };
-        // 取得
-        if (autoExpand_ && pool_.size() >= capacity_)
-        {
-            // 拡張
-            AddResource();
-            capacity_++;
-            // 利用状態にする
-            used_.push_back(pool_.back());
-        }
-        else
-        {
-            used_.push_back(free_.back());
-            free_.pop_back();
-        }
-        return used_.back();
+        std::lock_guard lock{ mutex_ };
+        if (!initialized) return;
+        if (availableObjects_.empty()) AddObject(objects_.size() - 1);
+        T* obj = availableObjects_.front();
+        availableObjects_.pop_front();
+        borrowedObjects_[obj] = obj;
+        return obj;
     }
 
     template<class T>
-    inline void ObjectPool<T>::Release(std::shared_ptr<T>& object)
+    inline void ObjectPool<T>::Release(T*& object)
     {
-        std::lock_guard<std::mutex> lock{ mutex_ };
-        // 返却
-        used_.remove(*object);
-        free_.push_back(object);
+        std::lock_guard lock{ mutex_ };
+        if (!initialized) return;
+        auto it = borrowedObjects_.find(object);
+        if (it != borrowedObjects_.end())
+        {
+            availableObjects_.push_back(it->second);
+            borrowedObjects_.erase(it);
+            object = nullptr;
+        }
     }
 
     template<class T>
     inline void Glib::ObjectPool<T>::Clear()
     {
-        std::lock_guard<std::mutex> lock{ mutex_ };
-        // 削除
-        pool_.clear();
-        capacity_ = 0;
-    }
+        std::lock_guard lock{ mutex_ };
+        if (!initialized) return;
+        for (auto it : objects_)
+        {
+            it.reset(nullptr);
+        }
 
-    template<class T>
-    inline void Glib::ObjectPool<T>::Capacity(size_t capacity)
-    {
-        std::lock_guard<std::mutex> lock{ mutex_ };
-        if (capacity_ >= capacity) return;
-        capacity_ = capacity;
-    }
-
-    template<class T>
-    inline size_t Glib::ObjectPool<T>::Capacity() const
-    {
-        return capacity_;
-    }
-
-    template<class T>
-    inline bool ObjectPool<T>::AutoExpand() const
-    {
-        return autoExpand_;
-    }
-
-    template<class T>
-    inline void ObjectPool<T>::AutoExpand(bool expand)
-    {
-        std::lock_guard<std::mutex> lock{ mutex_ };
-        autoExpand_ = expand;
+        objects_.clear();
+        availableObjects_.clear();
+        borrowedObjects_.clear();
+        callback_ = nullptr;
     }
 
     template<class T>
     inline size_t ObjectPool<T>::Count() const
     {
-        return used_.size();
+        std::lock_guard lock{ mutex_ };
+        if (!initialized) return -1;
+        return objects_.size();
     }
 
     template<class T>
-    inline bool Glib::ObjectPool<T>::PoolEnable() const
+    inline void ObjectPool<T>::SetInitializeCallBack(InitializeCallBack callback)
     {
-        std::lock_guard<std::mutex> lock{ mutex_ };
-        return capacity_ > 0 || pool_.size() > 0 || !pool_.empty();
+        std::lock_guard lock{ mutex_ };
+        callback_ = callback;
     }
 
     template<class T>
-    inline void ObjectPool<T>::AddResource()
+    inline void ObjectPool<T>::AddObject(size_t index)
     {
-        auto shared = std::make_shared<T>();
-        pool_.push_back(shared);
+        auto obj = std::make_unique<T>();
+        if (callback_) callback_(index, obj.get());
+        objects_.push_back(std::move(obj));
+        availableObjects_.push_back(objects_.back().get());
     }
 }

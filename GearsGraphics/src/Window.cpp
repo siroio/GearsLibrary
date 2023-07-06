@@ -33,15 +33,21 @@ bool Glib::Window::Initialize()
 {
     // 作成済みかチェック
     if (windowHandle_ != NULL) return false;
+
+    //Comの初期化
     if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED))) return false;
+
 #if defined(DEBUG) || defined(_DEBUG)
     // メモリリーク検出
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
+
+    // ウィンドウの作成
     windowClass_.cbSize = sizeof(WNDCLASSEX);
     windowClass_.hInstance = hInstance_ = GetModuleHandle(nullptr);
     windowClass_.lpfnWndProc = (WNDPROC)windowProc_;
-    // ウィンドウの名前
+    auto style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU;
+
 #ifdef UNICODE
     std::wstring wstr{ windowName_.begin(), windowName_.end() };
     windowClass_.lpszClassName = wstr.c_str();
@@ -55,14 +61,15 @@ bool Glib::Window::Initialize()
     RECT rect{ 0, 0, static_cast<LONG>(windowSize_.x), static_cast<LONG>(windowSize_.y) };
 #endif
 
-    RegisterClassEx(&windowClass_);
-    AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
+    if (!RegisterClassEx(&windowClass_)) return false;
+    AdjustWindowRect(&rect, style, false);
 
     // ウィンドウ作成
-    windowHandle_ = CreateWindow(
+    windowHandle_ = CreateWindowEx(
+        0,
         windowClass_.lpszClassName,
         windowClass_.lpszClassName,
-        WS_OVERLAPPEDWINDOW,
+        style,
         CW_USEDEFAULT,
         CW_USEDEFAULT,
         rect.right - rect.left,
@@ -74,13 +81,19 @@ bool Glib::Window::Initialize()
     );
 
     if (windowHandle_ == NULL) return false;
+
     ShowWindow(windowHandle_, SW_SHOW);
+    UpdateWindow(windowHandle_);
+    SetFocus(windowHandle_);
+
     return true;
 }
 
 void Glib::Window::Finalize()
 {
-    UnregisterClass(windowClass_.lpszClassName, windowClass_.hInstance);
+    UnregisterClass(windowClass_.lpszClassName, hInstance_);
+    hInstance_ = nullptr;
+    windowHandle_ = nullptr;
 }
 
 HINSTANCE Glib::Window::InstanceHandle()

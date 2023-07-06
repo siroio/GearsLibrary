@@ -60,14 +60,7 @@ class MyGame : public Game
     }
 };
 
-struct TEXXXX
-{
-    TEXXXX() = default;
-    int val;
-};
-
 int main()
 {
-
-    Glib::ObjectPool<TEXXXX> pool;
+    MyGame{}.Run();
 }
