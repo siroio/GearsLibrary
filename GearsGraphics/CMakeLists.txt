@@ -11,6 +11,9 @@ set(HEADER_FILE
 	./include/Internal/DirectX12.h
     ./include/Internal/d3dx12Inc.h
     ./include/Internal/DescriptorPool.h
+    ./include/Internal/ConstantBuffer.h
+    ./include/Internal/IndexBuffer.h
+    ./include/Internal/VertexBuffer.h
     ./include/Window.h
 )
 

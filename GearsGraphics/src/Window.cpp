@@ -80,7 +80,7 @@ bool Glib::Window::Initialize()
         nullptr
     );
 
-    if (windowHandle_ == NULL) return false;
+    if (windowHandle_ == nullptr) return false;
 
     ShowWindow(windowHandle_, SW_SHOW);
     UpdateWindow(windowHandle_);
