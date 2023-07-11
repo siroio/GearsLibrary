@@ -8,6 +8,7 @@
 
 namespace Glib
 {
+    //TODO: バグ直す
     template<class T>
     class ObjectPool
     {
@@ -15,8 +16,7 @@ namespace Glib
         using InitializeCallBack = std::function<void(size_t, T*)>;
 
         /* コンストラクタ */
-        ObjectPool();
-        ObjectPool(size_t count);
+        ObjectPool(size_t count = 32);
 
         /**
          * @brief 初期化
@@ -69,15 +69,9 @@ namespace Glib
 
         std::vector<std::unique_ptr<T>> objects_;
         std::list<T*> availableObjects_;
-        std::unordered_set<uintptr_t> borrowedObjects_;
+        std::unordered_set<T*> borrowedObjects_;
         InitializeCallBack callback_;
     };
-
-    template<class T>
-    inline ObjectPool<T>::ObjectPool()
-    {
-        Init(32);
-    }
 
     template<class T>
     inline ObjectPool<T>::ObjectPool(size_t count)
@@ -89,9 +83,8 @@ namespace Glib
     inline bool ObjectPool<T>::Init(size_t count)
     {
         std::lock_guard lock{ mutex_ };
-        if (initialized) return false;
+        if (initialized) return true;
         objects_.reserve(count);
-        availableObjects_.reserve(count);
         for (size_t i = 0; i < count; i++)
         {
             AddObject(i);
@@ -104,11 +97,11 @@ namespace Glib
     inline T* ObjectPool<T>::Get()
     {
         std::lock_guard lock{ mutex_ };
-        if (!initialized) return;
-        if (availableObjects_.empty()) AddObject(objects_.size() - 1);
+        if (!initialized) return nullptr;
+        if (availableObjects_.empty()) AddObject(objects_.size());
         T* obj = availableObjects_.front();
         availableObjects_.pop_front();
-        borrowedObjects_[obj] = obj;
+        borrowedObjects_.emplace(obj);
         return obj;
     }
 
@@ -120,7 +113,7 @@ namespace Glib
         auto it = borrowedObjects_.find(object);
         if (it != borrowedObjects_.end())
         {
-            availableObjects_.push_back(it->second);
+            availableObjects_.push_back(*it);
             borrowedObjects_.erase(it);
             object = nullptr;
         }
@@ -131,7 +124,7 @@ namespace Glib
     {
         std::lock_guard lock{ mutex_ };
         if (!initialized) return;
-        for (auto it : objects_)
+        for (auto& it : objects_)
         {
             it.reset(nullptr);
         }

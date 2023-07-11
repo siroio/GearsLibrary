@@ -15,6 +15,9 @@ struct D3D12_RESOURCE_DESC;
 
 namespace Glib::Internal::Graphics
 {
+
+    class DescriptorPool;
+
     class DirectX12 :
         public SingletonPtr<DirectX12>,
         public Interface::ISystem,
@@ -23,6 +26,17 @@ namespace Glib::Internal::Graphics
     {
         DirectX12() = default;
         friend WeakPtr<DirectX12> SingletonPtr<DirectX12>::Instance();
+
+    public:
+
+        enum class POOLTYPE
+        {
+            RES = 0,
+            SMP = 1,
+            RTV = 2,
+            DSV = 3,
+            COUNT = 4,
+        };
 
     public:
 
@@ -67,6 +81,11 @@ namespace Glib::Internal::Graphics
         ComPtr<ID3D12CommandQueue> CommandQueue() const;
 
         /**
+         * @brief ディスクリプタプールを取得
+         */
+        DescriptorPool* DescriptorPool(POOLTYPE type) const;
+
+        /**
          * @brief 背景色の取得
          * @return 背景色
          */
@@ -96,9 +115,9 @@ namespace Glib::Internal::Graphics
         bool CreateSwapChain();
 
         /**
-         * @brief バックバッファの作成
+         * @brief プールの作成
         */
-        bool CreateBackBuffer();
+        bool CreateDescriptorPool();
 
         /**
          * @brief デバッグレイヤーの有効化

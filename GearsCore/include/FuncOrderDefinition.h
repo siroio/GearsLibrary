@@ -1,6 +1,8 @@
 #pragma once
 #include <Internal/FuncOrder.h>
 
+/* Function Call Order Definition */
+
 FUNC_ORDER(Initialize)
 FUNC_ORDER(Update)
 FUNC_ORDER(BeginDraw)
