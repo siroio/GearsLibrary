@@ -10,7 +10,6 @@ set(SOURCE_FILE
 set(HEADER_FILE
     ./include/Internal/IFunc.h
     ./include/Internal/FuncOrder.h
-    ./include/Internal/HasFunction.h
     ./include/Internal/HasFunctionObject.h
     ./include/Internal/ISystem.h
     ./include/Internal/SystemFunctionType.h

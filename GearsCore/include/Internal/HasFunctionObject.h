@@ -1,7 +1,7 @@
 #ifndef GEARS_HAS_FUNCTION_OBJECT_H
 #define GEARS_HAS_FUNCTION_OBJECT_H
 
-#include <Internal/HasFunction.h>
+#include <concepts>
 #include <Internal/IFunc.h>
 #include <WeakPtr.h>
 
@@ -10,7 +10,16 @@
  */
 #define HAS_FUNC_OBJECT(FuncName)                                                                                       \
                                                                                                                         \
-HAS_FUNCTION(##FuncName##)                                                                                              \
+namespace Glib::Internal                                                                                                \
+{                                                                                                                       \
+    template<class T, class ReturnType, class... Args>                                                                  \
+    concept Has##FuncName##Func = requires (T* t, Args... args)                                                         \
+    {                                                                                                                   \
+        {                                                                                                               \
+            t->##FuncName##(args...)                                                                                    \
+        } -> std::same_as<ReturnType>;                                                                                  \
+    };                                                                                                                  \
+}                                                                                                                       \
                                                                                                                         \
 namespace Glib::Internal::Function                                                                                      \
 {                                                                                                                       \

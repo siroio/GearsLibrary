@@ -61,7 +61,7 @@ void Game::Draw()
 {
     systemManager.BeginDraw();
     systemManager.Draw();
-#if _DEBUG
+#if defined(DEBUG) || defined(_DEBUG)
     systemManager.DebugDraw();
 #endif
     systemManager.EndDraw();

@@ -8,6 +8,7 @@
 
 namespace Glib
 {
+    //TODO: バグ直す
     template<class T>
     class ObjectPool
     {
@@ -15,8 +16,7 @@ namespace Glib
         using InitializeCallBack = std::function<void(size_t, T*)>;
 
         /* コンストラクタ */
-        ObjectPool();
-        ObjectPool(size_t count);
+        ObjectPool(size_t count = 32);
 
         /**
          * @brief 初期化
@@ -74,12 +74,6 @@ namespace Glib
     };
 
     template<class T>
-    inline ObjectPool<T>::ObjectPool()
-    {
-        Init(32);
-    }
-
-    template<class T>
     inline ObjectPool<T>::ObjectPool(size_t count)
     {
         Init(count);
@@ -88,10 +82,9 @@ namespace Glib
     template<class T>
     inline bool ObjectPool<T>::Init(size_t count)
     {
-        std::lock_guard<std::mutex> lock{ mutex_ };
-        if (initialized) return false;
+        std::lock_guard lock{ mutex_ };
+        if (initialized) return true;
         objects_.reserve(count);
-        availableObjects_.resize(count);
         for (size_t i = 0; i < count; i++)
         {
             AddObject(i);
@@ -103,9 +96,9 @@ namespace Glib
     template<class T>
     inline T* ObjectPool<T>::Get()
     {
-        std::lock_guard<std::mutex> lock{ mutex_ };
+        std::lock_guard lock{ mutex_ };
         if (!initialized) return nullptr;
-        if (availableObjects_.empty()) AddObject(objects_.size() - 1);
+        if (availableObjects_.empty()) AddObject(objects_.size());
         T* obj = availableObjects_.front();
         availableObjects_.pop_front();
         borrowedObjects_.emplace(obj);
@@ -115,7 +108,7 @@ namespace Glib
     template<class T>
     inline void ObjectPool<T>::Release(T*& object)
     {
-        std::lock_guard<std::mutex> lock{ mutex_ };
+        std::lock_guard lock{ mutex_ };
         if (!initialized) return;
         auto it = borrowedObjects_.find(object);
         if (it != borrowedObjects_.end())
@@ -129,9 +122,9 @@ namespace Glib
     template<class T>
     inline void Glib::ObjectPool<T>::Clear()
     {
-        std::lock_guard<std::mutex> lock{ mutex_ };
+        std::lock_guard lock{ mutex_ };
         if (!initialized) return;
-        for (auto&& it : objects_)
+        for (auto& it : objects_)
         {
             it.reset(nullptr);
         }
@@ -145,7 +138,7 @@ namespace Glib
     template<class T>
     inline size_t ObjectPool<T>::Count() const
     {
-        std::lock_guard<std::mutex> lock{ mutex_ };
+        std::lock_guard lock{ mutex_ };
         if (!initialized) return -1;
         return objects_.size();
     }
@@ -153,7 +146,7 @@ namespace Glib
     template<class T>
     inline void ObjectPool<T>::SetInitializeCallBack(InitializeCallBack callback)
     {
-        std::lock_guard<std::mutex> lock{ mutex_ };
+        std::lock_guard lock{ mutex_ };
         callback_ = callback;
     }
 

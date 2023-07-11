@@ -1,4 +1,6 @@
 #include <Internal/DirectX12.h>
+#include <Internal/DescriptorPool.h>
+#include <Internal/RenderTarget.h>
 #include <Window.h>
 #include <Color.h>
 #include <Vector2.h>
@@ -8,7 +10,15 @@
 #include <array>
 #include <vector>
 
-//TODO: imple DirectX12 class
+namespace
+{
+    /* 背景色 */
+    Color backGroundColor_ = Color::Cyan();
+
+    /* バックバッファフレーム数 */
+    constexpr unsigned int FRAME_COUNT{ 2 };
+}
+
 namespace
 {
     /* デバイス */
@@ -35,20 +45,19 @@ namespace
     /* フェンス値 */
     UINT64 fenceValue_{ 0 };
 
-    /* バックバッファ */
-    std::vector<ComPtr<ID3D12Resource>> backBuffers;
+    Glib::Internal::Graphics::RenderTarget rtv_;
 
-    /* RTV ヒープ */
-    ComPtr<ID3D12DescriptorHeap> rtvHeap{ nullptr };
+    /* バックバッファ */
+    Glib::Internal::Graphics::RenderTarget backBuffers_[FRAME_COUNT];
+
+    /* ディスクリプタプール */
+    Glib::Internal::Graphics::DescriptorPool* descriptors_[static_cast<int>(Glib::Internal::Graphics::DirectX12::POOLTYPE::COUNT)];
 
     /* シザー矩形 */
     D3D12_RECT scissorRect{};
 
     /* ビューポート */
     D3D12_VIEWPORT viewPort{};
-
-    /* 背景色 */
-    Color backGroundColor_ = Color::Cyan();
 
     /* Windowインスタンス */
     Glib::Window& window_ = Glib::Window::Instance();
@@ -67,22 +76,13 @@ bool Glib::Internal::Graphics::DirectX12::Initialize()
     if (!InitDevice()) return false;
     if (!InitCommand()) return false;
     if (!CreateSwapChain()) return false;
-    if (!CreateBackBuffer()) return false;
+    if (!CreateDescriptorPool()) return false;
 
-    D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-    rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-    rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-
-    DXGI_SWAP_CHAIN_DESC swcDesc{};
-    swapChain_->GetDesc(&swcDesc);
-    backBuffers.resize(swcDesc.BufferCount);
-    for (UINT idx = 0; idx < swcDesc.BufferCount; ++idx)
+    // バックバッファの作成
+    for (auto idx = 0; idx < FRAME_COUNT; idx++)
     {
-        if (FAILED(swapChain_->GetBuffer(idx, IID_PPV_ARGS(backBuffers[idx].ReleaseAndGetAddressOf()))))
+        if (!backBuffers_[idx].Create(idx, swapChain_.Get()))
             return false;
-        D3D12_CPU_DESCRIPTOR_HANDLE handle = rtvHeap->GetCPUDescriptorHandleForHeapStart();
-        handle.ptr += static_cast<UINT_PTR>(idx) * device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-        device_->CreateRenderTargetView(backBuffers[idx].Get(), &rtvDesc, handle);
     }
 
     if (FAILED(device_->CreateFence(fenceValue_, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(fence_.ReleaseAndGetAddressOf())))) return false;
@@ -115,15 +115,14 @@ void Glib::Internal::Graphics::DirectX12::BeginDraw()
     auto bbIdx = swapChain_->GetCurrentBackBufferIndex();
 
     auto barrierDesc = CD3DX12_RESOURCE_BARRIER::Transition(
-        backBuffers[bbIdx].Get(),
+        backBuffers_[bbIdx].Resource(),
         D3D12_RESOURCE_STATE_PRESENT,
         D3D12_RESOURCE_STATE_RENDER_TARGET
     );
 
     cmdList_->ResourceBarrier(1, &barrierDesc);
 
-    auto rtvH = rtvHeap->GetCPUDescriptorHandleForHeapStart();
-    rtvH.ptr += static_cast<ULONG_PTR>(bbIdx) * device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+    auto& rtvH = backBuffers_[bbIdx].Handle()->CPU();
 
     cmdList_->OMSetRenderTargets(1, &rtvH, true, nullptr);
     float color[]{ backGroundColor_[0], backGroundColor_[1], backGroundColor_[2], backGroundColor_[3] };
@@ -134,7 +133,7 @@ void Glib::Internal::Graphics::DirectX12::EndDraw()
 {
     auto bbIdx = swapChain_->GetCurrentBackBufferIndex();
     auto barrierDesc = CD3DX12_RESOURCE_BARRIER::Transition(
-        backBuffers[bbIdx].Get(),
+        backBuffers_[bbIdx].Resource(),
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_PRESENT
     );
@@ -173,6 +172,11 @@ ComPtr<ID3D12GraphicsCommandList> Glib::Internal::Graphics::DirectX12::CommandLi
 ComPtr<ID3D12CommandQueue> Glib::Internal::Graphics::DirectX12::CommandQueue() const
 {
     return cmdQueue_;
+}
+
+Glib::Internal::Graphics::DescriptorPool* Glib::Internal::Graphics::DirectX12::DescriptorPool(POOLTYPE type) const
+{
+    return descriptors_[static_cast<int>(type)];
 }
 
 const Color& Glib::Internal::Graphics::DirectX12::BackGroundColor()
@@ -277,16 +281,31 @@ bool Glib::Internal::Graphics::DirectX12::CreateSwapChain()
     ));
 }
 
-bool Glib::Internal::Graphics::DirectX12::CreateBackBuffer()
+bool Glib::Internal::Graphics::DirectX12::CreateDescriptorPool()
 {
-    // バックバッファ用ヒープの設定
     D3D12_DESCRIPTOR_HEAP_DESC heapDesc{};
+    heapDesc.NodeMask = 1;
+    heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+    heapDesc.NumDescriptors = 512;
+    heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+    if (!DescriptorPool::Create(device_.Get(), &heapDesc, &descriptors_[static_cast<int>(POOLTYPE::RES)])) return false;
+
+    heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
+    heapDesc.NumDescriptors = 256;
+    heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+    if (!DescriptorPool::Create(device_.Get(), &heapDesc, &descriptors_[static_cast<int>(POOLTYPE::RES)])) return false;
+
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-    heapDesc.NodeMask = 0;
-    heapDesc.NumDescriptors = 2;
+    heapDesc.NumDescriptors = 512;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    // ヒープの作成
-    return SUCCEEDED(device_->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(rtvHeap.GetAddressOf())));
+    if (!DescriptorPool::Create(device_.Get(), &heapDesc, &descriptors_[static_cast<int>(POOLTYPE::RES)])) return false;
+
+    heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+    heapDesc.NumDescriptors = 512;
+    heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+    if (!DescriptorPool::Create(device_.Get(), &heapDesc, &descriptors_[static_cast<int>(POOLTYPE::RES)])) return false;
+
+    return true;
 }
 
 void Glib::Internal::Graphics::DirectX12::EnableDebugLayer()

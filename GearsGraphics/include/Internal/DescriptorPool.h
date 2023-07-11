@@ -4,7 +4,7 @@
 #include <ComPtr.h>
 #include <ObjectPool.h>
 
-namespace Glib::Graphics::Internal
+namespace Glib::Internal::Graphics
 {
     /**
      * @brief ディスクリプタハンドル

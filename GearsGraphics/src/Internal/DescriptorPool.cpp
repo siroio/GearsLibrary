@@ -1,36 +1,36 @@
 #include <Internal/DescriptorPool.h>
 
-void Glib::Graphics::Internal::DescriptorHandle::CPU(D3D12_CPU_DESCRIPTOR_HANDLE handle)
+void Glib::Internal::Graphics::DescriptorHandle::CPU(D3D12_CPU_DESCRIPTOR_HANDLE handle)
 {
     cpuHandle_ = handle;
 }
 
-void Glib::Graphics::Internal::DescriptorHandle::GPU(D3D12_GPU_DESCRIPTOR_HANDLE handle)
+void Glib::Internal::Graphics::DescriptorHandle::GPU(D3D12_GPU_DESCRIPTOR_HANDLE handle)
 {
     gpuHandle_ = handle;
 }
 
-const D3D12_CPU_DESCRIPTOR_HANDLE& Glib::Graphics::Internal::DescriptorHandle::CPU() const
+const D3D12_CPU_DESCRIPTOR_HANDLE& Glib::Internal::Graphics::DescriptorHandle::CPU() const
 {
     return cpuHandle_;
 }
 
-const D3D12_GPU_DESCRIPTOR_HANDLE& Glib::Graphics::Internal::DescriptorHandle::GPU() const
+const D3D12_GPU_DESCRIPTOR_HANDLE& Glib::Internal::Graphics::DescriptorHandle::GPU() const
 {
     return gpuHandle_;
 }
 
-bool Glib::Graphics::Internal::DescriptorHandle::HasCPU() const
+bool Glib::Internal::Graphics::DescriptorHandle::HasCPU() const
 {
     return cpuHandle_.ptr != 0;
 }
 
-bool Glib::Graphics::Internal::DescriptorHandle::HasGPU() const
+bool Glib::Internal::Graphics::DescriptorHandle::HasGPU() const
 {
     return gpuHandle_.ptr != 0;
 }
 
-Glib::Graphics::Internal::DescriptorPool::DescriptorPool() : refCount_{ 1 }, handles_{}, heap_{}, descriptorSize_{ 0 }
+Glib::Internal::Graphics::DescriptorPool::DescriptorPool() : refCount_{ 1 }, handles_{}, heap_{}, descriptorSize_{ 0 }
 {
     auto init = [&](size_t index, DescriptorHandle* handle)
     {
@@ -47,14 +47,14 @@ Glib::Graphics::Internal::DescriptorPool::DescriptorPool() : refCount_{ 1 }, han
     handles_.SetInitializeCallBack(init);
 }
 
-Glib::Graphics::Internal::DescriptorPool::~DescriptorPool()
+Glib::Internal::Graphics::DescriptorPool::~DescriptorPool()
 {
     handles_.Clear();
     heap_.Reset();
     descriptorSize_ = 0;
 }
 
-bool Glib::Graphics::Internal::DescriptorPool::Create(ComPtr<ID3D12Device> device, const D3D12_DESCRIPTOR_HEAP_DESC* desc, DescriptorPool** pool)
+bool Glib::Internal::Graphics::DescriptorPool::Create(ComPtr<ID3D12Device> device, const D3D12_DESCRIPTOR_HEAP_DESC* desc, DescriptorPool** pool)
 {
     if (device == nullptr || desc == nullptr || pool == nullptr) return false;
 
@@ -84,23 +84,23 @@ bool Glib::Graphics::Internal::DescriptorPool::Create(ComPtr<ID3D12Device> devic
     return true;
 }
 
-const ComPtr<ID3D12DescriptorHeap> Glib::Graphics::Internal::DescriptorPool::GetHeap() const
+const ComPtr<ID3D12DescriptorHeap> Glib::Internal::Graphics::DescriptorPool::GetHeap() const
 {
     return heap_;
 }
 
-Glib::Graphics::Internal::DescriptorHandle* Glib::Graphics::Internal::DescriptorPool::GetHandle()
+Glib::Internal::Graphics::DescriptorHandle* Glib::Internal::Graphics::DescriptorPool::GetHandle()
 {
     return handles_.Get();
 }
 
-void Glib::Graphics::Internal::DescriptorPool::Release()
+void Glib::Internal::Graphics::DescriptorPool::Release()
 {
     refCount_--;
     if (refCount_ == 0) delete this;
 }
 
-void Glib::Graphics::Internal::DescriptorPool::Release(DescriptorHandle*& handle)
+void Glib::Internal::Graphics::DescriptorPool::Release(DescriptorHandle*& handle)
 {
     if (handle != nullptr)
     {
@@ -109,12 +109,12 @@ void Glib::Graphics::Internal::DescriptorPool::Release(DescriptorHandle*& handle
     }
 }
 
-void Glib::Graphics::Internal::DescriptorPool::IncrementRef()
+void Glib::Internal::Graphics::DescriptorPool::IncrementRef()
 {
     refCount_++;
 }
 
-uint32_t Glib::Graphics::Internal::DescriptorPool::Count() const
+uint32_t Glib::Internal::Graphics::DescriptorPool::Count() const
 {
     return refCount_;
 }
