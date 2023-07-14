@@ -2,13 +2,21 @@ cmake_minimum_required(VERSION 3.1)
 
 # == CONFIG ==
 set(SOURCE_FILE
+    ./src/Internal/DinputDevice.cpp
+    ./src/Internal/KeyBoardDevice.cpp
+    ./src/Internal/MouseDevice.cpp
+    ./src/Internal/GamePad.cpp
     ./src/InputManager.cpp
 )
 
 set(HEADER_FILE
     ./include/Internal/InputState.h
     ./include/Internal/InputData.h
-    ./include/Internal/GamePadInput.h
+    ./include/Internal/DinputDevice.h
+    ./include/Internal/KeyBoardDevice.h
+    ./include/Internal/MouseDevice.h
+    ./include/Internal/MouseButton.h
+    ./include/Internal/GamePad.h
     ./include/InputManager.h
 )
 

@@ -9,6 +9,8 @@
 #include <GameObjectManager.h>
 #include <Component.h>
 #include <ObjectPool.h>
+#include <InputManager.h>
+
 using namespace std;
 
 class TestComponent : public Component

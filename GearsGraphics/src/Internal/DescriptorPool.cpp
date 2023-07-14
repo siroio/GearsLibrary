@@ -62,7 +62,7 @@ bool Glib::Internal::Graphics::DescriptorPool::Create(ComPtr<ID3D12Device> devic
     if (instance == nullptr) return false;
 
     // ディスクリプタヒープ生成
-    if (FAILED(device->CreateDescriptorHeap(desc, IID_PPV_ARGS(instance->heap_.GetAddressOf()))))
+    if (FAILED(device->CreateDescriptorHeap(desc, IID_PPV_ARGS(instance->heap_.ReleaseAndGetAddressOf()))))
     {
         instance->Release();
         return false;

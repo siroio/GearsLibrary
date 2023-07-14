@@ -8,7 +8,6 @@
 
 namespace Glib
 {
-    //TODO: ƒoƒO’¼‚·
     template<class T>
     class ObjectPool
     {
@@ -83,7 +82,10 @@ namespace Glib
     inline bool ObjectPool<T>::Init(size_t count)
     {
         std::lock_guard lock{ mutex_ };
-        if (initialized) return true;
+        for (auto& it : objects_) it.reset(nullptr);
+        objects_.clear();
+        availableObjects_.clear();
+        borrowedObjects_.clear();
         objects_.reserve(count);
         for (size_t i = 0; i < count; i++)
         {
@@ -133,6 +135,7 @@ namespace Glib
         availableObjects_.clear();
         borrowedObjects_.clear();
         callback_ = nullptr;
+        initialized = false;
     }
 
     template<class T>

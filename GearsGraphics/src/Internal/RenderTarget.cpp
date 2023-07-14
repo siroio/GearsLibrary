@@ -1,16 +1,16 @@
 #include <Internal/RenderTarget.h>
 #include <Internal/DirectX12.h>
-
+#include <Internal/d3dx12Inc.h>
 
 namespace
 {
-    auto dx12 = Glib::Internal::Graphics::DirectX12::Instance();
+    auto dx12_ = Glib::Internal::Graphics::DirectX12::Instance();
 }
 
 bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t index, IDXGISwapChain* swapChain)
 {
     if (swapChain == nullptr) return false;
-    pool_ = dx12->DescriptorPool(Glib::Internal::Graphics::DirectX12::POOLTYPE::RTV);
+    pool_ = dx12_->DescriptorPool(Glib::Internal::Graphics::DirectX12::POOLTYPE::RTV);
     pool_->IncrementRef();
 
     handle_ = pool_->GetHandle();
@@ -26,7 +26,7 @@ bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t index, IDXGISwapCha
     viewDesc_.Texture2D.MipSlice = 0;
     viewDesc_.Texture2D.PlaneSlice = 0;
 
-    dx12->Device()->CreateRenderTargetView(
+    dx12_->Device()->CreateRenderTargetView(
         target_.Get(),
         &viewDesc_,
         handle_->CPU()
@@ -35,9 +35,9 @@ bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t index, IDXGISwapCha
     return true;
 }
 
-bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t width, uint32_t height, DXGI_FORMAT format)
+bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t width, uint32_t height, DXGI_FORMAT format, DescriptorPool* pool)
 {
-    pool_ = dx12->DescriptorPool(Glib::Internal::Graphics::DirectX12::POOLTYPE::RTV);
+    pool_ = pool;
     pool_->IncrementRef();
 
     handle_ = pool_->GetHandle();
@@ -63,14 +63,10 @@ bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t width, uint32_t hei
     resDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
     resDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 
-    D3D12_CLEAR_VALUE clearValue{};
-    clearValue.Format = format;
-    clearValue.Color[0] = 1.0f;
-    clearValue.Color[1] = 1.0f;
-    clearValue.Color[2] = 1.0f;
-    clearValue.Color[3] = 1.0f;
+    const float color[]{ 1.0f, 1.0f, 1.0f, 1.0f };
+    auto clearValue = CD3DX12_CLEAR_VALUE(format, color);
 
-    bool failed = FAILED(dx12->Device()->CreateCommittedResource(
+    bool failed = FAILED(dx12_->Device()->CreateCommittedResource(
         &heapProp,
         D3D12_HEAP_FLAG_NONE,
         &resDesc,
@@ -86,7 +82,7 @@ bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t width, uint32_t hei
     viewDesc_.Texture2D.MipSlice = 0;
     viewDesc_.Texture2D.PlaneSlice = 0;
 
-    dx12->Device()->CreateRenderTargetView(
+    dx12_->Device()->CreateRenderTargetView(
         target_.Get(),
         &viewDesc_,
         handle_->CPU()

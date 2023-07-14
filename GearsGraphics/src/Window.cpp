@@ -24,7 +24,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
             CoUninitialize();
             break;
         default:
-            return(DefWindowProc(hwnd, msg, wparam, lparam));
+            return DefWindowProc(hwnd, msg, wparam, lparam);
     }
     return 0;
 }
@@ -46,7 +46,7 @@ bool Glib::Window::Initialize()
     windowClass_.cbSize = sizeof(WNDCLASSEX);
     windowClass_.hInstance = hInstance_ = GetModuleHandle(nullptr);
     windowClass_.lpfnWndProc = (WNDPROC)windowProc_;
-    auto style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU;
+    auto style = WS_OVERLAPPEDWINDOW;
 
 #ifdef UNICODE
     std::wstring wstr{ windowName_.begin(), windowName_.end() };
@@ -94,6 +94,9 @@ void Glib::Window::Finalize()
     UnregisterClass(windowClass_.lpszClassName, hInstance_);
     hInstance_ = nullptr;
     windowHandle_ = nullptr;
+#if defined(DEBUG) || defined(_DEBUG)
+    _CrtDumpMemoryLeaks();
+#endif
 }
 
 HINSTANCE Glib::Window::InstanceHandle()
@@ -142,4 +145,9 @@ void Glib::Window::WindowDebugSize(const Vector2& size)
 {
     if (windowHandle_ != NULL) return;
     windowDebugSize_ = size;
+}
+
+const Glib::PARAMS& Glib::Window::Params()
+{
+    return params_;
 }

@@ -1,7 +1,8 @@
 #pragma once
+#include <dxgi1_6.h>
 #include <Internal/DescriptorPool.h>
 #include <ComPtr.h>
-#include <dxgi1_6.h>
+
 
 namespace Glib::Internal::Graphics
 {
@@ -10,7 +11,7 @@ namespace Glib::Internal::Graphics
     public:
         RenderTarget() = default;
         bool Create(uint32_t index, IDXGISwapChain* swapChain);
-        bool Create(uint32_t width, uint32_t height, DXGI_FORMAT format);
+        bool Create(uint32_t width, uint32_t height, DXGI_FORMAT format, DescriptorPool* pool);
 
         DescriptorHandle* Handle() const;
         ID3D12Resource* Resource() const;
@@ -25,6 +26,6 @@ namespace Glib::Internal::Graphics
         ComPtr<ID3D12Resource> target_{ nullptr };
         DescriptorHandle* handle_{ nullptr };
         DescriptorPool* pool_{ nullptr };
-        D3D12_RENDER_TARGET_VIEW_DESC viewDesc_;
+        D3D12_RENDER_TARGET_VIEW_DESC viewDesc_{};
     };
 }

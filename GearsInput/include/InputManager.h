@@ -1,8 +1,9 @@
 #pragma once
 #include <Internal/ISystem.h>
+#include <Internal/FuncOrderConstant.h>
 #include <Singleton.h>
 #include <FuncOrderDefinition.h>
-#include <Internal/FuncOrderConstant.h>
+
 namespace Glib
 {
     class InputManager :
@@ -19,5 +20,7 @@ namespace Glib
 
         bool Initialize();
         void Update();
+
+    private:
     };
 }

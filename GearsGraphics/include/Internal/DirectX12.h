@@ -86,6 +86,11 @@ namespace Glib::Internal::Graphics
         DescriptorPool* DescriptorPool(POOLTYPE type) const;
 
         /**
+         * @brief リソースデスクを取得
+         */
+        D3D12_RESOURCE_DESC BackBufferResourceDesc() const;
+
+        /**
          * @brief 背景色の取得
          * @return 背景色
          */

@@ -45,8 +45,6 @@ namespace
     /* フェンス値 */
     UINT64 fenceValue_{ 0 };
 
-    Glib::Internal::Graphics::RenderTarget rtv_;
-
     /* バックバッファ */
     Glib::Internal::Graphics::RenderTarget backBuffers_[FRAME_COUNT];
 
@@ -71,7 +69,7 @@ bool Glib::Internal::Graphics::DirectX12::Initialize()
 #if defined(DEBUG) || defined(_DEBUG)
     if (FAILED(CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(dxgiFactory_.ReleaseAndGetAddressOf())))) return false;
 #else
-    if (FAILED(CreateDXGIFactory1(IID_PPV_ARGS(dxgiFactory_.GetAddressOf())))) return false;
+    if (FAILED(CreateDXGIFactory1(IID_PPV_ARGS(dxgiFactory_.ReleaseAndGetAddressOf())))) return false;
 #endif
     if (!InitDevice()) return false;
     if (!InitCommand()) return false;
@@ -179,6 +177,11 @@ Glib::Internal::Graphics::DescriptorPool* Glib::Internal::Graphics::DirectX12::D
     return descriptors_[static_cast<int>(type)];
 }
 
+D3D12_RESOURCE_DESC Glib::Internal::Graphics::DirectX12::BackBufferResourceDesc() const
+{
+    return backBuffers_[0].ResourceDesc();
+}
+
 const Color& Glib::Internal::Graphics::DirectX12::BackGroundColor()
 {
     return backGroundColor_;
@@ -202,7 +205,7 @@ bool Glib::Internal::Graphics::DirectX12::InitDevice()
     ComPtr<IDXGIAdapter> nvidiaAdapter{ nullptr };
     ComPtr<IDXGIAdapter> maxVMAdapter{ nullptr };
     size_t videoMemroySize{};
-    for (UINT i = 0; dxgiFactory_->EnumAdapters(i, adapter.GetAddressOf()) != DXGI_ERROR_NOT_FOUND; ++i)
+    for (UINT i = 0; dxgiFactory_->EnumAdapters(i, adapter.ReleaseAndGetAddressOf()) != DXGI_ERROR_NOT_FOUND; ++i)
     {
         DXGI_ADAPTER_DESC adptDesc{};
         adapter->GetDesc(&adptDesc);
@@ -222,7 +225,7 @@ bool Glib::Internal::Graphics::DirectX12::InitDevice()
 
     for (auto&& level : levels)
     {
-        auto result = SUCCEEDED(D3D12CreateDevice(adapter.Get(), level, IID_PPV_ARGS(device_.GetAddressOf())));
+        auto result = SUCCEEDED(D3D12CreateDevice(adapter.Get(), level, IID_PPV_ARGS(device_.ReleaseAndGetAddressOf())));
         if (result == S_OK) break;
     }
 
@@ -232,11 +235,11 @@ bool Glib::Internal::Graphics::DirectX12::InitDevice()
 bool Glib::Internal::Graphics::DirectX12::InitCommand()
 {
     // アロケーターの作成
-    auto result = device_->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(cmdAllocator_.GetAddressOf()));
+    auto result = device_->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(cmdAllocator_.ReleaseAndGetAddressOf()));
     if (FAILED(result)) return false;
 
     // リストの作成
-    result = device_->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, cmdAllocator_.Get(), nullptr, IID_PPV_ARGS(cmdList_.GetAddressOf()));
+    result = device_->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, cmdAllocator_.Get(), nullptr, IID_PPV_ARGS(cmdList_.ReleaseAndGetAddressOf()));
     if (FAILED(result)) return false;
 
     // キューの作成
@@ -245,7 +248,7 @@ bool Glib::Internal::Graphics::DirectX12::InitCommand()
     cmdQueueDesc.NodeMask = 0;
     cmdQueueDesc.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
     cmdQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-    result = device_->CreateCommandQueue(&cmdQueueDesc, IID_PPV_ARGS(cmdQueue_.GetAddressOf()));
+    result = device_->CreateCommandQueue(&cmdQueueDesc, IID_PPV_ARGS(cmdQueue_.ReleaseAndGetAddressOf()));
     return !FAILED(result);
 }
 
@@ -277,7 +280,7 @@ bool Glib::Internal::Graphics::DirectX12::CreateSwapChain()
         &swapChainDesc,
         nullptr,
         nullptr,
-        (IDXGISwapChain1**)swapChain_.GetAddressOf()
+        (IDXGISwapChain1**)swapChain_.ReleaseAndGetAddressOf()
     ));
 }
 
@@ -293,17 +296,17 @@ bool Glib::Internal::Graphics::DirectX12::CreateDescriptorPool()
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
     heapDesc.NumDescriptors = 256;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-    if (!DescriptorPool::Create(device_.Get(), &heapDesc, &descriptors_[static_cast<int>(POOLTYPE::RES)])) return false;
+    if (!DescriptorPool::Create(device_.Get(), &heapDesc, &descriptors_[static_cast<int>(POOLTYPE::SMP)])) return false;
 
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
     heapDesc.NumDescriptors = 512;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    if (!DescriptorPool::Create(device_.Get(), &heapDesc, &descriptors_[static_cast<int>(POOLTYPE::RES)])) return false;
+    if (!DescriptorPool::Create(device_.Get(), &heapDesc, &descriptors_[static_cast<int>(POOLTYPE::RTV)])) return false;
 
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
     heapDesc.NumDescriptors = 512;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    if (!DescriptorPool::Create(device_.Get(), &heapDesc, &descriptors_[static_cast<int>(POOLTYPE::RES)])) return false;
+    if (!DescriptorPool::Create(device_.Get(), &heapDesc, &descriptors_[static_cast<int>(POOLTYPE::DSV)])) return false;
 
     return true;
 }
@@ -312,7 +315,7 @@ void Glib::Internal::Graphics::DirectX12::EnableDebugLayer()
 {
 #if defined(DEBUG) || defined(_DEBUG)
     ComPtr<ID3D12Debug> debugController{ nullptr };
-    if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(debugController.GetAddressOf()))))
+    if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(debugController.ReleaseAndGetAddressOf()))))
     {
         debugController->EnableDebugLayer();
     }

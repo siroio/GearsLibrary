@@ -55,6 +55,7 @@ set(LIBRARY
     GearsGraphics
     GearsObject
     GearsComponent
+    GearsInput
     GearsScene
     GearsMath
     GearsUtility
