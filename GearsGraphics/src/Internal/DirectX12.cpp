@@ -9,6 +9,7 @@
 #include <string>
 #include <array>
 #include <vector>
+#include <memory>
 
 namespace
 {
@@ -49,7 +50,8 @@ namespace
     Glib::Internal::Graphics::RenderTarget backBuffers_[FRAME_COUNT];
 
     /* ディスクリプタプール */
-    Glib::Internal::Graphics::DescriptorPool* descriptors_[static_cast<int>(Glib::Internal::Graphics::DirectX12::POOLTYPE::COUNT)];
+    std::array<std::shared_ptr<Glib::Internal::Graphics::DescriptorPool>,
+        static_cast<int>(Glib::Internal::Graphics::DirectX12::POOLTYPE::COUNT)> descriptors_;
 
     /* シザー矩形 */
     D3D12_RECT scissorRect{};
@@ -174,7 +176,7 @@ ComPtr<ID3D12CommandQueue> Glib::Internal::Graphics::DirectX12::CommandQueue() c
 
 Glib::Internal::Graphics::DescriptorPool* Glib::Internal::Graphics::DirectX12::DescriptorPool(POOLTYPE type) const
 {
-    return descriptors_[static_cast<int>(type)];
+    return descriptors_[static_cast<int>(type)].get();
 }
 
 D3D12_RESOURCE_DESC Glib::Internal::Graphics::DirectX12::BackBufferResourceDesc() const
@@ -291,22 +293,26 @@ bool Glib::Internal::Graphics::DirectX12::CreateDescriptorPool()
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
     heapDesc.NumDescriptors = 512;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-    if (!DescriptorPool::Create(device_.Get(), &heapDesc, &descriptors_[static_cast<int>(POOLTYPE::RES)])) return false;
+    descriptors_[static_cast<int>(POOLTYPE::RES)].reset();
+    if (!DescriptorPool::Create(device_, &heapDesc, descriptors_[static_cast<int>(POOLTYPE::RES)])) return false;
 
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
     heapDesc.NumDescriptors = 256;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-    if (!DescriptorPool::Create(device_.Get(), &heapDesc, &descriptors_[static_cast<int>(POOLTYPE::SMP)])) return false;
+    descriptors_[static_cast<int>(POOLTYPE::SMP)].reset();
+    if (!DescriptorPool::Create(device_, &heapDesc, descriptors_[static_cast<int>(POOLTYPE::SMP)])) return false;
 
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
     heapDesc.NumDescriptors = 512;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    if (!DescriptorPool::Create(device_.Get(), &heapDesc, &descriptors_[static_cast<int>(POOLTYPE::RTV)])) return false;
+    descriptors_[static_cast<int>(POOLTYPE::RTV)].reset();
+    if (!DescriptorPool::Create(device_, &heapDesc, descriptors_[static_cast<int>(POOLTYPE::RTV)])) return false;
 
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
     heapDesc.NumDescriptors = 512;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    if (!DescriptorPool::Create(device_.Get(), &heapDesc, &descriptors_[static_cast<int>(POOLTYPE::DSV)])) return false;
+    descriptors_[static_cast<int>(POOLTYPE::DSV)].reset();
+    if (!DescriptorPool::Create(device_, &heapDesc, descriptors_[static_cast<int>(POOLTYPE::DSV)])) return false;
 
     return true;
 }

@@ -1,18 +1,23 @@
 #pragma once
-#include <dinput.h>
-#include <Internal/InputState.h>
+#include <Windows.h>
+#include <Internal/DinputGamePad.h>
+#include <Internal/XinputGamePad.h>
+#include <array>
+#include <variant>
 
 namespace Glib::Internal::Input
 {
-    class GamePad
+    class GamePadDevice
     {
     public:
+        using GamePad = std::variant<XinputGamePad, DinputGamePad>;
+
         enum class PadNumber : unsigned char
         {
             PAD_1 = 0,
             PAD_2 = 1,
             PAD_3 = 2,
-            PAD_4 = 3,
+            PAD_4 = 3
         };
 
         enum class InputType : unsigned short
@@ -22,13 +27,10 @@ namespace Glib::Internal::Input
         };
 
     public:
-        bool Initialize();
+        bool Initialize(ComPtr<IDirectInput8> dinput);
         void Update();
 
     private:
-        GamePad(GamePad&) = delete;
-        GamePad& operator = (const GamePad&) = delete;
-
-    private:
+        std::array<GamePad, 4> devices_;
     };
 }

@@ -4,10 +4,11 @@
 #include <GameObjectManager.h>
 #include <SceneManager.h>
 #include <GameTimer.h>
-#include <InputManager.h>
+#include <InputSystem.h>
 #include <Internal/ISystem.h>
 #include <Internal/ComponentManager.h>
 #include <Internal/DirectX12.h>
+
 namespace
 {
     auto& systemManager = SystemManager::Instance();
@@ -44,7 +45,7 @@ void Game::RegisterSystem()
     SystemManager::AddSystem<Glib::Internal::ComponentManager>();
     SystemManager::AddSystem<Glib::Scene::SceneManager>();
     SystemManager::AddSystem<GameTimer>();
-    SystemManager::AddSystem<Glib::InputManager>();
+    SystemManager::AddSystem<Glib::InputSystem>();
 }
 
 bool Game::Initialize()

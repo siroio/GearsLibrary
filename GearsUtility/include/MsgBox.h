@@ -5,6 +5,9 @@
 #include <functional>
 namespace Glib
 {
+    /**
+     * @brief メッセージボックス表示
+    */
     class MsgBox
     {
     private:
@@ -53,5 +56,4 @@ namespace Glib
         static RESULT Show(const std::string& msg, std::function<void(RESULT)> callback = nullptr);
     };
 }
-
 #endif // _WIN32

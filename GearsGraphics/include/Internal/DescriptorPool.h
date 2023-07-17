@@ -42,7 +42,7 @@ namespace Glib::Internal::Graphics
          * @return true ê¨å˜
          * @return false é∏îs
         */
-        static bool Create(ComPtr<ID3D12Device> device, const D3D12_DESCRIPTOR_HEAP_DESC* desc, DescriptorPool** pool);
+        static bool Create(ComPtr<ID3D12Device> device, const D3D12_DESCRIPTOR_HEAP_DESC* desc, std::shared_ptr<DescriptorPool>& pool);
 
     public:
         const ComPtr<ID3D12DescriptorHeap> GetHeap() const;

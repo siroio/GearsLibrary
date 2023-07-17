@@ -15,7 +15,7 @@ namespace Glib::Internal::Interface
     class ISystem;
 }
 
-namespace Glib::Internal::Concept
+namespace Glib::Internal::Conceptss
 {
     /**
      * @brief システム判定用
@@ -46,7 +46,7 @@ public:
     void EndDraw();
     void Finalize();
 
-    template<class T> requires Glib::Internal::Concept::HasSingletonSystem<T>
+    template<class T> requires Glib::Internal::Conceptss::HasSingletonSystem<T>
     static void AddSystem();
     static void AddSystem()
     {}
@@ -93,7 +93,7 @@ private:
     std::unordered_map<SystemFunctionType, std::vector<FunctionVariant>> systemFunctions_;
 };
 
-template<class T> requires Glib::Internal::Concept::HasSingletonSystem<T>
+template<class T> requires Glib::Internal::Conceptss::HasSingletonSystem<T>
 inline void SystemManager::AddSystem()
 {
     Glib::WeakPtr<T> instance = T::Instance();

@@ -12,7 +12,6 @@ namespace Glib
     */
     static constexpr std::vector<std::string> Split(std::string_view str, char delim)
     {
-
         std::vector<std::string> tokens;
         auto begin = str.begin();
         auto end = str.end();
@@ -43,5 +42,10 @@ namespace Glib
         if (end != std::string::npos) name = name.substr(end + 2);
 
         return name;
+    }
+
+    static constexpr std::string as_string(std::string_view sv)
+    {
+        return { sv.begin(), sv.end() };
     }
 };

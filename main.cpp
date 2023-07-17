@@ -9,8 +9,8 @@
 #include <GameObjectManager.h>
 #include <Component.h>
 #include <ObjectPool.h>
-#include <InputManager.h>
-
+#include <InputSystem.h>
+#include <StringUtility.h>
 using namespace std;
 
 class TestComponent : public Component
@@ -18,12 +18,16 @@ class TestComponent : public Component
 public:
     void Start()
     {
-        Debug::Log("Start TestComponent");
+        Debug::Log("Enable TestComponent");
     }
 
     void Update()
     {
-
+        using Glib::Key;
+        if (Glib::InputSystem::GetKeyDown(Key::Space))
+        {
+            Debug::Log("Press Space Key!");
+        }
     }
 private:
 };
@@ -35,10 +39,9 @@ public:
     {
         Debug::Log("Scene Loaded...");
         auto go = GameObjectManager::Instatiate("TestObject");
-        Debug::Log(go->Name());
+        if (!go.expired())Debug::Log("TestObject Created!");
         auto ptr = go->AddComponent<TestComponent>();
-        Debug::Log(ptr->GameObject()->Name());
-        Debug::Log("ActiveStatus: " + std::to_string(ptr->Active()));
+        Debug::Log(Glib::as_string(go->Name()) + "ActiveStatus: " + std::to_string(ptr->Active()));
     }
 
     virtual void End() override
@@ -51,14 +54,17 @@ class MyGame : public Game
 {
     virtual void Start() override
     {
-        Debug::Log("GAME STARTED. . . . .");
+        Debug::Log("GAME STARTTING");
         Glib::Scene::SceneManager::Register<TestScene>();
+        Debug::Log("Scene: " + Glib::nameof<TestScene>() + "Registered");
+        Debug::Log("TestScene Load Start");
         Glib::Scene::SceneManager::LoadScene("TestScene");
+        Debug::Log("TestScene Load Complete");
     }
 
     virtual void End() override
     {
-        cout << "END" << endl;
+        cout << "GAME END" << endl;
     }
 };
 

@@ -7,6 +7,7 @@ set(SOURCE_FILE
 )
 
 set(HEADER_FILE
+    ./include/InlineUtility.h
     ./include/Logger.h
     ./include/WeakPtr.h
     ./include/ComPtr.h

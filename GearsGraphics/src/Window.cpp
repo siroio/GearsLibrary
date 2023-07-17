@@ -146,8 +146,3 @@ void Glib::Window::WindowDebugSize(const Vector2& size)
     if (windowHandle_ != NULL) return;
     windowDebugSize_ = size;
 }
-
-const Glib::PARAMS& Glib::Window::Params()
-{
-    return params_;
-}

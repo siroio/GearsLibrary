@@ -1,4 +1,5 @@
 #include <Internal/DescriptorPool.h>
+#include <memory>
 
 void Glib::Internal::Graphics::DescriptorHandle::CPU(D3D12_CPU_DESCRIPTOR_HANDLE handle)
 {
@@ -32,6 +33,7 @@ bool Glib::Internal::Graphics::DescriptorHandle::HasGPU() const
 
 Glib::Internal::Graphics::DescriptorPool::DescriptorPool() : refCount_{ 1 }, handles_{}, heap_{}, descriptorSize_{ 0 }
 {
+    // 初期化関数
     auto init = [&](size_t index, DescriptorHandle* handle)
     {
         auto cpuHandle = heap_->GetCPUDescriptorHandleForHeapStart();
@@ -54,11 +56,10 @@ Glib::Internal::Graphics::DescriptorPool::~DescriptorPool()
     descriptorSize_ = 0;
 }
 
-bool Glib::Internal::Graphics::DescriptorPool::Create(ComPtr<ID3D12Device> device, const D3D12_DESCRIPTOR_HEAP_DESC* desc, DescriptorPool** pool)
+bool Glib::Internal::Graphics::DescriptorPool::Create(ComPtr<ID3D12Device> device, const D3D12_DESCRIPTOR_HEAP_DESC* desc, std::shared_ptr<DescriptorPool>& pool)
 {
-    if (device == nullptr || desc == nullptr || pool == nullptr) return false;
-
-    auto instance = new DescriptorPool{};
+    if (device == nullptr || desc == nullptr) return false;
+    std::shared_ptr<DescriptorPool> instance(new DescriptorPool);
     if (instance == nullptr) return false;
 
     // ディスクリプタヒープ生成
@@ -79,7 +80,7 @@ bool Glib::Internal::Graphics::DescriptorPool::Create(ComPtr<ID3D12Device> devic
     }
 
     // プールの設定
-    *pool = instance;
+    pool = std::move(instance);
 
     return true;
 }

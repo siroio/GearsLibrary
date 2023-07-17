@@ -2,22 +2,26 @@ cmake_minimum_required(VERSION 3.1)
 
 # == CONFIG ==
 set(SOURCE_FILE
-    ./src/Internal/DinputDevice.cpp
+    ./src/Internal/XinputGamePad.cpp
+    ./src/Internal/DinputGamePad.cpp
+    ./src/Internal/GamePadDevice.cpp
     ./src/Internal/KeyBoardDevice.cpp
     ./src/Internal/MouseDevice.cpp
-    ./src/Internal/GamePad.cpp
-    ./src/InputManager.cpp
+    ./src/InputSystem.cpp
 )
 
 set(HEADER_FILE
     ./include/Internal/InputState.h
     ./include/Internal/InputData.h
-    ./include/Internal/DinputDevice.h
+    ./include/Internal/KeyBoardKeys.h
+    ./include/Internal/GamePadKeys.h
+    ./include/Internal/GamePadDevice.h
+    ./include/Internal/XinputGamePad.h
+    ./include/Internal/DinputGamePad.h
     ./include/Internal/KeyBoardDevice.h
     ./include/Internal/MouseDevice.h
     ./include/Internal/MouseButton.h
-    ./include/Internal/GamePad.h
-    ./include/InputManager.h
+    ./include/InputSystem.h
 )
 
 set(LIB_NAME GearsInput)
