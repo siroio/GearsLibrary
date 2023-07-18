@@ -115,7 +115,7 @@ void Glib::Internal::Graphics::DirectX12::BeginDraw()
     auto bbIdx = swapChain_->GetCurrentBackBufferIndex();
 
     auto barrierDesc = CD3DX12_RESOURCE_BARRIER::Transition(
-        backBuffers_[bbIdx].Resource(),
+        backBuffers_[bbIdx].Resource().Get(),
         D3D12_RESOURCE_STATE_PRESENT,
         D3D12_RESOURCE_STATE_RENDER_TARGET
     );
@@ -133,7 +133,7 @@ void Glib::Internal::Graphics::DirectX12::EndDraw()
 {
     auto bbIdx = swapChain_->GetCurrentBackBufferIndex();
     auto barrierDesc = CD3DX12_RESOURCE_BARRIER::Transition(
-        backBuffers_[bbIdx].Resource(),
+        backBuffers_[bbIdx].Resource().Get(),
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_PRESENT
     );
@@ -174,9 +174,9 @@ ComPtr<ID3D12CommandQueue> Glib::Internal::Graphics::DirectX12::CommandQueue() c
     return cmdQueue_;
 }
 
-Glib::Internal::Graphics::DescriptorPool* Glib::Internal::Graphics::DirectX12::DescriptorPool(POOLTYPE type) const
+std::shared_ptr<Glib::Internal::Graphics::DescriptorPool> Glib::Internal::Graphics::DirectX12::DescriptorPool(POOLTYPE type) const
 {
-    return descriptors_[static_cast<int>(type)].get();
+    return descriptors_[static_cast<int>(type)];
 }
 
 D3D12_RESOURCE_DESC Glib::Internal::Graphics::DirectX12::BackBufferResourceDesc() const
@@ -293,25 +293,21 @@ bool Glib::Internal::Graphics::DirectX12::CreateDescriptorPool()
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
     heapDesc.NumDescriptors = 512;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-    descriptors_[static_cast<int>(POOLTYPE::RES)].reset();
     if (!DescriptorPool::Create(device_, &heapDesc, descriptors_[static_cast<int>(POOLTYPE::RES)])) return false;
 
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
     heapDesc.NumDescriptors = 256;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-    descriptors_[static_cast<int>(POOLTYPE::SMP)].reset();
     if (!DescriptorPool::Create(device_, &heapDesc, descriptors_[static_cast<int>(POOLTYPE::SMP)])) return false;
 
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
     heapDesc.NumDescriptors = 512;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    descriptors_[static_cast<int>(POOLTYPE::RTV)].reset();
     if (!DescriptorPool::Create(device_, &heapDesc, descriptors_[static_cast<int>(POOLTYPE::RTV)])) return false;
 
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
     heapDesc.NumDescriptors = 512;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    descriptors_[static_cast<int>(POOLTYPE::DSV)].reset();
     if (!DescriptorPool::Create(device_, &heapDesc, descriptors_[static_cast<int>(POOLTYPE::DSV)])) return false;
 
     return true;

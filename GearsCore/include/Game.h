@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @brief メインのゲームクラス
+ * @brief メインゲームクラス
  */
 class Game
 {

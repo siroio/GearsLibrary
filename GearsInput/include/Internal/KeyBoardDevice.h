@@ -28,7 +28,7 @@ namespace Glib::Internal::Input
         bool GetKeyUp(KeyCode key);
     private:
         ComPtr<IDirectInputDevice8> device_{ nullptr };
-        std::array<unsigned char, 256U> prevKeyState;
-        std::array<unsigned char, 256U> currentKeyState;
+        std::array<unsigned char, 256U> prevKeyState{ 0U };
+        std::array<unsigned char, 256U> currentKeyState{ 0U };
     };
 }

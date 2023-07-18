@@ -7,7 +7,7 @@ namespace
     auto dx12_ = Glib::Internal::Graphics::DirectX12::Instance();
 }
 
-bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t index, IDXGISwapChain* swapChain)
+bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t index, ComPtr<IDXGISwapChain> swapChain)
 {
     if (swapChain == nullptr) return false;
     pool_ = dx12_->DescriptorPool(Glib::Internal::Graphics::DirectX12::POOLTYPE::RTV);
@@ -35,7 +35,7 @@ bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t index, IDXGISwapCha
     return true;
 }
 
-bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t width, uint32_t height, DXGI_FORMAT format, DescriptorPool* pool)
+bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t width, uint32_t height, DXGI_FORMAT format, std::shared_ptr<DescriptorPool> pool)
 {
     pool_ = pool;
     pool_->IncrementRef();
@@ -91,14 +91,14 @@ bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t width, uint32_t hei
     return true;
 }
 
-Glib::Internal::Graphics::DescriptorHandle* Glib::Internal::Graphics::RenderTarget::Handle() const
+Glib::WeakPtr<Glib::Internal::Graphics::DescriptorHandle> Glib::Internal::Graphics::RenderTarget::Handle() const
 {
     return handle_;
 }
 
-ID3D12Resource* Glib::Internal::Graphics::RenderTarget::Resource() const
+ComPtr<ID3D12Resource> Glib::Internal::Graphics::RenderTarget::Resource() const
 {
-    return target_.Get();
+    return target_;
 }
 
 D3D12_RESOURCE_DESC Glib::Internal::Graphics::RenderTarget::ResourceDesc() const

@@ -1,5 +1,5 @@
 #include <Internal/DescriptorPool.h>
-#include <memory>
+#include <InlineUtility.h>
 
 void Glib::Internal::Graphics::DescriptorHandle::CPU(D3D12_CPU_DESCRIPTOR_HANDLE handle)
 {
@@ -59,7 +59,10 @@ Glib::Internal::Graphics::DescriptorPool::~DescriptorPool()
 bool Glib::Internal::Graphics::DescriptorPool::Create(ComPtr<ID3D12Device> device, const D3D12_DESCRIPTOR_HEAP_DESC* desc, std::shared_ptr<DescriptorPool>& pool)
 {
     if (device == nullptr || desc == nullptr) return false;
-    std::shared_ptr<DescriptorPool> instance(new DescriptorPool);
+    std::shared_ptr<DescriptorPool> instance{ new DescriptorPool, [](DescriptorPool* ptr)
+    {
+        ptr->Release();
+    }};
     if (instance == nullptr) return false;
 
     // ディスクリプタヒープ生成
@@ -90,9 +93,12 @@ const ComPtr<ID3D12DescriptorHeap> Glib::Internal::Graphics::DescriptorPool::Get
     return heap_;
 }
 
-Glib::Internal::Graphics::DescriptorHandle* Glib::Internal::Graphics::DescriptorPool::GetHandle()
+std::shared_ptr<Glib::Internal::Graphics::DescriptorHandle> Glib::Internal::Graphics::DescriptorPool::GetHandle()
 {
-    return handles_.Get();
+    return std::shared_ptr<DescriptorHandle>{ handles_.Get(), [&](DescriptorHandle* obj)
+    {
+        Release(obj);
+    } };
 }
 
 void Glib::Internal::Graphics::DescriptorPool::Release()

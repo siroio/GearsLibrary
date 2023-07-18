@@ -1,8 +1,9 @@
 #pragma once
 #include <d3d12.h>
-#include <atomic>
 #include <ComPtr.h>
 #include <ObjectPool.h>
+#include <atomic>
+#include <memory>
 
 namespace Glib::Internal::Graphics
 {
@@ -46,7 +47,7 @@ namespace Glib::Internal::Graphics
 
     public:
         const ComPtr<ID3D12DescriptorHeap> GetHeap() const;
-        DescriptorHandle* GetHandle();
+        std::shared_ptr<DescriptorHandle> GetHandle();
         void Release();
         void Release(DescriptorHandle*& handle);
         void IncrementRef();

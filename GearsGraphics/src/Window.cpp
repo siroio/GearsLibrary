@@ -2,6 +2,7 @@
 #include <Vector2.h>
 #if defined(DEBUG) || defined(_DEBUG)
 #include <crtdbg.h>
+#include <fstream>
 #endif
 
 namespace
@@ -13,6 +14,18 @@ namespace
     std::string windowName_{ "GameWindow" };
     Vector2 windowSize_{ 1240.0f, 720.0f };
     Vector2 windowDebugSize_{ 1240.0f, 720.0f };
+
+}
+
+int MemoryLeakHandler(int reportType, char* message, int* returnValue)
+{
+    std::ofstream logFile{ "leakCheck.txt", std::ios_base::app };
+    if (logFile.is_open())
+    {
+        logFile << message << std::endl;
+        logFile.close();
+    }
+    return 0;
 }
 
 LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -38,6 +51,8 @@ bool Glib::Window::Initialize()
     if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED))) return false;
 
 #if defined(DEBUG) || defined(_DEBUG)
+    // メモリリークレポートハンドラを設定する
+    _CrtSetReportHook2(_CRT_RPTHOOK_INSTALL, MemoryLeakHandler);
     // メモリリーク検出
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif

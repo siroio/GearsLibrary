@@ -1,13 +1,12 @@
 #include <Game.h>
-#include <d3d12.h>
 #include <SystemManager.h>
+#include <Internal/ISystem.h>
+#include <Internal/DirectX12.h>
+#include <Internal/ComponentManager.h>
 #include <GameObjectManager.h>
 #include <SceneManager.h>
-#include <GameTimer.h>
 #include <InputSystem.h>
-#include <Internal/ISystem.h>
-#include <Internal/ComponentManager.h>
-#include <Internal/DirectX12.h>
+#include <GameTimer.h>
 
 namespace
 {

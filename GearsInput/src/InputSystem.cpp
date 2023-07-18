@@ -1,6 +1,6 @@
 #include <InputSystem.h>
-#include <Internal/KeyBoardDevice.h>
 #include <Internal/GamePadDevice.h>
+#include <Internal/KeyBoardDevice.h>
 #include <Logger.h>
 
 namespace
@@ -28,15 +28,14 @@ bool Glib::InputSystem::Initialize()
     keyBoard_ = std::make_unique<Glib::Internal::Input::KeyBoardDevice>();
 
     bool initialized = keyBoard_->Initialize(dinput_);
-    if (!initialized) return false;
-
     initialized = gamePad_->Initialize(dinput_);
-    if (!initialized) return false;
+
     return true;
 }
 
 void Glib::InputSystem::Update()
 {
+    gamePad_->Update();
     keyBoard_->Update();
 }
 
@@ -53,9 +52,4 @@ bool Glib::InputSystem::GetKeyDown(KeyCode key)
 bool Glib::InputSystem::GetKeyUp(KeyCode key)
 {
     return keyBoard_->GetKeyUp(key);
-}
-
-Glib::InputSystem::~InputSystem()
-{
-
 }

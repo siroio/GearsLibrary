@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include <Singleton.h>
 #include <Internal/IFunc.h>
 #include <Internal/SystemFunctionType.h>

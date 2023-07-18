@@ -5,6 +5,7 @@ set(SOURCE_FILE
 	./src/Internal/DirectX12.cpp
 	./src/Internal/DescriptorPool.cpp
     ./src/Internal/RenderTarget.cpp
+    ./src/Internal/ConstantBuffer.cpp
     ./src/Window.cpp
 )
 

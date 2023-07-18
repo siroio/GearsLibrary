@@ -1,7 +1,7 @@
 #pragma once
-#include <Windows.h>
 #include <Internal/DinputGamePad.h>
 #include <Internal/XinputGamePad.h>
+#include <Internal/GamePadKeys.h>
 #include <array>
 #include <variant>
 
@@ -12,7 +12,7 @@ namespace Glib::Internal::Input
     public:
         using GamePad = std::variant<XinputGamePad, DinputGamePad>;
 
-        enum class PadNumber : unsigned char
+        enum class PadNum : unsigned short
         {
             PAD_1 = 0,
             PAD_2 = 1,
@@ -29,6 +29,11 @@ namespace Glib::Internal::Input
     public:
         bool Initialize(ComPtr<IDirectInput8> dinput);
         void Update();
+
+        //bool GetButton(PadNum pad, GPADCode button);
+        //bool GetButtonDown(PadNum pad, GPADCode button);
+        //bool GetButtonUp(PadNum pad, GPADCode button);
+        //bool GetAxis(PadNum pad, unsigned short axis);
 
     private:
         std::array<GamePad, 4> devices_;

@@ -8,17 +8,15 @@
 namespace Glib
 {
     class InputSystem :
-        public Glib::Internal::Interface::ISystem,
-        public Glib::SingletonPtr<InputSystem>,
-        public Glib::Internal::Function::UpdateOrderSet<Glib::Internal::Order::Update::INPUT>
+        public Internal::Interface::ISystem,
+        public SingletonPtr<InputSystem>,
+        public Internal::Function::UpdateOrderSet<Internal::Order::Update::INPUT>
     {
     private:
         InputSystem() = default;
-        friend Glib::WeakPtr<InputSystem> SingletonPtr<InputSystem>::Instance();
+        friend WeakPtr<InputSystem> SingletonPtr<InputSystem>::Instance();
 
     public:
-        ~InputSystem();
-
         bool Initialize();
         void Update();
 
@@ -43,7 +41,5 @@ namespace Glib
          * @return —£‚µ‚½ true
         */
         static bool GetKeyUp(KeyCode key);
-
-    private:
     };
 }

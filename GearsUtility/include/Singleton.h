@@ -72,7 +72,7 @@ namespace Glib
         /**
          * @brief インスタンスの取得
          */
-        static T& Instance()
+        static inline T& Instance()
         {
             std::lock_guard lock{ singleton_mutex };
             static T instance;

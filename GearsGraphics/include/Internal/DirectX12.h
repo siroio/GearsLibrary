@@ -83,7 +83,7 @@ namespace Glib::Internal::Graphics
         /**
          * @brief ディスクリプタプールを取得
          */
-        DescriptorPool* DescriptorPool(POOLTYPE type) const;
+        std::shared_ptr<DescriptorPool> DescriptorPool(POOLTYPE type) const;
 
         /**
          * @brief リソースデスクを取得

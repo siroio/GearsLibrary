@@ -1,5 +1,4 @@
 #pragma once
-#include <Internal/XinputGamePad.h>
 #include <Internal/InputState.h>
 
 namespace Glib::Internal::Input
@@ -11,8 +10,8 @@ namespace Glib::Internal::Input
         void Update();
 
     private:
-        DWORD controllerIndex_;
-        InputState currentPadState_;
-        InputState prevPadState_;
+        DWORD controllerIndex_{ 0 };
+        InputState currentPadState_{};
+        InputState prevPadState_{};
     };
 }

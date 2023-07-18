@@ -2,7 +2,7 @@
 
 bool Glib::Internal::Input::GamePadDevice::Initialize(ComPtr<IDirectInput8> dinput)
 {
-    for (size_t i = 0; i < 4; i++)
+    for (DWORD i = 0; i < 4; i++)
     {
         auto xGamePad = XinputGamePad{};
         auto dGamePad = DinputGamePad{};
@@ -11,7 +11,7 @@ bool Glib::Internal::Input::GamePadDevice::Initialize(ComPtr<IDirectInput8> dinp
             devices_[i] = std::move(xGamePad);
             return true;
         }
-        else if (!dGamePad.Initialize(dinput))
+        else if (dGamePad.Initialize(dinput))
         {
             devices_[i] = std::move(dGamePad);
             return true;

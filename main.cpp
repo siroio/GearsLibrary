@@ -9,8 +9,8 @@
 #include <GameObjectManager.h>
 #include <Component.h>
 #include <ObjectPool.h>
-#include <InputSystem.h>
 #include <StringUtility.h>
+#include <InputSystem.h>
 using namespace std;
 
 class TestComponent : public Component
@@ -23,11 +23,8 @@ public:
 
     void Update()
     {
-        using Glib::Key;
-        if (Glib::InputSystem::GetKeyDown(Key::Space))
-        {
-            Debug::Log("Press Space Key!");
-        }
+        using Glib::KeyCode;
+        using Glib::InputSystem;
     }
 private:
 };
