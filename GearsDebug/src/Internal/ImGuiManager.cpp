@@ -20,7 +20,7 @@ namespace
 
 bool Glib::Internal::Debug::ImGuiManager::Initialize()
 {
-    IMGUI_CHECKVERSION();
+    //IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     auto& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -29,8 +29,8 @@ bool Glib::Internal::Debug::ImGuiManager::Initialize()
     ImGui::StyleColorsDark();
     auto hwnd = Window::WindowHandle();
     auto resDesc = dx12_->BackBufferResourceDesc();
-
     const Vector2& windowSize = window_.WindowSize();
+
     bool result = renderTarget_.Create(
         static_cast<UINT>(windowSize.x),
         static_cast<UINT>(windowSize.y),

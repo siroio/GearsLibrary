@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <WeakPtr.h>
 #include <ComPtr.h>
 
 struct ID3D12Resource;
@@ -22,10 +23,22 @@ namespace Glib::Internal::Graphics
          */
         bool Create(UINT bufferSize);
 
+        /**
+         * @brief 定数バッファーのバインド
+         * @param rootParameterIndex
+         */
+        void BindRootParameter(unsigned int rootParameterIndex);
+
+        /**
+         * @brief 定数バッファの更新
+         * @param size データサイズ
+         * @param data データ
+         */
+        void Update(unsigned int size, const void* data);
 
     private:
         ComPtr<ID3D12Resource> buffer_{ nullptr };
-        std::shared_ptr<DescriptorPool> pool_{ nullptr };
+        Glib::WeakPtr<DescriptorPool> pool_{ nullptr };
         std::shared_ptr<DescriptorHandle> handle_{ nullptr };
     };
 }

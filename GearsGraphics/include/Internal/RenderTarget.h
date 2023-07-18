@@ -4,7 +4,6 @@
 #include <WeakPtr.h>
 #include <Internal/DescriptorPool.h>
 
-
 namespace Glib::Internal::Graphics
 {
     class RenderTarget
@@ -26,7 +25,7 @@ namespace Glib::Internal::Graphics
     private:
         ComPtr<ID3D12Resource> target_{ nullptr };
         std::shared_ptr<DescriptorHandle> handle_{ nullptr };
-        std::shared_ptr<DescriptorPool> pool_{ nullptr };
+        Glib::WeakPtr<DescriptorPool> pool_{ nullptr };
         D3D12_RENDER_TARGET_VIEW_DESC viewDesc_{};
     };
 }

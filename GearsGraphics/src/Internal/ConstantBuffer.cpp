@@ -37,3 +37,16 @@ bool Glib::Internal::Graphics::ConstantBuffer::Create(UINT bufferSize)
     viewDesc.SizeInBytes = (bufferSize + 0xff) & ~0xff;
     return true;
 }
+
+void Glib::Internal::Graphics::ConstantBuffer::BindRootParameter(unsigned int rootParameterIndex)
+{
+
+}
+
+void Glib::Internal::Graphics::ConstantBuffer::Update(unsigned int size, const void* data)
+{
+    void* map{ nullptr };
+    if (FAILED(buffer_->Map(0, nullptr, &map))) return;
+    std::memcpy(map, data, size);
+    buffer_->Unmap(0, nullptr);
+}

@@ -128,7 +128,7 @@ namespace Glib
         if (!initialized) return;
         for (auto& it : objects_)
         {
-            it.reset(nullptr);
+            it.reset();
         }
 
         objects_.clear();

@@ -98,7 +98,7 @@ std::shared_ptr<Glib::Internal::Graphics::DescriptorHandle> Glib::Internal::Grap
     return std::shared_ptr<DescriptorHandle>{ handles_.Get(), [&](DescriptorHandle* obj)
     {
         Release(obj);
-    } };
+    }};
 }
 
 void Glib::Internal::Graphics::DescriptorPool::Release()

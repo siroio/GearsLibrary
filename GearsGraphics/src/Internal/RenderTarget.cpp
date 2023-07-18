@@ -2,6 +2,7 @@
 #include <Internal/DirectX12.h>
 #include <Internal/d3dx12Inc.h>
 
+
 namespace
 {
     auto dx12_ = Glib::Internal::Graphics::DirectX12::Instance();
@@ -64,7 +65,7 @@ bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t width, uint32_t hei
     resDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 
     const float color[]{ 1.0f, 1.0f, 1.0f, 1.0f };
-    auto clearValue = CD3DX12_CLEAR_VALUE(format, color);
+    auto clearValue = CD3DX12_CLEAR_VALUE{ format, color };
 
     bool failed = FAILED(dx12_->Device()->CreateCommittedResource(
         &heapProp,

@@ -1,3 +1,6 @@
+#define _CRTDBG_MAP_ALLOC
+#include <cstdlib>
+#include <crtdbg.h>
 #include <Internal/DirectX12.h>
 #include <Internal/DescriptorPool.h>
 #include <Internal/RenderTarget.h>

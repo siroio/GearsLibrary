@@ -1,9 +1,12 @@
-#include <Window.h>
-#include <Vector2.h>
 #if defined(DEBUG) || defined(_DEBUG)
+#define _CRTDBG_MAP_ALLOC
+#include <cstdlib>
 #include <crtdbg.h>
 #include <fstream>
 #endif
+#include <Window.h>
+#include <Vector2.h>
+
 
 namespace
 {
@@ -14,11 +17,14 @@ namespace
     std::string windowName_{ "GameWindow" };
     Vector2 windowSize_{ 1240.0f, 720.0f };
     Vector2 windowDebugSize_{ 1240.0f, 720.0f };
-
 }
 
 int MemoryLeakHandler(int reportType, char* message, int* returnValue)
 {
+    if (std::ifstream("leakCheck.txt"))
+    {
+        std::remove("leakCheck.txt");
+    }
     std::ofstream logFile{ "leakCheck.txt", std::ios_base::app };
     if (logFile.is_open())
     {
