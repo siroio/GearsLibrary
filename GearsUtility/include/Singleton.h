@@ -33,7 +33,7 @@ namespace Glib
             std::lock_guard lock{ singleton_mutex };
             if (!instance)
             {
-                instance = std::shared_ptr<T>{ new T() };
+                instance = std::shared_ptr<T>{ new T };
             }
             return WeakPtr<T>{ instance };
         }
