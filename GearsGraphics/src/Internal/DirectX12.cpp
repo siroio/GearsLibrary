@@ -1,6 +1,3 @@
-#define _CRTDBG_MAP_ALLOC
-#include <cstdlib>
-#include <crtdbg.h>
 #include <Internal/DirectX12.h>
 #include <Internal/DescriptorPool.h>
 #include <Internal/RenderTarget.h>
@@ -154,8 +151,10 @@ void Glib::Internal::Graphics::DirectX12::Finalize()
 void Glib::Internal::Graphics::DirectX12::ExecuteCommandList()
 {
     cmdList_->Close();
-    ID3D12CommandList* cmdLists[]{ cmdList_.Get() };
-    cmdQueue_->ExecuteCommandLists(1, cmdLists);
+    ComPtr<ID3D12CommandList> cmdLists[]{ cmdList_.Get() };
+    cmdQueue_->ExecuteCommandLists(1, cmdLists->GetAddressOf());
+
+    // GPU‘Ò‹@
     WaitGPU();
 
     cmdAllocator_->Reset();
@@ -199,13 +198,6 @@ void Glib::Internal::Graphics::DirectX12::BackGroundColor(const Color& color)
 
 bool Glib::Internal::Graphics::DirectX12::InitDevice()
 {
-    D3D_FEATURE_LEVEL levels[]{
-        D3D_FEATURE_LEVEL_12_1,
-        D3D_FEATURE_LEVEL_12_0,
-        D3D_FEATURE_LEVEL_11_1,
-        D3D_FEATURE_LEVEL_11_0,
-    };
-
     ComPtr<IDXGIAdapter> adapter{ nullptr };
     ComPtr<IDXGIAdapter> nvidiaAdapter{ nullptr };
     ComPtr<IDXGIAdapter> maxVMAdapter{ nullptr };
@@ -227,6 +219,13 @@ bool Glib::Internal::Graphics::DirectX12::InitDevice()
     }
 
     adapter = nvidiaAdapter != nullptr ? nvidiaAdapter : maxVMAdapter;
+
+    const D3D_FEATURE_LEVEL levels[]{
+        D3D_FEATURE_LEVEL_12_1,
+        D3D_FEATURE_LEVEL_12_0,
+        D3D_FEATURE_LEVEL_11_1,
+        D3D_FEATURE_LEVEL_11_0,
+    };
 
     for (auto&& level : levels)
     {

@@ -11,9 +11,9 @@ class GameTimer final :
     public Glib::Internal::Function::UpdateOrderSet<Glib::Internal::Order::Update::TIME>
 {
 private:
-    using clock = std::chrono::high_resolution_clock;
-    using timePoint = clock::time_point;
-    using duration = std::chrono::duration<float>;
+    using Clock = std::chrono::high_resolution_clock;
+    using TimePoint = Clock::time_point;
+    using Duration = std::chrono::duration<float>;
     friend Glib::WeakPtr<GameTimer> Glib::SingletonPtr<GameTimer>::Instance();
     GameTimer() = default;
 
@@ -39,9 +39,9 @@ public:
     static float UnscaledDeltaTime();
 
 private:
-    static inline duration maxDeltaTime_{ 0.1f };
-    static inline duration deltaTime_{ 0.0f };
-    static inline duration unscaledDeltaTime_;
+    static inline Duration maxDeltaTime_{ 0.1f };
+    static inline Duration deltaTime_{ 0.0f };
+    static inline Duration unscaledDeltaTime_;
     static inline float timeScale_{ 1.0f };
-    timePoint prevTime_{ clock::now() };
+    TimePoint prevTime_{ Clock::now() };
 };

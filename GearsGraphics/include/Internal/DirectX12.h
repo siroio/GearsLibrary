@@ -15,7 +15,6 @@ struct D3D12_RESOURCE_DESC;
 
 namespace Glib::Internal::Graphics
 {
-
     class DescriptorPool;
 
     class DirectX12 :
@@ -28,7 +27,6 @@ namespace Glib::Internal::Graphics
         friend WeakPtr<DirectX12> SingletonPtr<DirectX12>::Instance();
 
     public:
-
         enum class POOLTYPE
         {
             RES = 0,

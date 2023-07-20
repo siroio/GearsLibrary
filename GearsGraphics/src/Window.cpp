@@ -1,12 +1,5 @@
-#if defined(DEBUG) || defined(_DEBUG)
-#define _CRTDBG_MAP_ALLOC
-#include <cstdlib>
-#include <crtdbg.h>
-#include <fstream>
-#endif
 #include <Window.h>
 #include <Vector2.h>
-
 
 namespace
 {
@@ -17,21 +10,6 @@ namespace
     std::string windowName_{ "GameWindow" };
     Vector2 windowSize_{ 1240.0f, 720.0f };
     Vector2 windowDebugSize_{ 1240.0f, 720.0f };
-}
-
-int MemoryLeakHandler(int reportType, char* message, int* returnValue)
-{
-    if (std::ifstream("leakCheck.txt"))
-    {
-        std::remove("leakCheck.txt");
-    }
-    std::ofstream logFile{ "leakCheck.txt", std::ios_base::app };
-    if (logFile.is_open())
-    {
-        logFile << message << std::endl;
-        logFile.close();
-    }
-    return 0;
 }
 
 LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -55,13 +33,6 @@ bool Glib::Window::Initialize()
 
     //Comの初期化
     if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED))) return false;
-
-#if defined(DEBUG) || defined(_DEBUG)
-    // メモリリークレポートハンドラを設定する
-    _CrtSetReportHook2(_CRT_RPTHOOK_INSTALL, MemoryLeakHandler);
-    // メモリリーク検出
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-#endif
 
     // ウィンドウの作成
     windowClass_.cbSize = sizeof(WNDCLASSEX);
@@ -115,9 +86,6 @@ void Glib::Window::Finalize()
     UnregisterClass(windowClass_.lpszClassName, hInstance_);
     hInstance_ = nullptr;
     windowHandle_ = nullptr;
-#if defined(DEBUG) || defined(_DEBUG)
-    _CrtDumpMemoryLeaks();
-#endif
 }
 
 HINSTANCE Glib::Window::InstanceHandle()

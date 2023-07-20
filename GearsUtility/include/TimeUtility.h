@@ -17,12 +17,9 @@ namespace Glib
             int seconds;
 
             Time() = default;
-
             Time(int hours, int minutes, int seconds)
                 : hours(hours), minutes(minutes), seconds(seconds)
             {}
-
-            bool operator == (const Time& other) const = default;
         };
 
         /**
@@ -31,19 +28,17 @@ namespace Glib
          */
         static inline Time CurrentTime()
         {
-            auto currentTime = std::chrono::system_clock::now();
-            std::time_t currentTime_t = std::chrono::system_clock::to_time_t(currentTime);
-            std::tm localTime;
-#ifdef _WIN32
-            localtime_s(&localTime, &currentTime_t);
-#else
-            localtime_r(&currentTime_t, &localTime);
-#endif
-            return Time{
-                localTime.tm_hour,
-                localTime.tm_min,
-                localTime.tm_sec
+            auto now = std::chrono::system_clock::now();
+            auto current_time = std::chrono::system_clock::to_time_t(now);
+            std::tm* time_info = std::localtime(&current_time);
+
+            Time current{
+                time_info->tm_hour,
+                time_info->tm_min,
+                time_info->tm_sec
             };
+            if (time_info != nullptr) delete time_info;
+            return current;
         }
 
         /**

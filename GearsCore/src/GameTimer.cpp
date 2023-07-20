@@ -2,8 +2,8 @@
 
 void GameTimer::Update()
 {
-    timePoint now = clock::now();
-    duration unscaledDeltaTime = now - prevTime_;
+    TimePoint now = Clock::now();
+    Duration unscaledDeltaTime = now - prevTime_;
     if (unscaledDeltaTime > maxDeltaTime_) unscaledDeltaTime_ = maxDeltaTime_;
     deltaTime_ = unscaledDeltaTime * timeScale_;
     prevTime_ = now;

@@ -1,7 +1,6 @@
 #pragma once
-#include <memory>
-#include <mutex>
 #include <WeakPtr.h>
+#include <mutex>
 
 namespace Glib
 {
@@ -28,12 +27,13 @@ namespace Glib
         /**
          * @brief インスタンスの取得
          */
-        static inline WeakPtr<T> Instance()
+        template<class... Args>
+        static inline WeakPtr<T> Instance(const Args&... args)
         {
             std::lock_guard lock{ singleton_mutex };
             if (!instance)
             {
-                instance = std::shared_ptr<T>{ new T };
+                instance = std::shared_ptr<T>{ new T{ args&&... } };
             }
             return WeakPtr<T>{ instance };
         }

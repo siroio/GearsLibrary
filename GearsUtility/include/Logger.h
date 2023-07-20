@@ -67,11 +67,12 @@ public:
      */
     static void Format(const char* format, ...)
     {
-        std::cout << Glib::TimeUtility::CurrentTimeStr() << " ";
-        va_list args;
+        printf(Glib::TimeUtility::CurrentTimeStr().c_str());
+        va_list args{};
         va_start(args, format);
         vprintf(format, args);
         va_end(args);
+        delete args;
     }
 #else
     static void Assert(...)
@@ -81,4 +82,4 @@ public:
     static void Format(...)
     {}
 #endif
-};
+    };
