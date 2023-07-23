@@ -1,5 +1,4 @@
 #include <Internal/KeyBoardDevice.h>
-#include <InlineUtility.h>
 #include <Logger.h>
 
 bool Glib::Internal::Input::KeyBoardDevice::Initialize(ComPtr<IDirectInput8> dinput)

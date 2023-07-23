@@ -28,13 +28,13 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 
 bool Glib::Window::Initialize()
 {
-    // ì¬Ï‚İ‚©ƒ`ƒFƒbƒN
+    // ï¿½ì¬ï¿½Ï‚İ‚ï¿½ï¿½`ï¿½Fï¿½bï¿½N
     if (windowHandle_ != NULL) return false;
 
-    //Com‚Ì‰Šú‰»
+    //Comï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½
     if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED))) return false;
 
-    // ƒEƒBƒ“ƒhƒE‚Ìì¬
+    // ï¿½Eï¿½Bï¿½ï¿½ï¿½hï¿½Eï¿½Ìì¬
     windowClass_.cbSize = sizeof(WNDCLASSEX);
     windowClass_.hInstance = hInstance_ = GetModuleHandle(nullptr);
     windowClass_.lpfnWndProc = (WNDPROC)windowProc_;
@@ -44,7 +44,7 @@ bool Glib::Window::Initialize()
     std::wstring wstr{ windowName_.begin(), windowName_.end() };
     windowClass_.lpszClassName = wstr.c_str();
 #else
-    wc.lpszClassName = windowName_.c_str();
+    windowClass_.lpszClassName = windowName_.c_str();
 #endif
 
 #if defined(DEBUG) || defined(_DEBUG)
@@ -56,7 +56,7 @@ bool Glib::Window::Initialize()
     if (!RegisterClassEx(&windowClass_)) return false;
     AdjustWindowRect(&rect, style, false);
 
-    // ƒEƒBƒ“ƒhƒEì¬
+    // ï¿½Eï¿½Bï¿½ï¿½ï¿½hï¿½Eï¿½ì¬
     windowHandle_ = CreateWindowEx(
         0,
         windowClass_.lpszClassName,

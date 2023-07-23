@@ -1,32 +1,35 @@
 #pragma once
 
-template<class T>
-inline void SafeDelete(T*& ptr)
+namespace Glib
 {
-    if (ptr != nullptr)
+    template<class T>
+    inline void SafeDelete(T*& ptr)
     {
-        delete ptr;
-        ptr = nullptr;
+        if (ptr != nullptr)
+        {
+            delete ptr;
+            ptr = nullptr;
+        }
     }
-}
 
-template<class T>
-inline void SafeDeleteArray(T*& ptr)
-{
-    if (ptr != nullptr)
+    template<class T>
+    inline void SafeDeleteArray(T*& ptr)
     {
-        delete[] ptr;
-        ptr = nullptr;
+        if (ptr != nullptr)
+        {
+            delete[] ptr;
+            ptr = nullptr;
+        }
     }
-}
 
-template<class T>
-inline void SafeRelease(T*& ptr)
-{
-    if constexpr (requires{ ptr->Release(); })
+    template<class T>
+    inline void SafeRelease(T*& ptr)
     {
-        if (ptr == nullptr) return;
-        ptr->Release();
-        ptr = nullptr;
+        if constexpr (requires{ ptr->Release(); })
+        {
+            if (ptr == nullptr) return;
+            ptr->Release();
+            ptr = nullptr;
+        }
     }
 }

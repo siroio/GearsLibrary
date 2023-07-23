@@ -32,14 +32,6 @@ int MemoryLeakHandler(int reportType, char* message, int* returnValue)
 
 int Game::Run()
 {
-#if defined(DEBUG) || defined(_DEBUG)
-    // ファイルチェック
-    if (std::ifstream("leakCheck.txt")) std::remove("leakCheck.txt");
-    // メモリリークレポートハンドラを設定する
-    _CrtSetReportHook2(_CRT_RPTHOOK_INSTALL, MemoryLeakHandler);
-    // メモリリーク検出
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-#endif
     RegisterSystem();
     if (!Initialize()) return -1;
 
@@ -59,20 +51,17 @@ int Game::Run()
     }
     Finalize();
     End();
-#if defined(DEBUG) || defined(_DEBUG)
-    _CrtDumpMemoryLeaks();
-#endif
     return 0;
 }
 
 void Game::RegisterSystem()
 {
+    SystemManager::AddSystem<Glib::Internal::ComponentManager>();
     SystemManager::AddSystem<Glib::Internal::Graphics::DirectX12>();
     SystemManager::AddSystem<GameObjectManager>();
-    SystemManager::AddSystem<Glib::Internal::ComponentManager>();
-    SystemManager::AddSystem<Glib::Scene::SceneManager>();
     SystemManager::AddSystem<GameTimer>();
     SystemManager::AddSystem<Glib::InputSystem>();
+    SystemManager::AddSystem<Glib::Scene::SceneManager>();
 }
 
 bool Game::Initialize()

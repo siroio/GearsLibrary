@@ -1,5 +1,4 @@
 #include <Internal/DescriptorPool.h>
-#include <InlineUtility.h>
 
 void Glib::Internal::Graphics::DescriptorHandle::CPU(D3D12_CPU_DESCRIPTOR_HANDLE handle)
 {
@@ -34,7 +33,7 @@ bool Glib::Internal::Graphics::DescriptorHandle::HasGPU() const
 Glib::Internal::Graphics::DescriptorPool::DescriptorPool() : refCount_{ 1 }, handles_{}, heap_{}, descriptorSize_{ 0 }
 {
     // ‰Šú‰»ŠÖ”
-    auto init = [&](size_t index, DescriptorHandle* handle)
+    handles_.SetInitializeCallBack([&](size_t index, DescriptorHandle* handle)
     {
         auto cpuHandle = heap_->GetCPUDescriptorHandleForHeapStart();
         cpuHandle.ptr += descriptorSize_ * index;
@@ -44,22 +43,19 @@ Glib::Internal::Graphics::DescriptorPool::DescriptorPool() : refCount_{ 1 }, han
 
         handle->CPU(cpuHandle);
         handle->GPU(gpuHandle);
-    };
-
-    handles_.SetInitializeCallBack(init);
+    });
 }
 
 Glib::Internal::Graphics::DescriptorPool::~DescriptorPool()
 {
     handles_.Clear();
-    heap_.Reset();
     descriptorSize_ = 0;
 }
 
 bool Glib::Internal::Graphics::DescriptorPool::Create(ComPtr<ID3D12Device> device, const D3D12_DESCRIPTOR_HEAP_DESC* desc, std::shared_ptr<DescriptorPool>& pool)
 {
     if (device == nullptr || desc == nullptr) return false;
-    std::shared_ptr<DescriptorPool> instance{ new DescriptorPool, [](DescriptorPool* ptr)
+    std::shared_ptr<DescriptorPool> instance{ new DescriptorPool, [](DescriptorPool*& ptr)
     {
         ptr->Release();
     }};
@@ -95,7 +91,7 @@ const ComPtr<ID3D12DescriptorHeap> Glib::Internal::Graphics::DescriptorPool::Get
 
 std::shared_ptr<Glib::Internal::Graphics::DescriptorHandle> Glib::Internal::Graphics::DescriptorPool::GetHandle()
 {
-    return std::shared_ptr<DescriptorHandle>{ handles_.Get(), [&](DescriptorHandle* obj)
+    return std::shared_ptr<DescriptorHandle>{ handles_.Get(), [&](DescriptorHandle*& obj)
     {
         Release(obj);
     }};
@@ -104,7 +100,7 @@ std::shared_ptr<Glib::Internal::Graphics::DescriptorHandle> Glib::Internal::Grap
 void Glib::Internal::Graphics::DescriptorPool::Release()
 {
     refCount_--;
-    if (refCount_ == 0) delete this;
+    if (refCount_ <= 0) delete this;
 }
 
 void Glib::Internal::Graphics::DescriptorPool::Release(DescriptorHandle*& handle)

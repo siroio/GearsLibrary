@@ -82,7 +82,6 @@ namespace Glib
     inline bool ObjectPool<T>::Init(size_t count)
     {
         std::lock_guard lock{ mutex_ };
-        for (auto& it : objects_) it.reset(nullptr);
         objects_.clear();
         availableObjects_.clear();
         borrowedObjects_.clear();
@@ -126,11 +125,6 @@ namespace Glib
     {
         std::lock_guard lock{ mutex_ };
         if (!initialized) return;
-        for (auto& it : objects_)
-        {
-            it.reset();
-        }
-
         objects_.clear();
         availableObjects_.clear();
         borrowedObjects_.clear();

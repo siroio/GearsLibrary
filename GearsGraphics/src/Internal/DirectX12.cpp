@@ -25,6 +25,9 @@ namespace
     /* デバイス */
     ComPtr<ID3D12Device> device_{ nullptr };
 
+    /* デバッグ */
+    ComPtr<ID3D12DebugDevice> debugDevice_{ nullptr };
+
     /* ファクトリー */
     ComPtr<IDXGIFactory6> dxgiFactory_{ nullptr };
 
@@ -146,6 +149,12 @@ void Glib::Internal::Graphics::DirectX12::Finalize()
 {
     WaitGPU();
     window_.Finalize();
+    debugDevice_->ReportLiveDeviceObjects(D3D12_RLDO_DETAIL);
+
+    for (int i = 0; i < 4; i++)
+    {
+        descriptors_[i] = nullptr;
+    }
 }
 
 void Glib::Internal::Graphics::DirectX12::ExecuteCommandList()
@@ -178,6 +187,7 @@ ComPtr<ID3D12CommandQueue> Glib::Internal::Graphics::DirectX12::CommandQueue() c
 
 std::shared_ptr<Glib::Internal::Graphics::DescriptorPool> Glib::Internal::Graphics::DirectX12::DescriptorPool(POOLTYPE type) const
 {
+    descriptors_[static_cast<int>(type)]->IncrementRef();
     return descriptors_[static_cast<int>(type)];
 }
 
@@ -233,6 +243,9 @@ bool Glib::Internal::Graphics::DirectX12::InitDevice()
         if (result == S_OK) break;
     }
 
+    // デバッグ用デバイス
+    if (FAILED(device_->QueryInterface(debugDevice_.ReleaseAndGetAddressOf()))) return false;
+
     return device_ != nullptr;
 }
 
@@ -272,7 +285,7 @@ bool Glib::Internal::Graphics::DirectX12::CreateSwapChain()
     swapChainDesc.SampleDesc.Count = 1;
     swapChainDesc.SampleDesc.Quality = 0;
     swapChainDesc.BufferUsage = DXGI_USAGE_BACK_BUFFER;
-    swapChainDesc.BufferCount = 2;
+    swapChainDesc.BufferCount = static_cast<UINT>(FRAME_COUNT);
     swapChainDesc.Scaling = DXGI_SCALING_STRETCH;
     swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
     swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
