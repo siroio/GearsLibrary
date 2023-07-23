@@ -18,6 +18,10 @@ namespace
 
     /* バックバッファフレーム数 */
     constexpr unsigned int FRAME_COUNT{ 2 };
+
+    /* ディスクリプタプール */
+    std::array<std::shared_ptr<Glib::Internal::Graphics::DescriptorPool>,
+        static_cast<int>(Glib::Internal::Graphics::DirectX12::POOLTYPE::COUNT)> descriptors_;
 }
 
 namespace
@@ -50,11 +54,7 @@ namespace
     UINT64 fenceValue_{ 0 };
 
     /* バックバッファ */
-    Glib::Internal::Graphics::RenderTarget backBuffers_[FRAME_COUNT];
-
-    /* ディスクリプタプール */
-    std::array<std::shared_ptr<Glib::Internal::Graphics::DescriptorPool>,
-        static_cast<int>(Glib::Internal::Graphics::DirectX12::POOLTYPE::COUNT)> descriptors_;
+    std::array<Glib::Internal::Graphics::RenderTarget, FRAME_COUNT>backBuffers_;
 
     /* シザー矩形 */
     D3D12_RECT scissorRect{};
@@ -150,11 +150,6 @@ void Glib::Internal::Graphics::DirectX12::Finalize()
     WaitGPU();
     window_.Finalize();
     debugDevice_->ReportLiveDeviceObjects(D3D12_RLDO_DETAIL);
-
-    for (int i = 0; i < 4; i++)
-    {
-        descriptors_[i] = nullptr;
-    }
 }
 
 void Glib::Internal::Graphics::DirectX12::ExecuteCommandList()
@@ -187,7 +182,6 @@ ComPtr<ID3D12CommandQueue> Glib::Internal::Graphics::DirectX12::CommandQueue() c
 
 std::shared_ptr<Glib::Internal::Graphics::DescriptorPool> Glib::Internal::Graphics::DirectX12::DescriptorPool(POOLTYPE type) const
 {
-    descriptors_[static_cast<int>(type)]->IncrementRef();
     return descriptors_[static_cast<int>(type)];
 }
 

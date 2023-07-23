@@ -15,7 +15,7 @@ namespace Glib
         using InitializeCallBack = std::function<void(size_t, T*)>;
 
         /* コンストラクタ */
-        ObjectPool(size_t count = 32);
+        ObjectPool() = default;
 
         /**
          * @brief 初期化
@@ -71,12 +71,6 @@ namespace Glib
         std::unordered_set<T*> borrowedObjects_;
         InitializeCallBack callback_;
     };
-
-    template<class T>
-    inline ObjectPool<T>::ObjectPool(size_t count)
-    {
-        Init(count);
-    }
 
     template<class T>
     inline bool ObjectPool<T>::Init(size_t count)

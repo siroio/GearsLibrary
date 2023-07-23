@@ -1,4 +1,4 @@
-#include <Window.h>
+﻿#include <Window.h>
 #include <Vector2.h>
 
 namespace
@@ -28,13 +28,13 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 
 bool Glib::Window::Initialize()
 {
-    // �쐬�ς݂��`�F�b�N
+    // 作成済みかチェック
     if (windowHandle_ != NULL) return false;
 
-    //Com�̏�����
+    // Comの初期化
     if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED))) return false;
 
-    // �E�B���h�E�̍쐬
+    // ウィンドウの作成
     windowClass_.cbSize = sizeof(WNDCLASSEX);
     windowClass_.hInstance = hInstance_ = GetModuleHandle(nullptr);
     windowClass_.lpfnWndProc = (WNDPROC)windowProc_;
@@ -56,7 +56,7 @@ bool Glib::Window::Initialize()
     if (!RegisterClassEx(&windowClass_)) return false;
     AdjustWindowRect(&rect, style, false);
 
-    // �E�B���h�E�쐬
+    // ウィンドウ作成
     windowHandle_ = CreateWindowEx(
         0,
         windowClass_.lpszClassName,

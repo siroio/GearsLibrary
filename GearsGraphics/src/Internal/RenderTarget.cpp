@@ -12,7 +12,6 @@ bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t index, ComPtr<IDXGI
 {
     if (swapChain == nullptr) return false;
     pool_ = dx12_->DescriptorPool(Glib::Internal::Graphics::DirectX12::POOLTYPE::RTV);
-    pool_->IncrementRef();
 
     handle_ = pool_->GetHandle();
     if (handle_ == nullptr) return false;
@@ -39,7 +38,6 @@ bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t index, ComPtr<IDXGI
 bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t width, uint32_t height, DXGI_FORMAT format, std::shared_ptr<DescriptorPool> pool)
 {
     pool_ = pool;
-    pool_->IncrementRef();
 
     handle_ = pool_->GetHandle();
     if (handle_ == nullptr) return false;

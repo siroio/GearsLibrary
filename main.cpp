@@ -67,8 +67,5 @@ class MyGame : public Game
 
 int main()
 {
-    {
-        MyGame{}.Run();
-    }
-
+    MyGame{}.Run();
 }

@@ -28,12 +28,6 @@ namespace Glib::Internal::Graphics
 
     class DescriptorPool
     {
-    private:
-        DescriptorPool();
-        ~DescriptorPool();
-        DescriptorPool(const DescriptorPool&) = delete;
-        void operator = (const DescriptorPool&) = delete;
-
     public:
         /**
          * @brief ÉvÅ[ÉãÇçÏê¨
@@ -46,16 +40,18 @@ namespace Glib::Internal::Graphics
         static bool Create(ComPtr<ID3D12Device> device, const D3D12_DESCRIPTOR_HEAP_DESC* desc, std::shared_ptr<DescriptorPool>& pool);
 
     public:
+        ~DescriptorPool();
         const ComPtr<ID3D12DescriptorHeap> GetHeap() const;
         std::shared_ptr<DescriptorHandle> GetHandle();
-        void Release();
         void Release(DescriptorHandle*& handle);
-        void IncrementRef();
-        uint32_t Count() const;
+
+    private:
+        DescriptorPool();
+        DescriptorPool(const DescriptorPool&) = delete;
+        void operator = (const DescriptorPool&) = delete;
 
     private:
         ObjectPool<DescriptorHandle> handles_;
-        std::atomic<uint32_t> refCount_;
         ComPtr<ID3D12DescriptorHeap> heap_;
         uint32_t descriptorSize_;
     };
