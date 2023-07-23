@@ -19,17 +19,6 @@ namespace
     auto& systemManager = SystemManager::Instance();
 }
 
-int MemoryLeakHandler(int reportType, char* message, int* returnValue)
-{
-    std::ofstream logFile{ "leakCheck.txt", std::ios_base::app };
-    if (logFile.is_open())
-    {
-        logFile << message << std::endl;
-        logFile.close();
-    }
-    return 0;
-}
-
 int Game::Run()
 {
     RegisterSystem();

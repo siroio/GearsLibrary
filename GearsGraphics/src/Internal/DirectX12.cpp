@@ -29,9 +29,6 @@ namespace
     /* デバイス */
     ComPtr<ID3D12Device> device_{ nullptr };
 
-    /* デバッグ */
-    ComPtr<ID3D12DebugDevice> debugDevice_{ nullptr };
-
     /* ファクトリー */
     ComPtr<IDXGIFactory6> dxgiFactory_{ nullptr };
 
@@ -149,7 +146,6 @@ void Glib::Internal::Graphics::DirectX12::Finalize()
 {
     WaitGPU();
     window_.Finalize();
-    debugDevice_->ReportLiveDeviceObjects(D3D12_RLDO_DETAIL);
 }
 
 void Glib::Internal::Graphics::DirectX12::ExecuteCommandList()
@@ -236,10 +232,6 @@ bool Glib::Internal::Graphics::DirectX12::InitDevice()
         auto result = SUCCEEDED(D3D12CreateDevice(adapter.Get(), level, IID_PPV_ARGS(device_.ReleaseAndGetAddressOf())));
         if (result == S_OK) break;
     }
-
-    // デバッグ用デバイス
-    if (FAILED(device_->QueryInterface(debugDevice_.ReleaseAndGetAddressOf()))) return false;
-
     return device_ != nullptr;
 }
 
