@@ -18,10 +18,6 @@ namespace
 
     /* バックバッファフレーム数 */
     constexpr unsigned int FRAME_COUNT{ 2 };
-
-    /* ディスクリプタプール */
-    std::array<std::shared_ptr<Glib::Internal::Graphics::DescriptorPool>,
-        static_cast<int>(Glib::Internal::Graphics::DirectX12::POOLTYPE::COUNT)> descriptors_;
 }
 
 namespace
@@ -49,6 +45,10 @@ namespace
 
     /* フェンス値 */
     UINT64 fenceValue_{ 0 };
+
+    /* ディスクリプタプール */
+    std::array<std::shared_ptr<Glib::Internal::Graphics::DescriptorPool>,
+        static_cast<int>(Glib::Internal::Graphics::DirectX12::POOLTYPE::COUNT)> descriptors_;
 
     /* バックバッファ */
     std::array<Glib::Internal::Graphics::RenderTarget, FRAME_COUNT>backBuffers_;

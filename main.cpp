@@ -13,6 +13,7 @@
 #include <InputSystem.h>
 using namespace std;
 
+// コンポーネント
 class TestComponent : public Component
 {
 public:
@@ -26,9 +27,9 @@ public:
         using Glib::KeyCode;
         using Glib::InputSystem;
     }
-private:
 };
 
+// シーンクラス
 class TestScene : public Glib::Scene::Scene
 {
 public:
@@ -47,6 +48,7 @@ public:
     }
 };
 
+// ゲーム本体
 class MyGame : public Game
 {
     virtual void Start() override

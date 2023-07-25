@@ -21,8 +21,7 @@ namespace Glib::Internal::Graphics
         public SingletonPtr<DirectX12>,
         public Interface::ISystem,
         public Function::InitializeOrderSet<Order::Initialzie::DX12_INIT>,
-        public Function::BeginDrawOrderSet<Order::BeginDraw::DX12_BEGINDRAW>,
-        public Function::FinalizeOrderSet<1000>
+        public Function::BeginDrawOrderSet<Order::BeginDraw::DX12_BEGINDRAW>
     {
         DirectX12() = default;
         friend WeakPtr<DirectX12> SingletonPtr<DirectX12>::Instance();

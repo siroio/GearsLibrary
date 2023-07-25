@@ -35,12 +35,13 @@ bool Glib::Internal::Graphics::ConstantBuffer::Create(UINT bufferSize)
     D3D12_CONSTANT_BUFFER_VIEW_DESC viewDesc{};
     viewDesc.BufferLocation = buffer_->GetGPUVirtualAddress();
     viewDesc.SizeInBytes = (bufferSize + 0xff) & ~0xff;
+    dx12->Device()->CreateConstantBufferView(&viewDesc, handle_->CPU());
     return true;
 }
 
 void Glib::Internal::Graphics::ConstantBuffer::BindRootParameter(unsigned int rootParameterIndex)
 {
-
+    dx12->CommandList()->SetGraphicsRootDescriptorTable(rootParameterIndex, handle_->GPU());
 }
 
 void Glib::Internal::Graphics::ConstantBuffer::Update(unsigned int size, const void* data)

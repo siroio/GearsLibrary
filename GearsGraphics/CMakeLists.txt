@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.1)
 # == CONFIG ==
 set(SOURCE_FILE 
 	./src/Internal/DirectX12.cpp
+    ./src/Internal/GraphicsPipeline.cpp
 	./src/Internal/DescriptorPool.cpp
     ./src/Internal/RenderTarget.cpp
     ./src/Internal/ConstantBuffer.cpp
@@ -11,6 +12,7 @@ set(SOURCE_FILE
 
 set(HEADER_FILE 
 	./include/Internal/DirectX12.h
+    ./include/Internal/GraphicsPipeline.h
     ./include/Internal/d3dx12Inc.h
     ./include/Internal/ConstantBuffer.h
     ./include/Internal/IndexBuffer.h

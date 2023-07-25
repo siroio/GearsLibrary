@@ -8,6 +8,9 @@
 
 namespace Glib
 {
+    /**
+     * @brief オブジェクトプールクラス
+     */
     template<class T>
     class ObjectPool
     {
@@ -41,6 +44,16 @@ namespace Glib
          * @brief オブジェクトの総数
          */
         size_t Count() const;
+
+        /**
+         * @brief 利用中オブジェクトの総数
+         */
+        size_t UseCount() const;
+
+        /**
+         * @brief 利用可能オブジェクトの総数
+         */
+        size_t AvaiavbleCount() const;
 
         /**
          * @brief コールバック関数の設定
@@ -130,8 +143,24 @@ namespace Glib
     inline size_t ObjectPool<T>::Count() const
     {
         std::lock_guard lock{ mutex_ };
-        if (!initialized) return -1;
+        if (!initialized) return 0;
         return objects_.size();
+    }
+
+    template<class T>
+    inline size_t ObjectPool<T>::UseCount() const
+    {
+        std::lock_guard lock{ mutex_ };
+        if (!initialized) return 0;
+        return borrowedObjects_.count();
+    }
+
+    template<class T>
+    inline size_t ObjectPool<T>::AvaiavbleCount() const
+    {
+        std::lock_guard lock{ mutex_ };
+        if (!initialized) return 0;
+        return availableObjects_.size();
     }
 
     template<class T>
