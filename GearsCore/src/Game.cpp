@@ -16,7 +16,7 @@
 
 namespace
 {
-    auto& systemManager = SystemManager::Instance();
+    auto& s_systemManager = SystemManager::Instance();
 }
 
 int Game::Run()
@@ -55,25 +55,25 @@ void Game::RegisterSystem()
 
 bool Game::Initialize()
 {
-    return systemManager.Initialize();
+    return s_systemManager.Initialize();
 }
 
 void Game::Update()
 {
-    systemManager.Update();
+    s_systemManager.Update();
 }
 
 void Game::Draw()
 {
-    systemManager.BeginDraw();
-    systemManager.Draw();
+    s_systemManager.BeginDraw();
+    s_systemManager.Draw();
 #if defined(DEBUG) || defined(_DEBUG)
-    systemManager.DebugDraw();
+    s_systemManager.DebugDraw();
 #endif
-    systemManager.EndDraw();
+    s_systemManager.EndDraw();
 }
 
 void Game::Finalize()
 {
-    systemManager.Finalize();
+    s_systemManager.Finalize();
 }

@@ -1,10 +1,10 @@
 #pragma once
 #include <ComPtr.h>
 
-struct ID3D12RootSignature;
-struct ID3D12PipelineState;
 struct D3D12_ROOT_SIGNATURE_DESC;
 struct D3D12_GRAPHICS_PIPELINE_STATE_DESC;
+struct ID3D12RootSignature;
+struct ID3D12PipelineState;
 
 namespace Glib::Internal::Graphics
 {

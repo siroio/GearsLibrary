@@ -5,13 +5,13 @@
 
 namespace
 {
-    auto dx12_ = Glib::Internal::Graphics::DirectX12::Instance();
+    auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
 }
 
 bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t index, ComPtr<IDXGISwapChain> swapChain)
 {
     if (swapChain == nullptr) return false;
-    pool_ = dx12_->DescriptorPool(Glib::Internal::Graphics::DirectX12::POOLTYPE::RTV);
+    pool_ = s_dx12->DescriptorPool(Glib::Internal::Graphics::DirectX12::POOLTYPE::RTV);
 
     handle_ = pool_->GetHandle();
     if (handle_ == nullptr) return false;
@@ -26,7 +26,7 @@ bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t index, ComPtr<IDXGI
     viewDesc_.Texture2D.MipSlice = 0;
     viewDesc_.Texture2D.PlaneSlice = 0;
 
-    dx12_->Device()->CreateRenderTargetView(
+    s_dx12->Device()->CreateRenderTargetView(
         target_.Get(),
         &viewDesc_,
         handle_->CPU()
@@ -65,7 +65,7 @@ bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t width, uint32_t hei
     const float color[]{ 1.0f, 1.0f, 1.0f, 1.0f };
     auto clearValue = CD3DX12_CLEAR_VALUE{ format, color };
 
-    bool failed = FAILED(dx12_->Device()->CreateCommittedResource(
+    bool failed = FAILED(s_dx12->Device()->CreateCommittedResource(
         &heapProp,
         D3D12_HEAP_FLAG_NONE,
         &resDesc,
@@ -81,7 +81,7 @@ bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t width, uint32_t hei
     viewDesc_.Texture2D.MipSlice = 0;
     viewDesc_.Texture2D.PlaneSlice = 0;
 
-    dx12_->Device()->CreateRenderTargetView(
+    s_dx12->Device()->CreateRenderTargetView(
         target_.Get(),
         &viewDesc_,
         handle_->CPU()

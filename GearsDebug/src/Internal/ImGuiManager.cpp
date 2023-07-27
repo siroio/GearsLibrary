@@ -8,14 +8,14 @@
 
 namespace
 {
-    auto dx12_ = Glib::Internal::Graphics::DirectX12::Instance();
-    auto& window_ = Glib::Window::Instance();
+    auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
+    auto& s_window = Glib::Window::Instance();
     constexpr int NUM_FRAMES_IN_FLIGHT = 3;
 }
 
 namespace
 {
-    Glib::Internal::Graphics::RenderTarget renderTarget_;
+    Glib::Internal::Graphics::RenderTarget s_renderTarget;
 }
 
 bool Glib::Internal::Debug::ImGuiManager::Initialize()

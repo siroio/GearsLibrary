@@ -7,7 +7,7 @@ namespace Graphics = Glib::Internal::Graphics;
 
 namespace
 {
-    auto dx12 = Graphics::DirectX12::Instance();
+    auto s_dx12 = Graphics::DirectX12::Instance();
 }
 
 bool Glib::Internal::Graphics::ConstantBuffer::Create(UINT bufferSize)
@@ -16,7 +16,7 @@ bool Glib::Internal::Graphics::ConstantBuffer::Create(UINT bufferSize)
     CD3DX12_HEAP_PROPERTIES heapProp{ D3D12_HEAP_TYPE_UPLOAD };
     auto resDesc = CD3DX12_RESOURCE_DESC::Buffer((static_cast<UINT64>(bufferSize) + 0xff) & ~0xff);
 
-    auto result = dx12->Device()->CreateCommittedResource(
+    auto result = s_dx12->Device()->CreateCommittedResource(
         &heapProp,
         D3D12_HEAP_FLAG_NONE,
         &resDesc,
@@ -28,20 +28,20 @@ bool Glib::Internal::Graphics::ConstantBuffer::Create(UINT bufferSize)
     if (FAILED(result)) return false;
 
     // ƒnƒ“ƒhƒ‹Žæ“¾
-    pool_ = dx12->DescriptorPool(DirectX12::POOLTYPE::RES);
+    pool_ = s_dx12->DescriptorPool(DirectX12::POOLTYPE::RES);
     handle_ = pool_->GetHandle();
 
     // view‚Ìì¬
     D3D12_CONSTANT_BUFFER_VIEW_DESC viewDesc{};
     viewDesc.BufferLocation = buffer_->GetGPUVirtualAddress();
     viewDesc.SizeInBytes = (bufferSize + 0xff) & ~0xff;
-    dx12->Device()->CreateConstantBufferView(&viewDesc, handle_->CPU());
+    s_dx12->Device()->CreateConstantBufferView(&viewDesc, handle_->CPU());
     return true;
 }
 
 void Glib::Internal::Graphics::ConstantBuffer::BindRootParameter(unsigned int rootParameterIndex)
 {
-    dx12->CommandList()->SetGraphicsRootDescriptorTable(rootParameterIndex, handle_->GPU());
+    s_dx12->CommandList()->SetGraphicsRootDescriptorTable(rootParameterIndex, handle_->GPU());
 }
 
 void Glib::Internal::Graphics::ConstantBuffer::Update(unsigned int size, const void* data)

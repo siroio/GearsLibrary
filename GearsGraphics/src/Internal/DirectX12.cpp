@@ -23,53 +23,53 @@ namespace
 namespace
 {
     /* デバイス */
-    ComPtr<ID3D12Device> device_{ nullptr };
+    ComPtr<ID3D12Device> s_device{ nullptr };
 
     /* ファクトリー */
-    ComPtr<IDXGIFactory6> dxgiFactory_{ nullptr };
+    ComPtr<IDXGIFactory6> s_dxgiFactory{ nullptr };
 
     /* スワップチェーン */
-    ComPtr<IDXGISwapChain4> swapChain_{ nullptr };
+    ComPtr<IDXGISwapChain4> s_swapChain{ nullptr };
 
     /* コマンドアロケーター */
-    ComPtr<ID3D12CommandAllocator> cmdAllocator_{ nullptr };
+    ComPtr<ID3D12CommandAllocator> s_cmdAllocator{ nullptr };
 
     /* コマンドリスト */
-    ComPtr<ID3D12GraphicsCommandList> cmdList_{ nullptr };
+    ComPtr<ID3D12GraphicsCommandList> s_cmdList{ nullptr };
 
     /* コマンドキュー */
-    ComPtr<ID3D12CommandQueue> cmdQueue_{ nullptr };
+    ComPtr<ID3D12CommandQueue> s_cmdQueue{ nullptr };
 
     /* フェンス */
-    ComPtr<ID3D12Fence> fence_{ nullptr };
+    ComPtr<ID3D12Fence> s_fence{ nullptr };
 
     /* フェンス値 */
-    UINT64 fenceValue_{ 0 };
+    UINT64 s_fenceValue{ 0 };
 
     /* ディスクリプタプール */
     std::array<std::shared_ptr<Glib::Internal::Graphics::DescriptorPool>,
-        static_cast<int>(Glib::Internal::Graphics::DirectX12::POOLTYPE::COUNT)> descriptors_;
+        static_cast<int>(Glib::Internal::Graphics::DirectX12::POOLTYPE::COUNT)> s_descriptors;
 
     /* バックバッファ */
-    std::array<Glib::Internal::Graphics::RenderTarget, FRAME_COUNT>backBuffers_;
+    std::array<Glib::Internal::Graphics::RenderTarget, FRAME_COUNT> s_backBuffers;
 
     /* シザー矩形 */
-    D3D12_RECT scissorRect{};
+    D3D12_RECT s_scissorRect{};
 
     /* ビューポート */
-    D3D12_VIEWPORT viewPort{};
+    D3D12_VIEWPORT s_viewPort{};
 
     /* Windowインスタンス */
-    Glib::Window& window_ = Glib::Window::Instance();
+    Glib::Window& s_window = Glib::Window::Instance();
 }
 
 bool Glib::Internal::Graphics::DirectX12::Initialize()
 {
-    if (!window_.Initialize()) return false;
+    if (!s_window.Initialize()) return false;
     EnableDebugLayer();
     // ファクトリーの作成
 #if defined(DEBUG) || defined(_DEBUG)
-    if (FAILED(CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(dxgiFactory_.ReleaseAndGetAddressOf())))) return false;
+    if (FAILED(CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(s_dxgiFactory.ReleaseAndGetAddressOf())))) return false;
 #else
     if (FAILED(CreateDXGIFactory1(IID_PPV_ARGS(dxgiFactory_.ReleaseAndGetAddressOf())))) return false;
 #endif
@@ -81,11 +81,11 @@ bool Glib::Internal::Graphics::DirectX12::Initialize()
     // バックバッファの作成
     for (auto idx = 0; idx < FRAME_COUNT; idx++)
     {
-        if (!backBuffers_[idx].Create(idx, swapChain_.Get()))
+        if (!s_backBuffers[idx].Create(idx, s_swapChain.Get()))
             return false;
     }
 
-    if (FAILED(device_->CreateFence(fenceValue_, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(fence_.ReleaseAndGetAddressOf())))) return false;
+    if (FAILED(s_device->CreateFence(s_fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(s_fence.ReleaseAndGetAddressOf())))) return false;
 
 #if defined(DEBUG) || defined(_DEBUG)
     const auto& windowSize = Window::WindowSize();
@@ -94,96 +94,96 @@ bool Glib::Internal::Graphics::DirectX12::Initialize()
 #endif
 
     // ビューポート設定
-    viewPort.Width = windowSize.x;
-    viewPort.Height = windowSize.y;
-    viewPort.TopLeftX = 0;
-    viewPort.TopLeftY = 0;
-    viewPort.MaxDepth = 1.0f;
-    viewPort.MinDepth = 0.0f;
+    s_viewPort.Width = windowSize.x;
+    s_viewPort.Height = windowSize.y;
+    s_viewPort.TopLeftX = 0;
+    s_viewPort.TopLeftY = 0;
+    s_viewPort.MaxDepth = 1.0f;
+    s_viewPort.MinDepth = 0.0f;
 
     // シザー矩形設定
-    scissorRect.left = 0;
-    scissorRect.top = 0;
-    scissorRect.right = scissorRect.left + static_cast<long>(windowSize.x);
-    scissorRect.bottom = scissorRect.top + static_cast<long>(windowSize.y);
+    s_scissorRect.left = 0;
+    s_scissorRect.top = 0;
+    s_scissorRect.right = s_scissorRect.left + static_cast<long>(windowSize.x);
+    s_scissorRect.bottom = s_scissorRect.top + static_cast<long>(windowSize.y);
 
     return true;
 }
 
 void Glib::Internal::Graphics::DirectX12::BeginDraw()
 {
-    auto bbIdx = swapChain_->GetCurrentBackBufferIndex();
+    auto bbIdx = s_swapChain->GetCurrentBackBufferIndex();
 
     auto barrierDesc = CD3DX12_RESOURCE_BARRIER::Transition(
-        backBuffers_[bbIdx].Resource().Get(),
+        s_backBuffers[bbIdx].Resource().Get(),
         D3D12_RESOURCE_STATE_PRESENT,
         D3D12_RESOURCE_STATE_RENDER_TARGET
     );
 
-    cmdList_->ResourceBarrier(1, &barrierDesc);
+    s_cmdList->ResourceBarrier(1, &barrierDesc);
 
-    auto& rtvH = backBuffers_[bbIdx].Handle()->CPU();
+    auto& rtvH = s_backBuffers[bbIdx].Handle()->CPU();
 
-    cmdList_->OMSetRenderTargets(1, &rtvH, true, nullptr);
+    s_cmdList->OMSetRenderTargets(1, &rtvH, true, nullptr);
     float color[]{ backGroundColor_[0], backGroundColor_[1], backGroundColor_[2], backGroundColor_[3] };
-    cmdList_->ClearRenderTargetView(rtvH, color, 0, nullptr);
+    s_cmdList->ClearRenderTargetView(rtvH, color, 0, nullptr);
 }
 
 void Glib::Internal::Graphics::DirectX12::EndDraw()
 {
-    auto bbIdx = swapChain_->GetCurrentBackBufferIndex();
+    auto bbIdx = s_swapChain->GetCurrentBackBufferIndex();
     auto barrierDesc = CD3DX12_RESOURCE_BARRIER::Transition(
-        backBuffers_[bbIdx].Resource().Get(),
+        s_backBuffers[bbIdx].Resource().Get(),
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_PRESENT
     );
-    cmdList_->ResourceBarrier(1, &barrierDesc);
+    s_cmdList->ResourceBarrier(1, &barrierDesc);
     ExecuteCommandList();
-    swapChain_->Present(0, 0);
+    s_swapChain->Present(0, 0);
 }
 
 void Glib::Internal::Graphics::DirectX12::Finalize()
 {
     WaitGPU();
-    window_.Finalize();
+    s_window.Finalize();
 }
 
 void Glib::Internal::Graphics::DirectX12::ExecuteCommandList()
 {
-    cmdList_->Close();
-    ComPtr<ID3D12CommandList> cmdLists[]{ cmdList_.Get() };
-    cmdQueue_->ExecuteCommandLists(1, cmdLists->GetAddressOf());
+    s_cmdList->Close();
+    ComPtr<ID3D12CommandList> cmdLists[]{ s_cmdList.Get() };
+    s_cmdQueue->ExecuteCommandLists(1, cmdLists->GetAddressOf());
 
     // GPU待機
     WaitGPU();
 
-    cmdAllocator_->Reset();
-    cmdList_->Reset(cmdAllocator_.Get(), nullptr);
+    s_cmdAllocator->Reset();
+    s_cmdList->Reset(s_cmdAllocator.Get(), nullptr);
 }
 
 ComPtr<ID3D12Device> Glib::Internal::Graphics::DirectX12::Device() const
 {
-    return device_;
+    return s_device;
 }
 
 ComPtr<ID3D12GraphicsCommandList> Glib::Internal::Graphics::DirectX12::CommandList() const
 {
-    return cmdList_;
+    return s_cmdList;
 }
 
 ComPtr<ID3D12CommandQueue> Glib::Internal::Graphics::DirectX12::CommandQueue() const
 {
-    return cmdQueue_;
+    return s_cmdQueue;
 }
 
 std::shared_ptr<Glib::Internal::Graphics::DescriptorPool> Glib::Internal::Graphics::DirectX12::DescriptorPool(POOLTYPE type) const
 {
-    return descriptors_[static_cast<int>(type)];
+    return s_descriptors[static_cast<int>(type)];
 }
 
 D3D12_RESOURCE_DESC Glib::Internal::Graphics::DirectX12::BackBufferResourceDesc() const
 {
-    return backBuffers_[0].ResourceDesc();
+    return s_backBuffers[0].ResourceDesc();
 }
 
 const Color& Glib::Internal::Graphics::DirectX12::BackGroundColor()
@@ -202,7 +202,7 @@ bool Glib::Internal::Graphics::DirectX12::InitDevice()
     ComPtr<IDXGIAdapter> nvidiaAdapter{ nullptr };
     ComPtr<IDXGIAdapter> maxVMAdapter{ nullptr };
     size_t videoMemroySize{};
-    for (UINT i = 0; dxgiFactory_->EnumAdapters(i, adapter.ReleaseAndGetAddressOf()) != DXGI_ERROR_NOT_FOUND; ++i)
+    for (UINT i = 0; s_dxgiFactory->EnumAdapters(i, adapter.ReleaseAndGetAddressOf()) != DXGI_ERROR_NOT_FOUND; ++i)
     {
         DXGI_ADAPTER_DESC adptDesc{};
         adapter->GetDesc(&adptDesc);
@@ -229,20 +229,20 @@ bool Glib::Internal::Graphics::DirectX12::InitDevice()
 
     for (auto&& level : levels)
     {
-        auto result = SUCCEEDED(D3D12CreateDevice(adapter.Get(), level, IID_PPV_ARGS(device_.ReleaseAndGetAddressOf())));
+        auto result = SUCCEEDED(D3D12CreateDevice(adapter.Get(), level, IID_PPV_ARGS(s_device.ReleaseAndGetAddressOf())));
         if (result == S_OK) break;
     }
-    return device_ != nullptr;
+    return s_device != nullptr;
 }
 
 bool Glib::Internal::Graphics::DirectX12::InitCommand()
 {
     // アロケーターの作成
-    auto result = device_->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(cmdAllocator_.ReleaseAndGetAddressOf()));
+    auto result = s_device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(s_cmdAllocator.ReleaseAndGetAddressOf()));
     if (FAILED(result)) return false;
 
     // リストの作成
-    result = device_->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, cmdAllocator_.Get(), nullptr, IID_PPV_ARGS(cmdList_.ReleaseAndGetAddressOf()));
+    result = s_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, s_cmdAllocator.Get(), nullptr, IID_PPV_ARGS(s_cmdList.ReleaseAndGetAddressOf()));
     if (FAILED(result)) return false;
 
     // キューの作成
@@ -251,7 +251,7 @@ bool Glib::Internal::Graphics::DirectX12::InitCommand()
     cmdQueueDesc.NodeMask = 0;
     cmdQueueDesc.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
     cmdQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-    result = device_->CreateCommandQueue(&cmdQueueDesc, IID_PPV_ARGS(cmdQueue_.ReleaseAndGetAddressOf()));
+    result = s_device->CreateCommandQueue(&cmdQueueDesc, IID_PPV_ARGS(s_cmdQueue.ReleaseAndGetAddressOf()));
     return !FAILED(result);
 }
 
@@ -277,13 +277,13 @@ bool Glib::Internal::Graphics::DirectX12::CreateSwapChain()
     swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
     swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-    return SUCCEEDED(dxgiFactory_->CreateSwapChainForHwnd(
-        cmdQueue_.Get(),
-        window_.WindowHandle(),
+    return SUCCEEDED(s_dxgiFactory->CreateSwapChainForHwnd(
+        s_cmdQueue.Get(),
+        s_window.WindowHandle(),
         &swapChainDesc,
         nullptr,
         nullptr,
-        (IDXGISwapChain1**)swapChain_.ReleaseAndGetAddressOf()
+        (IDXGISwapChain1**)s_swapChain.ReleaseAndGetAddressOf()
     ));
 }
 
@@ -294,22 +294,22 @@ bool Glib::Internal::Graphics::DirectX12::CreateDescriptorPool()
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
     heapDesc.NumDescriptors = 512;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-    if (!DescriptorPool::Create(device_, &heapDesc, descriptors_[static_cast<int>(POOLTYPE::RES)])) return false;
+    if (!DescriptorPool::Create(s_device, &heapDesc, s_descriptors[static_cast<int>(POOLTYPE::RES)])) return false;
 
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
     heapDesc.NumDescriptors = 256;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-    if (!DescriptorPool::Create(device_, &heapDesc, descriptors_[static_cast<int>(POOLTYPE::SMP)])) return false;
+    if (!DescriptorPool::Create(s_device, &heapDesc, s_descriptors[static_cast<int>(POOLTYPE::SMP)])) return false;
 
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
     heapDesc.NumDescriptors = 512;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    if (!DescriptorPool::Create(device_, &heapDesc, descriptors_[static_cast<int>(POOLTYPE::RTV)])) return false;
+    if (!DescriptorPool::Create(s_device, &heapDesc, s_descriptors[static_cast<int>(POOLTYPE::RTV)])) return false;
 
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
     heapDesc.NumDescriptors = 512;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    if (!DescriptorPool::Create(device_, &heapDesc, descriptors_[static_cast<int>(POOLTYPE::DSV)])) return false;
+    if (!DescriptorPool::Create(s_device, &heapDesc, s_descriptors[static_cast<int>(POOLTYPE::DSV)])) return false;
 
     return true;
 }
@@ -327,11 +327,11 @@ void Glib::Internal::Graphics::DirectX12::EnableDebugLayer()
 
 void Glib::Internal::Graphics::DirectX12::WaitGPU()
 {
-    cmdQueue_->Signal(fence_.Get(), ++fenceValue_);
-    if (fence_->GetCompletedValue() != fenceValue_)
+    s_cmdQueue->Signal(s_fence.Get(), ++s_fenceValue);
+    if (s_fence->GetCompletedValue() != s_fenceValue)
     {
         auto event = CreateEvent(nullptr, false, false, nullptr);
-        fence_->SetEventOnCompletion(fenceValue_, event);
+        s_fence->SetEventOnCompletion(s_fenceValue, event);
         if (event != 0)
         {
             WaitForSingleObjectEx(event, INFINITE, false);

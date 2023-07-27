@@ -11,7 +11,6 @@
 #include <ObjectPool.h>
 #include <StringUtility.h>
 #include <InputSystem.h>
-using namespace std;
 
 // コンポーネント
 class TestComponent : public Component
@@ -63,7 +62,7 @@ class MyGame : public Game
 
     virtual void End() override
     {
-        cout << "GAME END" << endl;
+        std::cout << "GAME END" << std::endl;
     }
 };
 

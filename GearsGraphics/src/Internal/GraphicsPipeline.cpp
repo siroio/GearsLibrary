@@ -4,7 +4,7 @@
 
 namespace
 {
-    auto dx12 = Glib::Internal::Graphics::DirectX12::Instance();
+    auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
 }
 
 bool Glib::Internal::Graphics::GraphicsPipeline::CreateRootSignature(const D3D12_ROOT_SIGNATURE_DESC& desc)
@@ -18,7 +18,7 @@ bool Glib::Internal::Graphics::GraphicsPipeline::CreateRootSignature(const D3D12
     );
     if (FAILED(hr)) return false;
 
-    hr = dx12->Device()->CreateRootSignature(
+    hr = s_dx12->Device()->CreateRootSignature(
         0,
         signature->GetBufferPointer(),
         signature->GetBufferSize(),
@@ -31,13 +31,13 @@ bool Glib::Internal::Graphics::GraphicsPipeline::CreateRootSignature(const D3D12
 bool Glib::Internal::Graphics::GraphicsPipeline::CreatePipelineState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& desc)
 {
     desc.pRootSignature = rootSignature_.Get();
-    auto hr = dx12->Device()->CreateGraphicsPipelineState(&desc, IID_PPV_ARGS(pipelineState_.ReleaseAndGetAddressOf()));
+    auto hr = s_dx12->Device()->CreateGraphicsPipelineState(&desc, IID_PPV_ARGS(pipelineState_.ReleaseAndGetAddressOf()));
     if (FAILED(hr)) return false;
     return true;
 }
 
 void Glib::Internal::Graphics::GraphicsPipeline::SetPipeline()
 {
-    dx12->CommandList()->SetGraphicsRootSignature(rootSignature_.Get());
-    dx12->CommandList()->SetPipelineState(pipelineState_.Get());
+    s_dx12->CommandList()->SetGraphicsRootSignature(rootSignature_.Get());
+    s_dx12->CommandList()->SetPipelineState(pipelineState_.Get());
 }

@@ -5,14 +5,14 @@
 
 namespace
 {
-    auto gameObjectManager = GameObjectManager::Instance();
+    auto s_gameObjectManager = GameObjectManager::Instance();
 }
 
 void Glib::Scene::SceneManager::Update()
 {
     if (next_.expired()) return;
     if (!current_.expired()) current_->End();
-    gameObjectManager->ResetGameObjects();
+    s_gameObjectManager->ResetGameObjects();
     current_ = next_;
     next_ = nullptr;
     current_->Start();

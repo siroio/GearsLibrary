@@ -32,7 +32,7 @@ bool Glib::Internal::Graphics::DescriptorHandle::HasGPU() const
 
 Glib::Internal::Graphics::DescriptorPool::DescriptorPool() : handles_{}, heap_{}, descriptorSize_{ 0 }
 {
-    // 初期化関数
+    // 初期化用コールバック
     handles_.SetInitializeCallBack([&](size_t index, DescriptorHandle* handle)
     {
         auto cpuHandle = heap_->GetCPUDescriptorHandleForHeapStart();
