@@ -1,4 +1,4 @@
-#include <Internal/DescriptorPool.h>
+#include <DX12/Internal/DescriptorPool.h>
 
 void Glib::Internal::Graphics::DescriptorHandle::CPU(D3D12_CPU_DESCRIPTOR_HANDLE handle)
 {

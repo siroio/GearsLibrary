@@ -1,8 +1,8 @@
 #include <Internal/ImGuiManager.h>
 #include <Internal/ImGuiInc.h>
-#include <Internal/d3dx12Inc.h>
-#include <Internal/DirectX12.h>
-#include <Internal/RenderTarget.h>
+#include <DX12/Internal/d3dx12Inc.h>
+#include <DX12/Internal/DirectX12.h>
+#include <DX12/Internal/RenderTarget.h>
 #include <Window.h>
 #include <Vector2.h>
 

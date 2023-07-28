@@ -1,5 +1,5 @@
-#include <Internal/GraphicsPipeline.h>
-#include <Internal/DirectX12.h>
+#include <DX12/Internal/GraphicsPipeline.h>
+#include <DX12/Internal/DirectX12.h>
 #include <d3d12.h>
 
 namespace

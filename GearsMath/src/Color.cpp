@@ -25,6 +25,61 @@ Color Color::LerpUnclamped(const Color& a, const Color& b, float t)
     return a + ((b - a) * t);
 }
 
+Color Color::Gamma(float r, float g, float b, float a)
+{
+    return Color();
+}
+
+Color Color::Gamma(const Color& color)
+{
+    return Color();
+}
+
+Color Color::GrayScale(float r, float g, float b, float a)
+{
+    return Color();
+}
+
+Color Color::GrayScale(const Color& color)
+{
+    return Color();
+}
+
+Color Color::Linear(float r, float g, float b, float a)
+{
+    return Color();
+}
+
+Color Color::Linear(const Color& color)
+{
+    return Color();
+}
+
+Color Color::MaxColor(float r, float g, float b, float a)
+{
+    return Color();
+}
+
+Color Color::MaxColor(const Color& color)
+{
+    return Color();
+}
+
+Color Color::HSVToRGB(float h, float s, float v)
+{
+    return Color();
+}
+
+Color Color::RGBToHSV(float r, float g, float b)
+{
+    return Color();
+}
+
+Color Color::RGBToHSV(const Color& color)
+{
+    return Color();
+}
+
 void Color::Set(const Color& v)
 {
     r = v.r;
@@ -251,3 +306,15 @@ Color Color::Magenta()
 {
     return Color{ 1, 0, 1, 1 };
 }
+
+void Color::Gamma() const
+{}
+
+void Color::GrayScale() const
+{}
+
+void Color::Linear() const
+{}
+
+void Color::MaxColor() const
+{}

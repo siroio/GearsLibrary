@@ -1,6 +1,6 @@
-#include <Internal/DirectX12.h>
-#include <Internal/DescriptorPool.h>
-#include <Internal/RenderTarget.h>
+#include <DX12/Internal/DirectX12.h>
+#include <DX12/Internal/DescriptorPool.h>
+#include <DX12/Internal/RenderTarget.h>
 #include <Window.h>
 #include <Color.h>
 #include <Vector2.h>
@@ -10,15 +10,6 @@
 #include <array>
 #include <vector>
 #include <memory>
-
-namespace
-{
-    /* 背景色 */
-    Color backGroundColor_ = Color::Cyan();
-
-    /* バックバッファフレーム数 */
-    constexpr unsigned int FRAME_COUNT{ 2 };
-}
 
 namespace
 {
@@ -50,6 +41,9 @@ namespace
     std::array<std::shared_ptr<Glib::Internal::Graphics::DescriptorPool>,
         static_cast<int>(Glib::Internal::Graphics::DirectX12::POOLTYPE::COUNT)> s_descriptors;
 
+    /* バックバッファフレーム数 */
+    constexpr unsigned int FRAME_COUNT{ 2 };
+
     /* バックバッファ */
     std::array<Glib::Internal::Graphics::RenderTarget, FRAME_COUNT> s_backBuffers;
 
@@ -59,8 +53,21 @@ namespace
     /* ビューポート */
     D3D12_VIEWPORT s_viewPort{};
 
+    /* 背景色 */
+    Color backGroundColor_ = Color::Cyan();
+
     /* Windowインスタンス */
     Glib::Window& s_window = Glib::Window::Instance();
+}
+
+namespace
+{
+    /* ディスクリプタプールのサイズ */
+
+    constexpr int RESOURCE_POOL_SIZE = 512;
+    constexpr int SAMPLER_POOL_SIZE = 256;
+    constexpr int RENDER_TARGET_VIEW_POOL_SIZE = 512;
+    constexpr int DEPTH_STENCIL_VIEW_POOL_SIZE = 512;
 }
 
 bool Glib::Internal::Graphics::DirectX12::Initialize()
@@ -125,8 +132,7 @@ void Glib::Internal::Graphics::DirectX12::BeginDraw()
     auto& rtvH = s_backBuffers[bbIdx].Handle()->CPU();
 
     s_cmdList->OMSetRenderTargets(1, &rtvH, true, nullptr);
-    float color[]{ backGroundColor_[0], backGroundColor_[1], backGroundColor_[2], backGroundColor_[3] };
-    s_cmdList->ClearRenderTargetView(rtvH, color, 0, nullptr);
+    s_cmdList->ClearRenderTargetView(rtvH, backGroundColor_.rgba.data(), 0, nullptr);
 }
 
 void Glib::Internal::Graphics::DirectX12::EndDraw()
@@ -292,22 +298,22 @@ bool Glib::Internal::Graphics::DirectX12::CreateDescriptorPool()
     D3D12_DESCRIPTOR_HEAP_DESC heapDesc{};
     heapDesc.NodeMask = 1;
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-    heapDesc.NumDescriptors = 512;
+    heapDesc.NumDescriptors = RESOURCE_POOL_SIZE;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
     if (!DescriptorPool::Create(s_device, &heapDesc, s_descriptors[static_cast<int>(POOLTYPE::RES)])) return false;
 
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
-    heapDesc.NumDescriptors = 256;
+    heapDesc.NumDescriptors = SAMPLER_POOL_SIZE;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
     if (!DescriptorPool::Create(s_device, &heapDesc, s_descriptors[static_cast<int>(POOLTYPE::SMP)])) return false;
 
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-    heapDesc.NumDescriptors = 512;
+    heapDesc.NumDescriptors = RENDER_TARGET_VIEW_POOL_SIZE;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
     if (!DescriptorPool::Create(s_device, &heapDesc, s_descriptors[static_cast<int>(POOLTYPE::RTV)])) return false;
 
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-    heapDesc.NumDescriptors = 512;
+    heapDesc.NumDescriptors = DEPTH_STENCIL_VIEW_POOL_SIZE;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
     if (!DescriptorPool::Create(s_device, &heapDesc, s_descriptors[static_cast<int>(POOLTYPE::DSV)])) return false;
 

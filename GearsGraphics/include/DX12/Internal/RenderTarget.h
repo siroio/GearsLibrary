@@ -1,8 +1,13 @@
 #pragma once
 #include <dxgi1_6.h>
+#include <DX12/Internal/DescriptorPool.h>
 #include <ComPtr.h>
 #include <WeakPtr.h>
-#include <Internal/DescriptorPool.h>
+
+namespace Glib::Internal::Graphics
+{
+    class DescriptorHandle;
+}
 
 namespace Glib::Internal::Graphics
 {

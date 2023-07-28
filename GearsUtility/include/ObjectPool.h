@@ -80,8 +80,8 @@ namespace Glib
         /* プールリスト */
 
         std::vector<std::unique_ptr<T>> objects_;
-        std::list<T*> availableObjects_;
-        std::unordered_set<T*> borrowedObjects_;
+        std::list<uintptr_t> availableObjects_;
+        std::unordered_set<uintptr_t> borrowedObjects_;
         InitializeCallBack callback_;
     };
 
@@ -107,9 +107,9 @@ namespace Glib
         std::lock_guard lock{ mutex_ };
         if (!initialized) return nullptr;
         if (availableObjects_.empty()) AddObject(objects_.size());
-        T* obj = availableObjects_.front();
+        T* obj = reinterpret_cast<T*>(availableObjects_.front());
         availableObjects_.pop_front();
-        borrowedObjects_.emplace(obj);
+        borrowedObjects_.emplace(reinterpret_cast<uintptr_t>(obj));
         return obj;
     }
 
@@ -118,7 +118,7 @@ namespace Glib
     {
         std::lock_guard lock{ mutex_ };
         if (!initialized) return;
-        auto it = borrowedObjects_.find(object);
+        auto it = borrowedObjects_.find(reinterpret_cast<uintptr_t>(object));
         if (it != borrowedObjects_.end())
         {
             availableObjects_.push_back(*it);
@@ -176,6 +176,6 @@ namespace Glib
         auto obj = std::make_unique<T>();
         if (callback_) callback_(index, obj.get());
         objects_.push_back(std::move(obj));
-        availableObjects_.push_back(objects_.back().get());
+        availableObjects_.push_back(reinterpret_cast<uintptr_t>(objects_.back().get()));
     }
 }

@@ -1,7 +1,7 @@
-#include <Internal/ConstantBuffer.h>
-#include <Internal/d3dx12Inc.h>
-#include <Internal/DirectX12.h>
-#include <Internal/DescriptorPool.h>
+#include <DX12/Internal/ConstantBuffer.h>
+#include <DX12/Internal/d3dx12Inc.h>
+#include <DX12/Internal/DirectX12.h>
+#include <DX12/Internal/DescriptorPool.h>
 
 namespace Graphics = Glib::Internal::Graphics;
 
@@ -39,7 +39,7 @@ bool Glib::Internal::Graphics::ConstantBuffer::Create(UINT bufferSize)
     return true;
 }
 
-void Glib::Internal::Graphics::ConstantBuffer::BindRootParameter(unsigned int rootParameterIndex)
+void Glib::Internal::Graphics::ConstantBuffer::BindPipeline(unsigned int rootParameterIndex)
 {
     s_dx12->CommandList()->SetGraphicsRootDescriptorTable(rootParameterIndex, handle_->GPU());
 }

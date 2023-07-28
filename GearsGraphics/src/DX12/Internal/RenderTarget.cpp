@@ -1,7 +1,6 @@
-#include <Internal/RenderTarget.h>
-#include <Internal/DirectX12.h>
-#include <Internal/d3dx12Inc.h>
-
+#include <DX12/Internal/RenderTarget.h>
+#include <DX12/Internal/DirectX12.h>
+#include <DX12/Internal/d3dx12Inc.h>
 
 namespace
 {
@@ -12,7 +11,6 @@ bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t index, ComPtr<IDXGI
 {
     if (swapChain == nullptr) return false;
     pool_ = s_dx12->DescriptorPool(Glib::Internal::Graphics::DirectX12::POOLTYPE::RTV);
-
     handle_ = pool_->GetHandle();
     if (handle_ == nullptr) return false;
 

@@ -7,7 +7,7 @@
 #include <Game.h>
 #include <SystemManager.h>
 #include <Internal/ISystem.h>
-#include <Internal/DirectX12.h>
+#include <DX12/Internal/DirectX12.h>
 #include <Internal/ComponentManager.h>
 #include <GameObjectManager.h>
 #include <SceneManager.h>

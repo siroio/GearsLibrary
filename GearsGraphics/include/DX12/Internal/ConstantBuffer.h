@@ -27,7 +27,7 @@ namespace Glib::Internal::Graphics
          * @brief 定数バッファーのバインド
          * @param rootParameterIndex
          */
-        void BindRootParameter(unsigned int rootParameterIndex);
+        void BindPipeline(unsigned int rootParameterIndex);
 
         /**
          * @brief 定数バッファの更新

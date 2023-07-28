@@ -1,5 +1,4 @@
 #pragma once
-#ifdef _WIN32
 #include <string>
 #include <Windows.h>
 #include <functional>
@@ -56,4 +55,3 @@ namespace Glib
         static RESULT Show(const std::string& msg, std::function<void(RESULT)> callback = nullptr);
     };
 }
-#endif // _WIN32
