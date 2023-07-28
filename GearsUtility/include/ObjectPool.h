@@ -26,6 +26,20 @@ namespace Glib
         bool Init(size_t count);
 
         /**
+         * @brief 追加でオブジェクトを確保
+         * @param size 追加で確保するサイズ
+         */
+        void IncreaceObject(size_t size)
+        {
+            size_t index = objects_.size();
+            size = index + size;
+            for (size_t i = index; i < size; i++)
+            {
+                AddObject(index);
+            }
+        }
+
+        /**
          * @brief オブジェクトの取得
          */
         T* Get();

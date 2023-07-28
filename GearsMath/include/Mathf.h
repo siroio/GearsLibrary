@@ -99,6 +99,8 @@ public:
     static float MoveTowardsAngle(float current, float target, float maxDelta);
     static float SmoothStep(float from, float to, float t);
     static float Gamma(float value, float absmax, float gamma);
+    static float GammaToLinearSpace(float value);
+    static float LinearToGammaSpace(float value);
     static float TGamma(float x);
     static float Hypot(float x, float y);
     static float Erf(float x);

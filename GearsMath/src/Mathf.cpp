@@ -280,6 +280,17 @@ float Mathf::Gamma(float value, float absmax, float gamma)
     return negative ? -result : result;
 }
 
+float Mathf::GammaToLinearSpace(float value)
+{
+    return Pow(2.2f, value);
+}
+
+float Mathf::LinearToGammaSpace(float value)
+{
+    static constexpr float gamma = 1.0f / 2.2f;
+    return Pow(value, gamma);
+}
+
 float Mathf::TGamma(float x)
 {
     return std::tgammaf(x);

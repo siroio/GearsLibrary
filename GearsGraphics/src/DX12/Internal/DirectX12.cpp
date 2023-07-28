@@ -54,7 +54,7 @@ namespace
     D3D12_VIEWPORT s_viewPort{};
 
     /* 背景色 */
-    Color backGroundColor_ = Color::Cyan();
+    Color s_backGroundColor = Color::Cyan();
 
     /* Windowインスタンス */
     Glib::Window& s_window = Glib::Window::Instance();
@@ -132,7 +132,12 @@ void Glib::Internal::Graphics::DirectX12::BeginDraw()
     auto& rtvH = s_backBuffers[bbIdx].Handle()->CPU();
 
     s_cmdList->OMSetRenderTargets(1, &rtvH, true, nullptr);
-    s_cmdList->ClearRenderTargetView(rtvH, backGroundColor_.rgba.data(), 0, nullptr);
+    s_cmdList->ClearRenderTargetView(rtvH, s_backGroundColor.rgba.data(), 0, nullptr);
+
+    ID3D12DescriptorHeap* heaps[] = {
+       s_descriptors[static_cast<int>(POOLTYPE::RES)]->GetHeap().Get()
+    };
+    s_cmdList->SetDescriptorHeaps(1, heaps);
 }
 
 void Glib::Internal::Graphics::DirectX12::EndDraw()
@@ -194,12 +199,12 @@ D3D12_RESOURCE_DESC Glib::Internal::Graphics::DirectX12::BackBufferResourceDesc(
 
 const Color& Glib::Internal::Graphics::DirectX12::BackGroundColor()
 {
-    return backGroundColor_;
+    return s_backGroundColor;
 }
 
 void Glib::Internal::Graphics::DirectX12::BackGroundColor(const Color& color)
 {
-    backGroundColor_ = color;
+    s_backGroundColor = color;
 }
 
 bool Glib::Internal::Graphics::DirectX12::InitDevice()

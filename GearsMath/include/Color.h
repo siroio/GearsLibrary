@@ -2,6 +2,7 @@
 #include <iosfwd>
 #include <string>
 #include <array>
+#include <tuple>
 
 struct Vector4;
 
@@ -17,6 +18,8 @@ public:
         std::array<float, 4> rgba;
     };
 
+    using HSV = std::tuple<float, float, float>;
+
 public:
     Color(const Color& color) = default;
     Color(const Vector4& vector);
@@ -29,15 +32,16 @@ public:
     static Color LerpUnclamped(const Color& a, const Color& b, float t);
     static Color Gamma(float r, float g, float b, float a = 1.0f);
     static Color Gamma(const Color& color);
-    static Color GrayScale(float r, float g, float b, float a = 1.0f);
-    static Color GrayScale(const Color& color);
     static Color Linear(float r, float g, float b, float a = 1.0f);
     static Color Linear(const Color& color);
-    static Color MaxColor(float r, float g, float b, float a = 1.0f);
-    static Color MaxColor(const Color& color);
-    static Color HSVToRGB(float h, float s, float v);
-    static Color RGBToHSV(float r, float g, float b);
-    static Color RGBToHSV(const Color& color);
+    static float GrayScale(float r, float g, float b, float a = 1.0f);
+    static float GrayScale(const Color& color);
+    static float MaxColor(float r, float g, float b);
+    static float MaxColor(const Color& color);
+    static Color HSVToRGB(float h, float s, float v, bool hdr);
+    static Color HSVToRGB(const HSV& hsv, bool hdr);
+    static HSV RGBToHSV(float r, float g, float b);
+    static HSV RGBToHSV(const Color& color);
     static Color Black();
     static Color White();
     static Color Red();
@@ -48,11 +52,14 @@ public:
     static Color Grey();
     static Color Magenta();
 
+private:
+    static void RGBToHSVHelper(float offset, float dominantcolor, float colorone, float colortwo, float& H, float& S, float& V);
+
 public:
-    void Gamma() const;
-    void GrayScale() const;
-    void Linear() const;
-    void MaxColor() const;
+    Color Gamma() const;
+    Color Linear() const;
+    float GrayScale() const;
+    float MaxColor() const;
     void Set(const Color& v);
     void Set(float r, float g, float b, float a);
     void Set(float rgba);
