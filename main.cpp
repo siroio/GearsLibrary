@@ -35,7 +35,7 @@ public:
     virtual void Start() override
     {
         Debug::Log("Scene Loaded...");
-        auto go = GameObjectManager::Instatiate("TestObject");
+        auto go = GameObjectManager::Instantiate("TestObject");
         if (!go.expired())Debug::Log("TestObject Created!");
         auto ptr = go->AddComponent<TestComponent>();
         Debug::Log(Glib::as_string(go->Name()) + "ActiveStatus: " + std::to_string(ptr->Active()));
