@@ -1,6 +1,7 @@
-#include "SystemManager.h"
+#include <SystemManager.h>
 #include <algorithm>
 #include <ranges>
+#include <GameTimer.h>
 
 bool SystemManager::Initialize()
 {
@@ -33,6 +34,16 @@ bool SystemManager::Initialize()
 void SystemManager::Update()
 {
     Execute(SystemFunctionType::Update);
+}
+
+void SystemManager::FixedUpdate()
+{
+    float deltTime = GameTimer::DeltaTime();
+    while (deltTime >= 0.0f)
+    {
+        Execute(SystemFunctionType::FixedUpdate);
+        deltTime -= deltTime < GameTimer::FixedTimeStep() ? GameTimer::FixedTimeStep() : GameTimer::MaximumAllowedTimestep();
+    }
 }
 
 void SystemManager::BeginDraw()

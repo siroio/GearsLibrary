@@ -8,6 +8,11 @@ void Glib::Internal::ComponentManager::Update()
     normalFunction_.Execute(ComponentFunctionType::LateUpdate);
 }
 
+void Glib::Internal::ComponentManager::FixedUpdate()
+{
+    normalFunction_.Execute(ComponentFunctionType::FixedUpdate);
+}
+
 void Glib::Internal::ComponentManager::Finalize()
 {
     normalFunction_.Clear();

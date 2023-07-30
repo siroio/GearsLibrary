@@ -37,7 +37,7 @@ void GameObjectManager::ResetGameObjects()
 
 GameObjectPtr GameObjectManager::Instantiate()
 {
-    return Instantiate("GameObject");
+    return gameObjects_.size() < 1 ? Instantiate("GameObject") : Instantiate("GameObject " + std::to_string(gameObjects_.size()));
 }
 
 GameObjectPtr GameObjectManager::Instantiate(std::string_view name)

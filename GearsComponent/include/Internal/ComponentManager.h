@@ -31,6 +31,7 @@ namespace Glib::Internal
 
     public:
         void Update();
+        void FixedUpdate();
         void Finalize();
 
         template<class ComponentType, class... Args>

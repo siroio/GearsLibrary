@@ -12,6 +12,8 @@
 #include <StringUtility.h>
 #include <InputSystem.h>
 
+#include <thread>
+
 // コンポーネント
 class TestComponent : public Component
 {
@@ -22,10 +24,7 @@ public:
     }
 
     void Update()
-    {
-        using Glib::KeyCode;
-        using Glib::InputSystem;
-    }
+    {}
 };
 
 // シーンクラス

@@ -60,6 +60,7 @@ bool Game::Initialize()
 
 void Game::Update()
 {
+    s_systemManager.FixedUpdate();
     s_systemManager.Update();
 }
 

@@ -12,6 +12,12 @@ namespace Glib::Internal::Order
         constexpr int DX12_INIT = -100;
     }
 
+    /* FIXEDUPDATE ORDERS */
+    namespace FixedUpdate
+    {
+        constexpr int TIME = -100;
+    }
+
     /* UPDATE ORDERS */
     namespace Update
     {

@@ -53,6 +53,11 @@ namespace Glib::Internal
         void AddUpdate(...)
         {}
 
+        template<class T> requires HasFixedUpdateFunc<T, void>
+        void AddFixedUpdate(const std::shared_ptr<T>& component);
+        void AddFixedUpdate(...)
+        {}
+
         template<class T> requires HasLateUpdateFunc<T, void>
         void AddLateUpdate(const std::shared_ptr<T>& component);
         void AddLateUpdate(...)
@@ -68,11 +73,12 @@ namespace Glib::Internal
     {
         AddStart(component);
         AddUpdate(component);
+        AddFixedUpdate(component);
         AddLateUpdate(component);
     }
 
     template<size_t index, class ...Args>
-    inline void ComponentFunctionList::ExecuteFromVariant(FunctionType type, const Args & ...args)
+    inline void ComponentFunctionList::ExecuteFromVariant(FunctionType type, const Args& ...args)
     {
         for (const auto& variant : functions_[type])
         {
@@ -99,6 +105,15 @@ namespace Glib::Internal
         addedFunction_.emplace_back(
             FunctionType::Update,
             FunctionInfo<void>{ component, std::make_shared<Function::HasUpdateObject<T, void>>(component) }
+        );
+    }
+
+    template<class T> requires HasFixedUpdateFunc<T, void>
+    inline void ComponentFunctionList::AddFixedUpdate(const std::shared_ptr<T>& component)
+    {
+        addedFunction_.emplace_back(
+            FunctionType::FixedUpdate,
+            FunctionInfo<void>{ component, std::make_shared<Function::HasFixedUpdateObject<T, void>>(component) }
         );
     }
 

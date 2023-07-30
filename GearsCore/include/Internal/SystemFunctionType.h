@@ -5,6 +5,7 @@ enum class SystemFunctionType
 {
     Initialize,
     Update,
+    FixedUpdate,
     BeginDraw,
     Draw,
     DebugDraw,

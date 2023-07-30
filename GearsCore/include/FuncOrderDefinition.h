@@ -5,6 +5,7 @@
 
 FUNC_ORDER(Initialize)
 FUNC_ORDER(Update)
+FUNC_ORDER(FixedUpdate)
 FUNC_ORDER(BeginDraw)
 FUNC_ORDER(Draw)
 FUNC_ORDER(DebugDraw)

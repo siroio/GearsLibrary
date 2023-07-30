@@ -7,6 +7,7 @@ enum class ComponentFunctionType
 {
     Start,
     Update,
+    FixedUpdate,
     LateUpdate,
 
     OnTriggerEnter,
