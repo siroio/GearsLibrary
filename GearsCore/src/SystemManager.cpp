@@ -36,16 +36,6 @@ void SystemManager::Update()
     Execute(SystemFunctionType::Update);
 }
 
-void SystemManager::FixedUpdate()
-{
-    float deltaTime{ GameTimer::DeltaTime() };
-    while (deltaTime >= 0.0f)
-    {
-        Execute(SystemFunctionType::FixedUpdate);
-        deltaTime -= deltaTime <= GameTimer::MaximumAllowedTimestep() ? GameTimer::FixedTimeStep() : GameTimer::MaximumAllowedTimestep();
-    }
-}
-
 void SystemManager::BeginDraw()
 {
     Execute(SystemFunctionType::BeginDraw);

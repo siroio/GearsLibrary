@@ -25,9 +25,10 @@ public:
 
     void Update()
     {
-        Debug::Log("Update" + std::to_string(1 / GameTimer::DeltaTime()));
-        for (int i = 0; i < 30000000; ++i)
+        Debug::Log("Update");
+        for (int i = 0; i < 50000000; i++)
         {
+
         }
     }
 

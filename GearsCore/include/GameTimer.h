@@ -8,8 +8,7 @@
 class GameTimer final :
     public Glib::SingletonPtr<GameTimer>,
     public Glib::Internal::Interface::ISystem,
-    public Glib::Internal::Function::UpdateOrderSet<Glib::Internal::Order::Update::TIME>,
-    public Glib::Internal::Function::FixedUpdateOrderSet<Glib::Internal::Order::FixedUpdate::TIME>
+    public Glib::Internal::Function::UpdateOrderSet<Glib::Internal::Order::Update::TIME>
 {
 private:
     using Clock = std::chrono::high_resolution_clock;

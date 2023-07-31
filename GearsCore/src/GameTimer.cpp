@@ -6,7 +6,6 @@ void GameTimer::Update()
     Duration unscaledDeltaTime = now - prevTime_;
     if (unscaledDeltaTime > maxDeltaTime_) unscaledDeltaTime_ = maxDeltaTime_;
     deltaTime_ = unscaledDeltaTime * timeScale_;
-    unscaledDeltaTime_ = unscaledDeltaTime;
     prevTime_ = now;
 }
 

@@ -23,8 +23,7 @@ namespace Glib::Internal
     class ComponentManager final :
         public Interface::ISystem,
         public Glib::SingletonPtr<ComponentManager>,
-        public Glib::Internal::Function::UpdateOrderSet<Glib::Internal::Order::Update::COMPONENT>,
-        public Glib::Internal::Function::FixedUpdateOrderSet<Glib::Internal::Order::FixedUpdate::COMPONENT>
+        public Glib::Internal::Function::UpdateOrderSet<Glib::Internal::Order::Update::COMPONENT>
     {
     private:
         friend Glib::WeakPtr<ComponentManager> Glib::SingletonPtr<ComponentManager>::Instance();
@@ -32,7 +31,6 @@ namespace Glib::Internal
 
     public:
         void Update();
-        void FixedUpdate();
         void Finalize();
 
         template<class ComponentType, class... Args>
