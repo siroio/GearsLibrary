@@ -19,6 +19,7 @@ private:
     GameTimer() = default;
 
 public:
+    bool Initialize();
     void Update();
     void FixedUpdate();
 
@@ -73,7 +74,7 @@ public:
 private:
     static inline Duration maxDeltaTime_{ 0.1f };
     static inline Duration deltaTime_{ 0.0f };
-    static inline Duration unscaledDeltaTime_{ 0.0f };
+    static inline Duration unscaledDeltaTime_{ 1.0f };
     static inline Duration maximumAllowedTimestep_{ 0.3333333f };
     static inline float timeScale_{ 1.0f };
     static inline float fixedTimestep_{ 0.02f };

@@ -24,7 +24,20 @@ public:
     }
 
     void Update()
-    {}
+    {
+        const auto deltaTime = GameTimer::DeltaTime();
+        Debug::Log("Update: " + std::to_string(deltaTime) + " : " + std::to_string(1 / deltaTime));
+        for (int i = 0; i < 30000000; i++)
+        {
+            // 重い処理
+        }
+    }
+
+    void FixedUpdate()
+    {
+        const auto deltaTime = GameTimer::FixedDeltaTime();
+        Debug::Log("FixedUpdate: " + std::to_string(deltaTime) + " : " + std::to_string(1 / deltaTime));
+    }
 };
 
 // シーンクラス
