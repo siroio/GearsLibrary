@@ -1,6 +1,6 @@
 #pragma once
 #include <variant>
-#include <deque>
+#include <list>
 #include <unordered_map>
 #include <Internal/ComponentFunctionInfo.h>
 #include <Internal/ComponentFunctionType.h>
@@ -64,8 +64,8 @@ namespace Glib::Internal
         {}
 
     private:
-        std::deque<std::pair<FunctionType, FunctionVariant>> addedFunction_;
-        std::unordered_map<FunctionType, std::deque<FunctionVariant>> functions_;
+        std::list<std::pair<FunctionType, FunctionVariant>> addedFunction_;
+        std::unordered_map<FunctionType, std::list<FunctionVariant>> functions_;
     };
 
     template<class T> requires std::derived_from<T, Component>
@@ -94,8 +94,9 @@ namespace Glib::Internal
     template<class T> requires HasStartFunc<T, void>
     inline void ComponentFunctionList::AddStart(const std::shared_ptr<T>& component)
     {
-        addedFunction_.emplace_back(FunctionType::Start,
-                                    FunctionInfo<void>{ component, std::make_shared<Function::HasStartObject<T, void>>(component)}
+        addedFunction_.emplace_back(
+            FunctionType::Start,
+            FunctionInfo<void>{ component, std::make_shared<Function::HasStartObject<T, void>>(component)}
         );
     }
 

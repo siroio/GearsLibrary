@@ -10,6 +10,7 @@ void Glib::Internal::ComponentManager::Update()
 
 void Glib::Internal::ComponentManager::FixedUpdate()
 {
+    normalFunction_.Update();
     normalFunction_.Execute(ComponentFunctionType::FixedUpdate);
 }
 

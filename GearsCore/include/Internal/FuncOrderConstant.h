@@ -16,6 +16,7 @@ namespace Glib::Internal::Order
     namespace FixedUpdate
     {
         constexpr int TIME = -100;
+        constexpr int COMPONENT = TIME + 1;
     }
 
     /* UPDATE ORDERS */

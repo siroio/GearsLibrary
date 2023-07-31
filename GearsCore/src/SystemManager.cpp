@@ -38,11 +38,11 @@ void SystemManager::Update()
 
 void SystemManager::FixedUpdate()
 {
-    float deltaTime = GameTimer::DeltaTime();
+    float deltaTime{ GameTimer::DeltaTime() };
     while (deltaTime >= 0.0f)
     {
         Execute(SystemFunctionType::FixedUpdate);
-        deltaTime -= deltaTime < GameTimer::MaximumAllowedTimestep() ? GameTimer::FixedTimeStep() : GameTimer::MaximumAllowedTimestep();
+        deltaTime -= deltaTime <= GameTimer::MaximumAllowedTimestep() ? GameTimer::FixedTimeStep() : GameTimer::MaximumAllowedTimestep();
     }
 }
 

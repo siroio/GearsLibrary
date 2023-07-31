@@ -1,11 +1,5 @@
 #include <GameTimer.h>
 
-bool GameTimer::Initialize()
-{
-    prevTime_ = Clock::now();
-    return true;
-}
-
 void GameTimer::Update()
 {
     TimePoint now = Clock::now();
@@ -14,11 +8,6 @@ void GameTimer::Update()
     deltaTime_ = unscaledDeltaTime * timeScale_;
     unscaledDeltaTime_ = unscaledDeltaTime;
     prevTime_ = now;
-}
-
-void GameTimer::FixedUpdate()
-{
-    unscaledDeltaTime_ = std::chrono::duration_cast<Duration>(Duration{ fixedTimestep_ });
 }
 
 float GameTimer::DeltaTime()

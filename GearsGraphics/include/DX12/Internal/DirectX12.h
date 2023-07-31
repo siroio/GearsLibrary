@@ -27,7 +27,7 @@ namespace Glib::Internal::Graphics
         friend WeakPtr<DirectX12> SingletonPtr<DirectX12>::Instance();
 
     public:
-        enum class POOLTYPE
+        enum class POOLTYPE : unsigned int
         {
             RES = 0,
             SMP = 1,

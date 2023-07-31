@@ -19,9 +19,7 @@ private:
     GameTimer() = default;
 
 public:
-    bool Initialize();
     void Update();
-    void FixedUpdate();
 
     /**
      * @brief 直前のフレームと今のフレーム間で経過した時間
