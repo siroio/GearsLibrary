@@ -1,7 +1,6 @@
 #include <SystemManager.h>
 #include <algorithm>
 #include <ranges>
-#include <GameTimer.h>
 
 bool SystemManager::Initialize()
 {
