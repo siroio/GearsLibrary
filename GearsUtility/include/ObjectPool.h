@@ -42,6 +42,7 @@ namespace Glib
 
         /**
          * @brief ƒv[ƒ‹‚ÌŠg’£
+         * @param expandSize Šg’£—Ê
          */
         void Expand(size_t expandSize);
 

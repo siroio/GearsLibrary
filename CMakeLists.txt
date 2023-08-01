@@ -75,6 +75,7 @@ set(DIRECTX12_LIBS
 set(EXTERNAL_LIBS
     DirectXTex
     nlohmann_json
+    assimp
 )
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -115,6 +116,7 @@ add_subdirectory(./GearsInput)
 add_subdirectory(./GearsUtility)
 add_subdirectory(./GearsDebug)
 add_subdirectory(./Modules/DirectXTex)
+add_subdirectory(./Modules/assimp)
 add_subdirectory(./Modules/json)
 
 # メインの実行可能ファイルの設定
@@ -127,11 +129,18 @@ set(IMGUI_BACKEND ${IMGUI_SOURCE}/backends)
 target_include_directories(GearsDebug PRIVATE ${IMGUI_SOURCE} ${IMGUI_BACKEND})
 
 # プロジェクトのフィルタ設定
-set_target_properties(DirectXTex PROPERTIES FOLDER Modules)
-set_target_properties(texassemble PROPERTIES FOLDER ExternalTools)
-set_target_properties(texconv PROPERTIES FOLDER ExternalTools)
-set_target_properties(texdiag PROPERTIES FOLDER ExternalTools)
-set_target_properties(ddsview PROPERTIES FOLDER ExternalTools)
+# DirectXTex
+set_target_properties(DirectXTex PROPERTIES FOLDER Modules/DirectXTex)
+set_target_properties(texassemble PROPERTIES FOLDER Modules/DirectXTex)
+set_target_properties(texconv PROPERTIES FOLDER Modules/DirectXTex)
+set_target_properties(texdiag PROPERTIES FOLDER Modules/DirectXTex)
+set_target_properties(ddsview PROPERTIES FOLDER Modules/DirectXTex)
+# assimp
+set_target_properties(assimp PROPERTIES FOLDER Modules/Assimp)
+set_target_properties(uninstall PROPERTIES FOLDER Modules/Assimp)
+set_target_properties(unit PROPERTIES FOLDER Modules/Assimp)
+set_target_properties(UpdateAssimpLibsDebugSymbolsAndDLLs PROPERTIES FOLDER Modules/Assimp)
+set_target_properties(zlibstatic PROPERTIES FOLDER Modules/Assimp)
 
 # ドキュメントのビルドオプション
 if(BUILD_DOCUMENTATION)
