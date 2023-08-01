@@ -9,7 +9,7 @@ namespace
 
 bool Glib::Internal::Graphics::VertexBuffer::Create(UINT sizePerVetex, UINT vertexCount)
 {
-    CD3DX12_HEAP_PROPERTIES heapProp{ D3D12_HEAP_TYPE_UPLOAD };
+    auto heapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_HEAP_TYPE_UPLOAD };
     auto resDesc = CD3DX12_RESOURCE_DESC::Buffer(vertexCount * static_cast<UINT64>(sizePerVetex));
     auto result = s_dx12->Device()->CreateCommittedResource(
         &heapProp,
@@ -31,7 +31,7 @@ bool Glib::Internal::Graphics::VertexBuffer::Create(UINT sizePerVetex, UINT vert
 
 void Glib::Internal::Graphics::VertexBuffer::SetBuffer()
 {
-
+    s_dx12->CommandList()->IASetVertexBuffers(0u, 1u, &view_);
 }
 
 void Glib::Internal::Graphics::VertexBuffer::Update(void* vertices)

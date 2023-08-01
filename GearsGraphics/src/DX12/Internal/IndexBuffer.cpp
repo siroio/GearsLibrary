@@ -9,7 +9,7 @@ namespace
 
 bool Glib::Internal::Graphics::IndexBuffer::Create(UINT sizePerIndex, UINT indexCount)
 {
-    CD3DX12_HEAP_PROPERTIES heapProp{ D3D12_HEAP_TYPE_UPLOAD };
+    auto heapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_HEAP_TYPE_UPLOAD };
     auto resDesc = CD3DX12_RESOURCE_DESC::Buffer(indexCount * static_cast<UINT64>(sizePerIndex));
     auto result = s_dx12->Device()->CreateCommittedResource(
         &heapProp,

@@ -9,18 +9,20 @@ set(SOURCE_FILE
     ./src/DX12/Internal/ConstantBuffer.cpp
     ./src/DX12/Internal/IndexBuffer.cpp
     ./src/DX12/Internal/VertexBuffer.cpp
+    ./src/DX12/Internal/BlendState.cpp
     ./src/Window.cpp
 )
 
-set(HEADER_FILE 
+set(HEADER_FILE
+    ./include/DX12/Internal/d3dx12Inc.h
 	./include/DX12/Internal/DirectX12.h
     ./include/DX12/Internal/GraphicsPipeline.h
-    ./include/DX12/Internal/d3dx12Inc.h
+    ./include/DX12/Internal/DescriptorPool.h
+    ./include/DX12/Internal/RenderTarget.h
     ./include/DX12/Internal/ConstantBuffer.h
     ./include/DX12/Internal/IndexBuffer.h
     ./include/DX12/Internal/VertexBuffer.h
-    ./include/DX12/Internal/DescriptorPool.h
-    ./include/DX12/Internal/RenderTarget.h
+    ./include/DX12/Internal/BlendState.h
     ./include/Window.h
 )
 

@@ -13,7 +13,7 @@ namespace
 bool Glib::Internal::Graphics::ConstantBuffer::Create(UINT bufferSize)
 {
     // バッファー作成
-    CD3DX12_HEAP_PROPERTIES heapProp{ D3D12_HEAP_TYPE_UPLOAD };
+    auto heapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_HEAP_TYPE_UPLOAD };
     auto resDesc = CD3DX12_RESOURCE_DESC::Buffer((static_cast<UINT64>(bufferSize) + 0xff) & ~0xff);
 
     auto result = s_dx12->Device()->CreateCommittedResource(

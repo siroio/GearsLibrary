@@ -11,6 +11,9 @@ namespace Glib::Internal::Graphics
     class GraphicsPipeline
     {
     public:
+
+        static D3D12_GRAPHICS_PIPELINE_STATE_DESC CreateDefaultPipelineDesc();
+
         /**
          * @brief ルートシグネチャの作成
          */
