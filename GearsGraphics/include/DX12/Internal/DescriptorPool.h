@@ -58,6 +58,11 @@ namespace Glib::Internal::Graphics
          */
         void Release(DescriptorHandle*& handle);
 
+        /**
+         * @brief —˜—p’†‚Ìƒq[ƒv‚Ì”
+         */
+        size_t UseHeapCount() const;
+
     private:
         void Resize(size_t numDescriptors);
 

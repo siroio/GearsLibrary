@@ -134,10 +134,8 @@ void Glib::Internal::Graphics::DirectX12::BeginDraw()
     s_cmdList->OMSetRenderTargets(1, &rtvH, true, nullptr);
     s_cmdList->ClearRenderTargetView(rtvH, s_backGroundColor.rgba.data(), 0, nullptr);
 
-    ID3D12DescriptorHeap* heaps[] = {
-       s_descriptors[static_cast<UINT>(POOLTYPE::RES)]->GetHeap().Get()
-    };
-    s_cmdList->SetDescriptorHeaps(1, heaps);
+    const auto& descriptor = s_descriptors[static_cast<UINT>(POOLTYPE::RES)];
+    s_cmdList->SetDescriptorHeaps(static_cast<UINT>(descriptor->UseHeapCount()), descriptor->GetHeap().GetAddressOf());
 }
 
 void Glib::Internal::Graphics::DirectX12::EndDraw()

@@ -60,22 +60,22 @@ namespace Glib::Internal::Graphics
 
         /**
          * @brief コマンドリストの実行
-        */
+         */
         void ExecuteCommandList();
 
         /**
          * @brief デバイスを取得
-        */
+         */
         ComPtr<ID3D12Device> Device() const;
 
         /**
          * @brief コマンドリストを取得
-        */
+         */
         ComPtr<ID3D12GraphicsCommandList> CommandList() const;
 
         /**
          * @brief コマンドキューを取得
-        */
+         */
         ComPtr<ID3D12CommandQueue> CommandQueue() const;
 
         /**
@@ -104,12 +104,12 @@ namespace Glib::Internal::Graphics
 
         /**
          * @brief デバイスの初期化
-        */
+         */
         bool InitDevice();
 
         /**
          * @brief コマンドの初期化
-        */
+         */
         bool InitCommand();
 
         /**
@@ -119,7 +119,7 @@ namespace Glib::Internal::Graphics
 
         /**
          * @brief プールの作成
-        */
+         */
         bool CreateDescriptorPool();
 
         /**
@@ -129,7 +129,7 @@ namespace Glib::Internal::Graphics
 
         /**
          * @brief GPUの処理待機
-        */
+         */
         void WaitGPU();
     };
 }

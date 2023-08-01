@@ -175,7 +175,6 @@ namespace Glib
     template<class T>
     inline size_t ObjectPool<T>::Count() const
     {
-        std::lock_guard lock{ mutex_ };
         if (!initialized) return 0;
         return objects_.size();
     }
@@ -183,15 +182,13 @@ namespace Glib
     template<class T>
     inline size_t ObjectPool<T>::UseCount() const
     {
-        std::lock_guard lock{ mutex_ };
         if (!initialized) return 0;
-        return borrowedObjects_.count();
+        return borrowedObjects_.size();
     }
 
     template<class T>
     inline size_t ObjectPool<T>::AvaiavbleCount() const
     {
-        std::lock_guard lock{ mutex_ };
         if (!initialized) return 0;
         return availableObjects_.size();
     }

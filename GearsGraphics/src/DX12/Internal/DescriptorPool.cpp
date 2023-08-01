@@ -102,6 +102,11 @@ void Glib::Internal::Graphics::DescriptorPool::Release(DescriptorHandle*& handle
     }
 }
 
+size_t Glib::Internal::Graphics::DescriptorPool::UseHeapCount() const
+{
+    return handles_.UseCount();
+}
+
 void Glib::Internal::Graphics::DescriptorPool::Resize(size_t numDescriptors)
 {
     ComPtr<ID3D12DescriptorHeap> newHeap;
