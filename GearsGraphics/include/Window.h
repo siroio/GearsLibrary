@@ -38,10 +38,16 @@ namespace Glib
         static HWND WindowHandle();
 
         /**
-         * @brief ウィンドウプロシージャを設定
+         * @brief ウィンドウプロシージャを追加
          * @param proc
          */
-        static void WndProc(WndProc proc);
+        static void WndProc(const Glib::WndProc& proc);
+
+        /**
+         * @brief ウィンドウプロシージャを削除
+         * @param proc
+         */
+        static void ClearWndProc(const Glib::WndProc& proc);
 
         /**
          * @brief ウィンドウの名前を取得
