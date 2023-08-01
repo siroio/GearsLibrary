@@ -28,17 +28,11 @@ namespace Glib
          */
         static inline Time CurrentTime()
         {
-            //using namespace std::chrono;
-            //zoned_time now{ current_zone(), system_clock::now() };
-            //auto localTime = now.get_local_time();
-            //auto time_point = localTime.time_since_epoch();
-            //auto h = std::chrono::duration_cast<hours>(time_point);
-            //time_point -= h;
-            //auto m = std::chrono::duration_cast<minutes>(time_point);
-            //time_point -= m;
-            //auto s = std::chrono::duration_cast<seconds>(time_point);
-
-            return Time{ 0,0,0 };
+            using namespace std::chrono;
+            auto now = system_clock::to_time_t(system_clock::now());
+            tm localTime{};
+            if (localtime_s(&localTime, &now) != 0) throw std::runtime_error("Failed to get local time.");
+            return Time{ localTime.tm_hour, localTime.tm_min, localTime.tm_sec };
         }
 
         /**

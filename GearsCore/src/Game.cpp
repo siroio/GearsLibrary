@@ -1,8 +1,7 @@
 #if defined(DEBUG) || defined(_DEBUG)
 #define _CRTDBG_MAP_ALLOC
-#include <cstdlib>
+#include <stdlib.h>
 #include <crtdbg.h>
-#include <fstream>
 #endif
 #include <Game.h>
 #include <SystemManager.h>
@@ -21,6 +20,11 @@ namespace
 
 int Game::Run()
 {
+#if defined(DEBUG) | defined(_DEBUG)
+    // ì‡ïîÉÅÉÇÉäÉäÅ[ÉNåüèo
+    _CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif
+
     RegisterSystem();
     if (!Initialize()) return -1;
 
@@ -38,6 +42,7 @@ int Game::Run()
         Update();
         Draw();
     }
+
     Finalize();
     End();
     return 0;

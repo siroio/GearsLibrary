@@ -1,4 +1,11 @@
 #include <DX12/Internal/DescriptorPool.h>
+#include <DX12/Internal/DirectX12.h>
+#include <cassert>
+
+namespace
+{
+    auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
+}
 
 void Glib::Internal::Graphics::DescriptorHandle::CPU(D3D12_CPU_DESCRIPTOR_HANDLE handle)
 {
@@ -52,17 +59,17 @@ Glib::Internal::Graphics::DescriptorPool::~DescriptorPool()
     descriptorSize_ = 0;
 }
 
-bool Glib::Internal::Graphics::DescriptorPool::Create(ComPtr<ID3D12Device> device, const D3D12_DESCRIPTOR_HEAP_DESC* desc, std::shared_ptr<DescriptorPool>& pool)
+bool Glib::Internal::Graphics::DescriptorPool::Create(const D3D12_DESCRIPTOR_HEAP_DESC* desc, std::shared_ptr<DescriptorPool>& pool)
 {
-    if (device == nullptr || desc == nullptr) return false;
+    if (s_dx12->Device() == nullptr || desc == nullptr) return false;
     std::shared_ptr<DescriptorPool> instance{ new DescriptorPool };
     if (instance == nullptr) return false;
 
     // ディスクリプタヒープ生成
-    if (FAILED(device->CreateDescriptorHeap(desc, IID_PPV_ARGS(instance->heap_.ReleaseAndGetAddressOf())))) return false;
+    if (FAILED(s_dx12->Device()->CreateDescriptorHeap(desc, IID_PPV_ARGS(instance->heap_.ReleaseAndGetAddressOf())))) return false;
 
     // ハンドル加算サイズ取得
-    instance->descriptorSize_ = device->GetDescriptorHandleIncrementSize(desc->Type);
+    instance->descriptorSize_ = s_dx12->Device()->GetDescriptorHandleIncrementSize(desc->Type);
 
     // プール初期化
     if (!instance->handles_.Init(desc->NumDescriptors)) return false;
@@ -93,4 +100,38 @@ void Glib::Internal::Graphics::DescriptorPool::Release(DescriptorHandle*& handle
         handles_.Release(handle);
         handle = nullptr;
     }
+}
+
+void Glib::Internal::Graphics::DescriptorPool::Resize(size_t numDescriptors)
+{
+    ComPtr<ID3D12DescriptorHeap> newHeap;
+    D3D12_DESCRIPTOR_HEAP_DESC desc = heap_->GetDesc();
+    desc.NumDescriptors = static_cast<UINT>(numDescriptors);
+    if (FAILED(s_dx12->Device()->CreateDescriptorHeap(&desc, IID_PPV_ARGS(newHeap.ReleaseAndGetAddressOf())))) return;
+
+    // ディスクリプタをコピー
+    s_dx12->Device()->CopyDescriptorsSimple(
+        heap_->GetDesc().NumDescriptors,
+        newHeap->GetCPUDescriptorHandleForHeapStart(),
+        heap_->GetCPUDescriptorHandleForHeapStart(),
+        desc.Type
+    );
+
+    handles_.Expand(static_cast<size_t>(desc.NumDescriptors - heap_->GetDesc().NumDescriptors));
+
+    // 新しいヒープに既存のハンドルをコピー
+    auto result = handles_.Init([&](size_t index, DescriptorHandle* handle)
+    {
+        auto cpuHandle = newHeap->GetCPUDescriptorHandleForHeapStart();
+        cpuHandle.ptr += descriptorSize_ * index;
+
+        auto gpuHandle = newHeap->GetGPUDescriptorHandleForHeapStart();
+        gpuHandle.ptr += descriptorSize_ * index;
+
+        handle->CPU(cpuHandle);
+        handle->GPU(gpuHandle);
+    });
+
+    if (!result) throw std::bad_alloc{};
+    heap_.Swap(newHeap);
 }

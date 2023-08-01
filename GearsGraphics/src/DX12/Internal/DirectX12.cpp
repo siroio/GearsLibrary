@@ -305,22 +305,22 @@ bool Glib::Internal::Graphics::DirectX12::CreateDescriptorPool()
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
     heapDesc.NumDescriptors = RESOURCE_POOL_SIZE;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-    if (!DescriptorPool::Create(s_device, &heapDesc, s_descriptors[static_cast<UINT>(POOLTYPE::RES)])) return false;
+    if (!DescriptorPool::Create(&heapDesc, s_descriptors[static_cast<UINT>(POOLTYPE::RES)])) return false;
 
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
     heapDesc.NumDescriptors = SAMPLER_POOL_SIZE;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-    if (!DescriptorPool::Create(s_device, &heapDesc, s_descriptors[static_cast<UINT>(POOLTYPE::SMP)])) return false;
+    if (!DescriptorPool::Create(&heapDesc, s_descriptors[static_cast<UINT>(POOLTYPE::SMP)])) return false;
 
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
     heapDesc.NumDescriptors = RENDER_TARGET_VIEW_POOL_SIZE;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    if (!DescriptorPool::Create(s_device, &heapDesc, s_descriptors[static_cast<UINT>(POOLTYPE::RTV)])) return false;
+    if (!DescriptorPool::Create(&heapDesc, s_descriptors[static_cast<UINT>(POOLTYPE::RTV)])) return false;
 
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
     heapDesc.NumDescriptors = DEPTH_STENCIL_VIEW_POOL_SIZE;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    if (!DescriptorPool::Create(s_device, &heapDesc, s_descriptors[static_cast<UINT>(POOLTYPE::DSV)])) return false;
+    if (!DescriptorPool::Create(&heapDesc, s_descriptors[static_cast<UINT>(POOLTYPE::DSV)])) return false;
 
     return true;
 }

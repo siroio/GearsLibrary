@@ -12,7 +12,6 @@
 #include <StringUtility.h>
 #include <InputSystem.h>
 
-#include <thread>
 
 // コンポーネント
 class TestComponent : public Component
@@ -25,16 +24,12 @@ public:
 
     void Update()
     {
-        Debug::Log("Update");
-        for (int i = 0; i < 50000000; i++)
-        {
 
-        }
     }
 
     void FixedUpdate()
     {
-        Debug::Log("FixedUpdate");
+
     }
 };
 

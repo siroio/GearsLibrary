@@ -26,18 +26,9 @@ namespace Glib
         bool Init(size_t count);
 
         /**
-         * @brief 追加でオブジェクトを確保
-         * @param size 追加で確保するサイズ
+         * @brief オブジェクトの再初期化
          */
-        void IncreaceObject(size_t size)
-        {
-            size_t index = objects_.size();
-            size = index + size;
-            for (size_t i = index; i < size; i++)
-            {
-                AddObject(index);
-            }
-        }
+        bool Init(InitializeCallBack init);
 
         /**
          * @brief オブジェクトの取得
@@ -48,6 +39,11 @@ namespace Glib
          * @brief オブジェクトの返却
          */
         void Release(T*& resource);
+
+        /**
+         * @brief プールの拡張
+         */
+        void Expand(size_t expandSize);
 
         /**
          * @brief プールの削除
@@ -116,15 +112,27 @@ namespace Glib
     }
 
     template<class T>
+    inline bool ObjectPool<T>::Init(InitializeCallBack init)
+    {
+        if (!init) return false;
+        for (size_t i = 0; i < objects_.size(); i++)
+        {
+            init(i, objects_[i].get());
+        }
+
+        return true;
+    }
+
+    template<class T>
     inline T* ObjectPool<T>::Get()
     {
         std::lock_guard lock{ mutex_ };
         if (!initialized) return nullptr;
         if (availableObjects_.empty()) AddObject(objects_.size());
-        T* obj = reinterpret_cast<T*>(availableObjects_.front());
+        uintptr_t obj = availableObjects_.front();
         availableObjects_.pop_front();
-        borrowedObjects_.emplace(reinterpret_cast<uintptr_t>(obj));
-        return obj;
+        borrowedObjects_.emplace(obj);
+        return reinterpret_cast<T*>(obj);
     }
 
     template<class T>
@@ -138,6 +146,16 @@ namespace Glib
             availableObjects_.push_back(*it);
             borrowedObjects_.erase(it);
             object = nullptr;
+        }
+    }
+
+    template<class T>
+    inline void ObjectPool<T>::Expand(size_t expandSize)
+    {
+        const auto size = objects_.size();
+        for (size_t i = 0; i < expandSize; i++)
+        {
+            AddObject(size + i);
         }
     }
 

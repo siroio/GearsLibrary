@@ -31,19 +31,35 @@ namespace Glib::Internal::Graphics
     public:
         /**
          * @brief プールを作成
-         * @param device デバイス
          * @param desc ヒープの設定
          * @param pool プール変数への参照
          * @return true 成功
          * @return false 失敗
         */
-        static bool Create(ComPtr<ID3D12Device> device, const D3D12_DESCRIPTOR_HEAP_DESC* desc, std::shared_ptr<DescriptorPool>& pool);
+        static bool Create(const D3D12_DESCRIPTOR_HEAP_DESC* desc, std::shared_ptr<DescriptorPool>& pool);
 
     public:
         ~DescriptorPool();
+
+        /**
+         * @brief ヒープの取得
+         */
         const ComPtr<ID3D12DescriptorHeap> GetHeap() const;
+
+        /**
+         * @brief ハンドルをプールから取得
+         * @brief 参照がない場合スコープを抜けると解放
+         */
         std::shared_ptr<DescriptorHandle> GetHandle();
+
+        /**
+         * @brief ハンドルを解放
+         * @param handle
+         */
         void Release(DescriptorHandle*& handle);
+
+    private:
+        void Resize(size_t numDescriptors);
 
     private:
         DescriptorPool();
