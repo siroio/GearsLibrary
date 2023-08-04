@@ -1,4 +1,4 @@
-#include <DX12/Internal/RenderTarget.h>
+#include <DX12/RenderTarget.h>
 #include <DX12/Internal/DirectX12.h>
 #include <DX12/Internal/d3dx12Inc.h>
 
@@ -7,7 +7,7 @@ namespace
     auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
 }
 
-bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t index, ComPtr<IDXGISwapChain> swapChain)
+bool Glib::Graphics::RenderTarget::Create(uint32_t index, ComPtr<IDXGISwapChain> swapChain)
 {
     if (swapChain == nullptr) return false;
     pool_ = s_dx12->DescriptorPool(Glib::Internal::Graphics::DirectX12::POOLTYPE::RTV);
@@ -33,7 +33,7 @@ bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t index, ComPtr<IDXGI
     return true;
 }
 
-bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t width, uint32_t height, DXGI_FORMAT format, std::shared_ptr<DescriptorPool> pool)
+bool Glib::Graphics::RenderTarget::Create(uint32_t width, uint32_t height, DXGI_FORMAT format, std::shared_ptr<Glib::Internal::Graphics::DescriptorPool> pool)
 {
     pool_ = pool;
 
@@ -88,23 +88,23 @@ bool Glib::Internal::Graphics::RenderTarget::Create(uint32_t width, uint32_t hei
     return true;
 }
 
-Glib::WeakPtr<Glib::Internal::Graphics::DescriptorHandle> Glib::Internal::Graphics::RenderTarget::Handle() const
+Glib::WeakPtr<Glib::Internal::Graphics::DescriptorHandle> Glib::Graphics::RenderTarget::Handle() const
 {
     return handle_;
 }
 
-ComPtr<ID3D12Resource> Glib::Internal::Graphics::RenderTarget::Resource() const
+ComPtr<ID3D12Resource> Glib::Graphics::RenderTarget::Resource() const
 {
     return target_;
 }
 
-D3D12_RESOURCE_DESC Glib::Internal::Graphics::RenderTarget::ResourceDesc() const
+D3D12_RESOURCE_DESC Glib::Graphics::RenderTarget::ResourceDesc() const
 {
     if (target_ == nullptr) return D3D12_RESOURCE_DESC{};
     return target_->GetDesc();
 }
 
-D3D12_RENDER_TARGET_VIEW_DESC Glib::Internal::Graphics::RenderTarget::RenderTargetViewDesc() const
+D3D12_RENDER_TARGET_VIEW_DESC Glib::Graphics::RenderTarget::RenderTargetViewDesc() const
 {
     return viewDesc_;
 }
