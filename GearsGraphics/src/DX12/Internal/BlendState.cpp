@@ -3,11 +3,11 @@
 
 D3D12_RENDER_TARGET_BLEND_DESC Glib::Internal::Graphics::BlendDesc::Create(BlendState state)
 {
+    D3D12_RENDER_TARGET_BLEND_DESC blendDesc{};
     switch (state)
     {
         default:
         case Glib::Internal::Graphics::BlendState::Default:
-            D3D12_RENDER_TARGET_BLEND_DESC blendDesc{};
             blendDesc.BlendEnable = false;
             blendDesc.LogicOpEnable = false;
             blendDesc.BlendOp = D3D12_BLEND_OP_ADD;
@@ -19,7 +19,6 @@ D3D12_RENDER_TARGET_BLEND_DESC Glib::Internal::Graphics::BlendDesc::Create(Blend
             blendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
             return blendDesc;
         case Glib::Internal::Graphics::BlendState::Alpha:
-            D3D12_RENDER_TARGET_BLEND_DESC blendDesc{};
             blendDesc.BlendEnable = true;
             blendDesc.LogicOpEnable = false;
             blendDesc.BlendOp = D3D12_BLEND_OP_ADD;
@@ -31,7 +30,6 @@ D3D12_RENDER_TARGET_BLEND_DESC Glib::Internal::Graphics::BlendDesc::Create(Blend
             blendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
             return blendDesc;
         case Glib::Internal::Graphics::BlendState::Add:
-            D3D12_RENDER_TARGET_BLEND_DESC blendDesc{};
             blendDesc.BlendEnable = true;
             blendDesc.LogicOpEnable = false;
             blendDesc.BlendOp = D3D12_BLEND_OP_ADD;
@@ -43,7 +41,6 @@ D3D12_RENDER_TARGET_BLEND_DESC Glib::Internal::Graphics::BlendDesc::Create(Blend
             blendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
             return blendDesc;
         case Glib::Internal::Graphics::BlendState::Substract:
-            D3D12_RENDER_TARGET_BLEND_DESC blendDesc{};
             blendDesc.BlendEnable = true;
             blendDesc.LogicOpEnable = false;
             blendDesc.BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
