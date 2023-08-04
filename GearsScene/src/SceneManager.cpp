@@ -25,5 +25,5 @@ void Glib::Scene::SceneManager::LoadScene(const std::string& name)
         Debug::Log("Scene " + name + " was not found.");
         return;
     }
-    next_ = scenes_[name];
+    next_ = scenes_.at(name);
 }
