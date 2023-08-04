@@ -100,7 +100,7 @@ endif()
 set(JSON_BuildTests OFF CACHE INTERNAL "")
 
 # 文字コードをUNICODEに設定
-add_definitions(-UNICODE -D_UNICODE)
+# add_definitions(-UNICODE -D_UNICODE)
 
 # メインの実行可能ファイル
 add_executable(GearsLibrary main.cpp)

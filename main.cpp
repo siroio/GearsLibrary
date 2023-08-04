@@ -9,11 +9,10 @@
 #include <GameObjectManager.h>
 #include <Component.h>
 #include <ObjectPool.h>
-#include <StringUtility.h>
 #include <InputSystem.h>
 
 
-// コンポーネント
+// テスト用コンポーネント
 class TestComponent : public Component
 {
 public:
@@ -33,7 +32,7 @@ public:
     }
 };
 
-// シーンクラス
+// テスト用シーンクラス
 class TestScene : public Glib::Scene::Scene
 {
 public:
@@ -59,7 +58,7 @@ class MyGame : public Game
     {
         Debug::Log("GAME STARTTING");
         Glib::Scene::SceneManager::Register<TestScene>();
-        Debug::Log("Scene: " + Glib::nameof<TestScene>() + "Registered");
+        Debug::Log("Scene: " + Glib::Scene::SceneManager::SceneName<TestScene>() + " Registered");
         Debug::Log("TestScene Load Start");
         Glib::Scene::SceneManager::LoadScene("TestScene");
         Debug::Log("TestScene Load Complete");
