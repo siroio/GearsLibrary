@@ -19,6 +19,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
     {
         std::invoke(proc, hwnd, msg, wparam, lparam);
     }
+
     switch (msg)
     {
         case WM_DESTROY:
@@ -49,13 +50,13 @@ bool Glib::Window::Initialize()
     std::wstring wstr{ s_windowName_.begin(), s_windowName_.end() };
     s_windowClass_.lpszClassName = wstr.c_str();
 #else
-    windowClass_.lpszClassName = windowName_.c_str();
+    s_windowClass_.lpszClassName = s_windowName_.c_str();
 #endif
 
 #if defined(DEBUG) || defined(_DEBUG)
     RECT rect{ 0, 0, static_cast<LONG>(s_windowDebugSize_.x), static_cast<LONG>(s_windowDebugSize_.y) };
 #else
-    RECT rect{ 0, 0, static_cast<LONG>(windowSize_.x), static_cast<LONG>(windowSize_.y) };
+    RECT rect{ 0, 0, static_cast<LONG>(s_windowSize_.x), static_cast<LONG>(s_windowSize_.y) };
 #endif
 
     if (!RegisterClassEx(&s_windowClass_)) return false;
