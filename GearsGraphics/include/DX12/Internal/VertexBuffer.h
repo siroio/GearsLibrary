@@ -4,6 +4,9 @@
 
 namespace Glib::Internal::Graphics
 {
+    /**
+     * @brief 頂点バッファー
+     */
     class VertexBuffer
     {
     public:
@@ -13,7 +16,7 @@ namespace Glib::Internal::Graphics
          * @param indexCount 頂点のサイズ
          * @return 成功 true
          */
-        bool Create(UINT sizePerVetex, UINT vertexCount);
+        bool Create(unsigned int sizePerVetex, unsigned int vertexCount);
 
         /**
          * @brief 頂点バッファーをセット

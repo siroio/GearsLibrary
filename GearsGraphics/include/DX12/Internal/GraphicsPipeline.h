@@ -8,6 +8,9 @@ struct ID3D12PipelineState;
 
 namespace Glib::Internal::Graphics
 {
+    /**
+     * @brief グラフィックスパイプライン
+     */
     class GraphicsPipeline
     {
     public:

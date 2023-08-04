@@ -7,7 +7,7 @@ namespace
     auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
 }
 
-bool Glib::Internal::Graphics::VertexBuffer::Create(UINT sizePerVetex, UINT vertexCount)
+bool Glib::Internal::Graphics::VertexBuffer::Create(unsigned int sizePerVetex, unsigned int vertexCount)
 {
     auto heapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_HEAP_TYPE_UPLOAD };
     auto resDesc = CD3DX12_RESOURCE_DESC::Buffer(vertexCount * static_cast<UINT64>(sizePerVetex));

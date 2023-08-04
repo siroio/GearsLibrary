@@ -30,6 +30,9 @@ namespace Glib::Internal::Graphics
         Substract
     };
 
+    /**
+     * @brief D3D12_RENDER_TARGET_BLEND_DESC ì¬—pƒNƒ‰ƒX
+     */
     class BlendDesc
     {
     public:

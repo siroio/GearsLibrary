@@ -13,6 +13,9 @@ namespace Glib::Internal::Graphics
 
 namespace Glib::Internal::Graphics
 {
+    /**
+     * @brief 定数バッファー
+     */
     class ConstantBuffer
     {
     public:
@@ -21,7 +24,7 @@ namespace Glib::Internal::Graphics
          * @param bufferSize バッファーのサイズ
          * @return 成功 true
          */
-        bool Create(UINT bufferSize);
+        bool Create(unsigned int bufferSize);
 
         /**
          * @brief 定数バッファーのバインド

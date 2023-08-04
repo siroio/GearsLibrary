@@ -10,7 +10,7 @@ namespace
     auto s_dx12 = Graphics::DirectX12::Instance();
 }
 
-bool Glib::Internal::Graphics::ConstantBuffer::Create(UINT bufferSize)
+bool Glib::Internal::Graphics::ConstantBuffer::Create(unsigned int bufferSize)
 {
     // バッファー作成
     auto heapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_HEAP_TYPE_UPLOAD };

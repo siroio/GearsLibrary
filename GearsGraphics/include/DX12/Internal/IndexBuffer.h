@@ -4,6 +4,9 @@
 
 namespace Glib::Internal::Graphics
 {
+    /**
+     * @brief インデックスバッファー
+     */
     class IndexBuffer
     {
     public:
@@ -13,7 +16,7 @@ namespace Glib::Internal::Graphics
          * @param indexCount インデックスのサイズ
          * @return 成功 true
          */
-        bool Create(UINT sizePerIndex, UINT indexCount);
+        bool Create(unsigned int sizePerIndex, unsigned int indexCount);
 
         /**
          * @brief インデックスバッファーをセット
