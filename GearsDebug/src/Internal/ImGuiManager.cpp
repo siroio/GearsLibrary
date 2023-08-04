@@ -2,7 +2,7 @@
 #include <Internal/ImGuiInc.h>
 #include <DX12/Internal/d3dx12Inc.h>
 #include <DX12/Internal/DirectX12.h>
-#include <DX12/Internal/RenderTarget.h>
+#include <DX12/RenderTarget.h>
 #include <Window.h>
 #include <Vector2.h>
 
@@ -15,7 +15,7 @@ namespace
 
 namespace
 {
-    Glib::Internal::Graphics::RenderTarget s_renderTarget;
+    Glib::Graphics::RenderTarget s_renderTarget;
 }
 
 bool Glib::Internal::Debug::ImGuiManager::Initialize()
