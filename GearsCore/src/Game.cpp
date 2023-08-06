@@ -21,7 +21,7 @@ namespace
 int Game::Run()
 {
 #if defined(DEBUG) | defined(_DEBUG)
-    // 内部メモリリーク検出
+    // メモリリーク検出
     _CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
