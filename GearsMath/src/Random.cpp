@@ -1,28 +1,33 @@
 #include <Random.h>
-#include <functional>
-#include <limits>
+#include <random>
 
-void Random::Seed(uint64_t seed)
+bool Glib::Random::Initialize()
 {
-    rand.Seed(seed);
+    generator = std::make_unique<Pcg32Fast>();
+    generator->Seed(std::random_device{}());
 }
 
-uint32_t Random::Next()
+void Glib::Random::Seed(uint64_t seed)
 {
-    return rand();
+    generator->Seed(seed);
 }
 
-float Random::Nextf()
+uint32_t Glib::Random::Next()
 {
-    return static_cast<float>(rand() * Pcg32Fast::DIVIDE);
+    return generator->Gen();
 }
 
-int Random::Range(int min, int max)
+float Glib::Random::Nextf()
 {
-    return (rand() % (max - min)) + min;
+    return static_cast<float>(generator->Gen() * Pcg32Fast::DIVIDE);
 }
 
-float Random::Range(float min, float max)
+int Glib::Random::Range(int min, int max)
 {
-    return static_cast<float>((min + (max - min) * (rand() * Pcg32Fast::DIVIDE)));
+    return (generator->Gen() % (max - min)) + min;
+}
+
+float Glib::Random::Range(float min, float max)
+{
+    return static_cast<float>((min + (max - min) * (generator->Gen() * Pcg32Fast::DIVIDE)));
 }

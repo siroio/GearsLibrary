@@ -3,15 +3,18 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 #endif
+
 #include <Game.h>
 #include <SystemManager.h>
 #include <Internal/ISystem.h>
-#include <DX12/Internal/DirectX12.h>
+
 #include <Internal/ComponentManager.h>
+#include <DX12/Internal/DirectX12.h>
 #include <GameObjectManager.h>
-#include <SceneManager.h>
-#include <InputSystem.h>
 #include <GameTimer.h>
+#include <InputSystem.h>
+#include <Random.h>
+#include <SceneManager.h>
 
 namespace
 {
@@ -21,7 +24,7 @@ namespace
 int Game::Run()
 {
 #if defined(DEBUG) | defined(_DEBUG)
-    // メモリリーク検出
+    // メモリリーク検出開始
     _CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
@@ -55,6 +58,7 @@ void Game::RegisterSystem()
     SystemManager::AddSystem<GameObjectManager>();
     SystemManager::AddSystem<GameTimer>();
     SystemManager::AddSystem<Glib::InputSystem>();
+    SystemManager::AddSystem<Glib::Random>();
     SystemManager::AddSystem<Glib::Scene::SceneManager>();
 }
 
