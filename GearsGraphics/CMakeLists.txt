@@ -10,7 +10,6 @@ set(SOURCE_FILE
     ./src/DX12/Internal/ConstantBuffer.cpp
     ./src/DX12/Internal/IndexBuffer.cpp
     ./src/DX12/Internal/VertexBuffer.cpp
-    ./src/DX12/Internal/InputLayout.cpp
     ./src/DX12/Internal/Texture.cpp
     ./src/DX12/RenderTarget.cpp
     ./src/DX12/GraphicsResource.cpp
@@ -27,6 +26,7 @@ set(HEADER_FILE
     ./include/DX12/Internal/ConstantBuffer.h
     ./include/DX12/Internal/IndexBuffer.h
     ./include/DX12/Internal/VertexBuffer.h
+    ./include/DX12/Internal/InputLayout.h
     ./include/DX12/Internal/Texture.h
     ./include/DX12/RenderTarget.h
     ./include/DX12/GraphicsResource.h
