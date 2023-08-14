@@ -1,6 +1,4 @@
-#ifndef FUNC_ORDER_CONSTANT_H
-#define FUNC_ORDER_CONSTANT_H
-
+#pragma once
 /**
  * @brief ŠeŠÖ”‚ÌÀs‡˜‚ğ§Œä‚·‚é‚½‚ß‚Ì’è”
  */
@@ -40,5 +38,3 @@ namespace Glib::Internal::Order
 
     }
 }
-
-#endif // !FUNC_ORDER_CONSTANT_H

@@ -1,5 +1,4 @@
-#ifndef GEARS_IORDERFUNC_H
-#define GEARS_IORDERFUNC_H
+#pragma once
 
 namespace Glib::Internal::Interface
 {
@@ -17,5 +16,3 @@ namespace Glib::Internal::Interface
         virtual int Order() = 0;
     };
 }
-
-#endif // !GEARS_IORDERFUNC_H

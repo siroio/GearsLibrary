@@ -1,5 +1,4 @@
-#ifndef GEARS_SYSTEM_FUNCTION_TYPE_H
-#define GEARS_SYSTEM_FUNCTION_TYPE_H
+#pragma once
 
 enum class SystemFunctionType
 {
@@ -11,5 +10,3 @@ enum class SystemFunctionType
     EndDraw,
     Finalize,
 };
-
-#endif // !GEARS_SYSTEM_FUNCTION_TYPE_H

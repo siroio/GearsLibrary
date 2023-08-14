@@ -1,5 +1,4 @@
-#ifndef GEARS_ISYSTEM_H
-#define GEARS_ISYSTEM_H
+#pragma once
 
 namespace Glib::Internal::Interface
 {
@@ -13,5 +12,3 @@ namespace Glib::Internal::Interface
         virtual ~ISystem() = default;
     };
 }
-
-#endif // !GEARS_ISYSTEM_H

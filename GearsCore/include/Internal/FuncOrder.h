@@ -1,6 +1,4 @@
-#ifndef GEARS_FUNC_ORDER_H
-#define GEARS_FUNC_ORDER_H
-
+#pragma once
 /**
  * @brief ä÷êîÇÃé¿çsèáê∂ê¨
  */
@@ -33,5 +31,3 @@ namespace Glib::Internal                                                \
         };                                                              \
     }                                                                   \
 }
-
-#endif // !GEARS_FUNC_ORDER_H

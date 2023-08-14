@@ -1,6 +1,4 @@
-#ifndef GEARS_HAS_FUNCTION_OBJECT_H
-#define GEARS_HAS_FUNCTION_OBJECT_H
-
+#pragma once
 #include <concepts>
 #include <Internal/IFunc.h>
 #include <WeakPtr.h>
@@ -77,5 +75,3 @@ namespace Glib::Internal::Function                                              
         WeakPtr<T> instance_{ nullptr };                                                                                \
     };                                                                                                                  \
 }                                                                                                                       \
-
-#endif // !HAS_FUNCTION_OBJECT_H
