@@ -63,7 +63,8 @@ public:
     static void TimeScale(float timeScale = 1.0f);
 
     /**
-     * @brief 直前のフレームと今のフレーム間で経過した時間 *タイムスケールの影響を受けない
+     * @brief 直前のフレームと今のフレーム間で経過した時間
+     * @brief タイムスケールの影響を受けない
      * @return 秒
      */
     static float UnscaledDeltaTime();
