@@ -2,6 +2,7 @@
 #include <string_view>
 #include <string>
 #include <vector>
+#include <Windows.h>
 
 namespace Glib
 {
@@ -44,8 +45,38 @@ namespace Glib
         return name;
     }
 
-    static constexpr std::string as_string(std::string_view sv)
+    /**
+     * @brief stringをコピー
+     */
+    static constexpr std::string ToString(std::string_view sv)
     {
         return { sv.begin(), sv.end() };
+    }
+
+    /**
+     * @brief マルチバイト文字列に変換
+     */
+    static inline std::wstring StringToWide(std::string_view sv)
+    {
+        int size = MultiByteToWideChar(
+            CP_ACP, MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
+            sv.data(),
+            -1,
+            nullptr,
+            0);
+
+        if (size == 0) return L"";
+
+        std::wstring wstr{};
+        wstr.resize(size - 1);
+        MultiByteToWideChar(
+            CP_ACP,
+            MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
+            sv.data(),
+            -1,
+            wstr.data(),
+            size);
+
+        return wstr;
     }
 };

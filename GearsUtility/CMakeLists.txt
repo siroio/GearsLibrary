@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
 
 # == CONFIG ==
-set(SOURCE_FILE 
+set(SOURCE_FILE
     ./src/CSVLoader.cpp
     ./src/MsgBox.cpp
 )
