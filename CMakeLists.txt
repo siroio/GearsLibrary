@@ -55,7 +55,9 @@ set(LIBRARY
     GearsGraphics
     GearsObject
     GearsComponent
+    GearsResource
     GearsInput
+    GearsAudio
     GearsScene
     GearsMath
     GearsUtility
@@ -103,16 +105,18 @@ set(JSON_BuildTests OFF CACHE INTERNAL "")
 # add_definitions(-UNICODE -D_UNICODE)
 
 # メインの実行可能ファイル
-add_executable(GearsLibrary main.cpp)
+add_executable(${PROJECT_NAME} main.cpp)
 
 # サブディレクトリの追加
 add_subdirectory(./GearsCore)
 add_subdirectory(./GearsGraphics)
 add_subdirectory(./GearsObject)
 add_subdirectory(./GearsComponent)
+add_subdirectory(./GearsResource)
 add_subdirectory(./GearsScene)
 add_subdirectory(./GearsMath)
 add_subdirectory(./GearsInput)
+add_subdirectory(./GearsAudio)
 add_subdirectory(./GearsUtility)
 add_subdirectory(./GearsDebug)
 add_subdirectory(./Modules/DirectXTex)
@@ -120,8 +124,8 @@ add_subdirectory(./Modules/assimp)
 add_subdirectory(./Modules/json)
 
 # メインの実行可能ファイルの設定
-target_compile_features(GearsLibrary PRIVATE cxx_std_20)
-target_link_libraries(GearsLibrary ${LIBRARY} ${DIRECTX12_LIBS} ${EXTERNAL_LIBS})
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBRARY} ${DIRECTX12_LIBS} ${EXTERNAL_LIBS})
 
 # imgui 設定
 set(IMGUI_SOURCE ./Modules/ImGui)
@@ -141,6 +145,7 @@ set_target_properties(uninstall PROPERTIES FOLDER Modules/Assimp)
 set_target_properties(unit PROPERTIES FOLDER Modules/Assimp)
 set_target_properties(UpdateAssimpLibsDebugSymbolsAndDLLs PROPERTIES FOLDER Modules/Assimp)
 set_target_properties(zlibstatic PROPERTIES FOLDER Modules/Assimp)
+target_include_directories(${PROJECT_NAME} PRIVATE ./Modules/assimp/include)
 
 # ドキュメントのビルドオプション
 if(BUILD_DOCUMENTATION)
