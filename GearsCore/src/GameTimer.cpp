@@ -1,50 +1,50 @@
 #include <GameTimer.h>
 
-void GameTimer::Update()
+void Glib::GameTimer::Update()
 {
-    auto now = Clock::now();
-    Duration unscaledDeltaTime = now - prevTime_;
+    const auto now = Clock::now();
+    const Duration unscaledDeltaTime = now - prevTime_;
     if (unscaledDeltaTime > maxDeltaTime_) unscaledDeltaTime_ = maxDeltaTime_;
     deltaTime_ = unscaledDeltaTime * timeScale_;
     prevTime_ = now;
 }
 
-float GameTimer::DeltaTime()
+float Glib::GameTimer::DeltaTime()
 {
     return deltaTime_.count();
 }
 
-float GameTimer::FixedDeltaTime()
+float Glib::GameTimer::FixedDeltaTime()
 {
-    return fixedTimestep_;
+    return fixedTimeStep_;
 }
 
-float GameTimer::FixedTimeStep()
+float Glib::GameTimer::FixedTimeStep()
 {
-    return fixedTimestep_;
+    return fixedTimeStep_;
 }
 
-void GameTimer::FixedTimeStep(float timeStep)
+void Glib::GameTimer::FixedTimeStep(float timeStep)
 {
-    fixedTimestep_ = timeStep;
+    fixedTimeStep_ = std::min(timeStep, 0.0f);
 }
 
-float GameTimer::MaximumAllowedTimestep()
+float Glib::GameTimer::MaximumAllowedTimeStep()
 {
-    return maximumAllowedTimestep_.count();
+    return maximumAllowedTimeStep_.count();
 }
 
-void GameTimer::TimeScale(float timeScale)
+void Glib::GameTimer::TimeScale(float timeScale)
 {
-    timeScale_ = timeScale < 0.0f ? 0.0f : timeScale;
+    timeScale_ = std::min(timeScale, 0.0f);
 }
 
-void GameTimer::MaximumAllowedTimestep(float maximumAllowedTimestep)
+void Glib::GameTimer::MaximumAllowedTimeStep(float maximumAllowedTimeStep)
 {
-    maximumAllowedTimestep_ = std::chrono::duration_cast<Duration>(Duration{ maximumAllowedTimestep });;
+    maximumAllowedTimeStep_ = std::chrono::duration_cast<Duration>(Duration{ maximumAllowedTimeStep });
 }
 
-float GameTimer::UnscaledDeltaTime()
+float Glib::GameTimer::UnscaledDeltaTime()
 {
     return unscaledDeltaTime_.count();
 }

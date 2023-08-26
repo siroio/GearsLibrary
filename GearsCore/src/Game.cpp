@@ -8,8 +8,10 @@
 #include <SystemManager.h>
 #include <Internal/ISystem.h>
 
+/* SYSTEM HEADERS */
+#include <AudioManager.h>
 #include <Internal/ComponentManager.h>
-#include <DX12/Internal/DirectX12.h>
+#include <Internal/DX12/DirectX12.h>
 #include <GameObjectManager.h>
 #include <GameTimer.h>
 #include <InputSystem.h>
@@ -21,15 +23,16 @@ namespace
     auto& s_systemManager = SystemManager::Instance();
 }
 
-int Game::Run()
+int Glib::Game::Run()
 {
 #if defined(DEBUG) | defined(_DEBUG)
     // メモリリーク検出開始
-    _CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG | _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
     RegisterSystem();
-    if (!Initialize()) return -1;
+    if (!Initialize())
+        return -1;
 
     Start();
 
@@ -51,28 +54,28 @@ int Game::Run()
     return 0;
 }
 
-void Game::RegisterSystem()
+void Glib::Game::RegisterSystem()
 {
-    SystemManager::AddSystem<Glib::Internal::ComponentManager>();
-    SystemManager::AddSystem<Glib::Internal::Graphics::DirectX12>();
+    SystemManager::AddSystem<Internal::ComponentManager>();
+    SystemManager::AddSystem<Internal::Graphics::DirectX12>();
     SystemManager::AddSystem<GameObjectManager>();
     SystemManager::AddSystem<GameTimer>();
-    SystemManager::AddSystem<Glib::InputSystem>();
-    SystemManager::AddSystem<Glib::Random>();
-    SystemManager::AddSystem<Glib::Scene::SceneManager>();
+    SystemManager::AddSystem<InputSystem>();
+    SystemManager::AddSystem<Random>();
+    SystemManager::AddSystem<Scene::SceneManager>();
 }
 
-bool Game::Initialize()
+bool Glib::Game::Initialize()
 {
     return s_systemManager.Initialize();
 }
 
-void Game::Update()
+void Glib::Game::Update()
 {
     s_systemManager.Update();
 }
 
-void Game::Draw()
+void Glib::Game::Draw()
 {
     s_systemManager.BeginDraw();
     s_systemManager.Draw();
@@ -82,7 +85,7 @@ void Game::Draw()
     s_systemManager.EndDraw();
 }
 
-void Game::Finalize()
+void Glib::Game::Finalize()
 {
     s_systemManager.Finalize();
 }
