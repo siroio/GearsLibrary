@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <iterator>
 
-void GameObjectManager::Update()
+void Glib::GameObjectManager::Update()
 {
     std::erase_if(gameObjects_, [](const std::shared_ptr<GameObject>& gameObject)
     {
@@ -18,15 +18,15 @@ void GameObjectManager::Update()
     }
 }
 
-void GameObjectManager::DebugDraw()
+void Glib::GameObjectManager::DebugDraw()
 {}
 
-void GameObjectManager::Finalize()
+void Glib::GameObjectManager::Finalize()
 {
     gameObjects_.clear();
 }
 
-void GameObjectManager::ResetGameObjects()
+void Glib::GameObjectManager::ResetGameObjects()
 {
     for (const auto& gameObject : gameObjects_)
     {
@@ -35,23 +35,23 @@ void GameObjectManager::ResetGameObjects()
     }
 }
 
-GameObjectPtr GameObjectManager::Instantiate()
+GameObjectPtr Glib::GameObjectManager::Instantiate()
 {
-    return gameObjects_.size() < 1 ?
+    return gameObjects_.empty() ?
         Instantiate("GameObject") :
         Instantiate("GameObject " + std::to_string(gameObjects_.size()));
 }
 
-GameObjectPtr GameObjectManager::Instantiate(std::string_view name)
+GameObjectPtr Glib::GameObjectManager::Instantiate(std::string_view name)
 {
-    std::shared_ptr<GameObject> gameObject = std::make_shared<GameObject>(name);
+    const auto gameObject = std::make_shared<GameObject>(name);
     gameObjects_.push_back(gameObject);
-    Glib::WeakPtr<Glib::Internal::Interface::IGameObject> iGameObj{ gameObject };
+    const WeakPtr<Internal::Interface::IGameObject> iGameObj{ gameObject };
     iGameObj->Initialize();
     return GameObjectPtr{ gameObject };
 }
 
-GameObjectPtr GameObjectManager::Find(std::string_view name)
+GameObjectPtr Glib::GameObjectManager::Find(std::string_view name)
 {
     const auto& it = std::ranges::find_if(gameObjects_.begin(), gameObjects_.end(), [name](const std::shared_ptr<GameObject>& gameObject)
     {
@@ -61,7 +61,7 @@ GameObjectPtr GameObjectManager::Find(std::string_view name)
     return it != gameObjects_.end() ? GameObjectPtr{ *it } : GameObjectPtr{ nullptr };
 }
 
-std::list<GameObjectPtr> GameObjectManager::FindGameObjectsWithTag(std::string_view tag)
+std::list<GameObjectPtr> Glib::GameObjectManager::FindGameObjectsWithTag(std::string_view tag)
 {
     std::list<GameObjectPtr> result;
 
@@ -73,7 +73,7 @@ std::list<GameObjectPtr> GameObjectManager::FindGameObjectsWithTag(std::string_v
     return result;
 }
 
-GameObjectPtr GameObjectManager::FindGameObjectWithTag(std::string_view tag)
+GameObjectPtr Glib::GameObjectManager::FindGameObjectWithTag(std::string_view tag)
 {
     const auto& it = std::ranges::find_if(gameObjects_.begin(), gameObjects_.end(), [tag](const std::shared_ptr<GameObject>& gameObject)
     {
