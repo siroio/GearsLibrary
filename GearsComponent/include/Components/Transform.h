@@ -17,7 +17,7 @@ public:
     };
 
     Transform() = default;
-    ~Transform();
+    ~Transform() override;
 
     Vector3 Forward() const;
     Vector3 Right() const;
