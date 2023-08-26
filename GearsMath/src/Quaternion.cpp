@@ -107,10 +107,10 @@ Quaternion Quaternion::FromToRotation(const Vector3& fromDirection, const Vector
     if (angle < Mathf::EPSILON) return Identity();
 
     Vector3 axis = Vector3::Cross(fromDirection, toDirection);
-    if (axis.SqrMagnitude() < Mathf::EPSILON_SRQT)
+    if (axis.SqrMagnitude() < Mathf::EPSILON_SQRT)
     {
         axis = Vector3::Cross(Vector3{ 0.0f, 0.0f, 1.0f }, fromDirection);
-        if (axis.SqrMagnitude() < Mathf::EPSILON_SRQT)
+        if (axis.SqrMagnitude() < Mathf::EPSILON_SQRT)
         {
             axis = Vector3::Cross(Vector3{ 1.0f, 0.0f, 0.0f }, fromDirection);
         }
@@ -122,13 +122,13 @@ Quaternion Quaternion::FromToRotation(const Vector3& fromDirection, const Vector
 Quaternion Quaternion::LookRotation(const Vector3& view, const Vector3& up)
 {
     Vector3 forward = Vector3::Normalize(view);
-    if (forward.SqrMagnitude() < (Mathf::EPSILON_SRQT))
+    if (forward.SqrMagnitude() < (Mathf::EPSILON_SQRT))
     {
         forward = Vector3{ 0.0f, 0.0f, 1.0f };
     }
 
     Vector3 right = Vector3::Cross(up, forward);
-    if (right.SqrMagnitude() < (Mathf::EPSILON_SRQT))
+    if (right.SqrMagnitude() < (Mathf::EPSILON_SQRT))
     {
         right = Vector3{ 1.0f, 0.0f, 0.0f };
     }

@@ -484,7 +484,7 @@ bool operator==(const Vector3& v1, const Vector3 v2)
     float diff_z = v1.z - v2.z;
     float sqrMag = diff_x * diff_x + diff_y * diff_y + diff_z * diff_z;
 
-    return sqrMag < (Mathf::EPSILON_SRQT);
+    return sqrMag < (Mathf::EPSILON_SQRT);
 }
 
 bool operator!=(const Vector3& v1, const Vector3 v2)

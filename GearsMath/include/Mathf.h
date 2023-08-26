@@ -2,59 +2,32 @@
 #include <numbers>
 #include <limits>
 
-class Mathf
+class Mathf final
 {
-private:
-    Mathf() = delete;
-
 public:
+    Mathf() = delete;
     static constexpr float EPSILON = 1e-5f;
-    static constexpr float EPSILON_SRQT = 1e-5f * 1e-5f;
+    static constexpr float EPSILON_SQRT = 1e-5f * 1e-5f;
     static constexpr float EPSILON_NORMAL_SQRT = 1e-15f;
     static constexpr float PI = std::numbers::pi_v<float>;
     static constexpr float INV_PI = std::numbers::inv_pi_v<float>;
     static constexpr float PHI = std::numbers::phi_v<float>;
     static constexpr float DEG2RAD = PI / 180.0f;
     static constexpr float RAD2DEG = 180.0f / PI;
-    static constexpr float MAX = std::numeric_limits<float>::max();
-    static constexpr float MIN = std::numeric_limits<float>::min();
+    static constexpr float MAX = FLT_MAX;
+    static constexpr float MIN = FLT_MIN;
     static constexpr float POSITIVE_INFINITY = std::numeric_limits<float>::infinity();
     static constexpr float NEGATIVE_INFINITY = -std::numeric_limits<float>::infinity();
-    static constexpr float QNAN = std::numeric_limits<float>::quiet_NaN();
+    static constexpr float QUIET_NAN = std::numeric_limits<float>::quiet_NaN();
 
-    /**
-     * @brief v‚Ì‹t”‚ğ•Ô‚·
-     *
-     * @param v
-     * @return float
-     */
-    static constexpr float Inverse(float v)
+
+    static constexpr float Inverse(const float v)
     {
         return 1.0f / v;
     }
 
-    /**
-     * @brief f‚Ìsin‚ğ•Ô‚·
-     *
-     * @param f
-     * @return float
-     */
     static float Sin(float f);
-
-    /**
-     * @brief f‚Ìcos‚ğ•Ô‚·
-     *
-     * @param f
-     * @return float
-     */
     static float Cos(float f);
-
-    /**
-     * @brief f‚Ìtan‚ğ•Ô‚·
-     *
-     * @param f
-     * @return float
-     */
     static float Tan(float f);
 
     static float Asin(float f);

@@ -360,7 +360,7 @@ bool operator==(const Vector2& v1, const Vector2 v2)
     float diff_y = v1.y - v2.y;
     float sqrMag = diff_x * diff_x + diff_y * diff_y;
 
-    return sqrMag < (Mathf::EPSILON_SRQT);
+    return sqrMag < (Mathf::EPSILON_SQRT);
 }
 
 bool operator!=(const Vector2& v1, const Vector2 v2)
