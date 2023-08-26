@@ -5,7 +5,7 @@
 
 namespace
 {
-    auto s_gameObjectManager = GameObjectManager::Instance();
+    auto s_gameObjectManager = Glib::GameObjectManager::Instance();
 }
 
 void Glib::Scene::SceneManager::Update()
