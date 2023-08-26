@@ -11,15 +11,16 @@ namespace Glib
     {
     public:
         using EnumType = std::underlying_type_t<Enum>;
-        BitFlag() : value_{ static_cast<EnumType> }
+        BitFlag() : value_{}
         {}
 
-        BitFlag(Enum flag) : value_{ static_cast<EnumType> }
+        explicit BitFlag(Enum flag) : value_{ static_cast<EnumType>(flag) }
+        {}
 
-            /**
-             * @brief フラグのセット
-             * @param flag
-             */
+        /**
+         * @brief フラグのセット
+         * @param flag
+         */
         void Set(Enum flag);
 
         /**

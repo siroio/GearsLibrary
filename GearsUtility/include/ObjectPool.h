@@ -38,7 +38,7 @@ namespace Glib
         /**
          * @brief オブジェクトの返却
          */
-        void Release(T*& resource);
+        void Release(T*& object);
 
         /**
          * @brief プールの拡張
@@ -64,7 +64,7 @@ namespace Glib
         /**
          * @brief 利用可能オブジェクトの総数
          */
-        size_t AvaiavbleCount() const;
+        size_t ValidCount() const;
 
         /**
          * @brief コールバック関数の設定
@@ -79,13 +79,13 @@ namespace Glib
         void AddObject(size_t index);
 
     private:
-        ObjectPool(const ObjectPool<T>&) = delete;
-        ObjectPool<T>& operator = (const ObjectPool<T>&) = delete;
+        ObjectPool(const ObjectPool&) = delete;
+        ObjectPool& operator = (const ObjectPool&) = delete;
 
     private:
         /* メンバ変数 */
 
-        bool initialized{ false };
+        bool initialized_{ false };
         std::mutex mutex_;
 
         /* プールリスト */
@@ -108,7 +108,7 @@ namespace Glib
         {
             AddObject(i);
         }
-        initialized = true;
+        initialized_ = true;
         return true;
     }
 
@@ -128,7 +128,7 @@ namespace Glib
     inline T* ObjectPool<T>::Get()
     {
         std::lock_guard lock{ mutex_ };
-        if (!initialized) return nullptr;
+        if (!initialized_) return nullptr;
         if (availableObjects_.empty()) AddObject(objects_.size());
         uintptr_t obj = availableObjects_.front();
         availableObjects_.pop_front();
@@ -140,8 +140,8 @@ namespace Glib
     inline void ObjectPool<T>::Release(T*& object)
     {
         std::lock_guard lock{ mutex_ };
-        if (!initialized) return;
-        auto it = borrowedObjects_.find(reinterpret_cast<uintptr_t>(object));
+        if (!initialized_) return;
+        const auto it = borrowedObjects_.find(reinterpret_cast<uintptr_t>(object));
         if (it != borrowedObjects_.end())
         {
             availableObjects_.push_back(*it);
@@ -164,32 +164,32 @@ namespace Glib
     inline void Glib::ObjectPool<T>::Clear()
     {
         std::lock_guard lock{ mutex_ };
-        if (!initialized) return;
+        if (!initialized_) return;
         objects_.clear();
         availableObjects_.clear();
         borrowedObjects_.clear();
         callback_ = nullptr;
-        initialized = false;
+        initialized_ = false;
     }
 
     template<class T>
     inline size_t ObjectPool<T>::Count() const
     {
-        if (!initialized) return 0;
+        if (!initialized_) return 0;
         return objects_.size();
     }
 
     template<class T>
     inline size_t ObjectPool<T>::UseCount() const
     {
-        if (!initialized) return 0;
+        if (!initialized_) return 0;
         return borrowedObjects_.size();
     }
 
     template<class T>
-    inline size_t ObjectPool<T>::AvaiavbleCount() const
+    inline size_t ObjectPool<T>::ValidCount() const
     {
-        if (!initialized) return 0;
+        if (!initialized_) return 0;
         return availableObjects_.size();
     }
 

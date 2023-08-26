@@ -2,17 +2,14 @@
 #include <string>
 #include <Windows.h>
 #include <functional>
+
 namespace Glib
 {
     /**
      * @brief メッセージボックス表示
     */
-    class MsgBox
+    class MsgBox final
     {
-    private:
-        MsgBox() = default;
-        ~MsgBox() = default;
-
     public:
         enum class RESULT
         {
@@ -50,8 +47,13 @@ namespace Glib
             ASTERISK_ICON = MB_ICONASTERISK
         };
 
-        static RESULT Show(const std::string& msg, const std::string& title, STYLE style, ICON icon, std::function<void(RESULT)> callback = nullptr);
-        static RESULT Show(const std::string& msg, const std::string& title, std::function<void(RESULT)> callback);
-        static RESULT Show(const std::string& msg, std::function<void(RESULT)> callback = nullptr);
+        static RESULT Show(std::string_view msg, std::string_view title, STYLE style, ICON icon, std::function<void(RESULT)> callback = nullptr);
+        static RESULT Show(std::string_view msg, std::string_view title, std::function<void(RESULT)> callback);
+        static RESULT Show(std::string_view msg, std::function<void(RESULT)> callback = nullptr);
+
+    private:
+        MsgBox() = delete;
+        MsgBox(const MsgBox&) = delete;
+        MsgBox& operator = (const MsgBox&) = delete;
     };
 }
