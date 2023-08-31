@@ -10,8 +10,10 @@ namespace Glib
     class BitFlag
     {
     public:
+        // enumの基底型: "char" "int" etc...
         using EnumType = std::underlying_type_t<Enum>;
-        BitFlag() : value_{}
+
+        BitFlag() : value_{ EnumType{} }
         {}
 
         explicit BitFlag(Enum flag) : value_{ static_cast<EnumType>(flag) }
@@ -24,11 +26,18 @@ namespace Glib
         void Set(Enum flag);
 
         /**
+         * @brief フラグのセット
+         * @param flag
+         * @param enable
+         */
+        void Set(Enum flag, bool enable);
+
+        /**
          * @brief フラグがセットされていれるか
          * @param flag
          * @return bool
          */
-        bool Set(Enum flag) const;
+        bool Has(Enum flag) const;
 
         /**
          * @brief フラグのクリア
@@ -38,78 +47,105 @@ namespace Glib
 
         /* 演算子 */
 
-        BitFlag<Enum>& operator |= (Enum&& flag);
-        BitFlag<Enum>& operator &= (Enum&& flag);
-        BitFlag<Enum>& operator ^= (Enum&& flag);
-        BitFlag<Enum>& operator | (Enum&& flag);
-        BitFlag<Enum>& operator & (Enum&& flag);
-        BitFlag<Enum>& operator ^ (Enum&& flag);
-        bool operator==(const BitFlag<Enum>& other) const;
+        BitFlag& operator |= (Enum&& flag);
+        BitFlag& operator &= (Enum&& flag);
+        BitFlag& operator ^= (Enum&& flag);
+        BitFlag& operator | (Enum&& flag);
+        BitFlag& operator & (Enum&& flag);
+        BitFlag& operator ^ (Enum&& flag);
+        bool operator==(const Enum& other) const;
+        bool operator!=(const Enum& other) const;
+        bool operator==(const BitFlag& other) const;
+        bool operator!=(const BitFlag& other) const;
 
     private:
         EnumType value_;
     };
 
-    template<class Enum>
-    inline void BitFlag<Enum>::Set(Enum flag)
+    template<class Enum> requires std::is_enum_v<Enum>
+    void BitFlag<Enum>::Set(Enum flag)
     {
         value_ |= static_cast<EnumType>(flag);
     }
 
-    template<class Enum>
-    inline bool BitFlag<Enum>::Set(Enum flag) const
+    template<class Enum> requires std::is_enum_v<Enum>
+    void BitFlag<Enum>::Set(Enum flag, bool enable)
     {
-        return (value_ & static_cast<EnumType>(flag)) != 0;
+        enable ? Set(flag) : Clear(flag);
     }
 
-    template<class Enum>
-    inline void BitFlag<Enum>::Clear(Enum flag)
+    template<class Enum> requires std::is_enum_v<Enum>
+    bool BitFlag<Enum>::Has(Enum flag) const
+    {
+        return (value_ & static_cast<EnumType>(flag)) == 0;
+    }
+
+    template<class Enum> requires std::is_enum_v<Enum>
+    void BitFlag<Enum>::Clear(Enum flag)
     {
         value_ &= ~static_cast<EnumType>(flag);
     }
 
-    template<class Enum>
-    inline BitFlag<Enum>& BitFlag<Enum>::operator|=(Enum&& flag)
+    template<class Enum> requires std::is_enum_v<Enum>
+    BitFlag<Enum>& BitFlag<Enum>::operator|=(Enum&& flag)
     {
         Set(flag);
         return *this;
     }
 
-    template<class Enum>
-    inline BitFlag<Enum>& BitFlag<Enum>::operator&=(Enum&& flag)
+    template<class Enum> requires std::is_enum_v<Enum>
+    BitFlag<Enum>& BitFlag<Enum>::operator&=(Enum&& flag)
     {
         value_ &= static_cast<std::underlying_type_t<Enum>>(flag);
         return *this;
     }
 
-    template<class Enum>
-    inline BitFlag<Enum>& BitFlag<Enum>::operator^=(Enum&& flag)
+    template<class Enum> requires std::is_enum_v<Enum>
+    BitFlag<Enum>& BitFlag<Enum>::operator^=(Enum&& flag)
     {
         value_ ^= static_cast<std::underlying_type_t<Enum>>(flag);
         return *this;
     }
 
-    template<class Enum>
-    inline BitFlag<Enum>& BitFlag<Enum>::operator|(Enum&& flag)
+    template<class Enum> requires std::is_enum_v<Enum>
+    BitFlag<Enum>& BitFlag<Enum>::operator|(Enum&& flag)
     {
         return BitFlag{ value_ } |= flag;
     }
 
-    template<class Enum>
-    inline BitFlag<Enum>& BitFlag<Enum>::operator&(Enum&& flag)
+    template<class Enum> requires std::is_enum_v<Enum>
+    BitFlag<Enum>& BitFlag<Enum>::operator&(Enum&& flag)
     {
         return BitFlag{ value_ } &= flag;
     }
 
-    template<class Enum>
-    inline BitFlag<Enum>& BitFlag<Enum>::operator^(Enum&& flag)
+    template<class Enum> requires std::is_enum_v<Enum>
+    BitFlag<Enum>& BitFlag<Enum>::operator^(Enum&& flag)
     {
         return BitFlag{ value_ } ^= flag;
     }
 
-    template<class Enum>
-    inline bool BitFlag<Enum>::operator==(const BitFlag<Enum>& other) const
+    template<class Enum> requires std::is_enum_v<Enum>
+    bool BitFlag<Enum>::operator==(const Enum& other) const
+    {
+        return (value_ & static_cast<EnumType>(other)) == 0;
+    }
+
+    template<class Enum> requires std::is_enum_v<Enum>
+    bool BitFlag<Enum>::operator!=(const Enum& other) const
+    {
+        return (value_ & static_cast<EnumType>(other)) != 0;;
+    }
+
+    template<class Enum> requires std::is_enum_v<Enum>
+    bool BitFlag<Enum>::operator==(const BitFlag& other) const
     {
         return value_ == other.value_;
+    }
+
+    template<class Enum> requires std::is_enum_v<Enum>
+    bool BitFlag<Enum>::operator!=(const BitFlag& other) const
+    {
+        return value_ != other.value_;
     }
 }
