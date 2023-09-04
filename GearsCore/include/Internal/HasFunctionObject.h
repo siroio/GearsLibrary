@@ -1,7 +1,7 @@
 #pragma once
 #include <concepts>
-#include <Internal/IFunc.h>
 #include <WeakPtr.h>
+#include <Internal/IFunc.h>
 
 /**
  * @brief 特定の関数を持ったオブジェクトの定義作成

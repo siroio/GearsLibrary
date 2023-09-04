@@ -68,6 +68,11 @@ namespace Glib::Internal
         void AddOnCollisionExit(...)
         {}
 
+        template<class T> requires HasOnMessageFunc<T, void, GameObjectPtr, void*>
+        void AddOnMessage(const std::shared_ptr<T>& component);
+        void AddOnMessage(...)
+        {}
+
     private:
         std::unordered_map<FunctionType, std::deque<FunctionVariant>> functions_;
     };
@@ -143,5 +148,11 @@ namespace Glib::Internal
         functions_[FunctionType::OnCollisionExit].push_back(
             FunctionInfo<void, GameObjectPtr>{ component, std::make_shared<Function::HasOnCollisionExitObject<T, void, GameObjectPtr>>(component)}
         );
+    }
+
+    template<class T> requires HasOnMessageFunc<T, void, GameObjectPtr, void*>
+    inline void ComponentEventFunctionList::AddOnMessage(const std::shared_ptr<T>& component)
+    {
+
     }
 }

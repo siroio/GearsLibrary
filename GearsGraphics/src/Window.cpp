@@ -1,6 +1,7 @@
 ﻿#include <Window.h>
 #include <Vector2.h>
 #include <unordered_set>
+#include <Internal/DX12/DirectX12.h>
 
 namespace
 {
@@ -11,6 +12,7 @@ namespace
     std::string s_windowName_{ "GameWindow" };
     Vector2 s_windowSize_{ 1240.0f, 720.0f };
     Vector2 s_windowDebugSize_{ 1240.0f, 720.0f };
+    bool s_isFullScreen{ false };
 }
 
 LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -146,4 +148,25 @@ void Glib::Window::WindowDebugSize(const Vector2& size)
 {
     if (s_windowHandle_ != NULL) return;
     s_windowDebugSize_ = size;
+}
+
+bool Glib::Window::FullScreen()
+{
+    return s_isFullScreen;
+}
+
+void Glib::Window::FullScreen(bool enable)
+{
+    const auto dx12 = Internal::Graphics::DirectX12::Instance();
+    s_isFullScreen = enable;
+    if (!dx12->SetFullScreen(s_isFullScreen))
+    {
+        std::string msg;
+        msg.append("FILE: ")
+            .append(__FILE__)
+            .append(" LINE: ")
+            .append(std::to_string(__LINE__))
+            .append(" SetFullScreen Error!");
+        throw std::runtime_error{ msg };
+    }
 }

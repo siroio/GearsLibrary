@@ -19,7 +19,7 @@ bool Glib::InputSystem::Initialize()
         GetModuleHandle(nullptr),
         DIRECTINPUT_VERSION,
         IID_IDirectInput8,
-        (void**)s_dinput.ReleaseAndGetAddressOf(),
+        reinterpret_cast<void**>(s_dinput.ReleaseAndGetAddressOf()),
         nullptr
     ));
     if (res) return false;

@@ -7,8 +7,8 @@ namespace Glib::Internal::Input
     struct InputState
     {
         XINPUT_STATE state{};
-        float VibratingStartTime{ 0.0f };
-        float VibratingTime{ 0.0f };
+        float vibratingStartTime{ 0.0f };
+        float vibratingTime{ 0.0f };
         bool isConnected{ true };
         bool isVibrating{ false };
     };

@@ -8,8 +8,6 @@
 #include <GameObject.h>
 #include <GameObjectManager.h>
 #include <Component.h>
-#include <ObjectPool.h>
-#include <InputSystem.h>
 
 
 // テスト用コンポーネント
@@ -36,25 +34,25 @@ public:
 class TestScene : public Glib::Scene::Scene
 {
 public:
-    virtual void Start() override
+    void Start() override
     {
         Debug::Log("Scene Loaded...");
-        auto go = GameObjectManager::Instantiate("TestObject");
+        auto go = Glib::GameObjectManager::Instantiate("TestObject");
         if (!go.expired())Debug::Log("TestObject Created!");
         auto ptr = go->AddComponent<TestComponent>();
-        Debug::Log(Glib::as_string(go->Name()) + "ActiveStatus: " + std::to_string(ptr->Active()));
+        Debug::Log(Glib::ToString(go->Name()) + "ActiveStatus: " + std::to_string(ptr->Active()));
     }
 
-    virtual void End() override
+    void End() override
     {
         Debug::Log("Scene Ended...");
     }
 };
 
 // ゲーム本体
-class MyGame : public Game
+class MyGame : public Glib::Game
 {
-    virtual void Start() override
+    void Start() override
     {
         Debug::Log("GAME STARTTING");
         Glib::Scene::SceneManager::Register<TestScene>();
@@ -64,7 +62,7 @@ class MyGame : public Game
         Debug::Log("TestScene Load Complete");
     }
 
-    virtual void End() override
+    void End() override
     {
         std::cout << "GAME END" << std::endl;
     }

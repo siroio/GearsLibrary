@@ -16,5 +16,5 @@ enum class ComponentFunctionType
     OnCollisionEnter,
     OnCollisionStay,
     OnCollisionExit,
-    ReceiveEvent,
+    OnMessage,
 };

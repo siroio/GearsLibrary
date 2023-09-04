@@ -1,10 +1,12 @@
 #include <Internal/ImGuiManager.h>
 #include <Internal/ImGuiInc.h>
-#include <DX12/Internal/d3dx12Inc.h>
-#include <DX12/Internal/DirectX12.h>
-#include <DX12/RenderTarget.h>
+#include <Internal/DX12/d3dx12Inc.h>
+#include <Internal/DX12/DirectX12.h>
+#include <RenderTarget.h>
 #include <Window.h>
 #include <Vector2.h>
+
+#include "RenderTarget.h"
 
 namespace
 {
@@ -35,7 +37,7 @@ bool Glib::Internal::Debug::ImGuiManager::Initialize()
     //    static_cast<UINT>(windowSize.x),
     //    static_cast<UINT>(windowSize.y),
     //    DXGI_FORMAT_R8G8B8A8_UNORM,
-    //    dx12_->DescriptorPool(Graphics::DirectX12::POOLTYPE::RES)
+    //    dx12_->DescriptorPool(Graphics::DirectX12::PoolType::RES)
     //);
     //if (!result) return false;
 
@@ -45,7 +47,7 @@ bool Glib::Internal::Debug::ImGuiManager::Initialize()
     //    dx12_->Device().Get(),
     //    NUM_FRAMES_IN_FLIGHT,
     //    DXGI_FORMAT_R8G8B8A8_UNORM,
-    //    dx12_->DescriptorPool(Graphics::DirectX12::POOLTYPE::RES)->GetHeap().Get(),
+    //    dx12_->DescriptorPool(Graphics::DirectX12::PoolType::RES)->GetHeap().Get(),
     //    renderTarget_.Handle()->CPU(),
     //    renderTarget_.Handle()->GPU()
     //);

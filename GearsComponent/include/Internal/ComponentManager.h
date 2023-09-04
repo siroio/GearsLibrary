@@ -1,14 +1,12 @@
 #pragma once
+#include <unordered_map>
 #include <GameObjectPtr.h>
 #include <FuncOrderDefinition.h>
 #include <Internal/FuncOrderConstant.h>
 #include <Internal/ISystem.h>
-#include <Internal/IComponent.h>
 #include <Internal/ComponentFunctionList.h>
 #include <Internal/ComponentEventFunctionList.h>
 #include <Singleton.h>
-
-#include <unordered_map>
 
 namespace Glib::Internal
 {

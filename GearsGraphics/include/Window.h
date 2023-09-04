@@ -13,7 +13,7 @@ namespace Glib
     class Window : public Singleton<Window>
     {
         Window() = default;
-        friend Window& Singleton<Window>::Instance();
+        friend Window& Glib::Singleton<Window>::Instance();
 
     public:
 
@@ -26,6 +26,8 @@ namespace Glib
          * @brief Windowの終了
         */
         void Finalize();
+
+    public:
 
         /**
          * @brief インスタンスハンドルの取得
@@ -80,5 +82,16 @@ namespace Glib
          * @brief デバッグ時のウィンドウサイズを設定
          */
         static void WindowDebugSize(const Vector2& size);
+
+        /**
+         * @brief フルスクリーンなのかを取得
+         */
+        static bool FullScreen();
+
+        /**
+         * @brief フルスクリーンの切り替え
+         * @param enable 有効化
+         */
+        static void FullScreen(bool enable);
     };
 }

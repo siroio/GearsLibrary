@@ -1,17 +1,25 @@
 #include <Internal/MouseDevice.h>
+#include <Window.h>
 #include <vector>
+
 namespace
 {
-    enum KEY
+    enum KEY : unsigned char
     {
         DOWN = 0,
         UP = 1
     };
+
+    auto& window = Glib::Window::Instance();
 }
 
 bool Glib::Internal::Input::MouseDevice::Initialize()
 {
     // デバイスの登録
+    window.WndProc([](HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpram)
+    {
+        return static_cast<LRESULT>(0);
+    });
     return true;
 }
 

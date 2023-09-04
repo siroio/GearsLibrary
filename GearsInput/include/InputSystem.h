@@ -14,10 +14,17 @@ namespace Glib
     {
     private:
         InputSystem() = default;
-        friend WeakPtr<InputSystem> SingletonPtr<InputSystem>::Instance();
+        friend WeakPtr<InputSystem> Glib::SingletonPtr<InputSystem>::Instance();
 
     public:
+        /**
+         * @brief 入力デバイスの初期化
+         */
         bool Initialize();
+
+        /**
+         * @brief 入力を取得
+         */
         void Update();
 
         /**
