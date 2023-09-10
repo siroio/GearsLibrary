@@ -58,6 +58,9 @@ namespace Glib::Internal::Graphics::InputLayout
         D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
     };
 
+    /**
+     * @brief êF
+    */
     constexpr D3D12_INPUT_ELEMENT_DESC COLOR
     {
         "COLOR", 0,
