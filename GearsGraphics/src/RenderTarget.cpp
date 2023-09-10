@@ -39,11 +39,8 @@ bool Glib::Graphics::RenderTarget::Create(uint32_t width, uint32_t height, DXGI_
     width_ = width;
     height_ = height;
 
-    if (renderFormat == DXGI_FORMAT_UNKNOWN ||
-        !CreateRenderTargetBuffer(renderFormat)) return false;
-
-    if (depthFormat == DXGI_FORMAT_UNKNOWN ||
-        !CreateDepthStencilBuffer(depthFormat)) return false;
+    if (renderFormat == DXGI_FORMAT_UNKNOWN && !CreateRenderTargetBuffer(renderFormat)) return false;
+    if (depthFormat == DXGI_FORMAT_UNKNOWN && !CreateDepthStencilBuffer(depthFormat)) return false;
 
     CreateView(renderFormat, depthFormat);
 
@@ -109,7 +106,7 @@ void Glib::Graphics::RenderTarget::CreateView(DXGI_FORMAT rtvFormat, DXGI_FORMAT
         );
     }
 
-    if (dsvHandle_ == nullptr)
+    if (dsvHandle_ != nullptr)
     {
         D3D12_DEPTH_STENCIL_VIEW_DESC desc{};
         desc.Format = dsvFormat;
