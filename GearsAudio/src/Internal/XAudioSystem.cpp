@@ -20,8 +20,8 @@ namespace
     std::shared_ptr<IXAudio2MasteringVoice> s_masterVoice{ nullptr };
 
     // 3D AUDIO
-    std::unique_ptr<X3DAUDIO_HANDLE> s_X3DAudioHandle;
-    std::unique_ptr<X3DAUDIO_LISTENER> s_X3DAudioListener;
+    X3DAUDIO_HANDLE s_X3DAudioHandle{};
+    X3DAUDIO_LISTENER s_X3DAudioListener{};
     std::array<X3DAUDIO_DSP_SETTINGS, 2> s_X3DAudioDspSettings;
 
     unsigned int s_channelNum;
@@ -55,14 +55,11 @@ bool Glib::Internal::Audio::XAudioSystem::Initialize()
     if (FAILED(s_masterVoice->GetChannelMask(&dwChannelMask)))
         return false;
 
-    std::unique_ptr<X3DAUDIO_HANDLE> x3DInstance;
-    if (FAILED(X3DAudioInitialize(dwChannelMask, X3DAUDIO_SPEED_OF_SOUND, *x3DInstance)))
+    if (FAILED(X3DAudioInitialize(dwChannelMask, X3DAUDIO_SPEED_OF_SOUND, s_X3DAudioHandle)))
         return false;
-    s_X3DAudioHandle = std::move(x3DInstance);
 
-    s_X3DAudioListener = std::make_unique<X3DAUDIO_LISTENER>();
-    s_X3DAudioListener->OrientFront = { 0.0f, 0.0f, 1.0f };
-    s_X3DAudioListener->OrientTop = { 0.0f, 1.0f, 0.0f };
+    s_X3DAudioListener.OrientFront = { 0.0f, 0.0f, 1.0f };
+    s_X3DAudioListener.OrientTop = { 0.0f, 1.0f, 0.0f };
 
     XAUDIO2_VOICE_DETAILS details{};
     s_masterVoice->GetVoiceDetails(&details);
@@ -106,7 +103,7 @@ bool Glib::Internal::Audio::XAudioSystem::LoadVoice(unsigned id, std::string_vie
 
     // Šg’£Žq‚ð¬•¶Žš‚Å”²‚«o‚·
     const std::filesystem::path file{ path.data() };
-    const std::string extension = file.filename().extension().string();
+    std::string extension = file.filename().extension().string();
     XAUDIO2_BUFFER buffer{};
     std::transform(extension.begin(), extension.end(), extension.begin(), tolower);
 
@@ -130,7 +127,7 @@ void Glib::Internal::Audio::XAudioSystem::Audio3DCalculate(const X3DAUDIO_EMITTE
     else return;
 
     static DWORD flags = X3DAUDIO_CALCULATE_MATRIX | X3DAUDIO_CALCULATE_DOPPLER | X3DAUDIO_CALCULATE_LPF_DIRECT;
-    X3DAudioCalculate(*s_X3DAudioHandle, s_X3DAudioListener.get(), emitter, flags, dspSettings);
+    X3DAudioCalculate(s_X3DAudioHandle, &s_X3DAudioListener, emitter, flags, dspSettings);
 
     IXAudio2Voice* destinationVoice = s_masterVoice.get();
     if (s_subMixVoice.contains(groupId))
@@ -186,9 +183,9 @@ void Glib::Internal::Audio::XAudioSystem::SetOutputSubMixVoice(IXAudio2SourceVoi
 void Glib::Internal::Audio::XAudioSystem::SetListenerParameter(const Vector3& position, const Vector3& forward, const Vector3& up)
 {
     Vector3 velocity{
-        position.x - s_X3DAudioListener->Position.x,
-        position.y - s_X3DAudioListener->Position.y,
-        position.z - s_X3DAudioListener->Position.z
+        position.x - s_X3DAudioListener.Position.x,
+        position.y - s_X3DAudioListener.Position.y,
+        position.z - s_X3DAudioListener.Position.z
     };
 
     // velocity‚ÌŒvŽZ
@@ -197,10 +194,10 @@ void Glib::Internal::Audio::XAudioSystem::SetListenerParameter(const Vector3& po
         Vector3::Zero() :
         velocity.Normalized() / deltaTime;
 
-    s_X3DAudioListener->Velocity = { velocity.x, velocity.y, velocity.z };
-    s_X3DAudioListener->Position = { position.x, position.y, position.z };
-    s_X3DAudioListener->OrientFront = { forward.x, forward.y, forward.z };
-    s_X3DAudioListener->OrientTop = { up.x, up.y, up.z };
+    s_X3DAudioListener.Velocity = { velocity.x, velocity.y, velocity.z };
+    s_X3DAudioListener.Position = { position.x, position.y, position.z };
+    s_X3DAudioListener.OrientFront = { forward.x, forward.y, forward.z };
+    s_X3DAudioListener.OrientTop = { up.x, up.y, up.z };
 }
 
 void Glib::Internal::Audio::XAudioSystem::SetGroupVolume(unsigned int groupId, float volume)

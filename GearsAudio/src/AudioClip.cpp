@@ -15,7 +15,7 @@ Glib::AudioClip::AudioClip(std::string_view name, const WAVEFORMATEX& format, co
     XAUDIO2_BUFFER buffer{};
     buffer.pAudioData = audioData_.data();
     buffer.Flags = XAUDIO2_END_OF_STREAM;
-    buffer.AudioBytes = audioData_.size();
+    buffer.AudioBytes = static_cast<UINT32>(audioData_.size());
     buffer.LoopCount = 0;
     buffer_ = buffer;
 }
