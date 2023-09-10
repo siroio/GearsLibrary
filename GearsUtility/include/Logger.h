@@ -1,8 +1,7 @@
 #pragma once
-#include <string_view>
 #include <iostream>
-#include <cstdarg>
 #include <format>
+#include <string_view>
 #include <TimeUtility.h>
 
 class Debug final
@@ -22,14 +21,14 @@ public:
 
     static inline bool DebugEnabled()
     {
-#ifdef _DEBUG
+#if defined(DEBUG) || defined(_DEBUG)
         return true;
 #else
         return false;
 #endif
     }
 
-#ifdef _DEBUG
+#if defined(DEBUG) || defined(_DEBUG)
     /**
      * @brief メッセージ指定なしassert
      */
@@ -65,15 +64,13 @@ public:
     /**
      * @brief フォーマット指定で出力
      */
-    static void Format(const char* format, ...)
+    template<class... Args>
+    static void Format(std::string_view fmt, const Args&... args)
     {
-        printf(Glib::TimeUtility::CurrentTimeStr().c_str());
-        va_list args{};
-        va_start(args, format);
-        vprintf(format, args);
-        va_end(args);
-        delete args;
+        std::cout << Glib::TimeUtility::CurrentTimeStr();
+        std::cout << std::format(fmt, args) << std::endl;
     }
+
 #else
     static void Assert(...)
     {}
@@ -82,4 +79,4 @@ public:
     static void Format(...)
     {}
 #endif
-    };
+};
