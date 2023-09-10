@@ -36,7 +36,7 @@ namespace Glib::Internal::Graphics
          * @param shader シェーダー情報
          * @return
          */
-        static bool CompileShader(const Glib::Graphics::Shader& shader);
+        bool CompileShader(const Glib::Graphics::Shader& shader);
 
     private:
         ComPtr<ID3DBlob> CompileFromFile(const Glib::Graphics::Shader& shader);
