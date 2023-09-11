@@ -156,6 +156,15 @@ public:
     static Vector2 Max(const Vector2& lhs, const Vector2& rhs);
 
     /**
+     * @brief ベクトルを範囲に収める
+     * @param vector 収めたいベクトル
+     * @param min 最低値
+     * @param max 最大値
+     * @return 収めたベクトル
+    */
+    static Vector2 Clamp(const Vector2& vector, float min, float max);
+
+    /**
      * @brief 2つのベクトルの要素ごとの積を計算し、その結果をVector2として返す
      * @param a 1つ目のベクトル
      * @param b 2つ目のベクトル

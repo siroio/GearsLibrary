@@ -100,6 +100,14 @@ Vector2 Vector2::Max(const Vector2& lhs, const Vector2& rhs)
     return Vector2{ Mathf::Max(lhs.x, rhs.x), Mathf::Max(lhs.y, rhs.y) };
 }
 
+Vector2 Vector2::Clamp(const Vector2& vector, float min, float max)
+{
+    return Vector2{
+        Mathf::Clamp(vector.x, min, max),
+        Mathf::Clamp(vector.y, min, max)
+    };
+}
+
 Vector2 Vector2::Scale(const Vector2& a, const Vector2& b)
 {
     return Vector2{ a.x * b.x, a.y * b.y };
