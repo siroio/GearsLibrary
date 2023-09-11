@@ -17,12 +17,12 @@ namespace Glib::Scene
      * @brief シーン管理クラス
      */
     class SceneManager :
-        public Glib::Internal::Interface::ISystem,
-        public Glib::SingletonPtr<SceneManager>,
-        public Glib::Internal::Function::UpdateOrderSet<Glib::Internal::Order::Update::SCENE>
+        public Internal::Interface::ISystem,
+        public SingletonPtr<SceneManager>,
+        public Internal::Function::UpdateOrderSet<Internal::Order::Update::SCENE>
     {
         SceneManager() = default;
-        friend Glib::WeakPtr<SceneManager> Glib::SingletonPtr<SceneManager>::Instance();
+        friend WeakPtr<SceneManager> SingletonPtr<SceneManager>::Instance();
 
     public:
 

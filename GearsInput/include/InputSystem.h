@@ -14,7 +14,7 @@ namespace Glib
     {
     private:
         InputSystem() = default;
-        friend WeakPtr<InputSystem> Glib::SingletonPtr<InputSystem>::Instance();
+        friend WeakPtr<InputSystem> SingletonPtr<InputSystem>::Instance();
 
     public:
         /**

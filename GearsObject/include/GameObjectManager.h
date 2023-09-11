@@ -12,11 +12,11 @@ namespace Glib
      * @brief ゲームオブジェクト管理クラス
      */
     class GameObjectManager final :
-        public Glib::Internal::Interface::ISystem,
-        public Glib::SingletonPtr<GameObjectManager>
+        public Internal::Interface::ISystem,
+        public SingletonPtr<GameObjectManager>
     {
     private:
-        friend Glib::WeakPtr<GameObjectManager> Glib::SingletonPtr<GameObjectManager>::Instance();
+        friend WeakPtr<GameObjectManager> SingletonPtr<GameObjectManager>::Instance();
         GameObjectManager() = default;
 
     public:

@@ -13,7 +13,7 @@ namespace Glib::Internal::Graphics
     {
     private:
         GraphicsResource() = default;
-        friend WeakPtr<GraphicsResource> Glib::SingletonPtr<GraphicsResource>::Instance();
+        friend WeakPtr<GraphicsResource> SingletonPtr<GraphicsResource>::Instance();
 
     public:
 
@@ -50,6 +50,7 @@ namespace Glib::Internal::Graphics
         bool CreateImageVertexBuffer();
 
         /*  テクスチャ作成  */
+
         bool CreateWhiteTexture();
         bool CreateNormalMapTexture();
 

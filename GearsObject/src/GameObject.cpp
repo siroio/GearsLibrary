@@ -12,7 +12,7 @@ GameObject::~GameObject()
 
 void GameObject::Initialize()
 {
-    transform_ = AddComponent<class Transform>();
+    transform_ = AddComponent<Glib::Transform>();
 }
 
 void GameObject::RemoveComponents()
@@ -85,7 +85,7 @@ bool GameObject::IsDead() const
     return isDead_;
 }
 
-const Glib::WeakPtr<Transform>& GameObject::Transform() const
+const Glib::WeakPtr<Glib::Transform>& GameObject::Transform() const
 {
     return transform_;
 }

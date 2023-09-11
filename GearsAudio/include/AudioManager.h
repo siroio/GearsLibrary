@@ -6,10 +6,10 @@ namespace Glib
 {
     class AudioManager final :
         public Internal::Interface::ISystem,
-        public Glib::SingletonPtr<AudioManager>
+        public SingletonPtr<AudioManager>
     {
         AudioManager() = default;
-        friend WeakPtr<AudioManager> Glib::SingletonPtr<AudioManager>::Instance();
+        friend WeakPtr<AudioManager> SingletonPtr<AudioManager>::Instance();
 
     public:
         /**

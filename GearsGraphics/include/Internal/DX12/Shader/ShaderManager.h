@@ -15,7 +15,7 @@ namespace Glib::Internal::Graphics
         public SingletonPtr<ShaderManager>
     {
         ShaderManager() = default;
-        friend WeakPtr<ShaderManager> Glib::SingletonPtr<ShaderManager>::Instance();
+        friend WeakPtr<ShaderManager> SingletonPtr<ShaderManager>::Instance();
 
     public:
         bool Initialize();

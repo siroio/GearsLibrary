@@ -14,6 +14,8 @@ set(SOURCE_FILE
     ./src/Internal/DX12/GraphicsResource.cpp
     ./src/Internal/DX12/Shader/Shader.cpp
     ./src/Internal/DX12/Shader/ShaderManager.cpp
+    ./src/Internal/CameraManager.cpp
+    ./src/Components/Camera.cpp
     ./src/RenderTarget.cpp
     ./src/Window.cpp
 )
@@ -35,6 +37,10 @@ set(HEADER_FILE
     ./include/Internal/DX12/Shader/ShaderType.h
     ./include/Internal/DX12/Shader/Shader.h
     ./include/Internal/DX12/Shader/ShaderManager.h
+    ./include/Internal/ICamera.h
+    ./include/Internal/CameraBase.h
+    ./include/Internal/CameraManager.h
+    ./include/Components/Camera.h
     ./include/RenderTarget.h
     ./include/Window.h
 )

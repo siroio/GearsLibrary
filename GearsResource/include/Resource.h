@@ -18,7 +18,7 @@ namespace Glib
         public SingletonPtr<Resource>
     {
         Resource() = default;
-        friend WeakPtr<Resource> Glib::SingletonPtr<Resource>::Instance();
+        friend WeakPtr<Resource> SingletonPtr<Resource>::Instance();
 
     public:
         bool Initialize();

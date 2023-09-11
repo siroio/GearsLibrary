@@ -33,7 +33,7 @@ std::string Glib::Graphics::Shader::Name() const
 
 std::wstring Glib::Graphics::Shader::Path() const
 {
-    if (shaderUnit_.index() == 0) return L"";
+    if (shaderUnit_.index() == 1) return L"";
     return std::get<0>(shaderUnit_);
 }
 

@@ -7,6 +7,26 @@ namespace
     auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
 }
 
+bool Glib::Graphics::RenderTarget::Create(uint32_t width, uint32_t height, Color clearColor, DXGI_FORMAT renderFormat, DXGI_FORMAT depthFormat)
+{
+    width_ = width;
+    height_ = height;
+    clearColor_ = clearColor;
+
+    if (renderFormat != DXGI_FORMAT_UNKNOWN)
+    {
+        if (!CreateRenderTargetBuffer(renderFormat)) return false;
+    }
+    if (depthFormat != DXGI_FORMAT_UNKNOWN)
+    {
+        if (!CreateDepthStencilBuffer(depthFormat)) return false;
+    }
+
+    CreateView(renderFormat, depthFormat);
+
+    return true;
+}
+
 bool Glib::Graphics::RenderTarget::Create(uint32_t index, ComPtr<IDXGISwapChain> swapChain)
 {
     if (swapChain == nullptr) return false;
@@ -30,19 +50,6 @@ bool Glib::Graphics::RenderTarget::Create(uint32_t index, ComPtr<IDXGISwapChain>
         &rtvDesc,
         rtvHandle_->CPU()
     );
-
-    return true;
-}
-
-bool Glib::Graphics::RenderTarget::Create(uint32_t width, uint32_t height, DXGI_FORMAT renderFormat, DXGI_FORMAT depthFormat)
-{
-    width_ = width;
-    height_ = height;
-
-    if (renderFormat == DXGI_FORMAT_UNKNOWN && !CreateRenderTargetBuffer(renderFormat)) return false;
-    if (depthFormat == DXGI_FORMAT_UNKNOWN && !CreateDepthStencilBuffer(depthFormat)) return false;
-
-    CreateView(renderFormat, depthFormat);
 
     return true;
 }
@@ -158,4 +165,22 @@ DXGI_FORMAT Glib::Graphics::RenderTarget::RenderTargetFormat() const
 DXGI_FORMAT Glib::Graphics::RenderTarget::DepthStencilFormat() const
 {
     return depthStencil_ == nullptr ? DXGI_FORMAT_UNKNOWN : depthStencil_->GetDesc().Format;
+}
+
+void Glib::Graphics::RenderTarget::AsTexture() const
+{
+    s_dx12->Barrier(
+        renderTarget_.Get(),
+        D3D12_RESOURCE_STATE_RENDER_TARGET,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+    );
+}
+
+void Glib::Graphics::RenderTarget::AsRenderTarget() const
+{
+    s_dx12->Barrier(
+        renderTarget_.Get(),
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+        D3D12_RESOURCE_STATE_RENDER_TARGET
+    );
 }

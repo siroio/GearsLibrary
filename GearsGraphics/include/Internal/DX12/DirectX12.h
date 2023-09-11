@@ -23,7 +23,7 @@ namespace Glib::Internal::Graphics
         public Function::BeginDrawOrderSet<Order::BeginDraw::DX12_BEGINDRAW>
     {
         DirectX12() = default;
-        friend WeakPtr<DirectX12> Glib::SingletonPtr<DirectX12>::Instance();
+        friend WeakPtr<DirectX12> SingletonPtr<DirectX12>::Instance();
 
     public:
         enum class PoolType : unsigned int
@@ -67,6 +67,7 @@ namespace Glib::Internal::Graphics
          */
         bool SetFullScreen(bool set);
 
+
         /**
          * @brief デバイスを取得
          */
@@ -91,6 +92,11 @@ namespace Glib::Internal::Graphics
          * @brief リソースデスクを取得
          */
         D3D12_RESOURCE_DESC BackBufferResourceDesc() const;
+
+        /**
+         * @brief バリアの推移
+        */
+        void Barrier(ID3D12Resource* resource, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after);
 
         /**
          * @brief 背景色の取得

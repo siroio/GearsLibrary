@@ -16,7 +16,7 @@ namespace Glib
         using Clock = std::chrono::high_resolution_clock;
         using TimePoint = Clock::time_point;
         using Duration = std::chrono::duration<float>;
-        friend WeakPtr<GameTimer> Glib::SingletonPtr<GameTimer>::Instance();
+        friend WeakPtr<GameTimer> SingletonPtr<GameTimer>::Instance();
         GameTimer() = default;
 
     public:

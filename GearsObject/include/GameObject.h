@@ -153,7 +153,7 @@ public:
      * @brief ゲームオブジェクトのトランスフォームを取得
      * @return
      */
-    const Glib::WeakPtr<Transform>& Transform() const;
+    const Glib::WeakPtr<Glib::Transform>& Transform() const;
 
 private:
     virtual void Initialize() override;
@@ -165,7 +165,7 @@ private:
     std::string name_{ "" };
     std::string tag_{ "" };
     std::list<std::shared_ptr<Component>> components_;
-    Glib::WeakPtr<class Transform> transform_{ nullptr };
+    Glib::WeakPtr<Glib::Transform> transform_{ nullptr };
 };
 
 template<class T, class... Args> requires IsComponent<T>

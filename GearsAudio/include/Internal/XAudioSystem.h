@@ -20,7 +20,7 @@ namespace Glib::Internal::Audio
         public SingletonPtr<XAudioSystem>
     {
         XAudioSystem() = default;
-        friend  WeakPtr<XAudioSystem> Glib::SingletonPtr<XAudioSystem>::Instance();
+        friend  WeakPtr<XAudioSystem> SingletonPtr<XAudioSystem>::Instance();
 
     public:
         bool Initialize();

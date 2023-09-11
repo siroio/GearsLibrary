@@ -20,11 +20,11 @@ namespace Glib::Internal
      */
     class ComponentManager final :
         public Interface::ISystem,
-        public Glib::SingletonPtr<ComponentManager>,
-        public Glib::Internal::Function::UpdateOrderSet<Glib::Internal::Order::Update::COMPONENT>
+        public SingletonPtr<ComponentManager>,
+        public Internal::Function::UpdateOrderSet<Internal::Order::Update::COMPONENT>
     {
     private:
-        friend Glib::WeakPtr<ComponentManager> Glib::SingletonPtr<ComponentManager>::Instance();
+        friend WeakPtr<ComponentManager> SingletonPtr<ComponentManager>::Instance();
         ComponentManager() = default;
 
     public:

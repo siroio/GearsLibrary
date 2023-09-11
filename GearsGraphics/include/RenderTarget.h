@@ -13,11 +13,6 @@ namespace Glib::Graphics
         RenderTarget() = default;
 
         /**
-         * @brief スワップチェーン用レンダーターゲットの作成
-         */
-        bool Create(uint32_t index, ComPtr<IDXGISwapChain> swapChain);
-
-        /**
          * @brief レンダーターゲットの作成
          * @param width 幅
          * @param height 高さ
@@ -25,7 +20,12 @@ namespace Glib::Graphics
          * @param depthFormat 深度バッファーフォーマット
          * @return 成功 true
          */
-        bool Create(uint32_t width, uint32_t height, DXGI_FORMAT renderFormat, DXGI_FORMAT depthFormat = DXGI_FORMAT_UNKNOWN);
+        bool Create(uint32_t width, uint32_t height, Color clearColor, DXGI_FORMAT renderFormat, DXGI_FORMAT depthFormat = DXGI_FORMAT_UNKNOWN);
+
+        /**
+         * @brief スワップチェーン用レンダーターゲットの作成
+         */
+        bool Create(uint32_t index, ComPtr<IDXGISwapChain> swapChain);
 
         /**
          * @brief レンダーターゲットのハンドル
@@ -47,7 +47,14 @@ namespace Glib::Graphics
          */
         ComPtr<ID3D12Resource> DepthStencilResource() const;
 
+        /**
+         * @brief レンダーターゲットのリソース設定
+        */
         D3D12_RESOURCE_DESC RTVResourceDesc() const;
+
+        /**
+         * @brief 深度バッファのリソース設定
+        */
         D3D12_RESOURCE_DESC DSVResourceDesc() const;
 
         /**
@@ -59,6 +66,16 @@ namespace Glib::Graphics
          * @brief 深度バッファのフォーマット
          */
         DXGI_FORMAT DepthStencilFormat() const;
+
+        /**
+         * @brief テクスチャとして利用
+        */
+        void AsTexture() const;
+
+        /**
+         * @brief レンダーターゲットとして利用
+        */
+        void AsRenderTarget() const;
 
     private:
         bool CreateRenderTargetBuffer(DXGI_FORMAT format);

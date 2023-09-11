@@ -3,7 +3,7 @@
 namespace Glib
 {
     template<class T>
-    void SafeDelete(T*& ptr)
+    inline void SafeDelete(T*& ptr)
     {
         if (ptr != nullptr)
         {
@@ -13,7 +13,7 @@ namespace Glib
     }
 
     template<class T>
-    void SafeDeleteArray(T*& ptr)
+    inline void SafeDeleteArray(T*& ptr)
     {
         if (ptr != nullptr)
         {
@@ -23,7 +23,7 @@ namespace Glib
     }
 
     template<class T>
-    void SafeRelease(T*& ptr)
+    inline void SafeRelease(T*& ptr)
     {
         if constexpr (requires{ ptr->Release(); })
         {

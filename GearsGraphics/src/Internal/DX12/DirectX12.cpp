@@ -91,9 +91,9 @@ bool Glib::Internal::Graphics::DirectX12::Initialize()
     if (FAILED(s_device->CreateFence(s_fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(s_fence.ReleaseAndGetAddressOf())))) return false;
 
 #if defined(DEBUG) || defined(_DEBUG)
-    const auto& windowSize = Window::WindowSize();
-#else
     const auto& windowSize = Window::WindowDebugSize();
+#else
+    const auto& windowSize = Window::WindowSize();
 #endif
 
     // ビューポート設定
@@ -117,37 +117,31 @@ void Glib::Internal::Graphics::DirectX12::BeginDraw()
 {
     const auto bbIdx = s_swapChain->GetCurrentBackBufferIndex();
 
-    const auto barrierDesc = CD3DX12_RESOURCE_BARRIER::Transition(
-        s_backBuffers[bbIdx].RenderTargetResource().Get(),
-        D3D12_RESOURCE_STATE_PRESENT,
-        D3D12_RESOURCE_STATE_RENDER_TARGET
-    );
-
-    s_cmdList->List()->ResourceBarrier(1, &barrierDesc);
+    Barrier(s_backBuffers[bbIdx].RenderTargetResource().Get(),
+            D3D12_RESOURCE_STATE_PRESENT,
+            D3D12_RESOURCE_STATE_RENDER_TARGET);
 
     auto& rtvH = s_backBuffers[bbIdx].RTVHandle()->CPU();
     s_cmdList->List()->OMSetRenderTargets(1, &rtvH, true, nullptr);
     s_cmdList->List()->ClearRenderTargetView(rtvH, s_backGroundColor.rgba.data(), 0, nullptr);
 
-    for (const WeakPtr<class DescriptorPool> descriptor : s_descriptors)
+    for (const auto& descriptor : s_descriptors)
     {
         if (descriptor->UseHeapCount() <= 0) continue;
         s_cmdList->List()->SetDescriptorHeaps(
             static_cast<UINT>(descriptor->UseHeapCount()),
-            descriptor->GetHeap().GetAddressOf()
-        );
+            descriptor->GetHeap().GetAddressOf());
     }
 }
 
 void Glib::Internal::Graphics::DirectX12::EndDraw()
 {
     const auto bbIdx = s_swapChain->GetCurrentBackBufferIndex();
-    const auto barrierDesc = CD3DX12_RESOURCE_BARRIER::Transition(
-        s_backBuffers[bbIdx].RenderTargetResource().Get(),
-        D3D12_RESOURCE_STATE_RENDER_TARGET,
-        D3D12_RESOURCE_STATE_PRESENT
-    );
-    s_cmdList->List()->ResourceBarrier(1, &barrierDesc);
+
+    Barrier(s_backBuffers[bbIdx].RenderTargetResource().Get(),
+            D3D12_RESOURCE_STATE_RENDER_TARGET,
+            D3D12_RESOURCE_STATE_PRESENT);
+
     ExecuteCommandList();
     s_swapChain->Present(0, 0);
 }
@@ -196,6 +190,12 @@ D3D12_RESOURCE_DESC Glib::Internal::Graphics::DirectX12::BackBufferResourceDesc(
     return s_backBuffers[0].RTVResourceDesc();
 }
 
+void Glib::Internal::Graphics::DirectX12::Barrier(ID3D12Resource* resource, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after)
+{
+    auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(resource, before, after, 0);
+    s_cmdList->List()->ResourceBarrier(1, &barrier);
+}
+
 const Color& Glib::Internal::Graphics::DirectX12::BackGroundColor()
 {
     return s_backGroundColor;
@@ -237,7 +237,7 @@ bool Glib::Internal::Graphics::DirectX12::InitDevice()
         D3D_FEATURE_LEVEL_11_0,
     };
 
-    for (auto&& level : levels)
+    for (const auto& level : levels)
     {
         auto result = SUCCEEDED(D3D12CreateDevice(adapter.Get(), level, IID_PPV_ARGS(s_device.ReleaseAndGetAddressOf())));
         if (result == S_OK) break;
@@ -261,9 +261,9 @@ bool Glib::Internal::Graphics::DirectX12::InitCommand()
 bool Glib::Internal::Graphics::DirectX12::CreateSwapChain()
 {
 #if defined(DEBUG) || defined(_DEBUG)
-    const auto& windowSize = Window::WindowSize();
-#else
     const auto& windowSize = Window::WindowDebugSize();
+#else
+    const auto& windowSize = Window::WindowSize();
 #endif
 
     DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
