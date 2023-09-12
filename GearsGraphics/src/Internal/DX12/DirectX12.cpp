@@ -121,22 +121,23 @@ void Glib::Internal::Graphics::DirectX12::BeginDraw()
             D3D12_RESOURCE_STATE_PRESENT,
             D3D12_RESOURCE_STATE_RENDER_TARGET);
 
-    auto& rtvH = s_backBuffers[bbIdx].RTVHandle()->CPU();
+    const auto& rtvH = s_backBuffers[bbIdx].RTVHandle()->CPU();
     s_cmdList->List()->OMSetRenderTargets(1, &rtvH, true, nullptr);
     s_cmdList->List()->ClearRenderTargetView(rtvH, s_backGroundColor.rgba.data(), 0, nullptr);
+
+    std::vector<ID3D12DescriptorHeap*> heaps{};
 
     for (const auto& descriptor : s_descriptors)
     {
         if (descriptor->UseHeapCount() <= 0) continue;
-        s_cmdList->List()->SetDescriptorHeaps(
-            static_cast<UINT>(descriptor->UseHeapCount()),
-            descriptor->GetHeap().GetAddressOf());
+        heaps.push_back(descriptor->GetHeap().Get());
     }
+    s_cmdList->List()->SetDescriptorHeaps(heaps.size(), heaps.data());
 }
 
 void Glib::Internal::Graphics::DirectX12::EndDraw()
 {
-    const auto bbIdx = s_swapChain->GetCurrentBackBufferIndex();
+    const auto& bbIdx = s_swapChain->GetCurrentBackBufferIndex();
 
     Barrier(s_backBuffers[bbIdx].RenderTargetResource().Get(),
             D3D12_RESOURCE_STATE_RENDER_TARGET,
@@ -163,6 +164,16 @@ void Glib::Internal::Graphics::DirectX12::ExecuteCommandList()
 bool Glib::Internal::Graphics::DirectX12::SetFullScreen(bool set)
 {
     return SUCCEEDED(s_swapChain->SetFullscreenState(set, nullptr));
+}
+
+void Glib::Internal::Graphics::DirectX12::SetDefaultRenderTarget()
+{
+    const auto& bbIdx = s_swapChain->GetCurrentBackBufferIndex();
+    const auto& rtvH = s_backBuffers[bbIdx].RTVHandle()->CPU();
+
+    s_cmdList->List()->OMSetRenderTargets(1, &rtvH, true, nullptr);
+    s_cmdList->List()->RSSetViewports(1, &s_viewPort);
+    s_cmdList->List()->RSSetScissorRects(1, &s_scissorRect);
 }
 
 ComPtr<ID3D12Device> Glib::Internal::Graphics::DirectX12::Device() const

@@ -6,16 +6,19 @@ set(SOURCE_FILE
 	./src/Internal/DX12/CommandList.cpp
     ./src/Internal/DX12/BlendState.cpp
     ./src/Internal/DX12/GraphicsPipeline.cpp
+	./src/Internal/DX12/DescriptorHandle.cpp
 	./src/Internal/DX12/DescriptorPool.cpp
     ./src/Internal/DX12/ConstantBuffer.cpp
     ./src/Internal/DX12/IndexBuffer.cpp
     ./src/Internal/DX12/VertexBuffer.cpp
-    ./src/Internal/DX12/Texture.cpp
     ./src/Internal/DX12/GraphicsResource.cpp
     ./src/Internal/DX12/Shader/Shader.cpp
     ./src/Internal/DX12/Shader/ShaderManager.cpp
     ./src/Internal/CameraManager.cpp
+    ./src/Internal/RenderingManager.cpp
     ./src/Components/Camera.cpp
+    ./src/TextureManager.cpp
+    ./src/Texture.cpp
     ./src/RenderTarget.cpp
     ./src/Window.cpp
 )
@@ -26,12 +29,12 @@ set(HEADER_FILE
 	./include/Internal/DX12/CommandList.h
     ./include/Internal/DX12/BlendState.h
     ./include/Internal/DX12/GraphicsPipeline.h
+    ./include/Internal/DX12/DescriptorHandle.h
     ./include/Internal/DX12/DescriptorPool.h
     ./include/Internal/DX12/ConstantBuffer.h
     ./include/Internal/DX12/IndexBuffer.h
     ./include/Internal/DX12/VertexBuffer.h
     ./include/Internal/DX12/InputLayout.h
-    ./include/Internal/DX12/Texture.h
     ./include/Internal/DX12/GraphicsResource.h
     ./include/Internal/DX12/GraphicsResourceID.h
     ./include/Internal/DX12/Shader/ShaderType.h
@@ -40,7 +43,10 @@ set(HEADER_FILE
     ./include/Internal/ICamera.h
     ./include/Internal/CameraBase.h
     ./include/Internal/CameraManager.h
+    ./include/Internal/RenderingManager.h
     ./include/Components/Camera.h
+    ./include/TextureManager.h
+    ./include/Texture.h
     ./include/RenderTarget.h
     ./include/Window.h
 )

@@ -6,13 +6,14 @@
 HAS_FUNC_OBJECT(Initialize);
 HAS_FUNC_OBJECT(BeginDraw);
 HAS_FUNC_OBJECT(DebugDraw);
+HAS_FUNC_OBJECT(Draw);
+HAS_FUNC_OBJECT(DrawShadow);
 HAS_FUNC_OBJECT(EndDraw);
 HAS_FUNC_OBJECT(Finalize);
 HAS_FUNC_OBJECT(Start);
 HAS_FUNC_OBJECT(Update);
 HAS_FUNC_OBJECT(FixedUpdate);
 HAS_FUNC_OBJECT(LateUpdate);
-HAS_FUNC_OBJECT(Draw);
 
 /* Event Function */
 

@@ -17,10 +17,11 @@ void Glib::Internal::Graphics::CameraManager::BeginDraw()
 
 void Glib::Internal::Graphics::CameraManager::Draw()
 {
+    // RenderTarget‚ÌÝ’è
 #if defined(DEBUG) || defined(_DEBUG)
 
 #else
-
+    s_dx12->SetDefaultRenderTarget();
 #endif
     for (const auto& camera : cameras_)
     {

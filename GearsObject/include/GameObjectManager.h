@@ -1,6 +1,7 @@
 #pragma once
 #include <Internal/ISystem.h>
 #include <Singleton.h>
+#include <Internal/FuncOrderConstant.h>
 #include <FuncOrderDefinition.h>
 #include <GameObjectPtr.h>
 #include <string_view>
@@ -13,7 +14,8 @@ namespace Glib
      */
     class GameObjectManager final :
         public Internal::Interface::ISystem,
-        public SingletonPtr<GameObjectManager>
+        public SingletonPtr<GameObjectManager>,
+        public Internal::Function::FinalizeOrderSet<Internal::Order::Finalize::GAMEOBJECT>
     {
     private:
         friend WeakPtr<GameObjectManager> SingletonPtr<GameObjectManager>::Instance();

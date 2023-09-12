@@ -67,6 +67,10 @@ namespace Glib::Internal::Graphics
          */
         bool SetFullScreen(bool set);
 
+        /**
+         * @brief レンダーターゲットの設定
+         */
+        void SetDefaultRenderTarget();
 
         /**
          * @brief デバイスを取得

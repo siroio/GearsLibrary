@@ -29,12 +29,17 @@ namespace Glib::Internal::Order
     /* DRAW ORDERS */
     namespace Draw
     {
-
+        constexpr int SKYBOX = -100;
+        constexpr int OBJECT = SKYBOX + 1;
+        constexpr int EFFECT = OBJECT + 1;
+        constexpr int PHYSIC = EFFECT + 1;
+        constexpr int CAMERA = PHYSIC + 1;
+        constexpr int UI = CAMERA + 1;
     }
 
     /* FINALIZE ORDERS */
     namespace Finalize
     {
-
+        constexpr int GAMEOBJECT = -100;
     }
 }

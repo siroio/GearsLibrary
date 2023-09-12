@@ -85,6 +85,7 @@ namespace Glib
     private:
         WeakPtr<Transform> transform_{ nullptr };
         Internal::Graphics::ConstantBuffer cameraCBuffer_{};
+        Graphics::RenderTarget shadowMap_{};
 
         ComPtr<ID3D12Resource> renderTarget_{ nullptr };
         std::shared_ptr<Internal::Graphics::DescriptorHandle> rtvHandle_{ nullptr };
@@ -92,8 +93,6 @@ namespace Glib
 
         ComPtr<ID3D12Resource> depthStencil_{ nullptr };
         std::shared_ptr<Internal::Graphics::DescriptorHandle> dsvHandle_{ nullptr };
-
-        Graphics::RenderTarget shadowMap_{};
 
         Color backGroundColor_{ 0.192f, 0.302f, 0.475f, 1.000f };
         CameraClearFlags clearFlags_{ CameraClearFlags::SkyBox };
