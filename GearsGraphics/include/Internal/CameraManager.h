@@ -10,6 +10,9 @@ namespace Glib::Internal
 
 namespace Glib::Internal::Graphics
 {
+    /**
+     * @brief ƒJƒƒ‰ŠÇ—ƒNƒ‰ƒX
+     */
     class CameraManager :
         public Interface::ISystem,
         public SingletonPtr<CameraManager>
