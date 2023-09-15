@@ -45,6 +45,11 @@ namespace Glib
          */
         void Clear(Enum flag);
 
+        /**
+         * @brief ’l‚ÌŽæ“¾
+         */
+        EnumType ToValue() const;
+
         /* ‰‰ŽZŽq */
 
         BitFlag& operator |= (Enum&& flag);
@@ -84,6 +89,12 @@ namespace Glib
     void BitFlag<Enum>::Clear(Enum flag)
     {
         value_ &= ~static_cast<EnumType>(flag);
+    }
+
+    template<class Enum> requires std::is_enum_v<Enum>
+    inline BitFlag<Enum>::EnumType BitFlag<Enum>::ToValue() const
+    {
+        return value_;
     }
 
     template<class Enum> requires std::is_enum_v<Enum>
