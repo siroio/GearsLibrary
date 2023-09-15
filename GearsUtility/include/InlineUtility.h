@@ -2,6 +2,9 @@
 
 namespace Glib
 {
+    /**
+     * @brief ’l‚ğíœŒã•Ï”‚ğnullptr‚É‚·‚é
+     */
     template<class T>
     inline void SafeDelete(T*& ptr)
     {
@@ -12,6 +15,9 @@ namespace Glib
         }
     }
 
+    /**
+     * @brief ’l‚ğíœŒã•Ï”‚ğnullptr‚É‚·‚é
+     */
     template<class T>
     inline void SafeDeleteArray(T*& ptr)
     {
@@ -22,6 +28,9 @@ namespace Glib
         }
     }
 
+    /**
+     * @brief ReleaseŠÖ”‚ğŒÄo‚µŒã•Ï”‚ğnullptr‚É‚·‚é
+     */
     template<class T>
     inline void SafeRelease(T*& ptr)
     {
