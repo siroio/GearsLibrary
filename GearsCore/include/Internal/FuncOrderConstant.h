@@ -4,13 +4,13 @@
  */
 namespace Glib::Internal::Order
 {
-    /* INITIALIZE ORDERS */
+    /* 初期化順番一覧 */
     namespace Initialzie
     {
         constexpr int DX12_INIT = -100;
     }
 
-    /* UPDATE ORDERS */
+    /* 更新順番一覧 */
     namespace Update
     {
         constexpr int INPUT = -100;
@@ -20,13 +20,13 @@ namespace Glib::Internal::Order
         constexpr int COMPONENT = 100;
     }
 
-    /* BEGINDRAW ORDERS */
+    /* 描画前順番一覧 */
     namespace BeginDraw
     {
         constexpr int DX12_BEGINDRAW = -100;
     }
 
-    /* DRAW ORDERS */
+    /* 描画順番一覧 */
     namespace Draw
     {
         constexpr int SKYBOX = -100;
@@ -37,7 +37,7 @@ namespace Glib::Internal::Order
         constexpr int UI = CAMERA + 1;
     }
 
-    /* FINALIZE ORDERS */
+    /* 終了順番一覧 */
     namespace Finalize
     {
         constexpr int GAMEOBJECT = -100;

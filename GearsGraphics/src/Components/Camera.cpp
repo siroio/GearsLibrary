@@ -4,6 +4,7 @@
 #include <Internal/DX12/GraphicsResource.h>
 #include <Internal/DX12/GraphicsResourceID.h>
 #include <Internal/CameraManager.h>
+#include <Internal/RenderingManager.h>
 #include <GameObject.h>
 #include <Window.h>
 #include <Mathf.h>
@@ -13,7 +14,7 @@ namespace
     auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
     auto s_resource = Glib::Internal::Graphics::GraphicsResource::Instance();
     auto s_cameraManager = Glib::Internal::Graphics::CameraManager::Instance();
-
+    auto s_renderingManaber = Glib::Internal::Graphics::RenderingManager::Instance();
     constexpr unsigned int SHADOW_MAP_SIZE = 2048;
 }
 
@@ -21,14 +22,13 @@ struct CameraCBuffer
 {
     Matrix4x4 View;
     Matrix4x4 Projection;
-    Matrix4x4 Light;
+    Matrix4x4 LightVP;
 };
 
 Glib::Camera::Camera()
 {
     // バッファーを作成
     cameraCBuffer_.Create(sizeof(CameraCBuffer));
-
 }
 
 void Glib::Camera::Start()
@@ -43,13 +43,25 @@ void Glib::Camera::LateUpdate()
 {
     if (transform_.expired()) return;
 
-    CameraCBuffer buffer;
+    CameraCBuffer buffer{};
     buffer.View = ViewMatrix();
     buffer.Projection = ProjectionMatrix();
+    buffer.LightVP = s_renderingManaber->CalculateMatrixForShadowMap(
+        transform_->Position() + transform_->Forward());
 
     cameraCBuffer_.Update(sizeof(CameraCBuffer), &buffer);
 
+    // バリアを推移
+    s_dx12->Barrier(renderTarget_.Get(),
+                    D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+                    D3D12_RESOURCE_STATE_RENDER_TARGET);
 
+    // レンダーターゲット、深度のクリア
+    s_dx12->CommandList()->ClearRenderTargetView(rtvHandle_->CPU(), backGroundColor_.rgba.data(), 0, nullptr);
+    s_dx12->CommandList()->ClearDepthStencilView(dsvHandle_->CPU(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+    shadowMap_.AsRenderTarget();
+    s_dx12->CommandList()->ClearRenderTargetView(shadowMap_.RTVHandle()->CPU(), Color::White().rgba.data(), 0, nullptr);
+    s_dx12->CommandList()->ClearDepthStencilView(shadowMap_.DSVHandle()->CPU(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
 const Color& Glib::Camera::BackGroundColor()
@@ -59,6 +71,7 @@ const Color& Glib::Camera::BackGroundColor()
 
 void Glib::Camera::BackGroundColor(const Color& color)
 {
+    if (renderTarget_ != nullptr) return;
     backGroundColor_ = color;
 }
 
@@ -134,8 +147,8 @@ Vector3 Glib::Camera::WorldToScreenPoint(const Vector3& position)
     Matrix4x4 projection = ProjectionMatrix();
 
     const auto& size = Window::WindowSize();
-    auto windowX = size.x / 2;
-    auto windowY = size.y / 2;
+    const auto windowX = size.x / 2;
+    const auto windowY = size.y / 2;
     Matrix4x4 screen{
         windowX, 0.0f, 0.0f, 0.0f,
         0.0f, -windowY, 0.0f, 0.0f,
@@ -241,7 +254,11 @@ void Glib::Camera::InitializeSM()
 
 void Glib::Camera::Draw()
 {
-    //TODO: barrier
+    // バリアを推移
+    s_dx12->Barrier(renderTarget_.Get(),
+                    D3D12_RESOURCE_STATE_RENDER_TARGET,
+                    D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+
 
     // カメラ用パイプライン設定
     s_resource->SetPipelineState(Internal::Graphics::ID::CAMERA_VERTEX);
@@ -259,6 +276,9 @@ void Glib::Camera::Draw()
 
     s_dx12->CommandList()->RSSetViewports(1, &viewPort);
 
+    s_dx12->CommandList()->SetGraphicsRootDescriptorTable(0, srvHandle_->GPU());
+    s_dx12->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    s_dx12->CommandList()->DrawInstanced(4, 1, 0, 0);
 }
 
 Matrix4x4 Glib::Camera::ViewMatrix() const
@@ -293,7 +313,15 @@ void Glib::Camera::SetConstantBuffer(unsigned int rootParamIndex)
 
 void Glib::Camera::SetDepthStencil()
 {
+    CD3DX12_VIEWPORT viewPort{ 0.0f, 0.0f, static_cast<float>(SHADOW_MAP_SIZE), static_cast<float>(SHADOW_MAP_SIZE) };
+    CD3DX12_RECT rect{ 0L, 0L, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE };
 
+    s_dx12->CommandList()->OMSetRenderTargets(
+        1, &shadowMap_.RTVHandle()->CPU(),
+        false, &shadowMap_.DSVHandle()->CPU());
+
+    s_dx12->CommandList()->RSSetViewports(1, &viewPort);
+    s_dx12->CommandList()->RSSetScissorRects(1, &rect);
 }
 
 void Glib::Camera::SetShadowMap(unsigned int rootParamIndex)
@@ -301,7 +329,7 @@ void Glib::Camera::SetShadowMap(unsigned int rootParamIndex)
 
 }
 
-void Glib::Camera::ShadowBulr()
+void Glib::Camera::ExecuteShadowBulr()
 {
-
+    shadowMap_.AsTexture();
 }

@@ -38,7 +38,6 @@ bool Glib::Internal::Graphics::GraphicsResource::Initialize()
     if (!CreateSkinnedMeshPipelineState()) return false;
     if (!CreateSkinnedMeshShadowPipelineState()) return false;
 
-
     if (!CreateWhiteTexture()) return false;
     if (!CreateNormalMapTexture()) return false;
 

@@ -16,6 +16,9 @@ namespace Glib
 
 namespace Glib
 {
+    /**
+     * @brief 背景のクリア方法
+     */
     enum class CameraClearFlags
     {
         Color,
@@ -37,6 +40,9 @@ namespace Glib
         Orthographic
     };
 
+    /**
+     * @brief カメラコンポーネント
+     */
     class Camera : public Internal::CameraBase
     {
     public:
@@ -80,7 +86,7 @@ namespace Glib
         virtual void SetConstantBuffer(unsigned int rootParamIndex) override;
         virtual void SetDepthStencil() override;
         virtual void SetShadowMap(unsigned int rootParamIndex) override;
-        virtual void ShadowBulr() override;
+        virtual void ExecuteShadowBulr() override;
 
     private:
         WeakPtr<Transform> transform_{ nullptr };

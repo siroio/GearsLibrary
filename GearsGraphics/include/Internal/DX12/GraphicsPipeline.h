@@ -15,6 +15,9 @@ namespace Glib::Internal::Graphics
     {
     public:
 
+        /**
+         * @brief 標準なグラフィックスパイプラインの設定を作成
+         */
         static D3D12_GRAPHICS_PIPELINE_STATE_DESC CreateDefaultPipelineDesc();
 
         /**

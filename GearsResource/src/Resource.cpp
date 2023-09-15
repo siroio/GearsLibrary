@@ -6,8 +6,6 @@
 #include <assimp/postprocess.h>
 #include <assimp/cimport.h>
 
-#include<Texture.h>
-
 #include <StringUtility.h>
 #include <ComPtr.h>
 #include <unordered_map>
@@ -22,9 +20,6 @@ namespace
 {
     /* リソース一覧 */
 
-    /* テクスチャ */
-    std::unordered_map<unsigned int, std::shared_ptr<Glib::Texture>> s_textureResource;
-    std::unordered_map<std::string, std::shared_ptr<Glib::Texture>> s_meshTextureResource;
     /* メッシュ */
     std::unordered_map<unsigned int, std::shared_ptr<Glib::Mesh>> s_meshResource;
     /* アニメーション */

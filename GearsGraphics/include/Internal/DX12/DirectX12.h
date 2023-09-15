@@ -26,6 +26,9 @@ namespace Glib::Internal::Graphics
         friend WeakPtr<DirectX12> SingletonPtr<DirectX12>::Instance();
 
     public:
+        /**
+         * @brief DescriptorPool‚ÌŽí—Þ
+         */
         enum class PoolType : unsigned int
         {
             RES = 0,

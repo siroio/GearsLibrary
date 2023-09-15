@@ -9,6 +9,7 @@
 #include <Internal/ISystem.h>
 
 /* SYSTEM HEADERS */
+#include <Internal/XAudioSystem.h>
 #include <Internal/ComponentManager.h>
 #include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/GraphicsResource.h>
@@ -58,6 +59,7 @@ int Glib::Game::Run()
 
 void Glib::Game::RegisterSystem()
 {
+    SystemManager::AddSystem<Internal::Audio::XAudioSystem>();
     SystemManager::AddSystem<Internal::ComponentManager>();
     SystemManager::AddSystem<Internal::Graphics::DirectX12>();
     SystemManager::AddSystem<Internal::Graphics::GraphicsResource>();
