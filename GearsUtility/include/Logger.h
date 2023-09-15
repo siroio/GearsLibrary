@@ -4,6 +4,10 @@
 #include <string_view>
 #include <TimeUtility.h>
 
+/**
+ * @brief 簡易ロガークラス
+ * @brief ファイル出力なし
+ */
 class Debug final
 {
 private:

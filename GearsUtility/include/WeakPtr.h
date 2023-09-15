@@ -5,7 +5,7 @@
 namespace Glib
 {
     /**
-     * @brief std::weakptr ラッパークラス
+     * @brief WeakPtr ラッパークラス
      */
     template<class T>
     class WeakPtr

@@ -6,6 +6,9 @@
 
 namespace Glib
 {
+    /**
+     * @brief CSVロードクラス
+     */
     class CSVLoader
     {
     private:
@@ -14,6 +17,10 @@ namespace Glib
         std::mutex mutex;
 
     public:
+        /**
+         * @brief ローダーの生成
+         * @param path CSVのファイルパス
+         */
         CSVLoader(std::string_view path);
         ~CSVLoader();
         /**
