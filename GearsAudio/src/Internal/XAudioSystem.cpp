@@ -17,14 +17,14 @@
 namespace
 {
     ComPtr<IXAudio2> s_xAudio2{ nullptr };
-    std::shared_ptr<IXAudio2MasteringVoice> s_masterVoice{ nullptr };
+    IXAudio2MasteringVoice* s_masterVoice{ nullptr };
 
     // 3D AUDIO
     X3DAUDIO_HANDLE s_X3DAudioHandle{};
     X3DAUDIO_LISTENER s_X3DAudioListener{};
     std::array<X3DAUDIO_DSP_SETTINGS, 2> s_X3DAudioDspSettings;
 
-    unsigned int s_channelNum;
+    unsigned int s_channelNum{ 0 };
 
     // CHANNEL SETTINGS
     std::array<float, Glib::Internal::Audio::CHANNEL_MONAURAL* Glib::Internal::Audio::CHANNEL_OUTPUT>
@@ -43,12 +43,13 @@ bool Glib::Internal::Audio::XAudioSystem::Initialize()
 #if defined(DEBUG) | defined(_DEBUG)
     flags |= XAUDIO2_DEBUG_ENGINE;
 #endif
+
     if (FAILED(XAudio2Create(s_xAudio2.ReleaseAndGetAddressOf(), flags, XAUDIO2_DEFAULT_PROCESSOR)))
         return false;
-    IXAudio2MasteringVoice* tmp;
-    if (FAILED(s_xAudio2->CreateMasteringVoice(&tmp)))
+
+    // TODO: Failed CreateMateringVoice
+    if (FAILED(s_xAudio2->CreateMasteringVoice(&s_masterVoice)))
         return false;
-    s_masterVoice.reset(tmp);
 
     // X3DAudio‚Ì‰Šú‰»
     DWORD dwChannelMask{};
@@ -76,7 +77,12 @@ bool Glib::Internal::Audio::XAudioSystem::Initialize()
 
 void Glib::Internal::Audio::XAudioSystem::Finalize()
 {
-    if (s_masterVoice != nullptr) s_masterVoice.reset();
+    if (s_masterVoice != nullptr)
+    {
+        s_masterVoice->DestroyVoice();
+        delete s_masterVoice;
+        s_masterVoice = nullptr;
+    }
 
     for (auto&& audio : s_subMixVoice | std::ranges::views::values)
     {
@@ -126,10 +132,10 @@ void Glib::Internal::Audio::XAudioSystem::Audio3DCalculate(const X3DAUDIO_EMITTE
     else if (channelCount == 2) dspSettings = &s_X3DAudioDspSettings.at(1);
     else return;
 
-    static DWORD flags = X3DAUDIO_CALCULATE_MATRIX | X3DAUDIO_CALCULATE_DOPPLER | X3DAUDIO_CALCULATE_LPF_DIRECT;
+    constexpr DWORD flags = X3DAUDIO_CALCULATE_MATRIX | X3DAUDIO_CALCULATE_DOPPLER | X3DAUDIO_CALCULATE_LPF_DIRECT;
     X3DAudioCalculate(s_X3DAudioHandle, &s_X3DAudioListener, emitter, flags, dspSettings);
 
-    IXAudio2Voice* destinationVoice = s_masterVoice.get();
+    IXAudio2Voice* destinationVoice = s_masterVoice;
     if (s_subMixVoice.contains(groupId))
     {
         destinationVoice = s_subMixVoice.at(groupId).get();

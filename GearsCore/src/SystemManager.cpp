@@ -1,6 +1,7 @@
 #include <SystemManager.h>
 #include <algorithm>
 #include <ranges>
+#include <string>
 
 bool SystemManager::Initialize()
 {
@@ -9,7 +10,6 @@ bool SystemManager::Initialize()
     {
         return std::get<1>(lhs)->Order() < std::get<1>(rhs)->Order();
     });
-
     for (const auto& initFunc : systemFunctions_[SystemFunctionType::Initialize])
     {
         if (initFunc.index() != 1) continue;
