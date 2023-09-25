@@ -21,7 +21,7 @@ Glib::WeakPtr<Glib::Texture> Glib::TextureManager::Load(std::string_view filePat
 {
     auto tex = std::make_shared<Texture>();
     if (!tex->CreateTexture(filePath)) return WeakPtr<Texture>{};
-    s_textureResource.emplace(filePath, tex);
+    s_meshTextureResource.emplace(filePath, tex);
     return tex;
 }
 

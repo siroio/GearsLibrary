@@ -4,10 +4,10 @@
 #include <AudioClip.h>
 #include <x3daudio.h>
 
-class Transform;
-
 namespace Glib
 {
+    class Transform;
+
     class AudioSource : public Component
     {
         enum class AudioStatus

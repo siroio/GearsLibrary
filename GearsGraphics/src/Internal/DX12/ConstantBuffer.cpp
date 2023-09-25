@@ -3,11 +3,9 @@
 #include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/DescriptorPool.h>
 
-namespace Graphics = Glib::Internal::Graphics;
-
 namespace
 {
-    auto s_dx12 = Graphics::DirectX12::Instance();
+    auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
 }
 
 bool Glib::Internal::Graphics::ConstantBuffer::Create(unsigned int bufferSize)

@@ -1,10 +1,9 @@
 #pragma once
 #include <Component.h>
 
-class Transform;
-
 namespace Glib
 {
+    class Transform;
 
     class AudioListener : public Component
     {

@@ -72,8 +72,8 @@ bool Glib::Texture::CreateTexture(std::string_view path)
     D3D12_RESOURCE_DESC texResDesc{};
     texResDesc.Format = metadata.format;
     texResDesc.Dimension = static_cast<D3D12_RESOURCE_DIMENSION>(metadata.dimension);
-    texResDesc.Width = metadata.width;
-    texResDesc.Height = metadata.height;
+    texResDesc.Width = static_cast<UINT>(metadata.width);
+    texResDesc.Height = static_cast<UINT>(metadata.height);
     texResDesc.DepthOrArraySize = static_cast<UINT16>(metadata.arraySize);
     texResDesc.MipLevels = static_cast<UINT16>(metadata.mipLevels);
     texResDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
@@ -111,9 +111,9 @@ bool Glib::Texture::CreateTexture(std::string_view path)
     src.pResource = uploadBuffer.Get();
     src.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
     src.PlacedFootprint.Offset = 0;
-    src.PlacedFootprint.Footprint.Width = img->width;
-    src.PlacedFootprint.Footprint.Height = img->height;
-    src.PlacedFootprint.Footprint.RowPitch = img->rowPitch + aligment;
+    src.PlacedFootprint.Footprint.Width = static_cast<UINT>(img->width);
+    src.PlacedFootprint.Footprint.Height = static_cast<UINT>(img->height);
+    src.PlacedFootprint.Footprint.RowPitch = static_cast<UINT>(img->rowPitch + aligment);
     src.PlacedFootprint.Footprint.Format = img->format;
 
     dst.pResource = texture_.Get();
@@ -148,7 +148,7 @@ ComPtr<ID3D12Resource> Glib::Texture::Get()
     return texture_;
 }
 
-Vector2 Glib::Texture::TextureSize() const
+const Vector2& Glib::Texture::TextureSize() const
 {
     return textureSize_;
 }

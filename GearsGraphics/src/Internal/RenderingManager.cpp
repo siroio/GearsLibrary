@@ -1,4 +1,5 @@
 #include <Internal/RenderingManager.h>
+#include <Internal/DX12/d3dx12Inc.h>
 #include <Internal/CameraManager.h>
 #include <Internal/CameraBase.h>
 #include <Internal/DX12/ConstantBuffer.h>
@@ -45,7 +46,7 @@ bool Glib::Internal::Graphics::RenderingManager::Initialize()
 void Glib::Internal::Graphics::RenderingManager::Update()
 {
     // 定数バッファの更新
-    DirectionalLightConstant cBuffer{};
+    DirectionalLightConstant cBuffer;
     cBuffer.ambient = s_ambient;
     cBuffer.diffuse = s_diffuse;
     cBuffer.specular = s_specular;
@@ -79,6 +80,8 @@ void Glib::Internal::Graphics::RenderingManager::Draw()
                 info.function->Call(camera);
             }
         }
+
+        //TODO: Shadow Map Blur
 
         // オブジェクトの描画
         for (const auto& info : renderers_.at(DrawType::Draw))

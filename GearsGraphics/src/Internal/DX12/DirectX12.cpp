@@ -132,7 +132,7 @@ void Glib::Internal::Graphics::DirectX12::BeginDraw()
         if (descriptor->UseHeapCount() <= 0) continue;
         heaps.push_back(descriptor->GetHeap().Get());
     }
-    s_cmdList->List()->SetDescriptorHeaps(heaps.size(), heaps.data());
+    s_cmdList->List()->SetDescriptorHeaps(static_cast<UINT>(heaps.size()), heaps.data());
 }
 
 void Glib::Internal::Graphics::DirectX12::EndDraw()

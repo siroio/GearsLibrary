@@ -43,7 +43,7 @@ void Glib::Camera::LateUpdate()
 {
     if (transform_.expired()) return;
 
-    CameraCBuffer buffer{};
+    CameraCBuffer buffer;
     buffer.View = ViewMatrix();
     buffer.Projection = ProjectionMatrix();
     buffer.LightVP = s_renderingManaber->CalculateMatrixForShadowMap(
