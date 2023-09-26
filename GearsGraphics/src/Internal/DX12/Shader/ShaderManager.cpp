@@ -1,4 +1,13 @@
 #include <Internal/DX12/Shader/ShaderManager.h>
+#include <Internal/DX12/ShaderCode/CameraShader.h>
+#include <Internal/DX12/ShaderCode/GaussianBlurShader.h>
+#include <Internal/DX12/ShaderCode/ImageShader.h>
+#include <Internal/DX12/ShaderCode/LineShader.h>
+#include <Internal/DX12/ShaderCode/MeshShader.h>
+#include <Internal/DX12/ShaderCode/SkinnedMeshShader.h>
+#include <Internal/DX12/ShaderCode/SkyboxShader.h>
+#include <Internal/DX12/ShaderCode/SpriteShader.h>
+#include <Internal/DX12/GraphicsResourceID.h>
 #include <d3d12.h>
 #include <d3dcompiler.h>
 #include <MsgBox.h>
@@ -17,8 +26,17 @@ namespace
 
 bool Glib::Internal::Graphics::ShaderManager::Initialize()
 {
+    // シェーダーのコンパイル
     std::vector<Glib::Graphics::Shader> shaders;
-    shaders.emplace_back(0, ShaderType::VERTEX, "code", "VS");
+    shaders.emplace_back(ID::CAMERA_SHADER, ShaderType::VERTEX, ShaderCode::CAMERA_SHADER, "VSmain");
+    shaders.emplace_back(ID::CAMERA_SHADER, ShaderType::PIXEL, ShaderCode::CAMERA_SHADER, "PSmain");
+
+
+
+    for (auto&& shader : shaders)
+    {
+        CompileShader(shader);
+    }
     return true;
 }
 
@@ -52,10 +70,10 @@ bool Glib::Internal::Graphics::ShaderManager::CompileShader(const Glib::Graphics
     switch (shader.Type())
     {
         case ShaderType::VERTEX:
-            s_vertexShader[shader.Id()] = shaderBlob;
+            s_vertexShader.emplace(shader.ID(), shaderBlob);
             break;
         case ShaderType::PIXEL:
-            s_pixelShader[shader.Id()] = shaderBlob;
+            s_pixelShader.emplace(shader.ID(), shaderBlob);
             break;
     }
     return true;

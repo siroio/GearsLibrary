@@ -9,7 +9,7 @@ Glib::Graphics::Shader::Shader(unsigned int id, ShaderType type, std::string_vie
     : id_{ id }, type_{ type }, shaderUnit_{ code.data() }, entryPoint_{ entryPoint }
 {}
 
-unsigned int Glib::Graphics::Shader::Id() const
+unsigned int Glib::Graphics::Shader::ID() const
 {
     return id_;
 }
@@ -60,5 +60,5 @@ std::string Glib::Graphics::Shader::ShaderModel() const
 
 bool Glib::Graphics::Shader::operator==(const Shader& shader) const
 {
-    return id_ == shader.Id() && type_ == shader.Type();
+    return id_ == shader.ID() && type_ == shader.Type();
 }

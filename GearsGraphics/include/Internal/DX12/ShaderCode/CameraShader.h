@@ -23,7 +23,7 @@ namespace Glib::Internal::Graphics::ShaderCode
                                                         \
         typedef VSOutput PSInput;                       \
                                                         \
-        VSOutput VSMain(VSInput input)                  \
+        VSOutput VSmain(VSInput input)                  \
         {                                               \
             VSOutput o;                                 \
             o.position = input.position;                \
@@ -32,7 +32,7 @@ namespace Glib::Internal::Graphics::ShaderCode
             o.uv = input.position.xy;                   \
         }                                               \
                                                         \
-        float4 PSMain(PSInput input)                    \
+        float4 PSmain(PSInput input)                    \
         {                                               \
             return tex.Sample(smp, input.uv)            \
         }                                               \

@@ -17,7 +17,7 @@ namespace Glib::Graphics
         /**
          * @brief シェーダーIDを取得
          */
-        unsigned int Id() const;
+        unsigned int ID() const;
 
         /**
          * @brief シェーダータイプを取得
