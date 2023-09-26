@@ -1,6 +1,6 @@
 #pragma once
-#include  <Internal/ISystem.h>
-#include  <Singleton.h>
+#include <Internal/ISystem.h>
+#include <Singleton.h>
 
 struct IXAudio2SourceVoice;
 struct IXAudio2SubmixVoice;
@@ -19,8 +19,8 @@ namespace Glib::Internal::Audio
         public Interface::ISystem,
         public SingletonPtr<XAudioSystem>
     {
-        XAudioSystem() = default;
         friend  WeakPtr<XAudioSystem> SingletonPtr<XAudioSystem>::Instance();
+        XAudioSystem() = default;
 
     public:
         bool Initialize();

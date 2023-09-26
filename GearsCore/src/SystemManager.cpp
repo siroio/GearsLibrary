@@ -1,15 +1,16 @@
 #include <SystemManager.h>
 #include <algorithm>
 #include <ranges>
-#include <string>
+
 
 bool SystemManager::Initialize()
 {
     auto& initilizeFunctions = systemFunctions_[SystemFunctionType::Initialize];
-    std::ranges::sort(initilizeFunctions.begin(), initilizeFunctions.end(), [](const FunctionVariant& lhs, const FunctionVariant& rhs)
+    std::ranges::sort(initilizeFunctions, [](const FunctionVariant& lhs, const FunctionVariant& rhs)
     {
         return std::get<1>(lhs)->Order() < std::get<1>(rhs)->Order();
     });
+
     for (const auto& initFunc : systemFunctions_[SystemFunctionType::Initialize])
     {
         if (initFunc.index() != 1) continue;
@@ -21,7 +22,7 @@ bool SystemManager::Initialize()
 
     for (auto&& [type, funcList] : systemFunctions_)
     {
-        std::ranges::sort(funcList.begin(), funcList.end(), [](const FunctionVariant& lhs, const FunctionVariant& rhs)
+        std::ranges::sort(funcList, [](const FunctionVariant& lhs, const FunctionVariant& rhs)
         {
             return std::get<0>(lhs)->Order() < std::get<0>(rhs)->Order();
         });

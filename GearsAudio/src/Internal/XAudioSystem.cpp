@@ -38,16 +38,15 @@ namespace
 
 bool Glib::Internal::Audio::XAudioSystem::Initialize()
 {
-    // XAudio2‚Ì‰Šú‰»
+    // ƒtƒ‰ƒO‚ÌÝ’è
     UINT flags = 0;
 #if defined(DEBUG) | defined(_DEBUG)
     flags |= XAUDIO2_DEBUG_ENGINE;
 #endif
-
+    // XAudio2‚Ì‰Šú‰»
     if (FAILED(XAudio2Create(s_xAudio2.ReleaseAndGetAddressOf(), flags, XAUDIO2_DEFAULT_PROCESSOR)))
         return false;
 
-    // TODO: Failed CreateMateringVoice
     if (FAILED(s_xAudio2->CreateMasteringVoice(&s_masterVoice)))
         return false;
 
