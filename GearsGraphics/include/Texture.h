@@ -12,7 +12,6 @@ namespace Glib
     class Texture
     {
     public:
-        Texture() = default;
         bool CreateTexture(std::string_view path);
         void SetTexture(unsigned int rootParamIndex);
         //bool CreateTexture(Vector2 textureSize, DXGI_FORMAT format);
@@ -23,8 +22,8 @@ namespace Glib
         bool CreateShaderResourceView(DXGI_FORMAT fmt);
 
     private:
-        Vector2 textureSize_;
-        DXGI_FORMAT format_;
+        Vector2 textureSize_{ 0 };
+        DXGI_FORMAT format_{ DXGI_FORMAT_UNKNOWN };
         std::shared_ptr<Internal::Graphics::DescriptorHandle> srvHandle_{ nullptr };
         ComPtr<ID3D12Resource> texture_{ nullptr };
     };
