@@ -40,6 +40,14 @@ set(HEADER_FILE
     ./include/Internal/DX12/Shader/ShaderType.h
     ./include/Internal/DX12/Shader/Shader.h
     ./include/Internal/DX12/Shader/ShaderManager.h
+    ./include/Internal/DX12/ShaderCode/CameraShader.h
+    ./include/Internal/DX12/ShaderCode/GaussianBlurShader.h
+    ./include/Internal/DX12/ShaderCode/ImageShader.h
+    ./include/Internal/DX12/ShaderCode/LineShader.h
+    ./include/Internal/DX12/ShaderCode/MeshShader.h
+    ./include/Internal/DX12/ShaderCode/SkinnedMeshShader.h
+    ./include/Internal/DX12/ShaderCode/SkyboxShader.h
+    ./include/Internal/DX12/ShaderCode/SpriteShader.h
     ./include/Internal/ICamera.h
     ./include/Internal/CameraBase.h
     ./include/Internal/CameraManager.h
