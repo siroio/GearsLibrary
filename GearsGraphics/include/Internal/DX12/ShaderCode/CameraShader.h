@@ -5,7 +5,7 @@ namespace Glib::Internal::Graphics::ShaderCode
     /**
      * @brief カメラ用シェーダー
      */
-    constexpr char CAMERA_SHADER[] =
+    constexpr char CAMERA_SHADER[]
     {
         "Texture2D<float4> tex : register(t0);          \
         SamplerState smp : register(s0);                \
