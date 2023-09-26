@@ -7,7 +7,8 @@ namespace Glib::Internal::Order
     /* ‰Šú‰»‡”Ôˆê—— */
     namespace Initialzie
     {
-        constexpr int DX12_INIT = -100;
+        constexpr int DX12 = -100;
+        constexpr int SHADER = DX12 + 1;
     }
 
     /* XV‡”Ôˆê—— */
@@ -23,7 +24,7 @@ namespace Glib::Internal::Order
     /* •`‰æ‘O‡”Ôˆê—— */
     namespace BeginDraw
     {
-        constexpr int DX12_BEGINDRAW = -100;
+        constexpr int DX12 = -100;
     }
 
     /* •`‰æ‡”Ôˆê—— */

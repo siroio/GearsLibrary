@@ -2,6 +2,8 @@
 #include <Internal/DX12/Shader/Shader.h>
 #include <Internal/ISystem.h>
 #include <Singleton.h>
+#include <Internal/FuncOrderConstant.h>
+#include <FuncOrderDefinition.h>
 #include <ComPtr.h>
 
 struct D3D12_GRAPHICS_PIPELINE_STATE_DESC;
@@ -12,12 +14,17 @@ namespace Glib::Internal::Graphics
 {
     class ShaderManager :
         public Interface::ISystem,
-        public SingletonPtr<ShaderManager>
+        public SingletonPtr<ShaderManager>,
+        public Function::InitializeOrderSet<Order::Initialzie::SHADER>
     {
         ShaderManager() = default;
         friend WeakPtr<ShaderManager> SingletonPtr<ShaderManager>::Instance();
 
     public:
+
+        /**
+         * @brief シェーダーの初期化
+         */
         bool Initialize();
 
         /**
