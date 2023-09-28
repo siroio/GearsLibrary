@@ -32,6 +32,8 @@ bool Glib::Internal::Graphics::ShaderManager::Initialize()
     shaders.emplace_back(ID::CAMERA_SHADER, ShaderType::PIXEL, ShaderCode::CAMERA_SHADER, "PSmain");
     shaders.emplace_back(ID::SPRITE_SHADER, ShaderType::VERTEX, ShaderCode::SPRITE_SHADER, "VSmain");
     shaders.emplace_back(ID::SPRITE_SHADER, ShaderType::PIXEL, ShaderCode::SPRITE_SHADER, "PSmain");
+    shaders.emplace_back(ID::IMAGE_SHADER, ShaderType::VERTEX, ShaderCode::IMAGE_SHADER, "VSmain");
+    shaders.emplace_back(ID::IMAGE_SHADER, ShaderType::PIXEL, ShaderCode::IMAGE_SHADER, "PSmain");
 
 
     for (auto&& shader : shaders)
