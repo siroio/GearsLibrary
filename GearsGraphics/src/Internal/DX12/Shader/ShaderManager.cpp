@@ -36,12 +36,23 @@ bool Glib::Internal::Graphics::ShaderManager::Initialize()
     shaders.emplace_back(ID::IMAGE_SHADER, ShaderType::PIXEL, ShaderCode::IMAGE_SHADER, "PSmain");
     shaders.emplace_back(ID::LINE_SHADER, ShaderType::VERTEX, ShaderCode::LINE_SHADER, "VSmain");
     shaders.emplace_back(ID::LINE_SHADER, ShaderType::PIXEL, ShaderCode::LINE_SHADER, "PSmain");
-    shaders.emplace_back(ID::SKYBOX_SHADER, ShaderType::VERTEX, ShaderCode::SKYBOX_SHADER, "VSmain");
-    shaders.emplace_back(ID::SKYBOX_SHADER, ShaderType::PIXEL, ShaderCode::SKYBOX_SHADER, "PSmain");
+    shaders.emplace_back(ID::MESH_SHADER, ShaderType::VERTEX, ShaderCode::MESH_SHADER, "VSmain");
+    shaders.emplace_back(ID::MESH_SHADER, ShaderType::PIXEL, ShaderCode::MESH_SHADER, "PSmain");
+    shaders.emplace_back(ID::MESH_SHADOW_SHADER, ShaderType::VERTEX, ShaderCode::MESH_SHADOW_SHADER, "VSmain");
+    shaders.emplace_back(ID::MESH_SHADOW_SHADER, ShaderType::PIXEL, ShaderCode::MESH_SHADOW_SHADER, "PSmain");
+    shaders.emplace_back(ID::MESH_SHADOW_SHADER, ShaderType::VERTEX, ShaderCode::MESH_SHADOW_SHADER, "VSmain");
+    shaders.emplace_back(ID::MESH_SHADOW_SHADER, ShaderType::PIXEL, ShaderCode::MESH_SHADOW_SHADER, "PSmain");
+    shaders.emplace_back(ID::SKINNED_MESH_SHADER, ShaderType::VERTEX, ShaderCode::SKINNED_MESH_SHADER, "VSmain");
+    shaders.emplace_back(ID::SKINNED_MESH_SHADER, ShaderType::PIXEL, ShaderCode::SKINNED_MESH_SHADER, "PSmain");
+    shaders.emplace_back(ID::SKINNED_MESH_SHADOW_SHADER, ShaderType::VERTEX, ShaderCode::SKINNED_MESH_SHADOW_SHADER, "VSmain");
+    shaders.emplace_back(ID::SKINNED_MESH_SHADOW_SHADER, ShaderType::PIXEL, ShaderCode::SKINNED_MESH_SHADOW_SHADER, "PSmain");
+    shaders.emplace_back(ID::XBLUR_VERTEX_SHADER, ShaderType::VERTEX, ShaderCode::XBLUR_VERTEX_SHADER, "VSmain");
+    shaders.emplace_back(ID::YBLUR_VERTEX_SHADER, ShaderType::VERTEX, ShaderCode::YBLUR_VERTEX_SHADER, "VSmain");
+    shaders.emplace_back(ID::BLUR_PIXEL_SHADER, ShaderType::PIXEL, ShaderCode::GAUSSIAN_BLUR_SHADER, "PSmain");
 
     for (auto&& shader : shaders)
     {
-        CompileShader(shader);
+        if (!CompileShader(shader)) return false;
     }
     return true;
 }

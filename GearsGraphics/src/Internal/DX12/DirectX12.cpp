@@ -125,14 +125,14 @@ void Glib::Internal::Graphics::DirectX12::BeginDraw()
     s_cmdList->List()->OMSetRenderTargets(1, &rtvH, true, nullptr);
     s_cmdList->List()->ClearRenderTargetView(rtvH, s_backGroundColor.rgba.data(), 0, nullptr);
 
-    std::vector<ID3D12DescriptorHeap*> heaps{};
+    ID3D12DescriptorHeap* const heaps[]{
+        s_descriptors[static_cast<UINT>(PoolType::RES)]->GetHeap().Get(),
+        s_descriptors[static_cast<UINT>(PoolType::SMP)]->GetHeap().Get(),
+        s_descriptors[static_cast<UINT>(PoolType::RTV)]->GetHeap().Get(),
+        s_descriptors[static_cast<UINT>(PoolType::DSV)]->GetHeap().Get(),
+    };
 
-    for (const auto& descriptor : s_descriptors)
-    {
-        if (descriptor->UseHeapCount() <= 0) continue;
-        heaps.push_back(descriptor->GetHeap().Get());
-    }
-    s_cmdList->List()->SetDescriptorHeaps(static_cast<UINT>(heaps.size()), heaps.data());
+    s_cmdList->List()->SetDescriptorHeaps(static_cast<UINT>(std::size(heaps)), heaps);
 }
 
 void Glib::Internal::Graphics::DirectX12::EndDraw()
