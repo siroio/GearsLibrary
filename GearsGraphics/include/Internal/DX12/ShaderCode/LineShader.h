@@ -2,6 +2,9 @@
 
 namespace Glib::Internal::Graphics::ShaderCode
 {
+    /**
+     * @brief 線描画用シェーダー
+     */
     constexpr char LINE_SHADER[]
     {
         "cbuffer CameraConstant : register(b0)                          \

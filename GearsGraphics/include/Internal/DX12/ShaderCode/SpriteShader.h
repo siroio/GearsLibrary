@@ -2,6 +2,9 @@
 
 namespace Glib::Internal::Graphics::ShaderCode
 {
+    /**
+     * @brief スプライト描画用シェーダー
+     */
     constexpr char SPRITE_SHADER[]
     {
         "cbuffer CameraConstant : register(b0)                                              \

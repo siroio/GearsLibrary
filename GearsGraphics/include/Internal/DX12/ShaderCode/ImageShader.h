@@ -2,6 +2,9 @@
 
 namespace Glib::Internal::Graphics::ShaderCode
 {
+    /**
+     * @brief UI画像用シェーダー
+     */
     constexpr char IMAGE_SHADER[]
     {
         "cbuffer SpriteConstant : register(b0)                                                                      \

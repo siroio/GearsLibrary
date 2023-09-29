@@ -2,6 +2,9 @@
 
 namespace Glib::Internal::Graphics::ShaderCode
 {
+    /**
+     * @brief スカイボックス描画用シェーダー
+     */
     constexpr char SKYBOX_SHADER[]
     {
         "cbuffer CameraConstant : register(b0)              \
