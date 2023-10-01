@@ -25,9 +25,6 @@ namespace
     /* コマンドリスト */
     std::shared_ptr<Glib::Internal::Graphics::CommandList> s_cmdList;
 
-    /* バンドルコマンドリスト */
-    std::shared_ptr<Glib::Internal::Graphics::CommandList> s_bundleCmdList;
-
     /* フェンス */
     ComPtr<ID3D12Fence> s_fence{ nullptr };
 
@@ -51,7 +48,7 @@ namespace
     D3D12_VIEWPORT s_viewPort{};
 
     /* 背景色 */
-    Color s_backGroundColor = Color::Cyan();
+    Color s_backGroundColor = Color::Black();
 
     /* Windowインスタンス */
     Glib::Window& s_window = Glib::Window::Instance();
@@ -123,13 +120,11 @@ void Glib::Internal::Graphics::DirectX12::BeginDraw()
 
     const auto& rtvH = s_backBuffers[bbIdx].RTVHandle()->CPU();
     s_cmdList->List()->OMSetRenderTargets(1, &rtvH, true, nullptr);
-    s_cmdList->List()->ClearRenderTargetView(rtvH, s_backGroundColor.rgba.data(), 0, nullptr);
+    s_cmdList->List()->ClearRenderTargetView(rtvH, s_backGroundColor.Raw(), 0, nullptr);
 
     ID3D12DescriptorHeap* const heaps[]{
         s_descriptors[static_cast<UINT>(PoolType::RES)]->GetHeap().Get(),
-        s_descriptors[static_cast<UINT>(PoolType::SMP)]->GetHeap().Get(),
-        s_descriptors[static_cast<UINT>(PoolType::RTV)]->GetHeap().Get(),
-        s_descriptors[static_cast<UINT>(PoolType::DSV)]->GetHeap().Get(),
+        s_descriptors[static_cast<UINT>(PoolType::SMP)]->GetHeap().Get()
     };
 
     s_cmdList->List()->SetDescriptorHeaps(static_cast<UINT>(std::size(heaps)), heaps);
@@ -159,11 +154,6 @@ void Glib::Internal::Graphics::DirectX12::ExecuteCommandList()
     s_cmdList->Execute();
     WaitGPU();
     s_cmdList->Reset();
-}
-
-bool Glib::Internal::Graphics::DirectX12::SetFullScreen(bool set)
-{
-    return SUCCEEDED(s_swapChain->SetFullscreenState(set, nullptr));
 }
 
 void Glib::Internal::Graphics::DirectX12::SetDefaultRenderTarget()
@@ -264,9 +254,7 @@ bool Glib::Internal::Graphics::DirectX12::InitCommand()
     cmdQueueDesc.NodeMask = 0;
     cmdQueueDesc.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
     cmdQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-    auto listRes = CommandList::Create(D3D12_COMMAND_LIST_TYPE_DIRECT, cmdQueueDesc, s_cmdList);
-    auto bundleRes = CommandList::CreateBundle(s_bundleCmdList);
-    return listRes && bundleRes;
+    return CommandList::Create(D3D12_COMMAND_LIST_TYPE_DIRECT, cmdQueueDesc, s_cmdList);;
 }
 
 bool Glib::Internal::Graphics::DirectX12::CreateSwapChain()

@@ -82,16 +82,5 @@ namespace Glib
          * @brief デバッグ時のウィンドウサイズを設定
          */
         static void WindowDebugSize(const Vector2& size);
-
-        /**
-         * @brief フルスクリーンなのかを取得
-         */
-        static bool FullScreen();
-
-        /**
-         * @brief フルスクリーンの切り替え
-         * @param enable 有効化
-         */
-        static void FullScreen(bool enable);
     };
 }

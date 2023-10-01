@@ -10,10 +10,12 @@
 
 /* SYSTEM HEADERS */
 #include <Internal/XAudioSystem.h>
+#include <Internal/CameraManager.h>
 #include <Internal/ComponentManager.h>
 #include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/GraphicsResource.h>
 #include <Internal/DX12/Shader/ShaderManager.h>
+#include <Internal/RenderingManager.h>
 #include <AudioManager.h>
 #include <GameObjectManager.h>
 #include <GameTimer.h>
@@ -59,11 +61,13 @@ int Glib::Game::Run()
 
 void Glib::Game::RegisterSystem()
 {
-    SystemManager::AddSystem<Internal::Audio::XAudioSystem>();
+    SystemManager::AddSystem<Internal::Graphics::CameraManager>();
     SystemManager::AddSystem<Internal::ComponentManager>();
     SystemManager::AddSystem<Internal::Graphics::DirectX12>();
     SystemManager::AddSystem<Internal::Graphics::GraphicsResource>();
+    SystemManager::AddSystem<Internal::Graphics::RenderingManager>();
     SystemManager::AddSystem<Internal::Graphics::ShaderManager>();
+    SystemManager::AddSystem<Internal::Audio::XAudioSystem>();
     SystemManager::AddSystem<AudioManager>();
     SystemManager::AddSystem<GameObjectManager>();
     SystemManager::AddSystem<GameTimer>();

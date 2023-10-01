@@ -11,7 +11,7 @@ namespace Glib::Internal::Graphics::ShaderCode
         {                                                                                   \
             float4x4 View;                                                                  \
             float4x4 Projection;                                                            \
-        }                                                                                   \
+        };                                                                                  \
                                                                                             \
         cbuffer SpriteConstant : register(b1)                                               \
         {                                                                                   \
@@ -21,8 +21,8 @@ namespace Glib::Internal::Graphics::ShaderCode
             float2 SpriteCenter;                                                            \
             float2 SpriteSize;                                                              \
             float2 SpritePadding;                                                           \
-            float4 SpriteColor                                                              \
-        }                                                                                   \
+            float4 SpriteColor;                                                                 \
+        };                                                                                  \
                                                                                             \
         Texture2D<float4> tex : register(t0);                                               \
         SamplerState smp : register(s0);                                                    \
@@ -31,17 +31,17 @@ namespace Glib::Internal::Graphics::ShaderCode
         {                                                                                   \
             float4 position : POSITION;                                                     \
             float2 uv : TEXCOORD;                                                           \
-        }                                                                                   \
+        };                                                                                  \
                                                                                             \
         struct VSOutput                                                                     \
         {                                                                                   \
             float4 position : SV_POSITION;                                                  \
             float2 uv : TEXCOORD;                                                           \
-        }                                                                                   \
+        };                                                                                  \
                                                                                             \
         typedef VSOutput PSInput;                                                           \
                                                                                             \
-        VSOutput VSmain()                                                                   \
+        VSOutput VSmain(VSInput input)                                                      \
         {                                                                                   \
             float2 spriteSize = SpriteSize * SpriteScale;                                   \
                                                                                             \
@@ -55,14 +55,12 @@ namespace Glib::Internal::Graphics::ShaderCode
 		 	rotate.y = o.position.y * cos(SpriteAngle) + o.position.x * sin(SpriteAngle);   \
 		 	o.position.xy = rotate;                                                         \
 		 	o.position.xyz += SpritePosition;                                               \
-		 	o.position = mul(Projection, mul(View, output.position));                       \
-                                                                                            \
+		 	o.position = mul(Projection, mul(View, o.position));                            \
 		 	o.uv = input.uv;                                                                \
-                                                                                            \
 		 	return o;                                                                       \
         }                                                                                   \
                                                                                             \
-        float4 PSmain(PSInput input)                                                        \
+        float4 PSmain(PSInput input) : SV_TARGET                                            \
         {                                                                                   \
             float4 color = float4(tex.Sample(smp, input.uv)) * SpriteColor;                 \
             clip(color.a < 0.001f ? -1 : 1);                                                \

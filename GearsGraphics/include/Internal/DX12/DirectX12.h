@@ -66,11 +66,6 @@ namespace Glib::Internal::Graphics
         void ExecuteCommandList();
 
         /**
-         * @brief フルスクリーンの切り替え
-         */
-        bool SetFullScreen(bool set);
-
-        /**
          * @brief レンダーターゲットの設定
          */
         void SetDefaultRenderTarget();

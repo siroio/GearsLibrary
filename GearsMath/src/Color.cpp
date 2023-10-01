@@ -57,7 +57,7 @@ Color Color::Linear(const Color& color)
 
 float Color::GrayScale(float r, float g, float b, float a)
 {
-    return 0.299F * r + 0.587F * g + 0.114F * b;
+    return 0.299f * r + 0.587f * g + 0.114f * b;
 }
 
 float Color::GrayScale(const Color& color)
@@ -230,6 +230,11 @@ void Color::Set0()
     g = 0;
     b = 0;
     a = 0;
+}
+
+const float* Color::Raw() const
+{
+    return rgba.data();
 }
 
 std::string Color::ToString() const

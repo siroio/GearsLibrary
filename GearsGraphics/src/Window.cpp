@@ -149,24 +149,3 @@ void Glib::Window::WindowDebugSize(const Vector2& size)
     if (s_windowHandle_ != NULL) return;
     s_windowDebugSize_ = size;
 }
-
-bool Glib::Window::FullScreen()
-{
-    return s_isFullScreen;
-}
-
-void Glib::Window::FullScreen(bool enable)
-{
-    const auto dx12 = Internal::Graphics::DirectX12::Instance();
-    s_isFullScreen = enable;
-    if (!dx12->SetFullScreen(s_isFullScreen))
-    {
-        std::string msg;
-        msg.append("FILE: ")
-            .append(__FILE__)
-            .append(" LINE: ")
-            .append(std::to_string(__LINE__))
-            .append(" SetFullScreen Error!");
-        throw std::runtime_error{ msg };
-    }
-}

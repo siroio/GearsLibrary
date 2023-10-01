@@ -11,13 +11,13 @@ namespace Glib::Internal::Graphics::ShaderCode
         {                                                                                                           \
             float2 ImagePosition;                                                                                   \
             float2 ImageCenter;                                                                                     \
-            float2 ImageScale                                                                                       \
+            float2 ImageScale;                                                                                      \
             float ImageAngle;                                                                                       \
             float Padding;                                                                                          \
             float2 ImageTextureSize;                                                                                \
             float2 WindowSize;                                                                                      \
-            float2 ImageColor;                                                                                      \
-        }                                                                                                           \
+            float4 ImageColor;                                                                                      \
+        };                                                                                                          \
                                                                                                                     \
         Texture2D<float4> tex : register(t0);                                                                       \
         SamplerState smp : register(s0);                                                                            \
@@ -25,27 +25,27 @@ namespace Glib::Internal::Graphics::ShaderCode
         struct VSInput                                                                                              \
         {                                                                                                           \
             float4 position : POSITION;                                                                             \
-        }                                                                                                           \
+        };                                                                                                          \
                                                                                                                     \
         struct VSOutput                                                                                             \
         {                                                                                                           \
             float4 position : SV_POSITION;                                                                          \
             float2 uv : TEXCOORD;                                                                                   \
-        }                                                                                                           \
+        };                                                                                                          \
                                                                                                                     \
         typedef VSOutput PSInput;                                                                                   \
                                                                                                                     \
-        VSOutput VSmain()                                                                                           \
+        VSOutput VSmain(VSInput input)                                                                              \
         {                                                                                                           \
             VSOutput o;                                                                                             \
             o.position = input.position;                                                                            \
-            o.position.x -= ImageTextureSize.x * ImageTextureScale.x;                                               \
-            o.position.y += ImageTextureSize.y * ImageTextureScale.y;                                               \
+            o.position.xy *= ImageTextureSize * ImageScale;                                                         \
+            o.position.xy -= ImageTextureSize * ImageScale * ImageCenter;                                           \
             float2 rotate;                                                                                          \
             float c = cos(ImageAngle);                                                                              \
             float s = sin(ImageAngle);                                                                              \
-            rotate.x = o.position.x * c - o.position.y * s                                                          \
-            rotate.y = o.position.y * c + o.position.X * s                                                          \
+            rotate.x = o.position.x * c - o.position.y * s;                                                         \
+            rotate.y = o.position.y * c + o.position.x * s;                                                         \
             o.position.xy = rotate + ImagePosition;                                                                 \
             o.position.xy = o.position.xy * float2(2.0f / WindowSize.x, -2.0f / WindowSize.y) + float2(-1.0f, 1.0f);\
             o.uv = input.position;                                                                                  \
@@ -53,9 +53,9 @@ namespace Glib::Internal::Graphics::ShaderCode
             return o;                                                                                               \
         }                                                                                                           \
                                                                                                                     \
-        float4 PSmain(PSInput input)                                                                                \
+        float4 PSmain(PSInput input) : SV_TARGET                                                                    \
         {                                                                                                           \
-            return float4(tex.Sample(smp, input.uv)) * ImageColor;                                                  \
+            return tex.Sample(smp, input.uv) * ImageColor;                                                          \
         }"
     };
 }

@@ -33,10 +33,10 @@ bool Glib::Internal::Graphics::GraphicsResource::Initialize()
     if (!CreateSpritePipelineState()) return false;
     if (!CreateImagePipelineState()) return false;
     if (!CreateLinePipelineState()) return false;
-    if (!CreateMeshPipelineState()) return false;
-    if (!CreateMeshShadowPipelineState()) return false;
-    if (!CreateSkinnedMeshPipelineState()) return false;
-    if (!CreateSkinnedMeshShadowPipelineState()) return false;
+    //if (!CreateMeshPipelineState()) return false;
+    //if (!CreateMeshShadowPipelineState()) return false;
+    //if (!CreateSkinnedMeshPipelineState()) return false;
+    //if (!CreateSkinnedMeshShadowPipelineState()) return false;
 
     if (!CreateWhiteTexture()) return false;
     if (!CreateNormalMapTexture()) return false;
@@ -66,7 +66,6 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateTexture(unsigned int id, 
     const UINT64 height = 4;
     auto texHeapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0 };
     auto resDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R8G8B8A8_UNORM, width, height, 1, 1);
-
     // リソースの作成
     auto result = s_dx12->Device()->CreateCommittedResource(
         &texHeapProp,
@@ -76,7 +75,6 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateTexture(unsigned int id, 
         nullptr,
         IID_PPV_ARGS(s_textureResources[id].ReleaseAndGetAddressOf())
     );
-
     if (FAILED(result)) return false;
 
     // 幅 * 高さ * RGBA 分確保
@@ -88,7 +86,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateTexture(unsigned int id, 
         else if (idx == 1) texData[i] = g;
         else if (idx == 2) texData[i] = b;
         else if (idx == 3) texData[i] = a;
-        else texData[i] = 0xFF;
+        else texData[i] = 0xff;
     }
 
     // データ転送
@@ -97,7 +95,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateTexture(unsigned int id, 
         nullptr,
         texData,
         width * 4,
-        (UINT)std::size(texData)
+        static_cast<UINT>(std::size(texData))
     );
 
     if (FAILED(result)) return false;
@@ -107,7 +105,8 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateTexture(unsigned int id, 
 
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
     srvDesc.Format = resDesc.Format;
-    srvDesc.Shader4ComponentMapping = D3D12_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
     srvDesc.Texture2D.MipLevels = 1;
     s_dx12->Device()->CreateShaderResourceView(
         s_textureResources.at(id).Get(),
@@ -272,7 +271,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateImagePipelineState()
     rootSigDesc.pParameters = rootParams;
     rootSigDesc.pStaticSamplers = &sampler;
 
-    if (s_pipelines[ID::IMAGE_PIPELINESTATE].CreateRootSignature(rootSigDesc)) return false;
+    if (!s_pipelines[ID::IMAGE_PIPELINESTATE].CreateRootSignature(rootSigDesc)) return false;
 
     auto pipelineDesc = GraphicsPipeline::CreateDefaultPipelineDesc();
     pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
@@ -311,7 +310,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateLinePipelineState()
     rootSigDesc.pParameters = &rootParam;
     rootSigDesc.pStaticSamplers = &sampler;
 
-    if (s_pipelines[ID::LINE_PIPELINESTATE].CreateRootSignature(rootSigDesc)) return false;
+    if (!s_pipelines[ID::LINE_PIPELINESTATE].CreateRootSignature(rootSigDesc)) return false;
 
     auto pipelineDesc = GraphicsPipeline::CreateDefaultPipelineDesc();
     pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
@@ -372,7 +371,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateMeshPipelineState()
     rootSigDesc.pParameters = rootParams;
     rootSigDesc.pStaticSamplers = sampler;
 
-    if (s_pipelines.at(ID::MESH_PIPELINESTATE).CreateRootSignature(rootSigDesc)) return false;
+    if (!s_pipelines.at(ID::MESH_PIPELINESTATE).CreateRootSignature(rootSigDesc)) return false;
 
     auto pipelineDesc = GraphicsPipeline::CreateDefaultPipelineDesc();
     pipelineDesc.InputLayout.pInputElementDescs = inputLayout;

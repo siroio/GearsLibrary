@@ -64,6 +64,7 @@ public:
     void Set(float r, float g, float b, float a);
     void Set(float rgba);
     void Set0();
+    const float* Raw() const;
     std::string ToString() const;
 
 public:
