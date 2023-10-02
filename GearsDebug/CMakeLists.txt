@@ -2,14 +2,16 @@ cmake_minimum_required(VERSION 3.1)
 
 # == CONFIG ==
 set(SOURCE_FILE
-	./src/GGui.cpp
     ./src/Internal/ImGuiManager.cpp
+    ./src/GGui.cpp
+    ./src/Debugger.cpp
 )
 
 set(HEADER_FILE
     ./include/Internal/ImGuiInc.h
     ./include/Internal/ImGuiManager.h
 	./include/GGui.h
+	./include/Debugger.h
 )
 
 set(LIB_NAME GearsDebug)

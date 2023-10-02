@@ -1,7 +1,7 @@
 #include <SceneManager.h>
 #include <Scene.h>
 #include <GameObjectManager.h>
-#include <Logger.h>
+#include <Debugger.h>
 
 namespace
 {
