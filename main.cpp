@@ -4,11 +4,12 @@
 #include <GameTimer.h>
 #include <Scene.h>
 #include <SceneManager.h>
-#include <Logger.h>
+#include <Debugger.h>
 #include <GameObject.h>
 #include <GameObjectManager.h>
 #include <Component.h>
 
+using namespace Glib;
 
 // テスト用コンポーネント
 class TestComponent : public Component
@@ -40,7 +41,7 @@ public:
         auto go = Glib::GameObjectManager::Instantiate("TestObject");
         if (!go.expired())Debug::Log("TestObject Created!");
         auto ptr = go->AddComponent<TestComponent>();
-        Debug::Log(Glib::ToString(go->Name()) + "ActiveStatus: " + std::to_string(ptr->Active()));
+        Debug::Log(Glib::ToString(go->Name()) + "ActiveStatus: " + std::to_string(go->Active()));
     }
 
     void End() override
