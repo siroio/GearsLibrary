@@ -25,7 +25,7 @@ Glib::WeakPtr<Glib::Texture> Glib::TextureManager::Load(std::string_view filePat
     return tex;
 }
 
-bool Glib::TextureManager::IsValid(unsigned int id)
+bool Glib::TextureManager::Contains(unsigned int id)
 {
     return s_textureResource.contains(id);
 }

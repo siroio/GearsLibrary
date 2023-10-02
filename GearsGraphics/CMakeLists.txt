@@ -16,7 +16,9 @@ set(SOURCE_FILE
     ./src/Internal/DX12/Shader/ShaderManager.cpp
     ./src/Internal/CameraManager.cpp
     ./src/Internal/RenderingManager.cpp
+    ./src/Internal/CanvasManager.cpp
     ./src/Components/Camera.cpp
+    ./src/Components/Canvas.cpp
     ./src/TextureManager.cpp
     ./src/Texture.cpp
     ./src/RenderTarget.cpp
@@ -52,7 +54,9 @@ set(HEADER_FILE
     ./include/Internal/CameraBase.h
     ./include/Internal/CameraManager.h
     ./include/Internal/RenderingManager.h
+    ./include/Internal/CanvasManager.h
     ./include/Components/Camera.h
+    ./include/Components/Canvas.h
     ./include/TextureManager.h
     ./include/Texture.h
     ./include/RenderTarget.h

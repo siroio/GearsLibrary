@@ -17,9 +17,9 @@ namespace
 
 LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    for (auto&& proc : s_windowProcedures)
+    for (const auto& proc : s_windowProcedures)
     {
-        std::invoke(proc, hwnd, msg, wparam, lparam);
+        std::invoke(proc, msg, wparam, lparam);
     }
 
     switch (msg)
@@ -44,9 +44,10 @@ bool Glib::Window::Initialize()
 
     // ウィンドウの作成
     s_windowClass_.cbSize = sizeof(WNDCLASSEX);
-    s_windowClass_.hInstance = s_hInstance_ = GetModuleHandle(nullptr);
+    GetModuleHandleEx(0, nullptr, &s_hInstance_);
+    s_windowClass_.hInstance = s_hInstance_;
     s_windowClass_.lpfnWndProc = (WNDPROC)WindowProcedure;
-    auto style = WS_OVERLAPPEDWINDOW;
+    auto style = WS_EX_OVERLAPPEDWINDOW;
 
 #ifdef UNICODE
     std::wstring wstr{ s_windowName_.begin(), s_windowName_.end() };

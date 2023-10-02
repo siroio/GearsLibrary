@@ -38,7 +38,7 @@ namespace Glib
          * @return 有効 true
          * @return 無効 false
          */
-        bool IsValid(unsigned int id);
+        bool Contains(unsigned int id);
 
         /**
          * @brief テクスチャのサイズを取得

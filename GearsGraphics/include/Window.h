@@ -8,7 +8,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 
 namespace Glib
 {
-    using WndProc = LRESULT(*)(HWND, UINT, WPARAM, LPARAM);
+    using WndProc = LRESULT(*)(UINT, WPARAM, LPARAM);
 
     class Window : public Singleton<Window>
     {
