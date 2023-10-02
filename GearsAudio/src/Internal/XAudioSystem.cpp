@@ -79,7 +79,6 @@ void Glib::Internal::Audio::XAudioSystem::Finalize()
     if (s_masterVoice != nullptr)
     {
         s_masterVoice->DestroyVoice();
-        delete s_masterVoice;
         s_masterVoice = nullptr;
     }
 
