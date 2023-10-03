@@ -1,7 +1,6 @@
 #include <Internal/ComponentFunctionList.h>
+#include <Internal/CameraBase.h>
 #include <Component.h>
-
-class CameraBase;
 
 void Glib::Internal::ComponentFunctionList::Update()
 {

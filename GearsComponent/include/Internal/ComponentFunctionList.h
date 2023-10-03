@@ -13,10 +13,10 @@ namespace Glib
     class WeakPtr;
 }
 
-class CameraBase;
-
 namespace Glib::Internal
 {
+    class CameraBase;
+
     class ComponentFunctionList
     {
         template<class ReturnType, class... Args>
