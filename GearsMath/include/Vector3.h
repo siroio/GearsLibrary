@@ -2,7 +2,6 @@
 #include <iosfwd>
 #include <string>
 #include <array>
-#include <Mathf.h>
 
 struct Vector2;
 struct Quaternion;
