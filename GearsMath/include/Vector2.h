@@ -293,6 +293,7 @@ public:
 
 public:
     void operator = (const Vector2& v);
+    void operator = (const Vector3& v);
     float operator [] (const size_t index) const;
     float& operator [] (const size_t index);
 };

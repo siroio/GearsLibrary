@@ -252,6 +252,12 @@ void Vector2::operator = (const Vector2& v)
     Set(v);
 }
 
+void Vector2::operator=(const Vector3& v)
+{
+    this->x = v.x;
+    this->y = v.y;
+}
+
 float Vector2::operator[](const size_t index) const
 {
     if (index > 1)
