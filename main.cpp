@@ -9,6 +9,10 @@
 #include <GameObjectManager.h>
 #include <Component.h>
 
+#include <TextureManager.h>
+#include <Components/Canvas.h>
+#include <Components/Image.h>
+
 using namespace Glib;
 
 // テスト用コンポーネント
@@ -18,6 +22,7 @@ public:
     void Start()
     {
         Debug::Log("Enable TestComponent");
+        this->GameObject()->AddComponent<Canvas>();
     }
 
     void Update()
@@ -37,10 +42,19 @@ class TestScene : public Glib::Scene::Scene
 public:
     void Start() override
     {
+    
+        auto& tex = TextureManager::Instance();
+        tex.Load(1, "C:/Users/rukar/Pictures/wall.jpg");
         Debug::Log("Scene Loaded...");
         auto go = Glib::GameObjectManager::Instantiate("TestObject");
+        auto go2 = Glib::GameObjectManager::Instantiate();
         if (!go.expired())Debug::Log("TestObject Created!");
+
+        auto img = go2->AddComponent<Image>();
+        
+        img->TextureID(1);
         auto ptr = go->AddComponent<TestComponent>();
+
         Debug::Log(Glib::ToString(go->Name()) + "ActiveStatus: " + std::to_string(go->Active()));
     }
 

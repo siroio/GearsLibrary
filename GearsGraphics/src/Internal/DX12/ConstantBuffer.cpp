@@ -8,11 +8,11 @@ namespace
     auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
 }
 
-bool Glib::Internal::Graphics::ConstantBuffer::Create(unsigned int bufferSize)
+bool Glib::Internal::Graphics::ConstantBuffer::Create(UINT64 bufferSize)
 {
     // バッファー作成
     auto heapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_HEAP_TYPE_UPLOAD };
-    auto resDesc = CD3DX12_RESOURCE_DESC::Buffer((static_cast<UINT64>(bufferSize) + 0xff) & ~0xff);
+    auto resDesc = CD3DX12_RESOURCE_DESC::Buffer((bufferSize + 0xff) & ~0xff);
 
     auto result = s_dx12->Device()->CreateCommittedResource(
         &heapProp,
@@ -26,8 +26,8 @@ bool Glib::Internal::Graphics::ConstantBuffer::Create(unsigned int bufferSize)
     if (FAILED(result)) return false;
 
     // ハンドル取得
-    pool_ = s_dx12->DescriptorPool(DirectX12::PoolType::RES);
-    handle_ = pool_->GetHandle();
+    auto pool =  s_dx12->DescriptorPool(DirectX12::PoolType::RES);
+    handle_ = pool->GetHandle();
 
     // viewの作成
     D3D12_CONSTANT_BUFFER_VIEW_DESC viewDesc{};

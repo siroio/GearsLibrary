@@ -1,14 +1,11 @@
 #pragma once
-#include <memory>
-#include <WeakPtr.h>
 #include <ComPtr.h>
-
-struct ID3D12Resource;
+#include <memory>
+#include <d3d12.h>
 
 namespace Glib::Internal::Graphics
 {
     class DescriptorHandle;
-    class DescriptorPool;
 }
 
 namespace Glib::Internal::Graphics
@@ -24,7 +21,7 @@ namespace Glib::Internal::Graphics
          * @param bufferSize バッファーのサイズ
          * @return 成功 true
          */
-        bool Create(unsigned int bufferSize);
+        bool Create(UINT64 bufferSize);
 
         /**
          * @brief 定数バッファーのバインド
@@ -40,8 +37,7 @@ namespace Glib::Internal::Graphics
         void Update(unsigned int size, const void* data);
 
     private:
-        ComPtr<ID3D12Resource> buffer_{ nullptr };
-        Glib::WeakPtr<DescriptorPool> pool_{ nullptr };
+        ComPtr<ID3D12Resource> buffer_;
         std::shared_ptr<DescriptorHandle> handle_{ nullptr };
     };
 }

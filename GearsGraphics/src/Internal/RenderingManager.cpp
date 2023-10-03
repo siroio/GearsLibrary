@@ -12,7 +12,7 @@
 namespace
 {
     auto s_cameraManager = Glib::Internal::Graphics::CameraManager::Instance();
-    Glib::Internal::Graphics::ConstantBuffer s_cBuffer{};
+    Glib::Internal::Graphics::ConstantBuffer s_constantBuffer{};
 
     Color s_ambient{ 0.2f, 0.2f, 0.2f };
     Color s_diffuse{ 1.0f, 1.0f, 1.0f };
@@ -24,10 +24,8 @@ namespace
     float s_shadowFar{ 100.0f };
     float s_shadowDistance{ 100.0f };
     Vector2 s_shadowRange{ 25.0f, 25.0f };
-}
 
-namespace Glib::Internal::Graphics
-{
+    // 平行光源用定数バッファ構造体
     struct DirectionalLightConstant
     {
         Color ambient;
@@ -40,19 +38,19 @@ namespace Glib::Internal::Graphics
 
 bool Glib::Internal::Graphics::RenderingManager::Initialize()
 {
-    return s_cBuffer.Create(sizeof(DirectionalLightConstant));
+    return s_constantBuffer.Create(sizeof(DirectionalLightConstant));
 }
 
 void Glib::Internal::Graphics::RenderingManager::Update()
 {
     // 定数バッファの更新
-    DirectionalLightConstant cBuffer;
-    cBuffer.ambient = s_ambient;
-    cBuffer.diffuse = s_diffuse;
-    cBuffer.specular = s_specular;
-    cBuffer.direction = s_direction;
-    cBuffer.shadowBias = s_shadowBias;
-    s_cBuffer.Update(sizeof(cBuffer), &cBuffer);
+    DirectionalLightConstant buffer;
+    buffer.ambient = s_ambient;
+    buffer.diffuse = s_diffuse;
+    buffer.specular = s_specular;
+    buffer.direction = s_direction;
+    buffer.shadowBias = s_shadowBias;
+    s_constantBuffer.Update(sizeof(buffer), &buffer);
 }
 
 void Glib::Internal::Graphics::RenderingManager::Draw()
@@ -82,6 +80,7 @@ void Glib::Internal::Graphics::RenderingManager::Draw()
         }
 
         //TODO: Shadow Map Blur
+        camera->ExecuteShadowBulr();
 
         // オブジェクトの描画
         for (const auto& info : renderers_.at(DrawType::Draw))
@@ -159,5 +158,5 @@ void Glib::Internal::Graphics::RenderingManager::ShadowMapRange(const Vector2& r
 
 void Glib::Internal::Graphics::RenderingManager::SetDirectionalLightConstant(unsigned int rootParamIndex)
 {
-    s_cBuffer.BindPipeline(rootParamIndex);
+    s_constantBuffer.BindPipeline(rootParamIndex);
 }

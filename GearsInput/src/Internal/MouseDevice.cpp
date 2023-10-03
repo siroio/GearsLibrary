@@ -16,10 +16,10 @@ namespace
 bool Glib::Internal::Input::MouseDevice::Initialize()
 {
     // デバイスの登録
-    window.WndProc([](HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpram)
-    {
-        return static_cast<LRESULT>(0);
-    });
+    //window.WndProc([](HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpram)
+    //{
+    //    return static_cast<LRESULT>(0);
+    //});
     return true;
 }
 

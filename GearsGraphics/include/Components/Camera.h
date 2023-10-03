@@ -90,7 +90,7 @@ namespace Glib
 
     private:
         WeakPtr<Transform> transform_{ nullptr };
-        Internal::Graphics::ConstantBuffer cameraCBuffer_{};
+        Internal::Graphics::ConstantBuffer constantBuffer_{};
         Graphics::RenderTarget shadowMap_{};
 
         ComPtr<ID3D12Resource> renderTarget_{ nullptr };

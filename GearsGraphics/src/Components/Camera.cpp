@@ -15,20 +15,22 @@ namespace
     auto s_resource = Glib::Internal::Graphics::GraphicsResource::Instance();
     auto s_cameraManager = Glib::Internal::Graphics::CameraManager::Instance();
     auto s_renderingManaber = Glib::Internal::Graphics::RenderingManager::Instance();
-    constexpr unsigned int SHADOW_MAP_SIZE = 2048;
-}
 
-struct CameraCBuffer
-{
-    Matrix4x4 View;
-    Matrix4x4 Projection;
-    Matrix4x4 LightVP;
-};
+    /*　シャドーマップの大きさ　*/
+    constexpr unsigned int SHADOW_MAP_SIZE = 2048;
+
+    struct CameraConstant
+    {
+        Matrix4x4 View;
+        Matrix4x4 Projection;
+        Matrix4x4 LightVP;
+    };
+}
 
 Glib::Camera::Camera()
 {
     // バッファーを作成
-    cameraCBuffer_.Create(sizeof(CameraCBuffer));
+    constantBuffer_.Create(sizeof(CameraConstant));
 }
 
 void Glib::Camera::Start()
@@ -36,20 +38,20 @@ void Glib::Camera::Start()
     transform_ = GameObject()->Transform();
     InitializeRT();
     InitializeSM();
-    s_cameraManager->AddCamera(weak_from_this());
+    s_cameraManager->AddCamera(shared_from_this());
 }
 
 void Glib::Camera::LateUpdate()
 {
     if (transform_.expired()) return;
 
-    CameraCBuffer buffer;
+    CameraConstant buffer;
     buffer.View = ViewMatrix();
     buffer.Projection = ProjectionMatrix();
     buffer.LightVP = s_renderingManaber->CalculateMatrixForShadowMap(
         transform_->Position() + transform_->Forward());
 
-    cameraCBuffer_.Update(sizeof(CameraCBuffer), &buffer);
+    constantBuffer_.Update(sizeof(buffer), &buffer);
 
     // バリアを推移
     s_dx12->Barrier(renderTarget_.Get(),
@@ -308,7 +310,7 @@ Matrix4x4 Glib::Camera::ProjectionMatrix() const
 
 void Glib::Camera::SetConstantBuffer(unsigned int rootParamIndex)
 {
-    cameraCBuffer_.BindPipeline(rootParamIndex);
+    constantBuffer_.BindPipeline(rootParamIndex);
 }
 
 void Glib::Camera::SetDepthStencil()

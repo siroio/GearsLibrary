@@ -20,6 +20,7 @@ void Glib::Internal::Graphics::CameraManager::Draw()
     // RenderTargetの設定
 #if defined(DEBUG) || defined(_DEBUG)
     // TODO: デバッグ用のRenderTargetへ描画
+    s_dx12->SetDefaultRenderTarget();
 #else
     s_dx12->SetDefaultRenderTarget();
 #endif

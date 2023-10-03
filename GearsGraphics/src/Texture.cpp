@@ -25,12 +25,6 @@ namespace
         {
             return SUCCEEDED(DirectX::LoadFromWICFile(path.data(), DirectX::WIC_FLAGS_NONE, meta, img));
         } },
-
-        { "bmp", s_loadFunctions["png"] },
-        { "jpg", s_loadFunctions["png"] },
-        { "jpeg", s_loadFunctions["png"] },
-        { "spa", s_loadFunctions["png"] },
-        { "sph", s_loadFunctions["png"] }
     };
 }
 
@@ -45,7 +39,10 @@ bool Glib::Texture::CreateTexture(std::string_view path)
     if (!filePath.has_extension()) return false;
     DirectX::TexMetadata metadata{};
     DirectX::ScratchImage scratchImg{};
-    const auto& func = s_loadFunctions.at(filePath.extension().string());
+    auto extension = filePath.extension().string();
+    if ((extension != "tga") || (extension != "dds"))
+        extension = "png";
+    const auto& func = s_loadFunctions.at(extension);
 
     // テクスチャのロード
     const auto result = func(filePath.wstring(), &metadata, scratchImg);

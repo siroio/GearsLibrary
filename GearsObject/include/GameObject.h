@@ -4,11 +4,9 @@
 #include <algorithm>
 #include <memory>
 #include <list>
-
 #include <Internal/IGameObject.h>
 #include <Internal/ComponentManager.h>
 #include <GameObjectManager.h>
-
 #include <Components/Transform.h>
 
 class Component;
@@ -208,7 +206,7 @@ inline Glib::WeakPtr<T> GameObject::GetComponentInParent() const
     Glib::WeakPtr<T> component = GetComponent<T>();
     if (!component.expired()) return component;
 
-    Glib::WeakPtr<class Transform> parent = transform_->Parent();
+    Glib::WeakPtr<Glib::Transform> parent = transform_->Parent();
     if (!parent.expired()) return parent->GameObject()->GetComponentInParent<T>();
 
     return Glib::WeakPtr<T>{ nullptr };
@@ -246,7 +244,7 @@ template<class T> requires IsComponent<T>
 inline Glib::WeakPtr<T> GameObject::GetComponentsInParent() const
 {
     std::list<Glib::WeakPtr<T>> components = GetComponents<T>();
-    Glib::WeakPtr<class Transform> parent = transform_->Parent();
+    Glib::WeakPtr<Glib::Transform> parent = transform_->Parent();
     if (!parent.expired())
     {
         std::list<Glib::WeakPtr<T>> parentComponents = parent->GameObject()->GetComponentsInParent();
