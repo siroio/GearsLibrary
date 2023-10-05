@@ -39,7 +39,7 @@ public:
     static Vector3 Down();
     static Vector3 Left();
     static Vector3 Right();
-    static Vector3 Divide(const Vector3& v1, const Vector3 v2, float threshold = 0);
+    static Vector3 Divide(const Vector3& v1, const Vector3 v2, float threshold = 1e-5f);
     static float Dot(const Vector3& v1, const Vector3& v2);
     static float Angle(const Vector3& from, const Vector3& to);
     static float SignedAngle(const Vector3& from, const Vector3& to, const Vector3& axis);
