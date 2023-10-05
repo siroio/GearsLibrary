@@ -19,11 +19,15 @@ namespace Glib::Internal::Input
 
         Vector2 Position();
         Vector2 Delta();
+
+    private:
+        void RawInputMsgHandler(UINT msg, WPARAM wparam, LPARAM lparam);
+
     private:
         RAWINPUTDEVICE device_;
         Vector2 delta_;
         Vector2 position_;
-        std::unordered_map<MouseButton, std::array<USHORT, 2>> prevMouseButton_;
-        std::unordered_map<MouseButton, std::array<USHORT, 2>> currentMouseButton_;
+        std::array<unsigned char, 2> prevMouseButton_;
+        std::array<unsigned char, 2> currentMouseButton_;
     };
 }

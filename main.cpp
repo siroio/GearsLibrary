@@ -10,6 +10,7 @@
 #include <Component.h>
 
 #include <TextureManager.h>
+#include <Components/Camera.h>
 #include <Components/Canvas.h>
 #include <Components/Image.h>
 
@@ -22,7 +23,6 @@ public:
     void Start()
     {
         Debug::Log("Enable TestComponent");
-        this->GameObject()->AddComponent<Canvas>();
     }
 
     void Update()
@@ -42,20 +42,18 @@ class TestScene : public Glib::Scene::Scene
 public:
     void Start() override
     {
-    
         auto& tex = TextureManager::Instance();
-        tex.Load(1, "C:/Users/rukar/Pictures/wall.jpg");
+        tex.Load(0, "C:\\Users\\rukar\\Pictures\\—§‚¿ŠG.png");
         Debug::Log("Scene Loaded...");
-        auto go = Glib::GameObjectManager::Instantiate("TestObject");
-        auto go2 = Glib::GameObjectManager::Instantiate();
-        if (!go.expired())Debug::Log("TestObject Created!");
 
-        auto img = go2->AddComponent<Image>();
-        
-        img->TextureID(1);
-        auto ptr = go->AddComponent<TestComponent>();
-
-        Debug::Log(Glib::ToString(go->Name()) + "ActiveStatus: " + std::to_string(go->Active()));
+        auto canvas = GameObjectManager::Instantiate("Canvas");
+        canvas->AddComponent<Canvas>();
+        auto img = GameObjectManager::Instantiate("Img");
+        img->Transform()->Parent(canvas->Transform());
+        auto imgComp = img->AddComponent<Image>();
+        imgComp->TextureID(0);
+        imgComp->Center(Vector2{ 0 });
+        imgComp->Color(Color{ 1.0f, 1.0f, 1.0f, 1.0f});
     }
 
     void End() override

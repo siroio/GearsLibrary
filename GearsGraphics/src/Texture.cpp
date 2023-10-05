@@ -26,6 +26,11 @@ namespace
             return SUCCEEDED(DirectX::LoadFromWICFile(path.data(), DirectX::WIC_FLAGS_NONE, meta, img));
         } },
     };
+
+    size_t AlignmentedSize(size_t size, size_t alignment)
+    {
+        return size + alignment - size % alignment;
+    }
 }
 
 namespace
@@ -52,10 +57,8 @@ bool Glib::Texture::CreateTexture(std::string_view path)
 
     // アップロード用バッファ作成
     ComPtr<ID3D12Resource> uploadBuffer{ nullptr };
-    auto aligment = ((256ULL - (img->rowPitch % 256)) % 256);
-    UINT64 width = static_cast<UINT64>(img->rowPitch) + aligment * static_cast<UINT64>(img->height);
     auto heapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_HEAP_TYPE_UPLOAD };
-    auto resDesc = CD3DX12_RESOURCE_DESC::Buffer(width);
+    auto resDesc = CD3DX12_RESOURCE_DESC::Buffer(AlignmentedSize(img->rowPitch, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT) * img->height);
 
     if (FAILED(s_dx12->Device()->CreateCommittedResource(
         &heapProp,
@@ -93,26 +96,35 @@ bool Glib::Texture::CreateTexture(std::string_view path)
     uint8_t* mapped{ nullptr };
     if (FAILED(uploadBuffer->Map(0, nullptr, (void**)&mapped))) return false;
 
-    auto adress = img->pixels;
-    auto rowPitch = img->rowPitch + aligment;
+    auto srcAdress = img->pixels;
+    auto rowPitch = AlignmentedSize(img->rowPitch, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
 
-    for (unsigned int y = 0; y < img->height; ++y)
+    for (unsigned int y = 0; y < img->height; y++)
     {
-        std::copy_n(adress, rowPitch, mapped);
-        adress += img->rowPitch;
+        std::copy_n(srcAdress, rowPitch, mapped);
+        srcAdress += img->rowPitch;
+        mapped += rowPitch;
     }
     uploadBuffer->Unmap(0, nullptr);
 
     // コピーの設定
-    D3D12_TEXTURE_COPY_LOCATION src{}, dst{};
+    D3D12_TEXTURE_COPY_LOCATION src{};
+    D3D12_PLACED_SUBRESOURCE_FOOTPRINT footprint = {};
+    UINT nRow{};
+    UINT64 rowSize{}, size{};
+    auto desc = texture_->GetDesc();
+    s_dx12->Device()->GetCopyableFootprints(&desc, 0, 1, 0, &footprint, &nRow, &rowSize, &size);
     src.pResource = uploadBuffer.Get();
     src.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
+    src.PlacedFootprint = footprint;
     src.PlacedFootprint.Offset = 0;
-    src.PlacedFootprint.Footprint.Width = static_cast<UINT>(img->width);
-    src.PlacedFootprint.Footprint.Height = static_cast<UINT>(img->height);
-    src.PlacedFootprint.Footprint.RowPitch = static_cast<UINT>(img->rowPitch + aligment);
+    src.PlacedFootprint.Footprint.Width = static_cast<UINT>(metadata.width);
+    src.PlacedFootprint.Footprint.Height = static_cast<UINT>(metadata.height);
+    src.PlacedFootprint.Footprint.Depth = static_cast<UINT>(metadata.depth);
+    src.PlacedFootprint.Footprint.RowPitch = static_cast<UINT>(img->rowPitch + ((256 - (img->rowPitch % 256)) % 256));
     src.PlacedFootprint.Footprint.Format = img->format;
 
+    D3D12_TEXTURE_COPY_LOCATION dst{};
     dst.pResource = texture_.Get();
     dst.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
     dst.SubresourceIndex = 0;

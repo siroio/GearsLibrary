@@ -23,6 +23,7 @@ set(SOURCE_FILE
     ./src/TextureManager.cpp
     ./src/Texture.cpp
     ./src/RenderTarget.cpp
+    ./src/GaussianBlur.cpp
     ./src/Window.cpp
 )
 
@@ -63,6 +64,7 @@ set(HEADER_FILE
     ./include/TextureManager.h
     ./include/Texture.h
     ./include/RenderTarget.h
+    ./include/GaussianBlur.h
     ./include/Window.h
 )
 

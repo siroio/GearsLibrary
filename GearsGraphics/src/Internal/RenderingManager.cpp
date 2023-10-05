@@ -3,12 +3,11 @@
 #include <Internal/CameraManager.h>
 #include <Internal/CameraBase.h>
 #include <Internal/DX12/ConstantBuffer.h>
-
 #include <Matrix4x4.h>
 #include <Color.h>
 #include <Vector3.h>
 #include <Vector2.h>
-
+#include <ranges>
 namespace
 {
     auto s_cameraManager = Glib::Internal::Graphics::CameraManager::Instance();
@@ -56,7 +55,7 @@ void Glib::Internal::Graphics::RenderingManager::Update()
 void Glib::Internal::Graphics::RenderingManager::Draw()
 {
     // 無効なコンポーネントをリストから削除
-    for (auto& [type, component] : renderers_)
+    for (auto& component : renderers_ | std::ranges::views::values)
     {
         component.remove_if([](const auto& info)
         {
@@ -71,7 +70,7 @@ void Glib::Internal::Graphics::RenderingManager::Draw()
 
         // シャドウマップ描画
         camera->SetDepthStencil();
-        for (const auto& info : renderers_.at(DrawType::Shadow))
+        for (const auto& info : renderers_[DrawType::Shadow])
         {
             if (info.component->Active())
             {
@@ -83,7 +82,8 @@ void Glib::Internal::Graphics::RenderingManager::Draw()
         camera->ExecuteShadowBulr();
 
         // オブジェクトの描画
-        for (const auto& info : renderers_.at(DrawType::Draw))
+        camera->SetRenderTarget();
+        for (const auto& info : renderers_[DrawType::Draw])
         {
             if (info.component->Active())
             {

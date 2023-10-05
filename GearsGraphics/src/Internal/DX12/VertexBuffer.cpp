@@ -31,7 +31,7 @@ bool Glib::Internal::Graphics::VertexBuffer::Create(unsigned int sizePerVetex, u
 
 void Glib::Internal::Graphics::VertexBuffer::SetBuffer()
 {
-    s_dx12->CommandList()->IASetVertexBuffers(0u, 1u, &view_);
+    s_dx12->CommandList()->IASetVertexBuffers(0, 1, &view_);
 }
 
 void Glib::Internal::Graphics::VertexBuffer::Update(void* vertices)

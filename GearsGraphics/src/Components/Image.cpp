@@ -48,7 +48,7 @@ void Glib::Image::LateUpdate()
     buffer.position = transform->Position();
     buffer.center = center_;
     buffer.scale = transform->Scale();
-    buffer.angle = transform->EulerAngles().x * Mathf::DEG2RAD;
+    buffer.angle = transform->EulerAngles().z * Mathf::DEG2RAD;
     buffer.textureSize = s_textureManager.TextureSize(textureID_);
     buffer.windowSize = Window::WindowSize();
     buffer.color = color_;
@@ -62,7 +62,7 @@ void Glib::Image::DrawUI()
     s_graphicsManager->SetPipelineState(ID::IMAGE_PIPELINESTATE);
     s_graphicsManager->SetVertexBuffer(ID::IMAGE_VERTEX);
     constantBuffer_.BindPipeline(1);
-    s_graphicsManager->SetTexture(textureID_, 0);
+    s_textureManager.SetTexture(textureID_, 0);
     s_dx12->CommandList()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
     s_dx12->CommandList()->DrawInstanced(4, 1, 0, 0);
 }

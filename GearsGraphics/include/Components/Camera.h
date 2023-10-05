@@ -4,6 +4,7 @@
 #include <Internal/DX12/ConstantBuffer.h>
 #include <ComPtr.h>
 #include <RenderTarget.h>
+#include <GaussianBlur.h>
 #include <Matrix4x4.h>
 #include <Vector2.h>
 #include <Vector3.h>
@@ -83,6 +84,7 @@ namespace Glib
         virtual void Draw() override;
         virtual Matrix4x4 ViewMatrix() const override;
         virtual Matrix4x4 ProjectionMatrix() const override;
+        virtual void SetRenderTarget() override;
         virtual void SetConstantBuffer(unsigned int rootParamIndex) override;
         virtual void SetDepthStencil() override;
         virtual void SetShadowMap(unsigned int rootParamIndex) override;
@@ -91,7 +93,6 @@ namespace Glib
     private:
         WeakPtr<Transform> transform_{ nullptr };
         Internal::Graphics::ConstantBuffer constantBuffer_{};
-        Graphics::RenderTarget shadowMap_{};
 
         ComPtr<ID3D12Resource> renderTarget_{ nullptr };
         std::shared_ptr<Internal::Graphics::DescriptorHandle> rtvHandle_{ nullptr };
@@ -99,6 +100,9 @@ namespace Glib
 
         ComPtr<ID3D12Resource> depthStencil_{ nullptr };
         std::shared_ptr<Internal::Graphics::DescriptorHandle> dsvHandle_{ nullptr };
+
+        Graphics::RenderTarget shadowMap_{};
+        Graphics::GaussianBlur shadowMapBlur{};
 
         Color backGroundColor_{ 0.192f, 0.302f, 0.475f, 1.000f };
         CameraClearFlags clearFlags_{ CameraClearFlags::SkyBox };

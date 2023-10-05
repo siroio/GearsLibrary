@@ -10,7 +10,7 @@
 #include <array>
 #include <vector>
 #include <memory>
-
+#include <iostream>
 namespace
 {
     /* デバイス */
@@ -82,7 +82,7 @@ bool Glib::Internal::Graphics::DirectX12::Initialize()
     // バックバッファの作成
     for (auto idx = 0; idx < FRAME_COUNT; idx++)
     {
-        if (!s_backBuffers[idx].Create(idx, s_swapChain.Get())) return false;
+        if (!s_backBuffers[idx].Create(idx, s_swapChain)) return false;
     }
 
     if (FAILED(s_device->CreateFence(s_fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(s_fence.ReleaseAndGetAddressOf())))) return false;
@@ -122,12 +122,12 @@ void Glib::Internal::Graphics::DirectX12::BeginDraw()
     s_cmdList->List()->OMSetRenderTargets(1, &rtvH, true, nullptr);
     s_cmdList->List()->ClearRenderTargetView(rtvH, s_backGroundColor.Raw(), 0, nullptr);
 
-    ID3D12DescriptorHeap* const heaps[]{
+    std::array<ID3D12DescriptorHeap* const, 2> heaps{
         s_descriptors[static_cast<UINT>(PoolType::RES)]->GetHeap().Get(),
         s_descriptors[static_cast<UINT>(PoolType::SMP)]->GetHeap().Get()
     };
 
-    s_cmdList->List()->SetDescriptorHeaps(static_cast<UINT>(std::size(heaps)), heaps);
+    s_cmdList->List()->SetDescriptorHeaps(static_cast<UINT>(heaps.size()), heaps.data());
 }
 
 void Glib::Internal::Graphics::DirectX12::EndDraw()
@@ -273,7 +273,7 @@ bool Glib::Internal::Graphics::DirectX12::CreateSwapChain()
     swapChainDesc.SampleDesc.Count = 1;
     swapChainDesc.SampleDesc.Quality = 0;
     swapChainDesc.BufferUsage = DXGI_USAGE_BACK_BUFFER;
-    swapChainDesc.BufferCount = static_cast<UINT>(FRAME_COUNT);
+    swapChainDesc.BufferCount = FRAME_COUNT;
     swapChainDesc.Scaling = DXGI_SCALING_STRETCH;
     swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
     swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
@@ -334,7 +334,7 @@ void Glib::Internal::Graphics::DirectX12::WaitGPU()
     {
         auto event = CreateEvent(nullptr, false, false, nullptr);
         s_fence->SetEventOnCompletion(s_fenceValue, event);
-        WaitForSingleObjectEx(event, INFINITE, false);
+        WaitForSingleObject(event, INFINITE);
         CloseHandle(event);
     }
 }

@@ -47,7 +47,7 @@ bool Glib::Window::Initialize()
     GetModuleHandleEx(0, nullptr, &s_hInstance_);
     s_windowClass_.hInstance = s_hInstance_;
     s_windowClass_.lpfnWndProc = (WNDPROC)WindowProcedure;
-    auto style = WS_EX_OVERLAPPEDWINDOW;
+    auto style = WS_OVERLAPPEDWINDOW;
 
 #ifdef UNICODE
     std::wstring wstr{ s_windowName_.begin(), s_windowName_.end() };

@@ -113,7 +113,7 @@ void Glib::Graphics::RenderTarget::CreateView(DXGI_FORMAT rtvFormat, DXGI_FORMAT
         );
     }
 
-    if (dsvHandle_ != nullptr)
+    if (dsvHandle_ != nullptr && rtvFormat != DXGI_FORMAT_UNKNOWN)
     {
         D3D12_DEPTH_STENCIL_VIEW_DESC desc{};
         desc.Format = dsvFormat;

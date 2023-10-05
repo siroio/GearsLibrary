@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Glib::Internal::Input
+namespace Glib
 {
     enum class MouseButton
     {

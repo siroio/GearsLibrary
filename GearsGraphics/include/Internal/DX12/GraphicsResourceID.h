@@ -11,9 +11,9 @@ namespace Glib::Internal::Graphics::ID
 
     /* パイプラインID */
 
-    constexpr UCHAR CAMERA_PIPELINESTATE = 0;                                           /* カメラ */
-    constexpr UCHAR SPRITE_PIPELINESTATE = CAMERA_PIPELINESTATE + 1;                    /* スプライト */
-    constexpr UCHAR IMAGE_PIPELINESTATE = SPRITE_PIPELINESTATE + 1;                     /* UI */
+    constexpr UCHAR SPRITE_PIPELINESTATE = 0;                                           /* カメラ */
+    constexpr UCHAR CAMERA_PIPELINESTATE = SPRITE_PIPELINESTATE + 1;                    /* スプライト */
+    constexpr UCHAR IMAGE_PIPELINESTATE = CAMERA_PIPELINESTATE + 1;                     /* UI */
     constexpr UCHAR LINE_PIPELINESTATE = IMAGE_PIPELINESTATE + 1;                       /* ライン */
 
     constexpr UCHAR MESH_PIPELINESTATE = LINE_PIPELINESTATE + 1;                        /* メッシュ */

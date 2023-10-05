@@ -59,10 +59,10 @@ void Glib::Camera::LateUpdate()
                     D3D12_RESOURCE_STATE_RENDER_TARGET);
 
     // レンダーターゲット、深度のクリア
-    s_dx12->CommandList()->ClearRenderTargetView(rtvHandle_->CPU(), backGroundColor_.rgba.data(), 0, nullptr);
+    s_dx12->CommandList()->ClearRenderTargetView(rtvHandle_->CPU(), backGroundColor_.Raw(), 0, nullptr);
     s_dx12->CommandList()->ClearDepthStencilView(dsvHandle_->CPU(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
     shadowMap_.AsRenderTarget();
-    s_dx12->CommandList()->ClearRenderTargetView(shadowMap_.RTVHandle()->CPU(), Color::White().rgba.data(), 0, nullptr);
+    s_dx12->CommandList()->ClearRenderTargetView(shadowMap_.RTVHandle()->CPU(), Color::White().Raw(), 0, nullptr);
     s_dx12->CommandList()->ClearDepthStencilView(shadowMap_.DSVHandle()->CPU(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
@@ -173,8 +173,8 @@ void Glib::Camera::InitializeRT()
     resDesc.Width = static_cast<UINT>(windowSize.x);
     resDesc.Height = static_cast<UINT>(windowSize.y);
     auto heapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_HEAP_TYPE_DEFAULT };
-    auto clearValue = CD3DX12_CLEAR_VALUE{ DXGI_FORMAT_B8G8R8A8_UNORM, backGroundColor_.rgba.data() };
-    s_dx12->Device()->CreateCommittedResource(
+    auto clearValue = CD3DX12_CLEAR_VALUE{ DXGI_FORMAT_R8G8B8A8_UNORM, backGroundColor_.Raw() };
+    auto res = s_dx12->Device()->CreateCommittedResource(
         &heapProp,
         D3D12_HEAP_FLAG_NONE,
         &resDesc,
@@ -216,9 +216,9 @@ void Glib::Camera::InitializeRT()
     depthValue.Format = DXGI_FORMAT_D32_FLOAT;
     depthValue.DepthStencil.Depth = 1.0f;
 
-    auto depthDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R32_FLOAT, resDesc.Width, resDesc.Height);
+    auto depthDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R32_TYPELESS, resDesc.Width, resDesc.Height);
     depthDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
-    s_dx12->Device()->CreateCommittedResource(
+    res = s_dx12->Device()->CreateCommittedResource(
         &heapProp,
         D3D12_HEAP_FLAG_NONE,
         &depthDesc,
@@ -252,6 +252,8 @@ void Glib::Camera::InitializeSM()
         DXGI_FORMAT_R32G32_FLOAT,
         DXGI_FORMAT_D32_FLOAT
     );
+
+    shadowMapBlur.Initialize(shadowMap_.RenderTargetResource(), DXGI_FORMAT_R32G32_FLOAT);
 }
 
 void Glib::Camera::Draw()
@@ -263,7 +265,7 @@ void Glib::Camera::Draw()
 
 
     // カメラ用パイプライン設定
-    s_resource->SetPipelineState(Internal::Graphics::ID::CAMERA_VERTEX);
+    s_resource->SetPipelineState(Internal::Graphics::ID::CAMERA_PIPELINESTATE);
     // 頂点バッファの設定
     s_resource->SetVertexBuffer(Internal::Graphics::ID::CAMERA_VERTEX);
 
@@ -277,7 +279,6 @@ void Glib::Camera::Draw()
     viewPort.MaxDepth = 1.0f;
 
     s_dx12->CommandList()->RSSetViewports(1, &viewPort);
-
     s_dx12->CommandList()->SetGraphicsRootDescriptorTable(0, srvHandle_->GPU());
     s_dx12->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
     s_dx12->CommandList()->DrawInstanced(4, 1, 0, 0);
@@ -308,6 +309,22 @@ Matrix4x4 Glib::Camera::ProjectionMatrix() const
     }
 }
 
+void Glib::Camera::SetRenderTarget()
+{
+    s_dx12->CommandList()->OMSetRenderTargets(
+        1,
+        &rtvHandle_->CPU(),
+        true,
+        &dsvHandle_->CPU()
+    );
+
+    const Vector2& windowSize = Window::WindowSize();
+    CD3DX12_VIEWPORT viewPort{ 0.0f, 0.0f, windowSize.x, windowSize.y };
+    CD3DX12_RECT rect{ 0, 0, static_cast<LONG>(windowSize.x), static_cast<LONG>(windowSize.y) };
+    s_dx12->CommandList()->RSSetViewports(1, &viewPort);
+    s_dx12->CommandList()->RSSetScissorRects(1, &rect);
+}
+
 void Glib::Camera::SetConstantBuffer(unsigned int rootParamIndex)
 {
     constantBuffer_.BindPipeline(rootParamIndex);
@@ -316,7 +333,7 @@ void Glib::Camera::SetConstantBuffer(unsigned int rootParamIndex)
 void Glib::Camera::SetDepthStencil()
 {
     CD3DX12_VIEWPORT viewPort{ 0.0f, 0.0f, static_cast<float>(SHADOW_MAP_SIZE), static_cast<float>(SHADOW_MAP_SIZE) };
-    CD3DX12_RECT rect{ 0L, 0L, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE };
+    CD3DX12_RECT rect{ 0, 0, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE };
 
     s_dx12->CommandList()->OMSetRenderTargets(
         1, &shadowMap_.RTVHandle()->CPU(),
@@ -328,10 +345,11 @@ void Glib::Camera::SetDepthStencil()
 
 void Glib::Camera::SetShadowMap(unsigned int rootParamIndex)
 {
-
+    shadowMapBlur.SetTexture(rootParamIndex);
 }
 
 void Glib::Camera::ExecuteShadowBulr()
 {
     shadowMap_.AsTexture();
+    shadowMapBlur.Execute(1.0f);
 }
