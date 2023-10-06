@@ -20,6 +20,7 @@ set(SOURCE_FILE
     ./src/Components/Camera.cpp
     ./src/Components/Canvas.cpp
     ./src/Components/Image.cpp
+    ./src/Components/SpriteRenderer.cpp
     ./src/TextureManager.cpp
     ./src/Texture.cpp
     ./src/RenderTarget.cpp
@@ -58,9 +59,11 @@ set(HEADER_FILE
     ./include/Internal/RenderingManager.h
     ./include/Internal/CanvasManager.h
     ./include/Internal/UIRenderer.h
+    ./include/Internal/Renderer.h
     ./include/Components/Camera.h
     ./include/Components/Canvas.h
     ./include/Components/Image.h
+    ./include/Components/SpriteRenderer.h
     ./include/TextureManager.h
     ./include/Texture.h
     ./include/RenderTarget.h
