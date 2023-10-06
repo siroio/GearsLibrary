@@ -27,6 +27,7 @@ namespace
         } },
     };
 
+    /* アライメント計算 */
     size_t AlignmentedSize(size_t size, size_t alignment)
     {
         return size + alignment - size % alignment;
@@ -48,7 +49,7 @@ bool Glib::Texture::CreateTexture(std::string_view path)
     if ((extension != "tga") || (extension != "dds"))
         extension = "png";
     const auto& func = s_loadFunctions.at(extension);
-
+        
     // テクスチャのロード
     const auto result = func(filePath.wstring(), &metadata, scratchImg);
     if (!result) return false;
@@ -109,19 +110,13 @@ bool Glib::Texture::CreateTexture(std::string_view path)
 
     // コピーの設定
     D3D12_TEXTURE_COPY_LOCATION src{};
-    D3D12_PLACED_SUBRESOURCE_FOOTPRINT footprint = {};
-    UINT nRow{};
-    UINT64 rowSize{}, size{};
-    auto desc = texture_->GetDesc();
-    s_dx12->Device()->GetCopyableFootprints(&desc, 0, 1, 0, &footprint, &nRow, &rowSize, &size);
     src.pResource = uploadBuffer.Get();
     src.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
-    src.PlacedFootprint = footprint;
     src.PlacedFootprint.Offset = 0;
     src.PlacedFootprint.Footprint.Width = static_cast<UINT>(metadata.width);
     src.PlacedFootprint.Footprint.Height = static_cast<UINT>(metadata.height);
     src.PlacedFootprint.Footprint.Depth = static_cast<UINT>(metadata.depth);
-    src.PlacedFootprint.Footprint.RowPitch = static_cast<UINT>(img->rowPitch + ((256 - (img->rowPitch % 256)) % 256));
+    src.PlacedFootprint.Footprint.RowPitch = static_cast<UINT>(AlignmentedSize(img->rowPitch, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT));
     src.PlacedFootprint.Footprint.Format = img->format;
 
     D3D12_TEXTURE_COPY_LOCATION dst{};

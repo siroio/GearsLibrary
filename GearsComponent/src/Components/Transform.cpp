@@ -196,7 +196,7 @@ Matrix4x4 Glib::Transform::WorldToLocalMatrix() const
 
 Vector3 Glib::Transform::TransformPoint(const Vector3& position) const
 {
-    return Rotation() * Vector3::Scale(position, Scale()) + position;
+    return Rotation() * Vector3::Scale(position, Scale()) + Position();
 }
 
 Vector3 Glib::Transform::TransformVector(const Vector3& vector) const
