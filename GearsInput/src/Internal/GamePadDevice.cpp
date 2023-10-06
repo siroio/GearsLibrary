@@ -24,7 +24,7 @@ void Glib::Internal::Input::GamePadDevice::Update()
 {
     for (auto& device : devices_)
     {
-        std::visit([](auto&& dev)
+        std::visit([](auto& dev)
         {
             dev.Update();
         }, device);

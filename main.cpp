@@ -24,31 +24,32 @@ public:
     void Start()
     {
         Debug::Log("Enable TestComponent");
-        GameObject()->Transform()->Position(Vector3{ 1280, 720, 0});
+        GameObject()->Transform()->Position(Vector3{ 1280, 720, 0 });
     }
 
     void Update()
     {
         auto& transform = GameObject()->Transform();
-        auto current = GameObject()->Transform()->Position();
-        Vector3 veclocity;
-        float speed = 10;
+        Vector3 velocity;
+        float speed = 500;
         if (InputSystem::GetKey(KeyCode::Up))
         {
-            veclocity.y += speed * GameTimer::DeltaTime();
+            velocity.y -= speed * GameTimer::DeltaTime();
         }
         if (InputSystem::GetKey(KeyCode::Down))
         {
-            veclocity.y -= speed * GameTimer::DeltaTime();
+            velocity.y += speed * GameTimer::DeltaTime();
         }
         if (InputSystem::GetKey(KeyCode::Left))
         {
-            veclocity.x -= speed * GameTimer::DeltaTime();
+            velocity.x -= speed * GameTimer::DeltaTime();
         }
         if (InputSystem::GetKey(KeyCode::Right))
         {
-            veclocity.x += speed * GameTimer::DeltaTime();
+            velocity.x += speed * GameTimer::DeltaTime();
         }
+
+        transform->Position(transform->Position() + velocity);
     }
 
     void FixedUpdate()
@@ -74,7 +75,7 @@ public:
         auto imgComp = img->AddComponent<Image>();
         img->AddComponent<TestComponent>();
         imgComp->TextureID(0);                          // 画像をテクスチャ番号0番に設定
-        imgComp->Color(Color{ 1.0f, 1.0f, 1.0f, 1.0f});
+        imgComp->Color(Color{ 1.0f, 1.0f, 1.0f, 1.0f });
     }
 
     void End() override
