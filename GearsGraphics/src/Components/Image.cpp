@@ -12,7 +12,7 @@
 namespace
 {
     auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
-    auto s_graphicsManager = Glib::Internal::Graphics::GraphicsResource::Instance();
+    auto s_graphics = Glib::Internal::Graphics::GraphicsResource::Instance();
     auto s_canvasManager = Glib::Internal::Graphics::CanvasManager::Instance();
     auto& s_textureManager = Glib::TextureManager::Instance();
 
@@ -59,8 +59,8 @@ void Glib::Image::DrawUI()
 {
     if (!enabled_) return;
     using namespace Internal::Graphics;
-    s_graphicsManager->SetPipelineState(ID::IMAGE_PIPELINESTATE);
-    s_graphicsManager->SetVertexBuffer(ID::IMAGE_VERTEX);
+    s_graphics->SetPipelineState(ID::IMAGE_PIPELINESTATE);
+    s_graphics->SetVertexBuffer(ID::IMAGE_VERTEX);
     constantBuffer_.BindPipeline(1);
     s_textureManager.SetTexture(textureID_, 0);
     s_dx12->CommandList()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
