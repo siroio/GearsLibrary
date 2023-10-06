@@ -8,7 +8,7 @@ namespace
     auto s_gameObjectManager = Glib::GameObjectManager::Instance();
 }
 
-void Glib::Scene::SceneManager::Update()
+void Glib::SceneManager::Update()
 {
     if (next_.expired()) return;
     if (!current_.expired()) current_->End();
@@ -18,7 +18,7 @@ void Glib::Scene::SceneManager::Update()
     current_->Start();
 }
 
-void Glib::Scene::SceneManager::LoadScene(const std::string& name)
+void Glib::SceneManager::LoadScene(const std::string& name)
 {
     if (scenes_.find(name) == scenes_.end())
     {
@@ -26,4 +26,14 @@ void Glib::Scene::SceneManager::LoadScene(const std::string& name)
         return;
     }
     next_ = scenes_.at(name);
+}
+
+std::list<std::string> Glib::SceneManager::Scenes()
+{
+    std::list<std::string> scenes;
+    for (const auto& [name, ptr] : scenes_)
+    {
+        scenes.push_back(name);
+    }
+    return scenes;
 }

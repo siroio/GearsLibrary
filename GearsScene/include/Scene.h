@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Glib::Scene
+namespace Glib
 {
     /**
      * @brief シーンクラス

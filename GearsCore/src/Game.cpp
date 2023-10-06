@@ -75,7 +75,7 @@ void Glib::Game::RegisterSystem()
     SystemManager::AddSystem<GameTimer>();
     SystemManager::AddSystem<InputSystem>();
     SystemManager::AddSystem<Random>();
-    SystemManager::AddSystem<Scene::SceneManager>();
+    SystemManager::AddSystem<SceneManager>();
 }
 
 bool Glib::Game::Initialize()

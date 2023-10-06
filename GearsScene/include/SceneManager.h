@@ -4,12 +4,12 @@
 #include <FuncOrderDefinition.h>
 #include <Singleton.h>
 #include <WeakPtr.h>
-#include <unordered_map>
-#include <memory>
-#include <string>
 #include <StringUtility.h>
+#include <memory>
+#include <unordered_map>
+#include <list>
 
-namespace Glib::Scene
+namespace Glib
 {
     class Scene;
 
@@ -50,6 +50,11 @@ namespace Glib::Scene
         template<class Scene>
         static std::string SceneName();
 
+        /**
+         * @brief ìoò^Ç≥ÇÍÇΩÉVÅ[ÉìàÍóó 
+         */
+        static std::list<std::string> Scenes();
+
     private:
         static inline std::unordered_map<std::string, std::shared_ptr<Scene>> scenes_;
         static inline Glib::WeakPtr<Scene> current_;
@@ -65,6 +70,8 @@ namespace Glib::Scene
     template<class Scene>
     inline std::string SceneManager::SceneName()
     {
-        return nameof<Scene>();
+        auto name = nameof<Scene>();
+        if (!scenes_.contains(name)) return "NotFound";
+        return name;
     }
 }
