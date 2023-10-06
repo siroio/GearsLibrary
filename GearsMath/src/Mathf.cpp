@@ -38,12 +38,12 @@ float Mathf::Atan2(float y, float x)
 
 float Mathf::Abs(float f)
 {
-    return f > 0 ? f : -f;
+    return f >= 0 ? f : -f;
 }
 
 int Mathf::Abs(int f)
 {
-    return f > 0 ? f : -f;
+    return f >= 0 ? f : -f;
 }
 
 float Mathf::Min(float a, float b)
@@ -138,7 +138,7 @@ float Mathf::Sign(float f)
 
 bool Mathf::Approximately(float a, float b)
 {
-    return Abs(b - a) < Max(0.000001f * Max(Abs(a), Abs(b)), EPSILON * 8.0f);
+    return Abs(b - a) < EPSILON;
 }
 
 bool Mathf::Tolerance(float a, float t)
