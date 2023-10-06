@@ -1,7 +1,6 @@
 #include <SystemManager.h>
 #include <algorithm>
 #include <ranges>
-#include <string>
 
 bool SystemManager::Initialize()
 {
@@ -11,19 +10,16 @@ bool SystemManager::Initialize()
         return std::get<1>(lhs)->Order() < std::get<1>(rhs)->Order();
     });
 
-    int i = 0;
     for (const auto& initFunc : systemFunctions_[SystemFunctionType::Initialize])
     {
         if (initFunc.index() != 1) continue;
-        i++;
-        puts(std::to_string(i).data());
         const auto& func = std::get<1>(initFunc);
         if (!func->Call()) return false;
     }
 
     systemFunctions_.erase(SystemFunctionType::Initialize);
 
-    for (auto&& [type, funcList] : systemFunctions_)
+    for (auto&& funcList : systemFunctions_ | std::ranges::views::values)
     {
         std::ranges::sort(funcList, [](const FunctionVariant& lhs, const FunctionVariant& rhs)
         {
