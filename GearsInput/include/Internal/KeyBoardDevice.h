@@ -15,17 +15,17 @@ namespace Glib::Internal::Input
         /**
          * @brief キーが押されているか
         */
-        bool GetKey(KeyCode key);
+        bool GetKey(KeyCode key) const;
 
         /**
          * @brief キーが離されたか
         */
-        bool GetKeyDown(KeyCode key);
+        bool GetKeyDown(KeyCode key) const;
 
         /**
          * @brief キーが押されたか
         */
-        bool GetKeyUp(KeyCode key);
+        bool GetKeyUp(KeyCode key) const;
     private:
         ComPtr<IDirectInputDevice8> device_{ nullptr };
         std::array<unsigned char, 256U> prevKeyState{ 0U };

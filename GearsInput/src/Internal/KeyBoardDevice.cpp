@@ -19,27 +19,25 @@ void Glib::Internal::Input::KeyBoardDevice::Update()
     if (FAILED(device_->GetDeviceState(256, currentKeyState.data())))
     {
         auto hr = device_->Acquire();
-        if (hr == DIERR_INPUTLOST || hr == DIERR_NOTACQUIRED)
-            device_->Acquire();
         device_->GetDeviceState(256, currentKeyState.data());
     }
 }
 
-bool Glib::Internal::Input::KeyBoardDevice::GetKey(KeyCode key)
+bool Glib::Internal::Input::KeyBoardDevice::GetKey(KeyCode key) const
 {
-    return currentKeyState.at(static_cast<unsigned short>(key)) & 0x80;
+    return currentKeyState.at(static_cast<unsigned char>(key)) & 0x80;
 }
 
-bool Glib::Internal::Input::KeyBoardDevice::GetKeyDown(KeyCode key)
+bool Glib::Internal::Input::KeyBoardDevice::GetKeyDown(KeyCode key) const
 {
-    unsigned char prevState = prevKeyState.at(static_cast<unsigned short>(key)) & 0x80;
-    unsigned char currentState = currentKeyState.at(static_cast<unsigned short>(key)) & 0x80;
-    return ~prevState & currentState;
+    unsigned char prevState = ~(prevKeyState.at(static_cast<unsigned char>(key)) & 0x80);
+    unsigned char currentState = currentKeyState.at(static_cast<unsigned char>(key)) & 0x80;
+    return prevState & currentState;
 }
 
-bool Glib::Internal::Input::KeyBoardDevice::GetKeyUp(KeyCode key)
+bool Glib::Internal::Input::KeyBoardDevice::GetKeyUp(KeyCode key) const
 {
-    unsigned char prevState = prevKeyState.at(static_cast<unsigned short>(key)) & 0x80;
-    unsigned char currentState = currentKeyState.at(static_cast<unsigned short>(key)) & 0x80;
-    return prevState & ~currentState;
+    unsigned char prevState = prevKeyState.at(static_cast<unsigned char>(key)) & 0x80;
+    unsigned char currentState = ~(currentKeyState.at(static_cast<unsigned char>(key)) & 0x80);
+    return prevState & currentState;
 }
