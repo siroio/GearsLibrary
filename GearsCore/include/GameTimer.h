@@ -23,6 +23,11 @@ namespace Glib
         void Update();
 
         /**
+         * @brief 現在時刻を取得
+         */
+        static float Now();
+
+        /**
          * @brief 直前のフレームと今のフレーム間で経過した時間
          * @return 秒
          */

@@ -9,6 +9,13 @@ void Glib::GameTimer::Update()
     prevTime_ = now;
 }
 
+float Glib::GameTimer::Now()
+{
+    auto now = Clock::now().time_since_epoch();
+    auto time = std::chrono::duration_cast<Duration>(now);
+    return time.count();
+}
+
 float Glib::GameTimer::DeltaTime()
 {
     return deltaTime_.count();
