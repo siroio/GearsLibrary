@@ -21,7 +21,7 @@ namespace Glib::Internal::Graphics::ShaderCode
             float2 SpriteCenter;                                                            \
             float2 SpriteSize;                                                              \
             float2 SpritePadding;                                                           \
-            float4 SpriteColor;                                                                 \
+            float4 SpriteColor;                                                             \
         };                                                                                  \
                                                                                             \
         Texture2D<float4> tex : register(t0);                                               \
