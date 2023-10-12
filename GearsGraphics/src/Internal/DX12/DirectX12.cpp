@@ -79,6 +79,9 @@ bool Glib::Internal::Graphics::DirectX12::Initialize()
     if (!CreateSwapChain()) return false;
     if (!CreateDescriptorPool()) return false;
 
+    // 遅延フレーム数を1に設定
+    s_swapChain->SetMaximumFrameLatency(1);
+
     // バックバッファの作成
     for (auto idx = 0; idx < FRAME_COUNT; idx++)
     {
@@ -86,7 +89,7 @@ bool Glib::Internal::Graphics::DirectX12::Initialize()
     }
 
     if (FAILED(s_device->CreateFence(s_fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(s_fence.ReleaseAndGetAddressOf())))) return false;
-
+    
 #if defined(DEBUG) || defined(_DEBUG)
     const auto& windowSize = Window::WindowDebugSize();
 #else
@@ -278,7 +281,7 @@ bool Glib::Internal::Graphics::DirectX12::CreateSwapChain()
     swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
     swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
     swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-
+    
     return SUCCEEDED(s_dxgiFactory->CreateSwapChainForHwnd(
         s_cmdList->Queue().Get(),
         s_window.WindowHandle(),
