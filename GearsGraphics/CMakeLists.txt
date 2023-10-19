@@ -23,6 +23,8 @@ set(SOURCE_FILE
     ./src/Components/SpriteRenderer.cpp
     ./src/TextureManager.cpp
     ./src/Texture.cpp
+    ./src/SkyboxManager.cpp
+    ./src/Skybox.cpp
     ./src/RenderTarget.cpp
     ./src/GaussianBlur.cpp
     ./src/Window.cpp
@@ -66,6 +68,9 @@ set(HEADER_FILE
     ./include/Components/SpriteRenderer.h
     ./include/TextureManager.h
     ./include/Texture.h
+    ./include/SkyboxManager.h
+    ./include/Skybox.h
+    ./include/CameraClearFlags.h
     ./include/RenderTarget.h
     ./include/GaussianBlur.h
     ./include/Window.h

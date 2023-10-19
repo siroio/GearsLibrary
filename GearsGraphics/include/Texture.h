@@ -13,9 +13,9 @@ namespace Glib
     {
     public:
         bool CreateTexture(std::string_view path);
-        void SetTexture(unsigned int rootParamIndex);
+        void SetTexture(unsigned int rootParamIndex) const;
         //bool CreateTexture(Vector2 textureSize, DXGI_FORMAT format);
-        ComPtr<ID3D12Resource> Get();
+        ComPtr<ID3D12Resource> Get() const;
         const Vector2& TextureSize() const;
 
     private:

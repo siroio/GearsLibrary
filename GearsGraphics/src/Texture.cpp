@@ -49,7 +49,7 @@ bool Glib::Texture::CreateTexture(std::string_view path)
     if ((extension != "tga") || (extension != "dds"))
         extension = "png";
     const auto& func = s_loadFunctions.at(extension);
-        
+
     // テクスチャのロード
     const auto result = func(filePath.wstring(), &metadata, scratchImg);
     if (!result) return false;
@@ -142,12 +142,12 @@ bool Glib::Texture::CreateTexture(std::string_view path)
     return true;
 }
 
-void Glib::Texture::SetTexture(unsigned int rootParamIndex)
+void Glib::Texture::SetTexture(unsigned int rootParamIndex) const
 {
     s_dx12->CommandList()->SetGraphicsRootDescriptorTable(rootParamIndex, srvHandle_->GPU());
 }
 
-ComPtr<ID3D12Resource> Glib::Texture::Get()
+ComPtr<ID3D12Resource> Glib::Texture::Get() const
 {
     return texture_;
 }
