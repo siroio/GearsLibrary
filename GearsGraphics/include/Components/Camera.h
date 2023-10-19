@@ -1,7 +1,8 @@
 #pragma once
 #include <Internal/CameraBase.h>
-#include <Components/Transform.h>
 #include <Internal/DX12/ConstantBuffer.h>
+#include <Components/Transform.h>
+#include <CameraClearFlags.h>
 #include <ComPtr.h>
 #include <RenderTarget.h>
 #include <GaussianBlur.h>
@@ -17,15 +18,6 @@ namespace Glib
 
 namespace Glib
 {
-    /**
-     * @brief ”wŒi‚ÌƒNƒŠƒA•û–@
-     */
-    enum class CameraClearFlags
-    {
-        Color,
-        SkyBox
-    };
-
     /**
      * @brief “Š‰e•û–@
     */
