@@ -4,7 +4,7 @@ GearsLibraryは、コンポーネント指向を取り入れたゲーム制作�
 
 ## 概要
 
-GearsLibraryは、ゲーム開発者が効率的にゲームを制作するためのツールセットを提供します。  
+GearsLibraryは、ゲーム開発者が効率的にゲームを制作するための機能を提供します。  
 コンポーネント指向のアーキテクチャにより、ゲームオブジェクトやシステムを独立した部品に分割し、再利用性を高めつつ開発を行うことができます。
 
 ## 対応OS
@@ -29,6 +29,7 @@ GearsLibraryは、ゲーム開発者が効率的にゲームを制作するた�
 
 ## 機能一覧
 
+* 編集中
 
 ## 使用方法
 
@@ -41,37 +42,73 @@ public:
     void Start()
     {
         Debug::Log("Enable TestComponent");
-    }
 
+        // オブジェクトの座標を指定
+        GameObject()->Transform()->Position(Vector3{ 1280, 720, 0 });
+    }
+    
     void Update()
     {
+        // 移動用処理
+        auto& transform = GameObject()->Transform();
+        Vector3 velocity;
+        float speed = 500;
+        if (InputSystem::GetKey(KeyCode::Up))
+        {
+            velocity.y -= speed * GameTimer::DeltaTime();
+        }
+        if (InputSystem::GetKey(KeyCode::Down))
+        {
+            velocity.y += speed * GameTimer::DeltaTime();
+        }
+        if (InputSystem::GetKey(KeyCode::Left))
+        {
+            velocity.x -= speed * GameTimer::DeltaTime();
+        }
+        if (InputSystem::GetKey(KeyCode::Right))
+        {
+            velocity.x += speed * GameTimer::DeltaTime();
+        }
 
+        transform->Position(transform->Position() + velocity);
     }
 
     void FixedUpdate()
     {
-
+        // 物理演算など
     }
 };
 ```
 
 ```cpp
-// テストシーンクラス
-class TestScene : public Glib::Scene::Scene
+// テスト用シーンクラス
+class TestScene : public Glib::Scene
 {
 public:
-    // シーンロード時
-    virtual void Start() override
+    // シーン読み込み
+    void Start() override
     {
+        // テクスチャを読み込み
+        auto& tex = TextureManager::Instance();
+        tex.Load(0, "texture.png");
         Debug::Log("Scene Loaded...");
-        auto go = GameObjectManager::Instantiate("TestObject");
-        if (!go.expired()) Debug::Log("TestObject Created!");
-        auto cmp = go->AddComponent<TestComponent>(); // コンポーネントの追加
-        Debug::Log(Glib::ToString(cmp->Name()) + "ActiveStatus: " + std::to_string(cmp->Active()));
+
+        // キャンバスコンポーネントを持ったオブジェクトを生成
+        auto canvas = GameObjectManager::Instantiate("Canvas");
+        canvas->AddComponent<Canvas>();
+        
+        // Imageコンポーネントを持ったオブジェクト生成
+        auto img = GameObjectManager::Instantiate("Img");
+        img->Transform()->Parent(canvas->Transform());// キャンバスの子オブジェクトに
+        auto imgComp = img->AddComponent<Image>();
+        img->AddComponent<TestComponent>();
+        
+        // テクスチャと色を指定
+        imgComp->TextureID(0);
+        imgComp->Color(Color{ 1.0f, 1.0f, 1.0f, 1.0f });
     }
 
-    // シーン終了時
-    virtual void End() override
+    void End() override
     {
         Debug::Log("Scene Ended...");
     }
@@ -80,28 +117,32 @@ public:
 
 ```cpp
 // ゲーム本体
-class MyGame : public Game
+class MyGame : public Glib::Game
 {
-    // シーンの登録と推移
-    virtual void Start() override
+    void Start() override
     {
         Debug::Log("GAME STARTTING");
-        Glib::Scene::SceneManager::Register<TestScene>(); // シーンの登録
-        Debug::Log("Scene: " + Glib::Scene::SceneManager::SceneName<TestScene>() + " Registered");
+        // シーンを登録
+        SceneManager::Register<TestScene>();
+
+        // シーン名を取得
+        Debug::Log("Scene: " + SceneManager::SceneName<TestScene>() + " Registered");
         Debug::Log("TestScene Load Start");
-        Glib::Scene::SceneManager::LoadScene("TestScene"); // シーンのロード
+
+        // シーンを読み込み
+        SceneManager::LoadScene("TestScene");
         Debug::Log("TestScene Load Complete");
     }
 
-    virtual void End() override
+    void End() override
     {
-        std::cout << "GAME END" << std::endl;
+        Debug::Log("GAME END");
     }
 };
 ```
 
 ```cpp
-int main() // EntryPoint
+int main()
 {
     // ゲームクラスの実行
     MyGame{}.Run();
