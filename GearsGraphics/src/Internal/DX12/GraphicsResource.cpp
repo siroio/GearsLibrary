@@ -162,6 +162,11 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateWhiteTexture()
     return CreateTexture(ID::WHITE_TEXTURE, 255, 255, 255, 255);
 }
 
+bool Glib::Internal::Graphics::GraphicsResource::CreateMagentaTexture()
+{
+    return CreateTexture(ID::MAGENTA_TEXTURE, 255, 0, 255, 255);
+}
+
 bool Glib::Internal::Graphics::GraphicsResource::CreateNormalMapTexture()
 {
     return CreateTexture(ID::NORMAL_MAP_TEXTURE, 128, 128, 255, 255);

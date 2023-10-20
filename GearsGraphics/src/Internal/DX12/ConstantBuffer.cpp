@@ -26,7 +26,7 @@ bool Glib::Internal::Graphics::ConstantBuffer::Create(UINT64 bufferSize)
     if (FAILED(result)) return false;
 
     // ƒnƒ“ƒhƒ‹Žæ“¾
-    auto pool =  s_dx12->DescriptorPool(DirectX12::PoolType::RES);
+    auto pool = s_dx12->DescriptorPool(DirectX12::PoolType::RES);
     handle_ = pool->GetHandle();
 
     // view‚Ìì¬
@@ -37,7 +37,7 @@ bool Glib::Internal::Graphics::ConstantBuffer::Create(UINT64 bufferSize)
     return true;
 }
 
-void Glib::Internal::Graphics::ConstantBuffer::BindPipeline(unsigned int rootParameterIndex)
+void Glib::Internal::Graphics::ConstantBuffer::SetBuffer(unsigned int rootParameterIndex) const
 {
     s_dx12->CommandList()->SetGraphicsRootDescriptorTable(rootParameterIndex, handle_->GPU());
 }

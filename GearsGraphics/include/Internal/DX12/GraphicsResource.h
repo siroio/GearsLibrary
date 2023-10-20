@@ -52,6 +52,7 @@ namespace Glib::Internal::Graphics
         /*  テクスチャ作成  */
 
         bool CreateWhiteTexture();
+        bool CreateMagentaTexture();
         bool CreateNormalMapTexture();
 
         /*  パイプライン作成  */

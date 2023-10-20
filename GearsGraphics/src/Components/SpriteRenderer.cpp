@@ -101,7 +101,7 @@ void Glib::SpriteRenderer::Draw(const WeakPtr<Internal::CameraBase>& camera)
 
     s_resource->SetPipelineState(ID::SPRITE_PIPELINESTATE);
 
-    constantBuffer_.BindPipeline(2);
+    constantBuffer_.SetBuffer(2);
 
     s_textureManager.SetTexture(textureID_, 0);
 
@@ -181,5 +181,3 @@ void Glib::SpriteRenderer::TextureID(unsigned int id, bool isResetSize)
     textureSize_ = s_textureManager.TextureSize(id);
     if (isResetSize) clippingSize_ = textureSize_;
 }
-
-

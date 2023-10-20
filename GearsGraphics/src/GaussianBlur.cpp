@@ -63,7 +63,7 @@ void Glib::Graphics::GaussianBlur::Execute(float power)
             D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
             D3D12_RESOURCE_STATE_RENDER_TARGET);
         pipelines_[0].SetPipeline();
-        constantBuffer_.BindPipeline(0);
+        constantBuffer_.SetBuffer(0);
         s_dx12->CommandList()->OMSetRenderTargets(1, &rtvHandle_[0]->CPU(), false, nullptr);
         s_dx12->CommandList()->ClearRenderTargetView(rtvHandle_[0]->CPU(), clearColor, 0, nullptr);
 
@@ -88,7 +88,7 @@ void Glib::Graphics::GaussianBlur::Execute(float power)
             D3D12_RESOURCE_STATE_RENDER_TARGET);
 
         pipelines_[1].SetPipeline();
-        constantBuffer_.BindPipeline(0);
+        constantBuffer_.SetBuffer(0);
         s_dx12->CommandList()->OMSetRenderTargets(1, &rtvHandle_[1]->CPU(), false, nullptr);
         s_dx12->CommandList()->ClearRenderTargetView(rtvHandle_[1]->CPU(), clearColor, 0, nullptr);
 
@@ -144,7 +144,7 @@ bool Glib::Graphics::GaussianBlur::CreatePipelines(DXGI_FORMAT format)
 
     for (auto& pipeline : pipelines_)
     {
-        if(!pipeline.CreateRootSignature(rootSigDesc)) return false;
+        if (!pipeline.CreateRootSignature(rootSigDesc)) return false;
     }
 
     auto pipelineDesc = GraphicsPipeline::CreateDefaultPipelineDesc();

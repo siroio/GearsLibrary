@@ -327,7 +327,7 @@ void Glib::Camera::SetRenderTarget()
 
 void Glib::Camera::SetConstantBuffer(unsigned int rootParamIndex)
 {
-    constantBuffer_.BindPipeline(rootParamIndex);
+    constantBuffer_.SetBuffer(rootParamIndex);
 }
 
 void Glib::Camera::SetDepthStencil()

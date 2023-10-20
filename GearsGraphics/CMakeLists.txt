@@ -21,10 +21,13 @@ set(SOURCE_FILE
     ./src/Components/Canvas.cpp
     ./src/Components/Image.cpp
     ./src/Components/SpriteRenderer.cpp
+    ./src/Components/MeshRenderer.cpp
     ./src/TextureManager.cpp
     ./src/Texture.cpp
     ./src/SkyboxManager.cpp
     ./src/Skybox.cpp
+    ./src/MeshManager.cpp
+    ./src/Mesh.cpp
     ./src/RenderTarget.cpp
     ./src/GaussianBlur.cpp
     ./src/Window.cpp
@@ -66,10 +69,13 @@ set(HEADER_FILE
     ./include/Components/Canvas.h
     ./include/Components/Image.h
     ./include/Components/SpriteRenderer.h
+    ./include/Components/MeshRenderer.h
     ./include/TextureManager.h
     ./include/Texture.h
     ./include/SkyboxManager.h
     ./include/Skybox.h
+    ./include/MeshManager.h
+    ./include/Mesh.h
     ./include/CameraClearFlags.h
     ./include/RenderTarget.h
     ./include/GaussianBlur.h

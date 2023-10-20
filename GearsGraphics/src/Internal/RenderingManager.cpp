@@ -158,5 +158,5 @@ void Glib::Internal::Graphics::RenderingManager::ShadowMapRange(const Vector2& r
 
 void Glib::Internal::Graphics::RenderingManager::SetDirectionalLightConstant(unsigned int rootParamIndex)
 {
-    s_constantBuffer.BindPipeline(rootParamIndex);
+    s_constantBuffer.SetBuffer(rootParamIndex);
 }

@@ -57,7 +57,8 @@ namespace Glib::Internal::Graphics::ID
     /* テクスチャID */
 
     constexpr UCHAR WHITE_TEXTURE = 0;
-    constexpr UCHAR NORMAL_MAP_TEXTURE = WHITE_TEXTURE + 1;
+    constexpr UCHAR MAGENTA_TEXTURE = WHITE_TEXTURE + 1;
+    constexpr UCHAR NORMAL_MAP_TEXTURE = MAGENTA_TEXTURE + 1;
 }
 
 #undef UCHAR

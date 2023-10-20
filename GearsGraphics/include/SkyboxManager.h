@@ -17,7 +17,8 @@ namespace Glib
          * @param right
          * @param front
          * @param back
-         * @return
+         * @return ¬Œ÷ : true
+         * @return ¸”s : false
         */
         bool Load(unsigned int id,
                   std::string_view up,
