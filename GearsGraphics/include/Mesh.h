@@ -19,7 +19,7 @@ namespace Glib
         {
             int indexStart;
             int indexEnd;
-            int MaterialID;
+            int materialID;
         };
 
         struct Material

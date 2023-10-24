@@ -62,6 +62,7 @@ set(LIBRARY
     GearsMath
     GearsUtility
     GearsDebug
+    Gears3DObject
 )
 
 set(DIRECTX12_LIBS
@@ -77,7 +78,6 @@ set(DIRECTX12_LIBS
 set(EXTERNAL_LIBS
     DirectXTex
     nlohmann_json
-    assimp
 )
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -119,8 +119,8 @@ add_subdirectory(./GearsInput)
 add_subdirectory(./GearsAudio)
 add_subdirectory(./GearsUtility)
 add_subdirectory(./GearsDebug)
+add_subdirectory(./Gears3DObject)
 add_subdirectory(./Modules/DirectXTex)
-add_subdirectory(./Modules/assimp)
 add_subdirectory(./Modules/json)
 
 # メインの実行可能ファイルの設定
@@ -139,13 +139,6 @@ set_target_properties(texassemble PROPERTIES FOLDER Modules/DirectXTex)
 set_target_properties(texconv PROPERTIES FOLDER Modules/DirectXTex)
 set_target_properties(texdiag PROPERTIES FOLDER Modules/DirectXTex)
 set_target_properties(ddsview PROPERTIES FOLDER Modules/DirectXTex)
-# assimp
-set_target_properties(assimp PROPERTIES FOLDER Modules/Assimp)
-set_target_properties(uninstall PROPERTIES FOLDER Modules/Assimp)
-set_target_properties(unit PROPERTIES FOLDER Modules/Assimp)
-set_target_properties(UpdateAssimpLibsDebugSymbolsAndDLLs PROPERTIES FOLDER Modules/Assimp)
-set_target_properties(zlibstatic PROPERTIES FOLDER Modules/Assimp)
-target_include_directories(${PROJECT_NAME} PRIVATE ./Modules/assimp/include)
 
 # ドキュメントのビルドオプション
 if(BUILD_DOCUMENTATION)
