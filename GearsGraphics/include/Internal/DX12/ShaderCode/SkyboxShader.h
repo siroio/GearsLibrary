@@ -5,9 +5,9 @@ namespace Glib::Internal::Graphics::ShaderCode
     /**
 * @brief スカイボックス描画用シェーダー
 */
-    constexpr char SKYBOX_SHADER[]{
-        R"(
-        cbuffer CameraConstant : register(b0)
+    constexpr char SKYBOX_SHADER[]
+    {
+        R"(cbuffer CameraConstant : register(b0)
         {
             float4x4 View;
             float4x4 Projection;
