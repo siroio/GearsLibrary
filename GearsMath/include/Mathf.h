@@ -26,6 +26,9 @@ public:
         return 1.0f / v;
     }
 
+    static float DegToRad(float degree);
+    static float RadToDeg(float rad);
+
     static float Sin(float f);
     static float Cos(float f);
     static float Tan(float f);

@@ -1,6 +1,16 @@
 #include <Mathf.h>
 #include <cmath>
 
+float Mathf::DegToRad(float degree)
+{
+    return degree * DEG2RAD;
+}
+
+float Mathf::RadToDeg(float rad)
+{
+    return rad * RAD2DEG;
+}
+
 float Mathf::Sin(float f)
 {
     return sinf(f);
