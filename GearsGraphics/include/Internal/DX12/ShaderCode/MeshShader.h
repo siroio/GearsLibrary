@@ -37,7 +37,7 @@ namespace Glib::Internal::Graphics::ShaderCode
 
         Texture2D<float4> albedoTexture : register(t0);
         Texture2D<float4> normalTexture : register(t1);
-        Texture2D<float3> shadowMap : register(t2);
+        Texture2D<float3> shadowTexture : register(t2);
 
         SamplerState sampler : register(s0);
         SamplerState shadowSampler : register(s1);
@@ -68,34 +68,41 @@ namespace Glib::Internal::Graphics::ShaderCode
         VSOutput VSMain(VSInput input)
         {
             float4x4 ModeView = mul(View, World);
-            float4 worldPosition = mul(input.position, World);
-            float4 viewPosition = mul(worldPosition, View);
-            float3 normal = normalize(mul(input.normal, (float3x3)ModelView));
+            float4 worldPosition = mul(World, input.position);
+            float4 viewPosition = mul(View, worldPosition);
+            float3 normal = normalize(mul((float3x3)World, input.normal));
             VSOutput o;
             o.position = mul(Projection, viewPosition);
             output.view = viewPosition.xyz;
-            output.light = mul(worldPosition, LightVP);
+            output.light = mul(LightVP, worldPosition);
             output.normal = normal;
             output.uv = input.uv;
-            output.tangent = normalize(mul(input.tangent, (float3x3)ModelView));
-            output.binormal = cross(normal, output.tangent);
+            output.tangent = normalize(mul((float3x3)World, input.tangent.xyz));
+            output.binormal = cross(normal, output.tangent) * input.tangent.w;
             return o;
         }
 
         float4 PSMain(PSInput input) : SV_TARGET
         {
-            float3 normalColor = (normalTexture.Sample(sampler, input.uv).xyz - 0.5f) * 2.0f;
+            float3 normalColor = normalTexture.Sample(sampler, input.uv).xyz * 2.0f - 1.0f;
+            
+            float3 N = normalize(input.tangent   * normalColor.x
+                                + input.binormal * nomral.y
+                                + input.normal   * normal.z);
 
-            float3 N = normalize(length(input.tangent));
             float3 L = normalize(-LightDirection);
             float3 V = normalize(-input.view);
             float3 H = normalize(L + V);
 
             float3 fromLightVP = input.light.xyz / input.light.w;
-            
 
-            float4 ambient = MatAmbient * LightAmbient;
-            float4 diffuse = max(dot(N, L), 0.0f);
+
+            float4 ambient  = MatAmbient * LightAmbient;
+            float4 diffuse  = LightDiffuse * MatDiffuse * max(dot(N, L), 0.0f);
+            float4 speculer = LightSpeculer * MatSpeculer * pow(max(dot(N, H), 0.0f), MatShininess);
+            float4 baseColor = albedoTexture.Sample(sampler, input.uv);
+            float4 color = (ambient + diffuse) * baseColor + speculer;
+            return float4(color.rgb, baseColor.a);
         })"
     };
 
@@ -140,8 +147,7 @@ namespace Glib::Internal::Graphics::ShaderCode
         {
             float4 lightVP = input.position;
             lightVP.xyz /= lightVP.w;
-            float depth = lightVP.z;
-            return float4(depth, pow(depth, 2), 0.0f, 1.0f);
+            return float4(lightVP.z, lightVP.z * lightVP.z, 0.0f, 1.0f);
         })"
     };
 }
