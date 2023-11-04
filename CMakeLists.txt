@@ -55,7 +55,6 @@ set(LIBRARY
     GearsGraphics
     GearsObject
     GearsComponent
-    GearsResource
     GearsInput
     GearsAudio
     GearsScene
@@ -112,7 +111,6 @@ add_subdirectory(./GearsCore)
 add_subdirectory(./GearsGraphics)
 add_subdirectory(./GearsObject)
 add_subdirectory(./GearsComponent)
-add_subdirectory(./GearsResource)
 add_subdirectory(./GearsScene)
 add_subdirectory(./GearsMath)
 add_subdirectory(./GearsInput)
