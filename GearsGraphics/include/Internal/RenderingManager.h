@@ -127,12 +127,12 @@ namespace Glib::Internal::Graphics
 
     private:
         template<class T> requires HasDrawFunc<T, void, WeakPtr<CameraBase>>
-        void AddDraw(const std::shared_ptr<T> renderer);
+        void AddDraw(const std::shared_ptr<T>& renderer);
         void AddDraw(...)
         {}
 
         template<class T> requires HasDrawShadowFunc<T, void, WeakPtr<CameraBase>>
-        void AddDrawShadow(const std::shared_ptr<T> renderer);
+        void AddDrawShadow(const std::shared_ptr<T>& renderer);
         void AddDrawShadow(...)
         {}
 
@@ -148,7 +148,7 @@ namespace Glib::Internal::Graphics
     }
 
     template<class T> requires HasDrawFunc<T, void, WeakPtr<CameraBase>>
-    inline void Graphics::RenderingManager::AddDraw(const std::shared_ptr<T> renderer)
+    inline void Graphics::RenderingManager::AddDraw(const std::shared_ptr<T>& renderer)
     {
         renderers_[DrawType::Draw].push_back(
             { renderer, std::make_shared<Function::HasDrawObject<T, void, WeakPtr<CameraBase>>>(renderer) }
@@ -156,10 +156,10 @@ namespace Glib::Internal::Graphics
     }
 
     template<class T> requires HasDrawShadowFunc<T, void, WeakPtr<CameraBase>>
-    inline void Graphics::RenderingManager::AddDrawShadow(const std::shared_ptr<T> renderer)
+    inline void Graphics::RenderingManager::AddDrawShadow(const std::shared_ptr<T>& renderer)
     {
         renderers_[DrawType::Shadow].push_back(
-            { renderers_, std::make_shared<Function::HasDrawShadowObject<T, void, WeakPtr<CameraBase>>>(renderer) }
+            { renderer, std::make_shared<Function::HasDrawShadowObject<T, void, WeakPtr<CameraBase>>>(renderer) }
         );
     }
 }
