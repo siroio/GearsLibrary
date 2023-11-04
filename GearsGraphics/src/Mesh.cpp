@@ -30,9 +30,9 @@ bool Glib::Mesh::Load(std::string_view path)
     GLObject object{};
     if (!object.ReadFile(path)) return false;
 
-    vertexBuffer_.Create(sizeof(Vertex), object.Vertices().size());
+    vertexBuffer_.Create(sizeof(Vertex), static_cast<unsigned int>(object.Vertices().size()));
     vertexBuffer_.Update(object.Vertices().data());
-    indexBuffer_.Create(sizeof(unsigned int), object.Indices().size());
+    indexBuffer_.Create(sizeof(unsigned int), static_cast<unsigned int>(object.Indices().size()));
     indexBuffer_.Update(object.Vertices().data());
 
     const auto paramSize = sizeof(Color) * 3 + sizeof(float);
@@ -42,11 +42,11 @@ bool Glib::Mesh::Load(std::string_view path)
     {
         if (!materials_[i].params.Create(paramSize)) return false;
         materials_[i].params.Update(paramSize, &mat[i]);
-        if (mat[i].texture != "")
+        if (std::strlen(mat[i].texture) != 0)
         {
             materials_[i].albedo = s_textureManager.Load(mat[i].texture);
         }
-        if (mat[i].normal != "")
+        if (std::strlen(mat[i].normal) != 0)
         {
             materials_[i].normal = s_textureManager.Load(mat[i].normal);
         }
@@ -93,4 +93,9 @@ void Glib::Mesh::DrawShadow()
     {
         s_dx12->CommandList()->DrawIndexedInstanced(subset.indexEnd, 1, subset.indexStart, 0, 0);
     }
+}
+
+const std::vector<Glib::Bone>& Glib::Mesh::Bone() const
+{
+    return bones_;
 }
