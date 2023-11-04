@@ -1,12 +1,18 @@
 #pragma once
+#include <Internal/ISystem.h>
 #include <Singleton.h>
+#include <Internal/FuncOrderConstant.h>
+#include <FuncOrderDefinition.h>
 
 namespace Glib
 {
-    class SkyboxManager : public Singleton<SkyboxManager>
+    class SkyboxManager :
+        public Internal::Interface::ISystem,
+        public Singleton<SkyboxManager>,
+        public Internal::Function::DrawOrderSet<Internal::Order::Draw::SKYBOX>
     {
         SkyboxManager() = default;
-        friend SkyboxManager& Singleton<SkyboxManager>::Instance();
+        friend WeakPtr<SkyboxManager> SingletonPtr<SkyboxManager>::Instance();
 
     public:
         /**
