@@ -74,6 +74,7 @@ set(HEADER_FILE
     ./include/Texture.h
     ./include/SkyboxManager.h
     ./include/Skybox.h
+    ./include/Bone.h
     ./include/MeshManager.h
     ./include/Mesh.h
     ./include/CameraClearFlags.h
