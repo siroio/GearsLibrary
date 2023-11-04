@@ -7,11 +7,10 @@
 #include <Internal/DX12/IndexBuffer.h>
 #include <WeakPtr.h>
 #include <Texture.h>
+#include <Bone.h>
 
 namespace Glib
 {
-    class Bone;
-
     class Mesh
     {
     private:
