@@ -86,7 +86,7 @@ bool Glib::SkyboxManager::Initialize()
     };
 
     //頂点バッファ作成
-    if (!s_vertexBuffer.Create(sizeof(SkyboxVertex), std::size(vertices))) return false;
+    if (!s_vertexBuffer.Create(sizeof(SkyboxVertex), static_cast<unsigned int>(std::size(vertices)))) return false;
     s_vertexBuffer.Update(vertices);
 
     D3D12_INPUT_ELEMENT_DESC inputLayout[]
@@ -138,8 +138,7 @@ void Glib::SkyboxManager::Draw()
     // スカイボックスを描画
     for (const auto& camera : s_cameraManager->Cameras())
     {
-        if (!camera->Active()) continue;
-        if (camera->ClearFlags() == CameraClearFlags::Color) continue;
+        if (!camera->Active() || camera->ClearFlags() == CameraClearFlags::Color) continue;
 
         camera->SetRenderTarget();
         camera->SetConstantBuffer(1);
