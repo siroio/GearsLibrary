@@ -36,7 +36,7 @@ void Glib::MeshRenderer::Start()
 void Glib::MeshRenderer::LateUpdate()
 {
     if (!isEnabled_) return;
-    MeshConstant buffer{};
+    MeshConstant buffer;
     buffer.world = Matrix4x4::TRS(
         transform_->Position(),
         transform_->Rotation(),
@@ -46,7 +46,7 @@ void Glib::MeshRenderer::LateUpdate()
     constantBuffer_.Update(sizeof(buffer), &buffer);
 }
 
-void Glib::MeshRenderer::Draw(const WeakPtr<Internal::CameraBase> camera)
+void Glib::MeshRenderer::Draw(const WeakPtr<Internal::CameraBase>& camera)
 {
     if (!isEnabled_) return;
     s_graphics->SetPipelineState(ID::MESH_PIPELINESTATE);
@@ -57,10 +57,10 @@ void Glib::MeshRenderer::Draw(const WeakPtr<Internal::CameraBase> camera)
     s_meshManager.Draw(meshID_);
 }
 
-void Glib::MeshRenderer::DrawShadow(const WeakPtr<Internal::CameraBase> camera)
+void Glib::MeshRenderer::DrawShadow(const WeakPtr<Internal::CameraBase>& camera)
 {
     if (!isEnabled_) return;
-    MeshConstant buffer{};
+    MeshConstant buffer;
     buffer.world = Matrix4x4::TRS(
         transform_->Position(),
         transform_->Rotation(),

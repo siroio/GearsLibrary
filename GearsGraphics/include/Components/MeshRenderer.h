@@ -12,8 +12,8 @@ namespace Glib
         MeshRenderer();
         void Start();
         void LateUpdate();
-        void Draw(const WeakPtr<Internal::CameraBase> camera);
-        void DrawShadow(const WeakPtr<Internal::CameraBase> camera);
+        void Draw(const WeakPtr<Internal::CameraBase>& camera);
+        void DrawShadow(const WeakPtr<Internal::CameraBase>& camera);
 
         /**
          * @brief ƒƒbƒVƒ…‚ÌID‚ğæ“¾
