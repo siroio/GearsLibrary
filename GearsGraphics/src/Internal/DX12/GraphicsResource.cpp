@@ -33,8 +33,8 @@ bool Glib::Internal::Graphics::GraphicsResource::Initialize()
     if (!CreateSpritePipelineState()) return false;
     if (!CreateImagePipelineState()) return false;
     if (!CreateLinePipelineState()) return false;
-    //if (!CreateMeshPipelineState()) return false;
-    //if (!CreateMeshShadowPipelineState()) return false;
+    if (!CreateMeshPipelineState()) return false;
+    if (!CreateMeshShadowPipelineState()) return false;
     //if (!CreateSkinnedMeshPipelineState()) return false;
     //if (!CreateSkinnedMeshShadowPipelineState()) return false;
 
@@ -376,7 +376,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateMeshPipelineState()
     rootSigDesc.pParameters = rootParams;
     rootSigDesc.pStaticSamplers = sampler;
 
-    if (!s_pipelines.at(ID::MESH_PIPELINESTATE).CreateRootSignature(rootSigDesc)) return false;
+    if (!s_pipelines[ID::MESH_PIPELINESTATE].CreateRootSignature(rootSigDesc)) return false;
 
     auto pipelineDesc = GraphicsPipeline::CreateDefaultPipelineDesc();
     pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
