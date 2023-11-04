@@ -11,6 +11,7 @@
 #include <d3d12.h>
 #include <d3dcompiler.h>
 #include <MsgBox.h>
+#include <Debugger.h>
 #include <memory>
 #include <unordered_map>
 #include <vector>
@@ -36,12 +37,10 @@ bool Glib::Internal::Graphics::ShaderManager::Initialize()
     shaders.emplace_back(ID::IMAGE_SHADER, ShaderType::PIXEL, ShaderCode::IMAGE_SHADER, "PSmain");
     shaders.emplace_back(ID::LINE_SHADER, ShaderType::VERTEX, ShaderCode::LINE_SHADER, "VSmain");
     shaders.emplace_back(ID::LINE_SHADER, ShaderType::PIXEL, ShaderCode::LINE_SHADER, "PSmain");
-    //shaders.emplace_back(ID::MESH_SHADER, ShaderType::VERTEX, ShaderCode::MESH_SHADER, "VSmain");
-    //shaders.emplace_back(ID::MESH_SHADER, ShaderType::PIXEL, ShaderCode::MESH_SHADER, "PSmain");
-    //shaders.emplace_back(ID::MESH_SHADOW_SHADER, ShaderType::VERTEX, ShaderCode::MESH_SHADOW_SHADER, "VSmain");
-    //shaders.emplace_back(ID::MESH_SHADOW_SHADER, ShaderType::PIXEL, ShaderCode::MESH_SHADOW_SHADER, "PSmain");
-    //shaders.emplace_back(ID::MESH_SHADOW_SHADER, ShaderType::VERTEX, ShaderCode::MESH_SHADOW_SHADER, "VSmain");
-    //shaders.emplace_back(ID::MESH_SHADOW_SHADER, ShaderType::PIXEL, ShaderCode::MESH_SHADOW_SHADER, "PSmain");
+    shaders.emplace_back(ID::MESH_SHADER, ShaderType::VERTEX, ShaderCode::MESH_SHADER, "VSmain");
+    shaders.emplace_back(ID::MESH_SHADER, ShaderType::PIXEL, ShaderCode::MESH_SHADER, "PSmain");
+    shaders.emplace_back(ID::MESH_SHADOW_SHADER, ShaderType::VERTEX, ShaderCode::MESH_SHADOW_SHADER, "VSmain");
+    shaders.emplace_back(ID::MESH_SHADOW_SHADER, ShaderType::PIXEL, ShaderCode::MESH_SHADOW_SHADER, "PSmain");
     //shaders.emplace_back(ID::SKINNED_MESH_SHADER, ShaderType::VERTEX, ShaderCode::SKINNED_MESH_SHADER, "VSmain");
     //shaders.emplace_back(ID::SKINNED_MESH_SHADER, ShaderType::PIXEL, ShaderCode::SKINNED_MESH_SHADER, "PSmain");
     //shaders.emplace_back(ID::SKINNED_MESH_SHADOW_SHADER, ShaderType::VERTEX, ShaderCode::SKINNED_MESH_SHADOW_SHADER, "VSmain");
@@ -138,9 +137,11 @@ ComPtr<ID3DBlob> Glib::Internal::Graphics::ShaderManager::CompileFromCode(const 
 
 void Glib::Internal::Graphics::ShaderManager::ShaderError(ComPtr<ID3DBlob> error) const
 {
+    Debug::Error("Shader Compile Error");
+    Debug::Error(static_cast<LPCSTR>(error.Get()->GetBufferPointer()));
     MsgBox::Show(
         static_cast<LPCSTR>(error.Get()->GetBufferPointer()),       // message
-        "Shader Compile Error.",                                    // title
+        "Shader Compile Error",                                     // title
         MsgBox::STYLE::OK,                                          // style
         MsgBox::ICON::ERROR_ICON                                    // icon
     );
