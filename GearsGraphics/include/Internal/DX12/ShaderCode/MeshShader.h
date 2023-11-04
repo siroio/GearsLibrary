@@ -2,7 +2,6 @@
 
 namespace Glib::Internal::Graphics::ShaderCode
 {
-    //TODO: フォンシェーディング実装
     constexpr char MESH_SHADER[]
     {
         R"(cbuffer CameraConstant : register(b0)
@@ -39,7 +38,7 @@ namespace Glib::Internal::Graphics::ShaderCode
         Texture2D<float4> normalTexture : register(t1);
         Texture2D<float3> shadowTexture : register(t2);
 
-        SamplerState sampler : register(s0);
+        SamplerState albedoSampler : register(s0);
         SamplerState shadowSampler : register(s1);
 
         struct VSInput
@@ -65,7 +64,7 @@ namespace Glib::Internal::Graphics::ShaderCode
 
         typedef VSOutput PSInput;
 
-        VSOutput VSMain(VSInput input)
+        VSOutput VSmain(VSInput input)
         {
             float4x4 ModeView = mul(View, World);
             float4 worldPosition = mul(World, input.position);
@@ -73,34 +72,69 @@ namespace Glib::Internal::Graphics::ShaderCode
             float3 normal = normalize(mul((float3x3)World, input.normal));
             VSOutput o;
             o.position = mul(Projection, viewPosition);
-            output.view = viewPosition.xyz;
-            output.light = mul(LightVP, worldPosition);
-            output.normal = normal;
-            output.uv = input.uv;
-            output.tangent = normalize(mul((float3x3)World, input.tangent.xyz));
-            output.binormal = cross(normal, output.tangent) * input.tangent.w;
+            o.view = viewPosition.xyz;
+            o.light = mul(LightVP, worldPosition);
+            o.normal = normal;
+            o.uv = input.uv;
+            o.tangent = normalize(mul((float3x3)World, input.tangent.xyz));
+            o.binormal = cross(normal, o.tangent) * input.tangent.w;
             return o;
         }
 
-        float4 PSMain(PSInput input) : SV_TARGET
+        float random(float3 seed, int i)
         {
-            float3 normalColor = normalTexture.Sample(sampler, input.uv).xyz * 2.0f - 1.0f;
+	        return frac(sin(dot(float4(seed, i), float4(12.9898, 78.233, 45.164, 94.673))) * 43758.5453);
+        }
+
+        float4 PSmain(PSInput input) : SV_TARGET
+        {
+            float3 normal = normalTexture.Sample(albedoSampler, input.uv).xyz * 2.0f - 1.0f;
             
-            float3 N = normalize(input.tangent   * normalColor.x
-                                + input.binormal * nomral.y
+            float3 N = normalize(input.tangent   * normal.x
+                                + input.binormal * normal.y
                                 + input.normal   * normal.z);
 
             float3 L = normalize(-LightDirection);
             float3 V = normalize(-input.view);
             float3 H = normalize(L + V);
 
-            float3 fromLightVP = input.light.xyz / input.light.w;
+            float3 posFromLightVP = input.light.xyz / input.light.w;
+            float2 shadowUV = (posFromLightVP.xy + float2(1.0f, -1.0f)) * float2(0.5f, -0.5f);
 
+            float bias = clamp(ShadowBias * tan(acos(dot(N, L))), 0, 0.01);
+            float visibility = 1.0f;
+
+            float2 poissonDisk[16] =
+            {
+                { -0.94201624,  -0.39906216 },
+                { 0.94558609,  -0.76890725 },
+                { -0.094184101, -0.92938870 },
+                { 0.34495938,   0.29387760 },
+                { -0.20290487,   0.58051342 },
+                { 0.67258888,  -0.13125129 },
+                { -0.55066599,   0.77551898 },
+                { 0.04716250,   0.97484398 },
+                { 0.71373935,   0.26432821 },
+                { 0.02300153,  -0.66625530 },
+                { 0.82045635,   0.95136894 },
+                { -0.67458926,  -0.75558874 },
+                { 0.34873644,  -0.37458623 },
+                { -0.94071815,   0.84484976 },
+                { -0.50315495,  -0.19719433 },
+                { 0.98379229,  -0.18368212 }
+            };
+
+            for (int i = 0; i < 4; i++)
+            {
+                int idx = int(16.0 * random(input.position.xyy, i)) % 16;
+                float sampleVal = shadowTexture.Sample(shadowSampler, float3((shadowUV + poissonDisk[i] / 700.0f).xy, posFromLightVP.z - bias));
+                visibility -= 0.2 * (1.0f - sampleVal);
+            }
 
             float4 ambient  = MatAmbient * LightAmbient;
-            float4 diffuse  = LightDiffuse * MatDiffuse * max(dot(N, L), 0.0f);
-            float4 speculer = LightSpeculer * MatSpeculer * pow(max(dot(N, H), 0.0f), MatShininess);
-            float4 baseColor = albedoTexture.Sample(sampler, input.uv);
+            float4 diffuse  = LightDiffuse * MatDiffuse * max(dot(N, L), 0.0f) * visibility;
+            float4 speculer = LightSpeculer * MatSpeculer * pow(max(dot(N, H), 0.0f), MatShininess) * visibility;
+            float4 baseColor = albedoTexture.Sample(albedoSampler, input.uv);
             float4 color = (ambient + diffuse) * baseColor + speculer;
             return float4(color.rgb, baseColor.a);
         })"
@@ -136,14 +170,14 @@ namespace Glib::Internal::Graphics::ShaderCode
 
         typedef VSOutput PSInput;
 
-        VSOutput VSMain(VSInput)
+        VSOutput VSmain(VSInput input)
         {
             VSOutput o;
             o.position = mul(LightVP, mul(input.position, World));
             return o;
         }
 
-        float4 PSMain(PSInput) : SV_TARGET
+        float4 PSmain(PSInput input) : SV_TARGET
         {
             float4 lightVP = input.position;
             lightVP.xyz /= lightVP.w;
