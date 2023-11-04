@@ -14,9 +14,9 @@ namespace
     auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
     auto s_resource = Glib::Internal::Graphics::GraphicsResource::Instance();
     auto s_cameraManager = Glib::Internal::Graphics::CameraManager::Instance();
-    auto s_renderingManaber = Glib::Internal::Graphics::RenderingManager::Instance();
+    auto s_renderingManager = Glib::Internal::Graphics::RenderingManager::Instance();
 
-    /*　シャドーマップの大きさ　*/
+    /*　シャドウマップの大きさ　*/
     constexpr unsigned int SHADOW_MAP_SIZE = 2048;
 
     struct CameraConstant
@@ -48,8 +48,7 @@ void Glib::Camera::LateUpdate()
     CameraConstant buffer;
     buffer.View = ViewMatrix();
     buffer.Projection = ProjectionMatrix();
-    buffer.LightVP = s_renderingManaber->CalculateMatrixForShadowMap(
-        transform_->Position() + transform_->Forward());
+    buffer.LightVP = s_renderingManager->CalculateMatrixForShadowMap(transform_->Position() + transform_->Forward());
 
     constantBuffer_.Update(sizeof(buffer), &buffer);
 
