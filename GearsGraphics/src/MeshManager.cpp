@@ -11,6 +11,7 @@ bool Glib::MeshManager::Load(unsigned int id, std::string_view path)
     Mesh mesh{};
     if (!mesh.Load(path)) return false;
     s_meshs.emplace(id, std::move(mesh));
+    return true;
 }
 
 bool Glib::MeshManager::Contains(unsigned int id)
