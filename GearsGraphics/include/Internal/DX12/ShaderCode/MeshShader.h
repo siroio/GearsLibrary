@@ -127,7 +127,7 @@ namespace Glib::Internal::Graphics::ShaderCode
             for (int i = 0; i < 4; i++)
             {
                 int idx = int(16.0 * random(input.position.xyy, i)) % 16;
-                float sampleVal = shadowTexture.Sample(shadowSampler, float3((shadowUV + poissonDisk[i] / 700.0f).xy, posFromLightVP.z - bias));
+                float sampleVal = shadowTexture.Sample(shadowSampler, float3((shadowUV + poissonDisk[idx] / 700.0f).xy, posFromLightVP.z - bias));
                 visibility -= 0.2 * (1.0f - sampleVal);
             }
 
