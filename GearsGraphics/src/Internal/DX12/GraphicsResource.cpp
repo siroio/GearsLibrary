@@ -39,6 +39,7 @@ bool Glib::Internal::Graphics::GraphicsResource::Initialize()
     //if (!CreateSkinnedMeshShadowPipelineState()) return false;
 
     if (!CreateWhiteTexture()) return false;
+    if (!CreateMagentaTexture()) return false;
     if (!CreateNormalMapTexture()) return false;
 
     return true;
@@ -198,7 +199,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateCameraPipelineState()
     pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
     pipelineDesc.InputLayout.pInputElementDescs = &layout;
     pipelineDesc.InputLayout.NumElements = 1;
-    pipelineDesc.DepthStencilState.DepthEnable = true;
+    pipelineDesc.DepthStencilState.DepthEnable = false;
 
     // シェーダーのセット
     s_shader->SetVertexShader(ID::CAMERA_SHADER, pipelineDesc);

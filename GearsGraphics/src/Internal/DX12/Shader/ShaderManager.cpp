@@ -70,7 +70,7 @@ void Glib::Internal::Graphics::ShaderManager::SetPixelShader(unsigned int id, D3
 
 bool Glib::Internal::Graphics::ShaderManager::CompileShader(const Glib::Graphics::Shader& shader)
 {
-    ComPtr<ID3D10Blob> shaderBlob{ nullptr };
+    ComPtr<ID3DBlob> shaderBlob{ nullptr };
     switch (shader.CodeType())
     {
         case ShaderCodeType::FILE:

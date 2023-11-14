@@ -23,6 +23,7 @@
 #include <InputSystem.h>
 #include <Random.h>
 #include <SceneManager.h>
+#include <MeshManager.h>
 
 namespace
 {

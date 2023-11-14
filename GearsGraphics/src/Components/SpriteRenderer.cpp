@@ -96,16 +96,12 @@ void Glib::SpriteRenderer::Draw(const WeakPtr<Internal::CameraBase>& camera)
     if (!enabled_) return;
 
     vertexBuffer_.SetBuffer();
-
     camera->SetConstantBuffer(1);
-
     s_resource->SetPipelineState(ID::SPRITE_PIPELINESTATE);
-
     constantBuffer_.SetBuffer(2);
-
     s_textureManager.SetTexture(textureID_, 0);
 
-    s_dx12->CommandList()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    s_dx12->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
     s_dx12->CommandList()->DrawInstanced(4, 1, 0, 0);
 }
 

@@ -53,15 +53,15 @@ namespace Glib::Internal
         normalFunction_.AddFunction(component);
         std::uintptr_t ptr = gameObject.getId();
 
-        if (eventFunction_.find(ptr) == eventFunction_.end())
+        if (eventFunction_.contains(ptr))
+        {
+            eventFunction_[ptr].AddFunction(component);
+        }
+        else
         {
             ComponentEventFunctionList list{};
             list.AddFunction(component);
             if (!list.Empty()) eventFunction_[ptr] = list;
-        }
-        else
-        {
-            eventFunction_[ptr].AddFunction(component);
         }
 
         return component;

@@ -63,7 +63,7 @@ void Glib::Image::DrawUI()
     s_graphics->SetVertexBuffer(ID::IMAGE_VERTEX);
     constantBuffer_.SetBuffer(1);
     s_textureManager.SetTexture(textureID_, 0);
-    s_dx12->CommandList()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    s_dx12->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
     s_dx12->CommandList()->DrawInstanced(4, 1, 0, 0);
 }
 

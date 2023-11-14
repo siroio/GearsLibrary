@@ -1,5 +1,7 @@
 #pragma once
 #include <Internal/ISystem.h>
+#include <Internal/FuncOrderConstant.h>
+#include <FuncOrderDefinition.h>
 #include <Singleton.h>
 #include <list>
 
@@ -15,7 +17,8 @@ namespace Glib::Internal::Graphics
      */
     class CameraManager :
         public Interface::ISystem,
-        public SingletonPtr<CameraManager>
+        public SingletonPtr<CameraManager>,
+        public Function::DrawOrderSet<Order::Draw::CAMERA>
     {
         CameraManager() = default;
         friend WeakPtr<CameraManager> SingletonPtr<CameraManager>::Instance();

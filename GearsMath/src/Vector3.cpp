@@ -128,11 +128,11 @@ Vector3 Vector3::Max(const Vector3& lhs, const Vector3& rhs)
 
 Vector3 Vector3::Cross(const Vector3& a, const Vector3& b)
 {
-    float corssX = a.y * b.z - a.z * b.y;
-    float crossY = a.z * b.x - a.x * b.z;
-    float crossZ = a.x * b.y - a.y * b.x;
-
-    return Vector3{ corssX, crossY, crossZ };
+    return Vector3{
+        a.y * b.z - a.z * b.y,
+        a.z * b.x - a.x * b.z,
+        a.x * b.y - a.y * b.x
+    };
 }
 
 Vector3 Vector3::Scale(const Vector3& a, const Vector3& b)
@@ -217,14 +217,10 @@ Vector3 Vector3::Normalize(const Vector3& v)
 {
     float mag = Magnitude(v);
 
-    if (mag > Mathf::EPSILON)
-    {
-        return v / mag;
-    }
-    else
-    {
-        return Zero();
-    }
+    if (mag <= Mathf::EPSILON) return Zero();
+
+    float inv = Mathf::Inverse(mag);
+    return Vector3{ v.x * inv, v.y * inv, v.z * inv };
 }
 
 Vector3 Vector3::Lerp(const Vector3& a, const Vector3& b, float t)

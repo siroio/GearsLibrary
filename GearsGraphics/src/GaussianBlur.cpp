@@ -52,7 +52,7 @@ void Glib::Graphics::GaussianBlur::Execute(float power)
     constantBuffer_.Update(sizeof(buffer), &buffer);
 
     s_resources->SetVertexBuffer(ID::CAMERA_VERTEX);
-    s_dx12->CommandList()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    s_dx12->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
     float clearColor[4]{ 1.0f, 1.0f, 1.0f, 1.0f };
 

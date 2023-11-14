@@ -100,9 +100,13 @@ Matrix4x4 Matrix4x4::Scale(float x, float y, float z)
 
 Matrix4x4 Matrix4x4::LookAt(const Vector3& position, const Vector3& target, const Vector3& up)
 {
+    if (position == target) return Matrix4x4::Identity();
+
     auto zaxis = (target - position).Normalized();
+    if (zaxis.SqrMagnitude() < Mathf::EPSILON) return Matrix4x4::Identity();
+
     auto xaxis = Vector3::Cross(up, zaxis).Normalized();
-    auto yaxis = Vector3::Cross(zaxis, xaxis);
+    auto yaxis = Vector3::Cross(zaxis, xaxis).Normalized();
 
     return Matrix4x4
     {
@@ -171,20 +175,15 @@ Matrix4x4 Matrix4x4::TRS(const Vector3& p, const Quaternion& q, const Vector3& s
 
 Matrix4x4 Matrix4x4::Perspective(float width, float height, float nearDistance, float farDistance)
 {
-    float Depth = nearDistance - farDistance;
-
-    float m11 = 2.0f * nearDistance / width;
-    float m22 = 2.0f * nearDistance / height;
-    float m33 = farDistance / Depth;
-    float m43 = nearDistance * farDistance / Depth;
-
-    return Matrix4x4
-    {
-        m11, 0.0f, 0.0f, 0.0f,
-        0.0f, m22, 0.0f, 0.0f,
-        0.0f, 0.0f, m33, -1.0f,
-        0.0f, 0.0f, m43, 0.0f
-    };
+    float TwoNear = nearDistance + nearDistance;
+    float fRange = farDistance / (farDistance - nearDistance);
+    Matrix4x4 mat{};
+    mat[0][0] = TwoNear / width;
+    mat[1][1] = TwoNear / height;
+    mat[2][2] = fRange;
+    mat[2][3] = 1.0f;
+    mat[3][2] = -fRange * nearDistance;
+    return mat;
 }
 
 Matrix4x4 Matrix4x4::PerspectiveFOV(float fieldOfView, float aspectRatio, float nearDistance, float farDistance)
@@ -206,7 +205,8 @@ Matrix4x4 Matrix4x4::Orthographic(float width, float height, float nearZ, float 
     float m11 = 2.0f / width;
     float m22 = 2.0f / height;
     float m33 = 1.0f / (farZ - nearZ);
-    float m43 = nearZ / (nearZ - farZ);
+    float m43 = -nearZ / (farZ - nearZ);
+
     return Matrix4x4
     {
         m11, 0.0f, 0.0f, 0.0f,

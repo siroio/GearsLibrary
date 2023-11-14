@@ -71,7 +71,7 @@ bool Glib::Graphics::RenderTarget::CreateRenderTargetBuffer(DXGI_FORMAT format)
         &heapProp,
         D3D12_HEAP_FLAG_NONE,
         &resDesc,
-        D3D12_RESOURCE_STATE_RENDER_TARGET,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
         &clearValue,
         IID_PPV_ARGS(renderTarget_.ReleaseAndGetAddressOf()
     )));

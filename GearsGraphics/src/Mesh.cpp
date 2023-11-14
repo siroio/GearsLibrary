@@ -5,6 +5,7 @@
 #include <TextureManager.h>
 #include <GLObject.h>
 #include <Color.h>
+#include <iterator>
 
 using namespace Glib::Internal::Graphics;
 
@@ -33,7 +34,12 @@ bool Glib::Mesh::Load(std::string_view path)
     vertexBuffer_.Create(sizeof(Vertex), static_cast<unsigned int>(object.Vertices().size()));
     vertexBuffer_.Update(object.Vertices().data());
     indexBuffer_.Create(sizeof(unsigned int), static_cast<unsigned int>(object.Indices().size()));
-    indexBuffer_.Update(object.Vertices().data());
+    indexBuffer_.Update(object.Indices().data());
+
+    for (const auto& subset : object.Subsets())
+    {
+        subsets_.emplace_back(subset.startIndex, subset.endIndex, subset.material);
+    }
 
     const auto paramSize = sizeof(Color) * 3 + sizeof(float);
     const auto& mat = object.Materials();
@@ -52,6 +58,18 @@ bool Glib::Mesh::Load(std::string_view path)
         }
     }
 
+    auto boneSize = object.Bones().size();
+    for (int i = 0; i < boneSize; i++)
+    {
+        const auto& bone = object.Bones().at(i);
+        Glib::Bone newBone{};
+        newBone.name = std::string{ bone.boneName };
+        newBone.position = Vector3{ bone.translate[0], bone.translate[1], bone.translate[2] };
+        newBone.parent = bone.parent;
+        newBone.boneIndex = i;
+        bones_.emplace_back(newBone);
+    }
+
     return true;
 }
 
@@ -66,20 +84,22 @@ void Glib::Mesh::Draw()
         const auto& material = materials_[subset.materialID];
 
         // アルベドテクスチャを設定
-        material.albedo.expired() ?
-            s_resource->SetTexture(ID::MAGENTA_TEXTURE, ID::MESH_ALBEDO) :
-            material.albedo->SetTexture(ID::MESH_ALBEDO);
+        //material.albedo.expired() ?
+        //    s_resource->SetTexture(ID::MAGENTA_TEXTURE, ID::MESH_ALBEDO) :
+        //    material.albedo->SetTexture(ID::MESH_ALBEDO);
+        s_resource->SetTexture(ID::MAGENTA_TEXTURE, ID::MESH_ALBEDO);
 
-        // 法線マップを設定
-        material.normal.expired() ?
-            s_resource->SetTexture(ID::NORMAL_MAP_TEXTURE, ID::MESH_NORMAL_MAP) :
-            material.normal->SetTexture(ID::MESH_NORMAL_MAP);
+        //// 法線マップを設定
+        //material.normal.expired() ?
+        //s_resource->SetTexture(ID::NORMAL_MAP_TEXTURE, ID::MESH_NORMAL_MAP) :
+        //material.normal->SetTexture(ID::MESH_NORMAL_MAP);
+        s_resource->SetTexture(ID::NORMAL_MAP_TEXTURE, ID::MESH_NORMAL_MAP);
 
         // 定数バッファを設定
         material.params.SetBuffer(ID::MESH_MATERIAL_BUFFER);
 
         // 描画
-        s_dx12->CommandList()->DrawIndexedInstanced(subset.indexEnd, 1, subset.indexStart, 0, 0);
+        s_dx12->CommandList()->DrawIndexedInstanced(subset.indexEnd - subset.indexStart + 1, 1, subset.indexStart, 0, 0);
     }
 }
 
@@ -91,7 +111,7 @@ void Glib::Mesh::DrawShadow()
 
     for (const auto& subset : subsets_)
     {
-        s_dx12->CommandList()->DrawIndexedInstanced(subset.indexEnd, 1, subset.indexStart, 0, 0);
+        s_dx12->CommandList()->DrawIndexedInstanced(subset.indexEnd - subset.indexStart + 1, 1, subset.indexStart, 0, 0);
     }
 }
 

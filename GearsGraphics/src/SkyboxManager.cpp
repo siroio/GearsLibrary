@@ -133,7 +133,7 @@ void Glib::SkyboxManager::Draw()
     if (!s_skyboxs.contains(s_drawSkyboxId)) return;
     s_vertexBuffer.SetBuffer();
     s_pipeline.SetPipeline();
-    s_dx12->CommandList()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    s_dx12->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
     // スカイボックスを描画
     for (const auto& camera : s_cameraManager->Cameras())

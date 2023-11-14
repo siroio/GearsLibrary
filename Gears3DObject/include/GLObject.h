@@ -56,7 +56,21 @@ namespace Glib
 
     public:
         GLObject() = default;
+
+        /**
+         * @brief ファイルを読み込む
+         * @param path
+         */
         GLObject(std::string_view path);
+
+        /**
+         * @brief オブジェクトを作成
+         * @param vertex 頂点
+         * @param indices インデックス
+         * @param subsets サブセット
+         * @param materials マテリアル
+         * @param bones
+         */
         GLObject(
             const std::vector<Vertex>& vertex,
             const std::vector<unsigned int>& indices,

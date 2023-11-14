@@ -3,6 +3,7 @@
 #include <Internal/CameraManager.h>
 #include <Internal/CameraBase.h>
 #include <Internal/DX12/ConstantBuffer.h>
+#include <Internal/DX12/DirectX12.h>
 #include <Matrix4x4.h>
 #include <Color.h>
 #include <Vector3.h>
@@ -11,6 +12,8 @@
 namespace
 {
     auto s_cameraManager = Glib::Internal::Graphics::CameraManager::Instance();
+    auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
+
     Glib::Internal::Graphics::ConstantBuffer s_constantBuffer{};
 
     Color s_ambient{ 0.2f, 0.2f, 0.2f };
@@ -78,7 +81,7 @@ void Glib::Internal::Graphics::RenderingManager::Draw()
             }
         }
 
-        //TODO: Shadow Map Blur
+        //シャドウマップにブラーをかける
         camera->ExecuteShadowBulr();
 
         // オブジェクトの描画

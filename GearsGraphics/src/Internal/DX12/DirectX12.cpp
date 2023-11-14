@@ -11,6 +11,7 @@
 #include <vector>
 #include <memory>
 #include <iostream>
+
 namespace
 {
     /* デバイス */
@@ -89,7 +90,7 @@ bool Glib::Internal::Graphics::DirectX12::Initialize()
     }
 
     if (FAILED(s_device->CreateFence(s_fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(s_fence.ReleaseAndGetAddressOf())))) return false;
-    
+
 #if defined(DEBUG) || defined(_DEBUG)
     const auto& windowSize = Window::WindowDebugSize();
 #else
@@ -280,8 +281,8 @@ bool Glib::Internal::Graphics::DirectX12::CreateSwapChain()
     swapChainDesc.Scaling = DXGI_SCALING_STRETCH;
     swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
     swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
-    swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-    
+    swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH | DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT;
+
     return SUCCEEDED(s_dxgiFactory->CreateSwapChainForHwnd(
         s_cmdList->Queue().Get(),
         s_window.WindowHandle(),
