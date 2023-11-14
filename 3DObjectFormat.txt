@@ -3,6 +3,7 @@ GearsLibrary用メッシュファイルフォーマット
 # int型     4byte
 # float型   4byte
 # stringは固定長 256byte
+# 拡張子 : globj
 
 # ""で囲まれているのは文字列として扱う
 
