@@ -121,6 +121,9 @@ add_subdirectory(./Gears3DObject)
 add_subdirectory(./Modules/DirectXTex)
 add_subdirectory(./Modules/json)
 
+# ツール類のサブディレクトリの追加
+add_subdirectory(./ModelConverter)
+
 # メインの実行可能ファイルの設定
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBRARY} ${DIRECTX12_LIBS} ${EXTERNAL_LIBS})

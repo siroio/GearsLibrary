@@ -60,9 +60,9 @@ void Glib::Camera::LateUpdate()
     // レンダーターゲット、深度のクリア
     s_dx12->CommandList()->ClearRenderTargetView(rtvHandle_->CPU(), backGroundColor_.Raw(), 0, nullptr);
     s_dx12->CommandList()->ClearDepthStencilView(dsvHandle_->CPU(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-    //shadowMap_.AsRenderTarget();
-    //s_dx12->CommandList()->ClearRenderTargetView(shadowMap_.RTVHandle()->CPU(), Color::White().Raw(), 0, nullptr);
-    //s_dx12->CommandList()->ClearDepthStencilView(shadowMap_.DSVHandle()->CPU(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+    shadowMap_.AsRenderTarget();
+    s_dx12->CommandList()->ClearRenderTargetView(shadowMap_.RTVHandle()->CPU(), Color::White().Raw(), 0, nullptr);
+    s_dx12->CommandList()->ClearDepthStencilView(shadowMap_.DSVHandle()->CPU(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
 const Color& Glib::Camera::BackGroundColor()

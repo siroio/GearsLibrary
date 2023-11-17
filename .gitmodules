@@ -13,6 +13,3 @@
 [submodule "Modules/PhysX"]
 	path = Modules/PhysX
 	url = https://github.com/NVIDIA-Omniverse/PhysX.git
-[submodule "Modules/assimp"]
-	path = Modules/assimp
-	url = https://github.com/assimp/assimp.git

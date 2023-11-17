@@ -136,7 +136,7 @@ namespace Glib::Internal::Graphics::ShaderCode
             float4 speculer = LightSpeculer * MatSpeculer * pow(max(dot(N, H), 0.0f), MatShininess) * visibility;
             float4 baseColor = albedoTexture.Sample(albedoSampler, input.uv);
             float4 color = (ambient + diffuse) * baseColor + speculer;
-            return float4(color.rgb, baseColor.a);
+            return baseColor;
         })"
     };
 
