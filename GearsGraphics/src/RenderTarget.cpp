@@ -27,7 +27,7 @@ bool Glib::Graphics::RenderTarget::Create(uint32_t width, uint32_t height, Color
     return true;
 }
 
-bool Glib::Graphics::RenderTarget::Create(uint32_t index, ComPtr<IDXGISwapChain> swapChain)
+bool Glib::Graphics::RenderTarget::Create(uint32_t index, const ComPtr<IDXGISwapChain>& swapChain)
 {
     if (swapChain == nullptr) return false;
     auto pool = s_dx12->DescriptorPool(Glib::Internal::Graphics::DirectX12::PoolType::RTV);

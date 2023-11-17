@@ -12,7 +12,7 @@ namespace Glib::Internal::Input
     class DinputGamePad
     {
     public:
-        bool Initialize(ComPtr<IDirectInput8> dinput);
+        bool Initialize(ComPtr<IDirectInput8>& dinput);
         void Update();
 
     private:

@@ -42,7 +42,7 @@ namespace Glib::Internal::Graphics
         /**
          * @brief UIを追加
          */
-        void AddUI(const WeakPtr<Internal::UIRenderer> renderer, const WeakPtr<Canvas>& canvas);
+        void AddUI(const WeakPtr<Internal::UIRenderer>& renderer, const WeakPtr<Canvas>& canvas);
 
         /**
          * @brief キャンバスの描画順番を変更

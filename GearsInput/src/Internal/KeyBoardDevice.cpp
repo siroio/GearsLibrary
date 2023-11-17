@@ -1,7 +1,7 @@
 #include <Internal/KeyBoardDevice.h>
 #include <Logger.h>
 
-bool Glib::Internal::Input::KeyBoardDevice::Initialize(ComPtr<IDirectInput8> dinput)
+bool Glib::Internal::Input::KeyBoardDevice::Initialize(ComPtr<IDirectInput8>& dinput)
 {
     if (FAILED(dinput->CreateDevice(GUID_SysKeyboard, device_.ReleaseAndGetAddressOf(), nullptr))) return false;
     if (FAILED(device_->SetDataFormat(&c_dfDIKeyboard))) return false;

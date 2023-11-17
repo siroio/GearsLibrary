@@ -9,7 +9,7 @@ namespace Glib::Internal::Input
     class KeyBoardDevice
     {
     public:
-        bool Initialize(ComPtr<IDirectInput8> dinput);
+        bool Initialize(ComPtr<IDirectInput8>& dinput);
         void Update();
 
         /**

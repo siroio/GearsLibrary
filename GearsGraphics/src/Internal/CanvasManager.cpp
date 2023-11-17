@@ -22,7 +22,7 @@ void Glib::Internal::Graphics::CanvasManager::Draw()
 {
     s_dx12->SetDefaultRenderTarget();
 
-    for(const auto& canvsList : s_canvas | std::ranges::views::values)
+    for (const auto& canvsList : s_canvas | std::ranges::views::values)
     {
         for (const auto& canvas : canvsList)
         {
@@ -36,7 +36,7 @@ void Glib::Internal::Graphics::CanvasManager::AddCanvas(const WeakPtr<Canvas>& c
     s_canvas[canvas->Order()].push_back(canvas);
 }
 
-void Glib::Internal::Graphics::CanvasManager::AddUI(const WeakPtr<Internal::UIRenderer> renderer, const WeakPtr<Canvas>& canvas)
+void Glib::Internal::Graphics::CanvasManager::AddUI(const WeakPtr<Internal::UIRenderer>& renderer, const WeakPtr<Canvas>& canvas)
 {
     if (canvas.expired()) return;
     s_renderers[canvas.getId()].push_back(renderer);

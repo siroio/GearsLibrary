@@ -1,6 +1,6 @@
 #include <Internal/GamePadDevice.h>
 
-bool Glib::Internal::Input::GamePadDevice::Initialize(ComPtr<IDirectInput8> dinput)
+bool Glib::Internal::Input::GamePadDevice::Initialize(ComPtr<IDirectInput8>& dinput)
 {
     for (DWORD i = 0; i < 4; i++)
     {

@@ -1,7 +1,7 @@
 #pragma once
 #include <Internal/DinputGamePad.h>
 
-bool Glib::Internal::Input::DinputGamePad::Initialize(ComPtr<IDirectInput8> dinput)
+bool Glib::Internal::Input::DinputGamePad::Initialize(ComPtr<IDirectInput8>& dinput)
 {
     if (FAILED(dinput->CreateDevice(GUID_Joystick, device_.ReleaseAndGetAddressOf(), nullptr))) return false;
     if (FAILED(device_->SetDataFormat(&c_dfDIJoystick))) return false;

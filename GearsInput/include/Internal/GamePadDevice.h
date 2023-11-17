@@ -27,7 +27,7 @@ namespace Glib::Internal::Input
         };
 
     public:
-        bool Initialize(ComPtr<IDirectInput8> dinput);
+        bool Initialize(ComPtr<IDirectInput8>& dinput);
         void Update();
 
         //bool GetButton(PadNum pad, GPADCode button);

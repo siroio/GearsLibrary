@@ -83,17 +83,26 @@ void Glib::Mesh::Draw()
     {
         const auto& material = materials_[subset.materialID];
 
-        // アルベドテクスチャを設定
-        //material.albedo.expired() ?
-        //    s_resource->SetTexture(ID::MAGENTA_TEXTURE, ID::MESH_ALBEDO) :
-        //    material.albedo->SetTexture(ID::MESH_ALBEDO);
-        s_resource->SetTexture(ID::MAGENTA_TEXTURE, ID::MESH_ALBEDO);
+        //アルベドテクスチャを設定
+        if (material.albedo.expired())
+        {
+            s_resource->SetTexture(ID::MAGENTA_TEXTURE, ID::MESH_ALBEDO);
+        }
+        else
+        {
+            material.albedo->SetTexture(ID::MESH_ALBEDO);
+        }
 
-        //// 法線マップを設定
-        //material.normal.expired() ?
-        //s_resource->SetTexture(ID::NORMAL_MAP_TEXTURE, ID::MESH_NORMAL_MAP) :
-        //material.normal->SetTexture(ID::MESH_NORMAL_MAP);
-        s_resource->SetTexture(ID::NORMAL_MAP_TEXTURE, ID::MESH_NORMAL_MAP);
+
+        // 法線マップを設定
+        if (material.normal.expired())
+        {
+            s_resource->SetTexture(ID::NORMAL_MAP_TEXTURE, ID::MESH_NORMAL_MAP);
+        }
+        else
+        {
+            material.normal->SetTexture(ID::MESH_NORMAL_MAP);
+        }
 
         // 定数バッファを設定
         material.params.SetBuffer(ID::MESH_MATERIAL_BUFFER);

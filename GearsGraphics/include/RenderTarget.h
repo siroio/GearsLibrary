@@ -25,7 +25,7 @@ namespace Glib::Graphics
         /**
          * @brief スワップチェーン用レンダーターゲットの作成
          */
-        bool Create(uint32_t index, ComPtr<IDXGISwapChain> swapChain);
+        bool Create(uint32_t index, const ComPtr<IDXGISwapChain>& swapChain);
 
         /**
          * @brief レンダーターゲットのハンドル

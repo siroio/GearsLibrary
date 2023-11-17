@@ -135,7 +135,7 @@ ComPtr<ID3DBlob> Glib::Internal::Graphics::ShaderManager::CompileFromCode(const 
     return result ? shaderBinary : nullptr;
 }
 
-void Glib::Internal::Graphics::ShaderManager::ShaderError(ComPtr<ID3DBlob> error) const
+void Glib::Internal::Graphics::ShaderManager::ShaderError(const ComPtr<ID3DBlob>& error) const
 {
     Debug::Error("Shader Compile Error");
     Debug::Error(static_cast<LPCSTR>(error.Get()->GetBufferPointer()));
