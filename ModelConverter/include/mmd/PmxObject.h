@@ -36,8 +36,11 @@ struct PmxBone
     int parentBoneIndex;
 };
 
-class PmxModel : public IModel<PmxModel>
+class PmxModel : public IModel<int>
 {
-    void LoadModel(const std::string_view path) override;
-    const PmxModel& GetData() const override;
+    virtual bool LoadModel(std::string_view path) override;
+    virtual const int& GetData() const override;
+
+private:
+
 };

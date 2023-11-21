@@ -1,7 +1,6 @@
 #pragma once
 #include <vector>
 #include <string>
-#include <string_view>
 
 namespace Glib
 {
@@ -58,12 +57,6 @@ namespace Glib
         GLObject() = default;
 
         /**
-         * @brief ファイルを読み込む
-         * @param path
-         */
-        GLObject(std::string_view path);
-
-        /**
          * @brief オブジェクトを作成
          * @param vertex 頂点
          * @param indices インデックス
@@ -84,7 +77,7 @@ namespace Glib
          * @return 成功 : true
          * @return 失敗 : false
          */
-        bool ReadFile(std::string_view path);
+        bool ReadFile(const std::string& path);
 
         /**
          * @brief ファイルへ書き込み
@@ -92,7 +85,7 @@ namespace Glib
          * @return 成功 : true
          * @return 失敗 : false
          */
-        bool WriteFile(std::string_view path);
+        bool WriteFile(const std::string& path);
 
     public:
         /**

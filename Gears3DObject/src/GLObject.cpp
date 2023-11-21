@@ -1,19 +1,9 @@
-#include "GLObject.h"
-#include "ByteUtility.h"
+#include <GLObject.h>
+#include <GLObjectConstant.h>
+#include <ByteUtility.h>
 #include <fstream>
 #include <filesystem>
 #include <iostream>
-
-namespace
-{
-    constexpr char GL_OBJECT_SIGNATURE[]{ "GLOBJFILE" };
-    constexpr auto GL_OBJECT_VERSION{ 1.0f };
-}
-
-Glib::GLObject::GLObject(std::string_view path)
-{
-    ReadFile(path);
-}
 
 Glib::GLObject::GLObject
 (
@@ -31,18 +21,22 @@ Glib::GLObject::GLObject
     bones_ = bones;
 }
 
-bool Glib::GLObject::ReadFile(std::string_view path)
+bool Glib::GLObject::ReadFile(const std::string& path)
 {
     // バイナリモードで開く
-    std::ifstream file{ path.data(), std::ios::binary };
+    std::ifstream file{ path, std::ios::binary };
 
     try
     {
+        std::filesystem::path check{ path };
+        if (check.extension() != GL_OBJECT_EXTENSION)
+        {
+            throw std::runtime_error{ "mismatch file extension." };
+        }
         if (!std::filesystem::exists(path))
         {
             throw std::runtime_error{ "file not found." };
         }
-
         if (!file.is_open())
         {
             throw std::runtime_error{ "failed to open the file." };
@@ -55,23 +49,25 @@ bool Glib::GLObject::ReadFile(std::string_view path)
         ReadMaterial(file);
         ReadBone(file);
 
-        file.close();
         return true;
     }
     catch (const std::exception& e)
     {
-        file.close();
         puts(e.what());
         return false;
     }
 }
 
-bool Glib::GLObject::WriteFile(std::string_view path)
+bool Glib::GLObject::WriteFile(const std::string& path)
 {
-    std::ofstream file{ path.data(), std::ios::binary | std::ios::out | std::ios::trunc };
+    std::ofstream file{ path, std::ios::binary | std::ios::out | std::ios::trunc };
 
     try
     {
+        if (path.length() <= FILENAME_MAX)
+        {
+            throw std::runtime_error{ "file name is too long." };
+        }
         if (!file.is_open())
         {
             throw std::runtime_error{ "failed to open the file." };
@@ -84,12 +80,10 @@ bool Glib::GLObject::WriteFile(std::string_view path)
         WriteMaterial(file);
         WriteBone(file);
 
-        file.close();
         return true;
     }
     catch (const std::exception& e)
     {
-        file.close();
         std::cout << e.what() << std::endl;
         return false;
     }

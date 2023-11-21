@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.1)
 # == CONFIG ==
 set(SOURCE_FILE
     ./src/mmd/PmxObject.cpp
+    ./src/main.cpp
 )
 
 set(HEADER_FILE

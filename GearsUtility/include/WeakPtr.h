@@ -45,7 +45,7 @@ namespace Glib
         inline WeakPtr(const WeakPtr<Drived>& ptr) : ptr_{ ptr.get() }
         {}
 
-        std::shared_ptr<T> get() const
+        std::shared_ptr<T> get() const noexcept(false)
         {
             auto ptr = ptr_.lock();
             if (!ptr) throw std::bad_weak_ptr();

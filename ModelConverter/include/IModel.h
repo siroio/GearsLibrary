@@ -15,7 +15,7 @@ public:
      * @brief モデルの読み込み
      * @param path モデルパス
      */
-    virtual void LoadModel(const std::string_view path) = 0;
+    virtual bool LoadModel(std::string_view path) = 0;
 
     /**
      * @brief モデルデータの取得

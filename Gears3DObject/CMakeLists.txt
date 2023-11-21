@@ -7,6 +7,7 @@ set(SOURCE_FILE
 
 set(HEADER_FILE
 	./include/GLObject.h
+    ./include/GLObjectConstant.h
 	./include/ByteUtility.h
 )
 
@@ -16,7 +17,7 @@ create_filter()
 add_library(${LIB_NAME} STATIC ${SOURCE_FILE} ${HEADER_FILE})
 target_compile_features(${LIB_NAME} PRIVATE cxx_std_20)
 target_include_directories(${LIB_NAME} PUBLIC ./include)
-target_link_libraries(${LIB_NAME} GearsMath)
+target_link_libraries(${LIB_NAME})
 set_target_properties(${LIB_NAME}
     PROPERTIES
     VERSION ${PROJECT_VERSION})
