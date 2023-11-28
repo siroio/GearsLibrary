@@ -173,20 +173,7 @@ Matrix4x4 Matrix4x4::TRS(const Vector3& p, const Quaternion& q, const Vector3& s
     return m;
 }
 
-Matrix4x4 Matrix4x4::Perspective(float width, float height, float nearDistance, float farDistance)
-{
-    float TwoNear = nearDistance + nearDistance;
-    float fRange = farDistance / (farDistance - nearDistance);
-    Matrix4x4 mat{};
-    mat[0][0] = TwoNear / width;
-    mat[1][1] = TwoNear / height;
-    mat[2][2] = fRange;
-    mat[2][3] = 1.0f;
-    mat[3][2] = -fRange * nearDistance;
-    return mat;
-}
-
-Matrix4x4 Matrix4x4::PerspectiveFOV(float fieldOfView, float aspectRatio, float nearDistance, float farDistance)
+Matrix4x4 Matrix4x4::Perspective(float fieldOfView, float aspectRatio, float nearDistance, float farDistance)
 {
     float yScale = 1.0f / Mathf::Tan(fieldOfView * 0.5f * Mathf::DEG2RAD);
     float xScale = yScale / aspectRatio;

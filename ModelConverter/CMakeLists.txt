@@ -7,6 +7,7 @@ set(SOURCE_FILE
 )
 
 set(HEADER_FILE
+    ./include/mcMath.h
     ./include/IModel.h
     ./include/mmd/PmxObject.h
 )

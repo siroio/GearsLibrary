@@ -6,6 +6,7 @@
 #include <GLObject.h>
 #include <Color.h>
 #include <iterator>
+#include <filesystem>
 
 using namespace Glib::Internal::Graphics;
 
@@ -30,7 +31,7 @@ bool Glib::Mesh::Load(std::string_view path)
 {
     GLObject object{};
     if (!object.ReadFile(path)) return false;
-
+    std::filesystem::path folderPath = path;
     vertexBuffer_.Create(sizeof(Vertex), static_cast<unsigned int>(object.Vertices().size()));
     vertexBuffer_.Update(object.Vertices().data());
     indexBuffer_.Create(sizeof(unsigned int), static_cast<unsigned int>(object.Indices().size()));
@@ -38,7 +39,7 @@ bool Glib::Mesh::Load(std::string_view path)
 
     for (const auto& subset : object.Subsets())
     {
-        subsets_.emplace_back(subset.startIndex, subset.endIndex, subset.material);
+        subsets_.emplace_back(subset.indexStart, subset.indecCount, subset.material);
     }
 
     const auto paramSize = sizeof(Color) * 3 + sizeof(float);
@@ -50,11 +51,13 @@ bool Glib::Mesh::Load(std::string_view path)
         materials_[i].params.Update(paramSize, &mat[i]);
         if (std::strlen(mat[i].texture) != 0)
         {
-            materials_[i].albedo = s_textureManager.Load(mat[i].texture);
+            auto texPath = folderPath.remove_filename().string() + std::string{ mat[i].texture };
+            materials_[i].albedo = s_textureManager.Load(texPath);
         }
         if (std::strlen(mat[i].normal) != 0)
         {
-            materials_[i].normal = s_textureManager.Load(mat[i].normal);
+            auto normalPath = folderPath.remove_filename().string() + std::string{ mat[i].normal };
+            materials_[i].normal = s_textureManager.Load(normalPath);
         }
     }
 
@@ -108,7 +111,7 @@ void Glib::Mesh::Draw()
         material.params.SetBuffer(ID::MESH_MATERIAL_BUFFER);
 
         // •`‰æ
-        s_dx12->CommandList()->DrawIndexedInstanced(subset.indexEnd - subset.indexStart + 1, 1, subset.indexStart, 0, 0);
+        s_dx12->CommandList()->DrawIndexedInstanced(subset.indexCount, 1, subset.indexStart, 0, 0);
     }
 }
 
@@ -120,7 +123,7 @@ void Glib::Mesh::DrawShadow()
 
     for (const auto& subset : subsets_)
     {
-        s_dx12->CommandList()->DrawIndexedInstanced(subset.indexEnd - subset.indexStart + 1, 1, subset.indexStart, 0, 0);
+        s_dx12->CommandList()->DrawIndexedInstanced(subset.indexCount, 1, subset.indexStart, 0, 0);
     }
 }
 

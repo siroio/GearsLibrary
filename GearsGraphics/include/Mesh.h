@@ -17,7 +17,7 @@ namespace Glib
         struct Subset
         {
             int indexStart;
-            int indexEnd;
+            int indexCount;
             int materialID;
         };
 

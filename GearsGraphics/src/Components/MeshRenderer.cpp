@@ -23,6 +23,7 @@ namespace
 
 Glib::MeshRenderer::MeshRenderer()
 {
+    isEnabled_ = false;
     constantBuffer_.Create(sizeof(MeshConstant));
 }
 
@@ -70,7 +71,7 @@ void Glib::MeshRenderer::DrawShadow(const WeakPtr<Internal::CameraBase>& camera)
     constantBuffer_.Update(sizeof(buffer), &buffer);
     s_graphics->SetPipelineState(ID::MESH_SHADOW_PIPELINESTATE);
     camera->SetConstantBuffer(0);
-    constantBuffer_.SetBuffer(0);
+    constantBuffer_.SetBuffer(1);
     s_meshManager.DrawShadow(meshID_);
 
 }

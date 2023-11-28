@@ -4,6 +4,7 @@
 #include <fstream>
 #include <filesystem>
 #include <iostream>
+#include <string>
 
 Glib::GLObject::GLObject
 (
@@ -21,15 +22,16 @@ Glib::GLObject::GLObject
     bones_ = bones;
 }
 
-bool Glib::GLObject::ReadFile(const std::string& path)
+bool Glib::GLObject::ReadFile(std::string_view path)
 {
     // バイナリモードで開く
-    std::ifstream file{ path, std::ios::binary };
+    std::ifstream file{ path.data(), std::ios::binary };
 
     try
     {
         std::filesystem::path check{ path };
-        if (check.extension() != GL_OBJECT_EXTENSION)
+        auto c = check.extension().generic_string();
+        if (!check.extension().generic_string().ends_with(GL_OBJECT_EXTENSION))
         {
             throw std::runtime_error{ "mismatch file extension." };
         }
@@ -64,7 +66,7 @@ bool Glib::GLObject::WriteFile(const std::string& path)
 
     try
     {
-        if (path.length() <= FILENAME_MAX)
+        if (path.length() >= FILENAME_MAX)
         {
             throw std::runtime_error{ "file name is too long." };
         }

@@ -5,7 +5,6 @@
  * @brief 3Dモデル用インターフェース
  * @param ModelType 3Dモデルのデータ型
  */
-template<class ModelType>
 class IModel
 {
 public:
@@ -18,7 +17,8 @@ public:
     virtual bool LoadModel(std::string_view path) = 0;
 
     /**
-     * @brief モデルデータの取得
+     * @brief モデルの出力
+     * @param path 出力パス
      */
-    virtual const ModelType& GetData() const = 0;
+    virtual bool WriteModel(std::string_view path) = 0;
 };

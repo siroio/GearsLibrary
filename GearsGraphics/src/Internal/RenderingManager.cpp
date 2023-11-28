@@ -71,18 +71,18 @@ void Glib::Internal::Graphics::RenderingManager::Draw()
     {
         if (!camera->Active()) continue;
 
-        // シャドウマップ描画
-        camera->SetDepthStencil();
-        for (const auto& info : renderers_[DrawType::Shadow])
-        {
-            if (info.component->Active())
-            {
-                info.function->Call(camera);
-            }
-        }
+        //// シャドウマップ描画
+        //camera->SetDepthStencil();
+        //for (const auto& info : renderers_[DrawType::Shadow])
+        //{
+        //    if (info.component->Active())
+        //    {
+        //        info.function->Call(camera);
+        //    }
+        //}
 
-        //シャドウマップにブラーをかける
-        camera->ExecuteShadowBulr();
+        ////シャドウマップにブラーをかける
+        //camera->ExecuteShadowBulr();
 
         // オブジェクトの描画
         camera->SetRenderTarget();

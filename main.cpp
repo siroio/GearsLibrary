@@ -10,6 +10,7 @@
 #include <Component.h>
 #include <TextureManager.h>
 #include <MeshManager.h>
+#include <Internal/RenderingManager.h>
 #include <Components/Camera.h>
 #include <Components/Canvas.h>
 #include <Components/Image.h>
@@ -33,14 +34,15 @@ public:
     {
         auto& transform = GameObject()->Transform();
         Vector3 velocity;
+        Vector3 rotation;
         float speed = 10;
         if (InputSystem::GetKey(KeyCode::Up))
         {
-            velocity.z -= speed * GameTimer::DeltaTime();
+            velocity.y -= speed * GameTimer::DeltaTime();
         }
         if (InputSystem::GetKey(KeyCode::Down))
         {
-            velocity.z += speed * GameTimer::DeltaTime();
+            velocity.y += speed * GameTimer::DeltaTime();
         }
         if (InputSystem::GetKey(KeyCode::Left))
         {
@@ -50,8 +52,24 @@ public:
         {
             velocity.x += speed * GameTimer::DeltaTime();
         }
-
+        if (InputSystem::GetKey(KeyCode::W))
+        {
+            velocity.z -= speed * GameTimer::DeltaTime();
+        }
+        if (InputSystem::GetKey(KeyCode::S))
+        {
+            velocity.z += speed * GameTimer::DeltaTime();
+        }
+        if (InputSystem::GetKey(KeyCode::A))
+        {
+            rotation.y -= speed * GameTimer::DeltaTime();
+        }
+        if (InputSystem::GetKey(KeyCode::D))
+        {
+            rotation.y += speed * GameTimer::DeltaTime();
+        }
         transform->Position(transform->Position() + velocity);
+        transform->Rotate(rotation);
     }
 
     void FixedUpdate()
@@ -66,10 +84,16 @@ class TestScene : public Glib::Scene
 public:
     void Start() override
     {
-        if (!MeshManager::Instance().Load(0, "D:/MyLib/GearsLibrary/Quad.globj"))
+        if (!MeshManager::Instance().Load(0, "D:/MyLib/GearsLibrary/初音ミクver.2.1/output.globj"))
         {
             Debug::Error("ロード失敗");
         }
+
+        auto render = Internal::Graphics::RenderingManager::Instance();
+        render->LightAmbient(Color{ 1.0f, 1.0f, 1.0f, 1.0f });
+        render->LightDiffuse(Color{ 1.0f, 1.0f, 1.0f });
+        render->LightSpecular(Color{ 1.0f, 1.0f, 1.0f });
+        render->LightDirection(Vector3{ 0.0f, -1.0f, 0.0f });
 
         auto mesh = GameObjectManager::Instantiate("Mesh");
         auto renderer = mesh->AddComponent<MeshRenderer>();

@@ -30,8 +30,8 @@ namespace Glib
 
         struct Subset
         {
-            int startIndex;
-            int endIndex;
+            int indexStart;
+            int indecCount;
             int material;
         };
 
@@ -77,7 +77,7 @@ namespace Glib
          * @return ¬Œ÷ : true
          * @return ¸”s : false
          */
-        bool ReadFile(const std::string& path);
+        bool ReadFile(std::string_view path);
 
         /**
          * @brief ƒtƒ@ƒCƒ‹‚Ö‘‚«‚İ

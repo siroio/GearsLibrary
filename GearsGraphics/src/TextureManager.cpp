@@ -11,18 +11,24 @@ namespace
 
 bool Glib::TextureManager::Load(unsigned int id, std::string_view filePath)
 {
-    auto tex = std::make_shared<Texture>();
-    if (!tex->CreateTexture(filePath)) return false;
-    s_textureResource.emplace(id, tex);
+    if (!s_textureResource.contains(id))
+    {
+        auto tex = std::make_shared<Texture>();
+        if (!tex->CreateTexture(filePath)) return false;
+        s_textureResource.emplace(id, tex);
+    }
     return true;
 }
 
 Glib::WeakPtr<Glib::Texture> Glib::TextureManager::Load(std::string_view filePath)
 {
-    auto tex = std::make_shared<Texture>();
-    if (!tex->CreateTexture(filePath)) return WeakPtr<Texture>{};
-    s_meshTextureResource.emplace(filePath, tex);
-    return tex;
+    if (!s_meshTextureResource.contains(filePath.data()))
+    {
+        auto tex = std::make_shared<Texture>();
+        if (!tex->CreateTexture(filePath)) return WeakPtr<Texture>{};
+        s_meshTextureResource.emplace(filePath, tex);
+    }
+    return WeakPtr<Texture>{ s_meshTextureResource.at(filePath.data()) };
 }
 
 bool Glib::TextureManager::Contains(unsigned int id)
