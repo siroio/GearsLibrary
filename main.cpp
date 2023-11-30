@@ -38,11 +38,11 @@ public:
         float speed = 10;
         if (InputSystem::GetKey(KeyCode::Up))
         {
-            velocity.y -= speed * GameTimer::DeltaTime();
+            velocity.y += speed * GameTimer::DeltaTime();
         }
         if (InputSystem::GetKey(KeyCode::Down))
         {
-            velocity.y += speed * GameTimer::DeltaTime();
+            velocity.y -= speed * GameTimer::DeltaTime();
         }
         if (InputSystem::GetKey(KeyCode::Left))
         {
@@ -84,16 +84,16 @@ class TestScene : public Glib::Scene
 public:
     void Start() override
     {
-        if (!MeshManager::Instance().Load(0, "D:/MyLib/GearsLibrary/初音ミクver.2.1/output.globj"))
+        if (!MeshManager::Instance().Load(0, "F:/GearsLib/GearsLibrary/quad.globj"))
         {
             Debug::Error("ロード失敗");
         }
 
-        auto render = Internal::Graphics::RenderingManager::Instance();
-        render->LightAmbient(Color{ 1.0f, 1.0f, 1.0f, 1.0f });
-        render->LightDiffuse(Color{ 1.0f, 1.0f, 1.0f });
-        render->LightSpecular(Color{ 1.0f, 1.0f, 1.0f });
-        render->LightDirection(Vector3{ 0.0f, -1.0f, 0.0f });
+        auto light = Internal::Graphics::RenderingManager::Instance();
+        light->LightAmbient(Color{ 1.0f, 1.0f, 1.0f, 1.0f });
+        light->LightDiffuse(Color{ 1.0f, 1.0f, 1.0f });
+        light->LightSpecular(Color{ 1.0f, 1.0f, 1.0f });
+        light->LightDirection(Vector3{ 0.0f, -1.0f, 0.0f });
 
         auto mesh = GameObjectManager::Instantiate("Mesh");
         auto renderer = mesh->AddComponent<MeshRenderer>();
@@ -151,7 +151,8 @@ int main()
     //};
 
     //std::vector<Glib::GLObject::Subset> quadSubsets = {
-    //    { 0, 5, 0 }
+    //    // 開始位置 利用数 マテリアルID
+    //    { 0, 6, 0 } // サブセット
     //};
 
     //std::vector<Glib::GLObject::Material> quadMaterials = {

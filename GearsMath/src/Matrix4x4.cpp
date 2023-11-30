@@ -69,9 +69,9 @@ Matrix4x4 Matrix4x4::Rotate(const Quaternion& q)
 
     return Matrix4x4
     {
-        1.0f - yy - zz, xy + wz, xz - wy, 0.0f,
-        xy - wz, 1.0f - xx - zz, yz + wx, 0.0f,
-        xz + wy, yz - wx, 1.0f - xx - yy, 0.0f,
+        1.0f - (yy + zz), xy + wz, xz - wy, 0.0f,
+        xy - wz, 1.0f - (xx + zz), yz + wx, 0.0f,
+        xz + wy, yz - wx, 1.0f - (xx + yy), 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f
     };
 }
@@ -162,13 +162,13 @@ Matrix4x4 Matrix4x4::RotationZ(float deg)
     };
 }
 
-Matrix4x4 Matrix4x4::TRS(const Vector3& p, const Quaternion& q, const Vector3& s)
+Matrix4x4 Matrix4x4::TRS(const Vector3& pos, const Quaternion& q, const Vector3& s)
 {
     Matrix4x4 m = Rotate(q);
     m.m11 *= s.x; m.m12 *= s.x; m.m13 *= s.x;
     m.m21 *= s.y; m.m22 *= s.y; m.m23 *= s.y;
     m.m31 *= s.z; m.m32 *= s.z; m.m33 *= s.z;
-    m.m41 = p.x;  m.m42 = p.y;  m.m43 = p.z;
+    m.m41 = pos.x;  m.m42 = pos.y;  m.m43 = pos.z;
 
     return m;
 }

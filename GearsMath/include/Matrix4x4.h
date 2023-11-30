@@ -48,7 +48,7 @@ public:
     static Matrix4x4 RotationX(float deg);
     static Matrix4x4 RotationY(float deg);
     static Matrix4x4 RotationZ(float deg);
-    static Matrix4x4 TRS(const Vector3& p, const Quaternion& q, const Vector3& s);
+    static Matrix4x4 TRS(const Vector3& pos, const Quaternion& q, const Vector3& s);
     static Matrix4x4 Perspective(float fieldOfView, float aspectRatio, float nearDistance, float farDistance);
     static Matrix4x4 Orthographic(float width, float height, float nearZ, float farZ);
 

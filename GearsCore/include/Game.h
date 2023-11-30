@@ -36,7 +36,6 @@ namespace Glib
         }
 
     private:
-
         /**
          * @brief ƒVƒXƒeƒ€‚Ì“o˜^
         */

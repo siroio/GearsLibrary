@@ -4,6 +4,9 @@
 #include <IModel.h>
 #include <mcMath.h>
 
+/**
+ * @brief PMXエンコード
+*/
 enum class EncodeType
 {
     UTF16,
@@ -104,6 +107,9 @@ struct PmxSurface
     int vertexIndex;
 };
 
+/**
+ * @brief ボーン
+*/
 struct PmxBone
 {
     // ボーン名

@@ -4,13 +4,13 @@
 
 int main(int argc, char* argv[])
 {
-    //if (argc < 2)
-    //{
-    //    std::cerr << "Usage: " << argv[0] << " <input_file.pmx> <output_file.pmx>" << std::endl;
-    //}
+    if (argc != 2)
+    {
+        std::cerr << "Usage: " << " <input_file> <output_file>" << std::endl;
+    }
 
-    auto inputFile = std::string{ "C:/Users/rukar/Desktop/初音ミクif v11/初音ミクif.pmx" };
-    auto outputFile = std::string{ "ifmiku" };
+    auto inputFile = std::string{ argv[0] };
+    auto outputFile = std::string{ argv[1] };
 
     PmxModel pmx = PmxModel{};
     if (!pmx.LoadModel(inputFile))

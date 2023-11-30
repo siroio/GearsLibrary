@@ -25,7 +25,7 @@ namespace Glib::Internal::Graphics::ShaderCode
             float3 MatPadding;
         };
 
-        cbuffer DirectionlLight : register(b4)
+        cbuffer DirectionalLight : register(b4)
         {
             float4 LightAmbient;
             float4 LightDiffuse;
@@ -66,7 +66,6 @@ namespace Glib::Internal::Graphics::ShaderCode
 
         VSOutput VSmain(VSInput input)
         {
-            float4x4 ModeView = mul(View, World);
             float4 worldPosition = mul(World, input.position);
             float4 viewPosition = mul(View, worldPosition);
             float3 normal = normalize(mul((float3x3)World, input.normal));

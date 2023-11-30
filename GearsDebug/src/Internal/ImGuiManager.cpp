@@ -110,3 +110,19 @@ void Glib::Internal::Debug::ImGuiManager::CreateGameScreen()
 {
 
 }
+
+void Glib::Internal::Debug::ImGuiManager::ResetLayout()
+{}
+
+void Glib::Internal::Debug::ImGuiManager::StyleColor()
+{}
+
+ImVec2 Glib::Internal::Debug::ToImVec2(const Vector2& v)
+{
+    return ImVec2{ v.x, v.y };
+}
+
+Vector2 Glib::Internal::Debug::ToVector2(const ImVec2& v)
+{
+    return Vector2{ v.x, v.y };
+}

@@ -54,6 +54,6 @@ namespace Glib::Internal::Debug
         void StyleColor();
     };
 
-    ImVec2 ToImVec2(const Vector2& v);
-    Vector2 ToVector2(const ImVec2& v);
+    static ImVec2 ToImVec2(const Vector2& v);
+    static Vector2 ToVector2(const ImVec2& v);
 }

@@ -45,7 +45,8 @@ Glib::SpriteRenderer::SpriteRenderer()
 void Glib::SpriteRenderer::Start()
 {
     transform_ = GameObject()->Transform();
-    s_renderingManager->AddRenderer(WeakPtr<SpriteRenderer>{ shared_from_this() }.get());
+    auto renderer = WeakPtr<SpriteRenderer>{ shared_from_this() };
+    s_renderingManager->AddRenderer(renderer.get());
 }
 
 void Glib::SpriteRenderer::LateUpdate()
@@ -172,8 +173,8 @@ unsigned int Glib::SpriteRenderer::TextureID() const
 
 void Glib::SpriteRenderer::TextureID(unsigned int id, bool isResetSize)
 {
-    if (!s_textureManager.Contains(id)) return;
-    enabled_ = true;
+    enabled_ = s_textureManager.Contains(id);
+    if (!enabled_) return;
     textureSize_ = s_textureManager.TextureSize(id);
     if (isResetSize) clippingSize_ = textureSize_;
 }

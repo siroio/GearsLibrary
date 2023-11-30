@@ -34,32 +34,32 @@ public:
         x{ x_ }, y{ y_ }
     {}
 
-     Vector2 operator+(const Vector2& other) const
+    Vector2 operator+(const Vector2& other) const
     {
         return { x + other.x, y + other.y };
     }
 
-     Vector2 operator-(const Vector2& other) const
+    Vector2 operator-(const Vector2& other) const
     {
         return { x - other.x, y - other.y };
     }
 
-     Vector2 operator*(T scalar) const
+    Vector2 operator*(T scalar) const
     {
         return { x * scalar, y * scalar };
     }
 
-     Vector2 operator/(T scalar) const
+    Vector2 operator/(T scalar) const
     {
         return { x / scalar, y / scalar };
     }
 
-     bool operator==(const Vector2& other) const
+    bool operator==(const Vector2& other) const
     {
         return std::abs(x - other.x) < Epsilon<T>() && std::abs(y - other.y) < Epsilon<T>();
     }
 
-     bool operator!=(const Vector2& other) const
+    bool operator!=(const Vector2& other) const
     {
         return !(*this == other);
     }
@@ -121,32 +121,32 @@ public:
         };
     }
 
-     Vector3 operator+(const Vector3& other) const
+    Vector3 operator+(const Vector3& other) const
     {
         return { x + other.x, y + other.y, z + other.z };
     }
 
-     Vector3 operator-(const Vector3& other) const
+    Vector3 operator-(const Vector3& other) const
     {
         return { x - other.x, y - other.y, z - other.z };
     }
 
-     Vector3 operator*(T scalar) const
+    Vector3 operator*(T scalar) const
     {
         return { x * scalar, y * scalar, z * scalar };
     }
 
-     Vector3 operator/(T scalar) const
+    Vector3 operator/(T scalar) const
     {
         return { x / scalar, y / scalar, z / scalar };
     }
 
-     bool operator==(const Vector3& other) const
+    bool operator==(const Vector3& other) const
     {
         return std::abs(x - other.x) < Epsilon<T>() && std::abs(y - other.y) < Epsilon<T>() && std::abs(z - other.z) < Epsilon<T>();
     }
 
-     bool operator!=(const Vector3& other) const
+    bool operator!=(const Vector3& other) const
     {
         return !(*this == other);
     }
@@ -201,32 +201,32 @@ public:
         return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w * v2.w;
     }
 
-     Vector4 operator+(const Vector4& other) const
+    Vector4 operator+(const Vector4& other) const
     {
         return { x + other.x, y + other.y, z + other.z, w + other.w };
     }
 
-     Vector4 operator-(const Vector4& other) const
+    Vector4 operator-(const Vector4& other) const
     {
         return { x - other.x, y - other.y, z - other.z, w - other.w };
     }
 
-     Vector4 operator*(T scalar) const
+    Vector4 operator*(T scalar) const
     {
         return { x * scalar, y * scalar, z * scalar, w * scalar };
     }
 
-     Vector4 operator/(T scalar) const
+    Vector4 operator/(T scalar) const
     {
         return { x / scalar, y / scalar, z / scalar, w / scalar };
     }
 
-     bool operator==(const Vector4& other) const
+    bool operator==(const Vector4& other) const
     {
         return std::abs(x - other.x) < Epsilon<T>() && std::abs(y - other.y) < Epsilon<T>() && std::abs(z - other.z) < Epsilon<T>() && std::abs(w - other.w) < Epsilon<T>();
     }
 
-     bool operator!=(const Vector4& other) const
+    bool operator!=(const Vector4& other) const
     {
         return !(*this == other);
     }
