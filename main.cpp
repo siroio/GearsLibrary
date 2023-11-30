@@ -71,11 +71,6 @@ public:
         transform->Position(transform->Position() + velocity);
         transform->Rotate(rotation);
     }
-
-    void FixedUpdate()
-    {
-
-    }
 };
 
 // テスト用シーンクラス
@@ -138,39 +133,4 @@ class MyGame : public Glib::Game
 int main()
 {
     MyGame{}.Run();
-    //std::vector<Glib::GLObject::Vertex> quadVertices = {
-    //    // 頂点データ (位置, 法線, UV座標, ボーンインデックス, ボーンウェイト, 接線)
-    //    {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, {0, 0, 0, 0}, {1.0f, 0.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
-    //    {{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}, {0, 0, 0, 0}, {1.0f, 0.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
-    //    {{0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}, {0, 0, 0, 0}, {1.0f, 0.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
-    //    {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}, {0, 0, 0, 0}, {1.0f, 0.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
-    //};
-
-    //std::vector<unsigned int> quadIndices = {
-    //    0, 1, 2, 0, 2, 3 // 頂点インデックス
-    //};
-
-    //std::vector<Glib::GLObject::Subset> quadSubsets = {
-    //    // 開始位置 利用数 マテリアルID
-    //    { 0, 6, 0 } // サブセット
-    //};
-
-    //std::vector<Glib::GLObject::Material> quadMaterials = {
-    //    {
-    //        {0.2f, 0.2f, 0.2f, 1.0f}, // 環境光
-    //        {1.0f, 1.0f, 1.0f, 1.0f}, // 拡散光
-    //        {0.0f, 0.0f, 0.0f, 1.0f}, // 鏡面反射光
-    //        0.0f,                      // 光沢度
-    //        "texture.png",              // テクスチャファイル名
-    //        "normal.png"                // 法線マップファイル名
-    //    }
-    //};
-
-    //std::vector<Glib::GLObject::Bone> quadBones = {
-    //    { "Root", { 0.0f, 0.0f, 0.0f }, -1 }
-    //};
-
-    //GLObject quadObject(quadVertices, quadIndices, quadSubsets, quadMaterials, quadBones);
-
-    //quadObject.WriteFile("Quad.globj");
 }

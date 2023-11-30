@@ -318,7 +318,7 @@ Matrix4x4 Matrix4x4::Inverse() const
     {
         return *this;
     }
-    float invDet = 1.0f / det;
+    const float invDet = Mathf::Inverse(det);
     return Matrix4x4{
         (m22 * b5 - m23 * b4 + m24 * b3) * invDet,
         (-m12 * b5 + m13 * b4 - m14 * b3) * invDet,
@@ -517,7 +517,7 @@ Matrix4x4 operator/=(Matrix4x4& m, float scalar)
 
 Matrix4x4 operator+(const Matrix4x4& m1, const Matrix4x4& m2)
 {
-    Matrix4x4 result;
+    Matrix4x4 result{};
 
     result.m11 = m1.m11 + m2.m11;
     result.m12 = m1.m12 + m2.m12;
@@ -544,7 +544,7 @@ Matrix4x4 operator+(const Matrix4x4& m1, const Matrix4x4& m2)
 
 Matrix4x4 operator-(const Matrix4x4& m1, const Matrix4x4& m2)
 {
-    Matrix4x4 result;
+    Matrix4x4 result{};
 
     result.m11 = m1.m11 - m2.m11;
     result.m12 = m1.m12 - m2.m12;
@@ -571,7 +571,7 @@ Matrix4x4 operator-(const Matrix4x4& m1, const Matrix4x4& m2)
 
 Matrix4x4 operator*(const Matrix4x4& m, float scalar)
 {
-    Matrix4x4 result;
+    Matrix4x4 result{};
 
     result.m11 = m.m11 + scalar;
     result.m12 = m.m12 + scalar;
@@ -598,7 +598,7 @@ Matrix4x4 operator*(const Matrix4x4& m, float scalar)
 
 Matrix4x4 operator*(float scalar, const Matrix4x4& m)
 {
-    Matrix4x4 result;
+    Matrix4x4 result{};
 
     result.m11 = m.m11 * scalar;
     result.m12 = m.m12 * scalar;
@@ -625,7 +625,7 @@ Matrix4x4 operator*(float scalar, const Matrix4x4& m)
 
 Matrix4x4 operator*(const Matrix4x4& m1, const Matrix4x4& m2)
 {
-    Matrix4x4 result;
+    Matrix4x4 result{};
     for (int i = 0; i < 4; ++i)
     {
         for (int j = 0; j < 4; ++j)
@@ -642,7 +642,7 @@ Matrix4x4 operator*(const Matrix4x4& m1, const Matrix4x4& m2)
 
 Matrix4x4 operator/(const Matrix4x4& m, float scalar)
 {
-    Matrix4x4 result;
+    Matrix4x4 result{};
 
     const float scalarInv = Mathf::Inverse(scalar);
 
