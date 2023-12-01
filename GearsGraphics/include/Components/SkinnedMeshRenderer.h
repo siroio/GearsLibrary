@@ -3,6 +3,10 @@
 #include <Internal/Renderer.h>
 #include <Internal/CameraBase.h>
 #include <Components/Transform.h>
+#include <Matrix4x4.h>
+#include <Bone.h>
+#include <array>
+#include <vector>
 
 namespace Glib
 {
@@ -27,10 +31,12 @@ namespace Glib
         void MeshID(unsigned int id);
 
     private:
-        WeakPtr<Transform> transform_;
-        Internal::Graphics::ConstantBuffer constantBuffer_;
+        std::array<Matrix4x4, 128> boneMatrix_;
+        std::vector<Bone> bones_;
+        std::vector<WeakPtr<Transform>> boneTransforms_;
+        Internal::Graphics::ConstantBuffer worldConstantBuffer_;
         Internal::Graphics::ConstantBuffer boneConstantBuffer_;
         unsigned int meshID_{ UINT_MAX };
-        bool isEnabled_;
+        bool isEnabled_{ false };
     };
 }

@@ -22,22 +22,6 @@ namespace
         return fs::path{ file }.relative_path().string();
     }
 
-    // ワイド文字変換
-    std::string W2String(std::wstring_view wstr)
-    {
-        int bufferSize = WideCharToMultiByte(CP_UTF8, 0, wstr.data(), -1, nullptr, 0, nullptr, nullptr);
-
-        if (bufferSize == 0) return "";
-
-        std::string result(bufferSize, '\0');
-        if (WideCharToMultiByte(CP_UTF8, 0, wstr.data(), -1, result.data(), bufferSize, nullptr, nullptr) == 0)
-        {
-            return "";
-        }
-
-        return result;
-    }
-
     std::string ReadTextBuf(std::ifstream& file, EncodeType encode)
     {
         int bufLength{ 0 };
@@ -47,7 +31,16 @@ namespace
         {
             std::wstring textBuf(bufLength / sizeof(wchar_t), L'\0');
             file.read(reinterpret_cast<char*>(textBuf.data()), bufLength);
-            return W2String(textBuf);
+
+            int bufferSize = WideCharToMultiByte(CP_ACP, 0, textBuf.c_str(), -1, nullptr, 0, nullptr, nullptr);
+            if (bufferSize == 0) return "";
+            std::string result(bufferSize, '\0');
+            if (WideCharToMultiByte(CP_ACP, 0, textBuf.data(), -1, result.data(), bufferSize, nullptr, nullptr) == 0)
+            {
+                return "";
+            }
+
+            return result;
         }
         else if (encode == EncodeType::UTF8)
         {
@@ -58,13 +51,19 @@ namespace
         return "";
     }
 
-    constexpr std::array<unsigned char, 4> PMX_MAGIC_NUMBER{ 0x50, 0x4d, 0x58, 0x20 };
-    constexpr int PMX_NO_DATA = -1;
+    bool CheckHasBoneFlag(const PmxBone& bone, const PmxBoneFlag& flag)
+    {
+        return ((unsigned int)bone.flag & (unsigned int)flag) != 0;
+    }
+
+    static constexpr std::array<unsigned char, 4> PMX_MAGIC_NUMBER{ 0x50, 0x4d, 0x58, 0x20 };
+    static constexpr int PMX_NO_DATA = -1;
 }
 
 bool PmxModel::LoadModel(std::string_view path)
 {
     // 拡張子が間違っていたら失敗
+    puts(GetExt(path).c_str());
     if (GetExt(path) != ".pmx") return false;
     std::ifstream pmxFile{ path.data(), std::ios::binary };
     if (pmxFile.fail()) return false;
@@ -191,7 +190,9 @@ bool PmxModel::LoadModel(std::string_view path)
     texturePath.resize(textureSize);
     for (int i = 0; i < textureSize; i++)
     {
-        texturePath.at(i) = ReadTextBuf(pmxFile, header.encode);
+        auto texPath = ReadTextBuf(pmxFile, header.encode);
+        texPath = fs::path{ texPath }.make_preferred().lexically_normal().string();
+        texturePath.at(i) = texPath;
     }
 
     // マテリアル
@@ -211,7 +212,7 @@ bool PmxModel::LoadModel(std::string_view path)
         pmxFile.read(reinterpret_cast<char*>(&material.diffuse), 16);
         pmxFile.read(reinterpret_cast<char*>(&material.specular), 12);
         pmxFile.read(reinterpret_cast<char*>(&material.specularFactor), 4);
-        pmxFile.read(reinterpret_cast<char*>(&material.diffuse), 12);
+        pmxFile.read(reinterpret_cast<char*>(&material.ambient), 12);
 
         // フラグ
         pmxFile.get();
@@ -221,9 +222,9 @@ bool PmxModel::LoadModel(std::string_view path)
         // エッジサイズ
         pmxFile.seekg(4, std::ios::cur);
 
-        // テクスチャインデックス
+        // テクスチャ
         pmxFile.read(reinterpret_cast<char*>(&material.textureIndex), header.Info[2]);
-        pmxFile.seekg(header.Info[2], std::ios::cur);
+        pmxFile.seekg(header.Info[2], std::ios::cur); // スフィアは飛ばす
         pmxFile.get();
 
         const unsigned char sharedToonFlag = pmxFile.get();
@@ -248,83 +249,80 @@ bool PmxModel::LoadModel(std::string_view path)
     {
         auto& bone = bones.at(i);
         // ボーン名
-        for (int i = 0; i < 2; i++)
+        bone.name = ReadTextBuf(pmxFile, header.encode);
+        bone.nameBoneEng = ReadTextBuf(pmxFile, EncodeType::UTF8);
+
+        pmxFile.read(reinterpret_cast<char*>(&bone.position), 12);
+        pmxFile.read(reinterpret_cast<char*>(&bone.parentBoneIndex), header.Info[4]);
+        if (boneSize <= bone.parentBoneIndex)
         {
-            bone.name = ReadTextBuf(pmxFile, header.encode);
-            bone.nameBoneEng = ReadTextBuf(pmxFile, EncodeType::UTF8);
+            bone.parentBoneIndex = PMX_NO_DATA;
+        }
+        pmxFile.read(reinterpret_cast<char*>(&bone.transformHierarchy), 4);
+        pmxFile.read(reinterpret_cast<char*>(&bone.flag), 2);
 
-            pmxFile.read(reinterpret_cast<char*>(&bone.position), 12);
-            pmxFile.read(reinterpret_cast<char*>(&bone.parentBoneIndex), header.Info[4]);
-            if (boneSize <= bone.parentBoneIndex)
-            {
-                bone.parentBoneIndex = PMX_NO_DATA;
-            }
-            pmxFile.read(reinterpret_cast<char*>(&bone.transformHierarchy), 4);
-            pmxFile.read(reinterpret_cast<char*>(&bone.flag), 2);
-
-            if (bone.flag & BoneFlagMask::ACCESS_POINT)
-            {
-                pmxFile.read(reinterpret_cast<char*>(&bone.childrenIndex), header.Info[4]);
-                if (boneSize <= bone.childrenIndex)
-                {
-                    bone.childrenIndex = PMX_NO_DATA;
-                }
-            }
-            else
+        if (CheckHasBoneFlag(bone, PmxBoneFlag::TargetShowMode))
+        {
+            pmxFile.read(reinterpret_cast<char*>(&bone.childrenIndex), header.Info[4]);
+            if (boneSize <= bone.childrenIndex)
             {
                 bone.childrenIndex = PMX_NO_DATA;
-                pmxFile.read(reinterpret_cast<char*>(&bone.offset), 12);
-            }
-
-            if ((bone.flag & BoneFlagMask::IMPART_ROTATION) || (bone.flag & BoneFlagMask::IMPART_TRANSLATION))
-            {
-                pmxFile.read(reinterpret_cast<char*>(&bone.impartParentIndex), header.Info[4]);
-                pmxFile.read(reinterpret_cast<char*>(&bone.impartRate), 4);
-            }
-
-            if (bone.flag & BoneFlagMask::AXIS_FIXING)
-            {
-                pmxFile.read(reinterpret_cast<char*>(&bone.fixedAxis), 12);
-            }
-
-            if (bone.flag & BoneFlagMask::LOCAL_AXIS)
-            {
-                pmxFile.read(reinterpret_cast<char*>(&bone.localAxisX), 12);
-                pmxFile.read(reinterpret_cast<char*>(&bone.localAxisZ), 12);
-            }
-
-            if (bone.flag & BoneFlagMask::EXTERNAL_PARENT_TRANS)
-            {
-                pmxFile.read(reinterpret_cast<char*>(&bone.externalParentKey), 4);
-            }
-
-            if (bone.flag & IK)
-            {
-                pmxFile.read(reinterpret_cast<char*>(&bone.ikTargetIndex), header.Info[4]);
-                pmxFile.read(reinterpret_cast<char*>(&bone.ikLoopCount), 4);
-                pmxFile.read(reinterpret_cast<char*>(&bone.ikUnitAngle), 4);
-                pmxFile.read(reinterpret_cast<char*>(&ikLinkSize), 4);
-                bone.ikLinks.resize(ikLinkSize);
-                for (int j = 0; j < ikLinkSize; ++j)
-                {
-                    pmxFile.read(reinterpret_cast<char*>(&bone.ikLinks[j].index), header.Info[4]);
-                    angleLimit = pmxFile.get();
-                    bone.ikLinks[j].existAngleLimited = false;
-                    if (angleLimit == 1)
-                    {
-                        pmxFile.read(reinterpret_cast<char*>(&bone.ikLinks[j].limitAngleMin), 12);
-                        pmxFile.read(reinterpret_cast<char*>(&bone.ikLinks[j].limitAngleMax), 12);
-                        bone.ikLinks[j].existAngleLimited = true;
-                    }
-                }
-            }
-            else
-            {
-                bone.ikTargetIndex = PMX_NO_DATA;
             }
         }
-    }
+        else
+        {
+            bone.childrenIndex = PMX_NO_DATA;
+            pmxFile.read(reinterpret_cast<char*>(&bone.offset), 12);
+        }
 
+        if (CheckHasBoneFlag(bone, PmxBoneFlag::AppendRotate) || CheckHasBoneFlag(bone, PmxBoneFlag::AppendTranslate))
+        {
+            pmxFile.read(reinterpret_cast<char*>(&bone.impartParentIndex), header.Info[4]);
+            pmxFile.read(reinterpret_cast<char*>(&bone.impartRate), 4);
+        }
+
+        if (CheckHasBoneFlag(bone, PmxBoneFlag::FixedAxis))
+        {
+            pmxFile.read(reinterpret_cast<char*>(&bone.fixedAxis), 12);
+        }
+
+        if (CheckHasBoneFlag(bone, PmxBoneFlag::LocalAxis))
+        {
+            pmxFile.read(reinterpret_cast<char*>(&bone.localAxisX), 12);
+            pmxFile.read(reinterpret_cast<char*>(&bone.localAxisZ), 12);
+        }
+
+        if (CheckHasBoneFlag(bone, PmxBoneFlag::DeformOuterParent))
+        {
+            pmxFile.read(reinterpret_cast<char*>(&bone.externalParentKey), 4);
+        }
+
+        if (CheckHasBoneFlag(bone, PmxBoneFlag::IK))
+        {
+            pmxFile.read(reinterpret_cast<char*>(&bone.ikTargetIndex), header.Info[4]);
+            pmxFile.read(reinterpret_cast<char*>(&bone.ikLoopCount), 4);
+            pmxFile.read(reinterpret_cast<char*>(&bone.ikUnitAngle), 4);
+            pmxFile.read(reinterpret_cast<char*>(&ikLinkSize), 4);
+            bone.ikLinks.resize(ikLinkSize);
+
+            for (int j = 0; j < ikLinkSize; ++j)
+            {
+                pmxFile.read(reinterpret_cast<char*>(&bone.ikLinks[j].index), header.Info[4]);
+                angleLimit = pmxFile.get();
+                bone.ikLinks[j].existAngleLimited = false;
+                if (angleLimit == 1)
+                {
+                    pmxFile.read(reinterpret_cast<char*>(&bone.ikLinks[j].limitAngleMin), 12);
+                    pmxFile.read(reinterpret_cast<char*>(&bone.ikLinks[j].limitAngleMax), 12);
+                    bone.ikLinks[j].existAngleLimited = true;
+                }
+            }
+        }
+        else
+        {
+            bone.ikTargetIndex = PMX_NO_DATA;
+        }
+    }
     return true;
 }
 
@@ -403,21 +401,14 @@ bool PmxModel::WriteModel(std::string_view path)
         glMat.specular[2] = mat.specular.z;
         glMat.specular[3] = 1;
         glMat.shininess = mat.specularFactor;
-        std::string albedo = texturePath.at(mat.textureIndex);
-        std::string normal = texturePath.at(texturePath.size() - 1);
-        memset(glMat.texture, 0, 256);
-        memset(glMat.normal, 0, 256);
-        albedo = fs::path{ albedo }.make_preferred().string();
-        normal = fs::path{ normal }.make_preferred().string();
-        std::replace(albedo.begin(), albedo.end(), '\\', '/');
-        std::replace(normal.begin(), normal.end(), '\\', '/');
-        for (int i = 0; i < albedo.size(); i++)
+        memset(glMat.texture, 0, sizeof(glMat.texture));
+        if (mat.textureIndex != 0xFF)
         {
-            glMat.texture[i] = albedo.at(i);
-        }
-        for (int i = 0; i < normal.size() - 1; i++)
-        {
-            glMat.normal[i] = normal.at(i);
+            std::string albedo = texturePath.at(mat.textureIndex);
+            for (int i = 0; i < albedo.size(); i++)
+            {
+                glMat.texture[i] = albedo.at(i);
+            }
         }
         glMaterials.push_back(glMat);
     }

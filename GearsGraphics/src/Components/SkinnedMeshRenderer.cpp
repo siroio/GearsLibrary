@@ -14,7 +14,8 @@ namespace
 
 Glib::SkinnedMeshRenderer::SkinnedMeshRenderer()
 {
-
+    worldConstantBuffer_.Create(sizeof(Matrix4x4));
+    boneConstantBuffer_.Create(sizeof(Matrix4x4) * boneMatrix_.size());
 }
 
 void Glib::SkinnedMeshRenderer::Start()
@@ -24,20 +25,27 @@ void Glib::SkinnedMeshRenderer::Start()
 }
 
 void Glib::SkinnedMeshRenderer::LateUpdate()
-{}
+{
+    if (!isEnabled_ || bones_.empty()) return;
+}
 
 void Glib::SkinnedMeshRenderer::Draw(const WeakPtr<Internal::CameraBase>& camera)
-{}
+{
+    if (!isEnabled_ || bones_.empty()) return;
+}
 
 void Glib::SkinnedMeshRenderer::DrawShadow(const WeakPtr<Internal::CameraBase>& camera)
-{}
+{
+
+}
 
 unsigned int Glib::SkinnedMeshRenderer::MeshID() const
 {
-    return 0;
+    return meshID_;
 }
 
 void Glib::SkinnedMeshRenderer::MeshID(unsigned int id)
 {
     meshID_ = id;
+    bones_ = s_meshManager.Bone(id);
 }

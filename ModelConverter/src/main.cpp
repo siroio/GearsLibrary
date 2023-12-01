@@ -9,8 +9,15 @@ int main(int argc, char* argv[])
         std::cerr << "Usage: " << " <input_file> <output_file>" << std::endl;
     }
 
-    auto inputFile = std::string{ argv[0] };
-    auto outputFile = std::string{ argv[1] };
+#if _DEBUG | DEBUG
+    auto inputFile = std::string{ "C:/Users/rukar/Desktop/MikuMikuDance_v932x64/初音ミクif v11/初音ミクif.pmx" };
+    auto outputFile = std::string{ "C:/Users/rukar/Desktop/MikuMikuDance_v932x64/初音ミクif v11/初音ミクif" };
+#else
+    auto inputFile = std::string{ argv[1] };
+    auto outputFile = std::string{ argv[2] };
+#endif // DEBUG_ | DEBUG
+
+
 
     PmxModel pmx = PmxModel{};
     if (!pmx.LoadModel(inputFile))

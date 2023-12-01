@@ -107,6 +107,23 @@ struct PmxSurface
     int vertexIndex;
 };
 
+enum class PmxBoneFlag : unsigned int
+{
+    TargetShowMode = 0x0001,
+    AllowRotate = 0x0002,
+    AllowTranslate = 0x0004,
+    Visible = 0x0008,
+    AllowControl = 0x0010,
+    IK = 0x0020,
+    AppendLocal = 0x0080,
+    AppendRotate = 0x0100,
+    AppendTranslate = 0x0200,
+    FixedAxis = 0x0400,
+    LocalAxis = 0x800,
+    DeformAfterPhysics = 0x1000,
+    DeformOuterParent = 0x2000,
+};
+
 /**
  * @brief ボーン
 */
@@ -123,7 +140,7 @@ struct PmxBone
     // 変形階層
     int transformHierarchy;
     // ボーンフラグ
-    unsigned int flag;
+    PmxBoneFlag flag;
 
     Vector3f offset;
     int childrenIndex;
@@ -137,24 +154,6 @@ struct PmxBone
     int ikLoopCount;
     float ikUnitAngle;
     std::vector<IKLink> ikLinks;
-};
-
-enum BoneFlagMask
-{
-    // 接続先
-    ACCESS_POINT = 0x0001,
-    // IK
-    IK = 0x0020,
-    // 回転付与
-    IMPART_ROTATION = 0x0100,
-    // 移動付与
-    IMPART_TRANSLATION = 0x0200,
-    // 軸固定
-    AXIS_FIXING = 0x0400,
-    // ローカル軸
-    LOCAL_AXIS = 0x0800,
-    // 外部親変形
-    EXTERNAL_PARENT_TRANS = 0x2000,
 };
 
 /**

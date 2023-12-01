@@ -84,12 +84,12 @@ void Glib::Mesh::Draw()
 
     for (const auto& subset : subsets_)
     {
-        const auto& material = materials_[subset.materialID];
+        const auto& material = materials_.at(subset.materialID);
 
         //アルベドテクスチャを設定
         if (material.albedo.expired())
         {
-            s_resource->SetTexture(ID::MAGENTA_TEXTURE, ID::MESH_ALBEDO);
+            s_resource->SetTexture(ID::WHITE_TEXTURE, ID::MESH_ALBEDO);
         }
         else
         {

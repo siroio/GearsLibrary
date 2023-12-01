@@ -5,6 +5,7 @@
 namespace
 {
     std::unordered_map<unsigned int, std::unique_ptr<Glib::Mesh>> s_meshs;
+    const std::vector<Glib::Bone> s_NullBone;
 }
 
 bool Glib::MeshManager::Load(unsigned int id, std::string_view path)
@@ -15,18 +16,24 @@ bool Glib::MeshManager::Load(unsigned int id, std::string_view path)
     return true;
 }
 
-bool Glib::MeshManager::Contains(unsigned int id)
+bool Glib::MeshManager::Contains(unsigned int id) const
 {
     return s_meshs.contains(id);
 }
 
-void Glib::MeshManager::Draw(unsigned int id)
+const std::vector<Glib::Bone>& Glib::MeshManager::Bone(unsigned int id)
+{
+    if (!s_meshs.contains(id)) return s_NullBone;
+    return s_meshs.at(id)->Bone();
+}
+
+void Glib::MeshManager::Draw(unsigned int id) const
 {
     if (!s_meshs.contains(id)) return;
     s_meshs.at(id)->Draw();
 }
 
-void Glib::MeshManager::DrawShadow(unsigned int id)
+void Glib::MeshManager::DrawShadow(unsigned int id) const
 {
     if (!s_meshs.contains(id)) return;
     s_meshs.at(id)->DrawShadow();

@@ -79,7 +79,7 @@ class TestScene : public Glib::Scene
 public:
     void Start() override
     {
-        if (!MeshManager::Instance().Load(0, "F:/GearsLib/GearsLibrary/quad.globj"))
+        if (!MeshManager::Instance().Load(0, "C:/Users/rukar/Desktop/MikuMikuDance_v932x64/初音ミクif v11/初音ミクif.globj"))
         {
             Debug::Error("ロード失敗");
         }

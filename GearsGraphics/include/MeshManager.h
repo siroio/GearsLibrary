@@ -25,17 +25,23 @@ namespace Glib
          * @brief メッシュがロードされているか調べる
          * @param id
          */
-        bool Contains(unsigned int id);
+        bool Contains(unsigned int id) const;
+
+        /**
+         * @brief メッシュのボーンを取得
+         * @param id
+         */
+        const std::vector<Bone>& Bone(unsigned int id);
 
         /**
          * @brief 描画
          */
-        void Draw(unsigned int id);
+        void Draw(unsigned int id) const;
 
         /**
          * @brief 影を描画
          */
-        void DrawShadow(unsigned int id);
+        void DrawShadow(unsigned int id) const;
 
     };
 }
