@@ -14,7 +14,7 @@ void Glib::Debug::Assert(bool expression)
 {
 #if defined(DEBUG) || defined(_DEBUG)
     if (expression) return;
-    Log("Assertion Error.", LogLevel::Error);
+    Log("Assertion Failed.", LogLevel::Error);
 #endif
 }
 
