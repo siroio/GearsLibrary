@@ -63,7 +63,6 @@ namespace
 bool PmxModel::LoadModel(std::string_view path)
 {
     // Šg’£Žq‚ªŠÔˆá‚Á‚Ä‚¢‚½‚çŽ¸”s
-    puts(GetExt(path).c_str());
     if (GetExt(path) != ".pmx") return false;
     std::ifstream pmxFile{ path.data(), std::ios::binary };
     if (pmxFile.fail()) return false;
