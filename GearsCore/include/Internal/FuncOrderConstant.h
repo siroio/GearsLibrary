@@ -33,8 +33,8 @@ namespace Glib::Internal::Order
         constexpr int SKYBOX = -100;
         constexpr int OBJECT = SKYBOX + 1;
         constexpr int EFFECT = OBJECT + 1;
-        constexpr int PHYSIC = EFFECT + 1;
-        constexpr int CAMERA = PHYSIC + 1;
+        constexpr int PHYSICS = EFFECT + 1;
+        constexpr int CAMERA = PHYSICS + 1;
         constexpr int UI = CAMERA + 1;
     }
 
