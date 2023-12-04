@@ -23,6 +23,7 @@ set(SOURCE_FILE
     ./src/Components/SpriteRenderer.cpp
     ./src/Components/MeshRenderer.cpp
     ./src/Components/SkinnedMeshRenderer.cpp
+    ./src/Components/Animator.cpp
     ./src/TextureManager.cpp
     ./src/Texture.cpp
     ./src/SkyboxManager.cpp
@@ -66,12 +67,14 @@ set(HEADER_FILE
     ./include/Internal/CanvasManager.h
     ./include/Internal/UIRenderer.h
     ./include/Internal/Renderer.h
+    ./include/Internal/SkinnedRenderer.h
     ./include/Components/Camera.h
     ./include/Components/Canvas.h
     ./include/Components/Image.h
     ./include/Components/SpriteRenderer.h
     ./include/Components/MeshRenderer.h
     ./include/Components/SkinnedMeshRenderer.h
+    ./include/Components/Animator.h
     ./include/TextureManager.h
     ./include/Texture.h
     ./include/SkyboxManager.h

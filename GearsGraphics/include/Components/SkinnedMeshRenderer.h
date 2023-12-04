@@ -1,6 +1,7 @@
 #pragma once
 #include <Internal/DX12/ConstantBuffer.h>
 #include <Internal/Renderer.h>
+#include <Internal/SkinnedRenderer.h>
 #include <Internal/CameraBase.h>
 #include <Components/Transform.h>
 #include <Matrix4x4.h>
@@ -11,7 +12,8 @@
 namespace Glib
 {
     class SkinnedMeshRenderer :
-        public Internal::Renderer
+        public Internal::Renderer,
+        public Internal::SkinnedRenderer
     {
     public:
         SkinnedMeshRenderer();
@@ -31,6 +33,33 @@ namespace Glib
         void MeshID(unsigned int id);
 
     private:
+        /**
+         * @brief ボーンの計算
+         */
+        void ComputeBone();
+
+        /**
+         * @brief ボーンのゲームオブジェクトを生成
+         */
+        void CreateBoneGameObject();
+
+        /**
+         * @brief ボーンの取得
+         */
+        virtual const std::vector<Bone>& Bones() const override;
+
+        /**
+         * @brief ボーンのトランスフォームを取得
+         */
+        virtual const std::vector<WeakPtr<Transform>>& BoneTransforms() const override;
+
+        /**
+         * @brief ボーンの行列を取得
+         */
+        virtual std::array<Matrix4x4, 128>& BoneMatrix() override;
+
+    private:
+        WeakPtr<Transform> transform_;
         std::array<Matrix4x4, 128> boneMatrix_;
         std::vector<Bone> bones_;
         std::vector<WeakPtr<Transform>> boneTransforms_;
