@@ -198,6 +198,16 @@ float Mathf::Clamp01(float value)
     return value;
 }
 
+float Mathf::Remap(float value, float fromLow, float fromHigh, float toLow, float toHigh)
+{
+    return toLow + (toHigh - toLow) * (value - fromLow) / (fromHigh - fromLow);
+}
+
+float Mathf::Remap01(float value, float low, float high)
+{
+    return 0.0f + (1.0f - 0.0f) * (value - low) / (high - low);
+}
+
 float Mathf::Lerp(float a, float b, float t)
 {
     return a + (b - a) * Clamp01(t);

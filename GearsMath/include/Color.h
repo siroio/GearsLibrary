@@ -21,7 +21,7 @@ public:
     using HSV = std::tuple<float, float, float>;
 
 public:
-    Color(const Color& color) = default;
+    Color(const Color&) = default;
     Color(const Vector4& vector);
     explicit Color();
     explicit Color(float r, float g, float b, float a = 1.0f);

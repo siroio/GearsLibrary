@@ -65,6 +65,8 @@ public:
     static float Clamp(float value, float min, float max);
     static int Clamp(int value, int min, int max);
     static float Clamp01(float value);
+    static float Remap(float value, float fromLow, float fromHigh, float toLow, float toHigh);
+    static float Remap01(float value, float low, float high);
     static float Lerp(float a, float b, float t);
     static float LerpUnclamped(float a, float b, float t);
     static float LerpAngle(float a, float b, float t);

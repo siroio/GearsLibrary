@@ -29,7 +29,7 @@ public:
      * @brief コピーコンストラクタ
      * @param v コピー元のベクトル
     */
-    Vector2(const Vector2& v) = default;
+    Vector2(const Vector2&) = default;
 
     /**
      * @brief コンストラクタ

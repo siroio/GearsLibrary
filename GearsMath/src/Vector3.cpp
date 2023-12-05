@@ -242,6 +242,25 @@ Vector3 Vector3::LerpUnclamped(const Vector3& a, const Vector3& b, float t)
     return Vector3{ lerp_x, lerp_y, lerp_z };
 }
 
+Vector3 Vector3::SLerp(const Vector3& a, const Vector3& b, float t)
+{
+    float dot = Dot(a, b);
+    dot = Mathf::Clamp(dot, -1.0f, 1.0f);
+    float theta = Mathf::Acos(dot) * t;
+    Vector3 relative = b - a * dot;
+    relative.Normalize();
+    return ((a * Mathf::Cos(theta)) + (relative * Mathf::Sin(theta)));
+}
+
+Vector3 Vector3::SlerpUnclamped(const Vector3& a, const Vector3& b, float t)
+{
+    float dot = Dot(a, b);
+    float theta = Mathf::Acos(dot) * t;
+    Vector3 relative = b - a * dot;
+    relative.Normalize();
+    return ((a * Mathf::Cos(theta)) + (relative * Mathf::Sin(theta)));
+}
+
 Vector3 Vector3::MoveTowards(const Vector3& current, const Vector3& target, float maxDistanceDelta)
 {
     float toVectorX = target.x - current.x;

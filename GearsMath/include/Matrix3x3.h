@@ -23,9 +23,7 @@ public:
 
 public:
     Matrix3x3(const Matrix3x3&) = default;
-
     explicit Matrix3x3();
-
     explicit Matrix3x3(
         float m11, float m12, float m13,
         float m21, float m22, float m23,

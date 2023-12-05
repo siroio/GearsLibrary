@@ -72,12 +72,12 @@ Quaternion Quaternion::Inverse(const Quaternion& q)
     return Quaternion{ -q.x, -q.y, -q.z, q.w };
 }
 
-Quaternion Quaternion::Serp(const Quaternion& a, const Quaternion& b, float t)
+Quaternion Quaternion::Slerp(const Quaternion& a, const Quaternion& b, float t)
 {
-    return SerpUnclamped(a, b, Mathf::Clamp01(t));
+    return SlerpUnclamped(a, b, Mathf::Clamp01(t));
 }
 
-Quaternion Quaternion::SerpUnclamped(const Quaternion& a, const Quaternion& b, float t)
+Quaternion Quaternion::SlerpUnclamped(const Quaternion& a, const Quaternion& b, float t)
 {
     float dot = Dot(a, b);
     float sign = 1.0f;

@@ -22,12 +22,9 @@ public:
     };
 
 public:
-    Vector4(const Vector4& v) = default;
-
+    Vector4(const Vector4&) = default;
     explicit Vector4();
-
     explicit Vector4(float x, float y, float z, float w);
-
     explicit Vector4(float xyzw);
 
 public:

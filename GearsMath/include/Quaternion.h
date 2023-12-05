@@ -52,8 +52,8 @@ public:
     static Quaternion Euler(float x, float y, float z);
     static Quaternion Euler(const Vector3& euler);
     static Quaternion Inverse(const Quaternion& q);
-    static Quaternion Serp(const Quaternion& a, const Quaternion& b, float t);
-    static Quaternion SerpUnclamped(const Quaternion& a, const Quaternion& b, float t);
+    static Quaternion Slerp(const Quaternion& a, const Quaternion& b, float t);
+    static Quaternion SlerpUnclamped(const Quaternion& a, const Quaternion& b, float t);
     static Quaternion FromToRotation(const Vector3& fromDirection, const Vector3& toDirection);
     static Quaternion LookRotation(const Vector3& view, const Vector3& up);
     static Quaternion LookRotation(const Vector3& view);
