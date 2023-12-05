@@ -60,16 +60,8 @@ namespace
     static constexpr int PMX_NO_DATA = -1;
 }
 
-bool PmxModel::LoadModel(std::string_view path)
+bool PmxModel::ReadPmxHeader(std::ifstream& pmxFile, PmxHeader& header)
 {
-    // 拡張子が間違っていたら失敗
-    if (GetExt(path) != ".pmx") return false;
-    std::ifstream pmxFile{ path.data(), std::ios::binary };
-    if (pmxFile.fail()) return false;
-
-    // ヘッダ
-    PmxHeader header{};
-
     // マジックナンバー読み込み
     std::array<unsigned char, 4> magicNum{};
     pmxFile.read(reinterpret_cast<char*>(magicNum.data()), 4);
@@ -96,10 +88,15 @@ bool PmxModel::LoadModel(std::string_view path)
         pmxFile.seekg(len, std::ios::cur);
     }
 
-    //頂点の読み込み
+    return true;
+}
+
+bool PmxModel::ReadVertices(std::ifstream& pmxFile, const PmxHeader& header)
+{
+    // 頂点
     int vertexSize{ 0 };
     pmxFile.read(reinterpret_cast<char*>(&vertexSize), 4);
-    vertices.resize(vertexSize);
+    vertices.reserve(vertexSize);
     for (int i = 0; i < vertexSize; i++)
     {
         auto& vertex = vertices.at(i);
@@ -110,7 +107,7 @@ bool PmxModel::LoadModel(std::string_view path)
         auto uvCount = header.Info[0];
         if (uvCount != 0)
         {
-            vertex.additionalUV.resize(uvCount);
+            vertex.additionalUV.reserve(uvCount);
             for (int uv = 0; uv < uvCount; uv++)
             {
                 pmxFile.read(reinterpret_cast<char*>(&vertex.additionalUV[uv]), 16);
@@ -170,11 +167,15 @@ bool PmxModel::LoadModel(std::string_view path)
         pmxFile.seekg(4, std::ios::cur);
         if (vertex.weight.bone1 == PMX_NO_DATA) return false;
     }
+    return true;
+}
 
+bool PmxModel::ReadSurfaces(std::ifstream& pmxFile, const PmxHeader& header)
+{
     // 頂点インデックス
     int surfaceSize{ 0 };
     pmxFile.read(reinterpret_cast<char*>(&surfaceSize), 4);
-    surfaces.resize(surfaceSize);
+    surfaces.reserve(surfaceSize);
 
     for (int i = 0; i < surfaceSize; i++)
     {
@@ -182,22 +183,30 @@ bool PmxModel::LoadModel(std::string_view path)
         pmxFile.read(reinterpret_cast<char*>(&surface.vertexIndex), header.Info[1]);
         if (surface.vertexIndex == PMX_NO_DATA) return false;
     }
+    return true;
+}
 
+bool PmxModel::ReadTextures(std::ifstream& pmxFile, const PmxHeader& header)
+{
     // テクスチャ
     int textureSize{ 0 };
     pmxFile.read(reinterpret_cast<char*>(&textureSize), 4);
-    texturePath.resize(textureSize);
+    texturePath.reserve(textureSize);
     for (int i = 0; i < textureSize; i++)
     {
         auto texPath = ReadTextBuf(pmxFile, header.encode);
         texPath = fs::path{ texPath }.make_preferred().lexically_normal().string();
         texturePath.at(i) = texPath;
     }
+    return true;
+}
 
+bool PmxModel::ReadMaterials(std::ifstream& pmxFile, const PmxHeader& header)
+{
     // マテリアル
     int materialSize{ 0 };
     pmxFile.read(reinterpret_cast<char*>(&materialSize), 4);
-    materials.resize(materialSize);
+    materials.reserve(materialSize);
     for (int i = 0; i < materialSize; i++)
     {
         // 素材名 & 素材名(英名)
@@ -237,12 +246,17 @@ bool PmxModel::LoadModel(std::string_view path)
 
         pmxFile.read(reinterpret_cast<char*>(&material.vertexNum), 4);
     }
+    return false;
+}
 
+bool PmxModel::ReadBones(std::ifstream& pmxFile, const PmxHeader& header)
+{
+    // ボーン
     int boneSize{ 0 };
     int ikLinkSize{ 0 };
     unsigned char angleLimit = 0;
     pmxFile.read(reinterpret_cast<char*>(&boneSize), 4);
-    bones.resize(boneSize);
+    bones.reserve(boneSize);
 
     for (int i = 0; i < boneSize; i++)
     {
@@ -302,7 +316,7 @@ bool PmxModel::LoadModel(std::string_view path)
             pmxFile.read(reinterpret_cast<char*>(&bone.ikLoopCount), 4);
             pmxFile.read(reinterpret_cast<char*>(&bone.ikUnitAngle), 4);
             pmxFile.read(reinterpret_cast<char*>(&ikLinkSize), 4);
-            bone.ikLinks.resize(ikLinkSize);
+            bone.ikLinks.reserve(ikLinkSize);
 
             for (int j = 0; j < ikLinkSize; ++j)
             {
@@ -323,6 +337,23 @@ bool PmxModel::LoadModel(std::string_view path)
         }
     }
     return true;
+}
+
+bool PmxModel::LoadModel(std::string_view path)
+{
+    // 拡張子が間違っていたら失敗
+    if (!GetExt(path).ends_with("pmx")) return false;
+    std::ifstream pmxFile{ path.data(), std::ios::binary };
+    if (pmxFile.fail()) return false;
+
+    PmxHeader header{};
+    if (!ReadPmxHeader(pmxFile, header)) return false;
+
+    return ReadVertices(pmxFile, header) &&
+        ReadSurfaces(pmxFile, header) &&
+        ReadTextures(pmxFile, header) &&
+        ReadMaterials(pmxFile, header) &&
+        ReadBones(pmxFile, header);
 }
 
 bool PmxModel::WriteModel(std::string_view path)

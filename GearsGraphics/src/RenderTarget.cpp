@@ -167,7 +167,7 @@ DXGI_FORMAT Glib::Graphics::RenderTarget::DepthStencilFormat() const
     return depthStencil_ == nullptr ? DXGI_FORMAT_UNKNOWN : depthStencil_->GetDesc().Format;
 }
 
-void Glib::Graphics::RenderTarget::AsTexture() const
+void Glib::Graphics::RenderTarget::AsTexture()
 {
     s_dx12->Barrier(
         renderTarget_.Get(),
@@ -176,7 +176,7 @@ void Glib::Graphics::RenderTarget::AsTexture() const
     );
 }
 
-void Glib::Graphics::RenderTarget::AsRenderTarget() const
+void Glib::Graphics::RenderTarget::AsRenderTarget()
 {
     s_dx12->Barrier(
         renderTarget_.Get(),

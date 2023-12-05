@@ -1,10 +1,27 @@
 #include <GLObject.h>
-#include <GLObjectConstant.h>
 #include <ByteUtility.h>
 #include <fstream>
 #include <filesystem>
 #include <iostream>
 #include <string>
+
+namespace
+{
+    /**
+     * @brief 拡張子
+     */
+    constexpr char GL_OBJECT_EXTENSION[]{ "globj" };
+
+    /**
+     * @brief シグネチャ
+     */
+    constexpr char GL_OBJECT_SIGNATURE[]{ "GLOBJFILE" };
+
+    /**
+     * @brief ファイルバージョン
+     */
+    constexpr auto GL_OBJECT_VERSION{ 1.0f };
+}
 
 Glib::GLObject::GLObject
 (
@@ -30,8 +47,7 @@ bool Glib::GLObject::ReadFile(std::string_view path)
     try
     {
         std::filesystem::path check{ path };
-        auto c = check.extension().generic_string();
-        if (!check.extension().generic_string().ends_with(GL_OBJECT_EXTENSION))
+        if (!check.extension().string().ends_with(GL_OBJECT_EXTENSION))
         {
             throw std::runtime_error{ "mismatch file extension." };
         }

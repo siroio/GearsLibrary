@@ -5,7 +5,6 @@
 
 struct ImVec2;
 struct Vector2;
-struct ID3D12DescriptorHeap;
 
 namespace Glib::Internal::Debug
 {

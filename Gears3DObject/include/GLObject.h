@@ -41,13 +41,16 @@ namespace Glib
             float       diffuse[4];
             float       specular[4];
             float       shininess;
-            char        texture[256];
-            char        normal[256];
+            int         texLength;
+            std::string texture;
+            int         normalLength;
+            std::string normal;
         };
 
         struct Bone
         {
-            char        boneName[256];
+            int         boneNameLength;
+            std::string bonename;
             float       translate[3];
             int         parent;
         };

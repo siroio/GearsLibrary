@@ -1,17 +1,22 @@
 # GearsLibrary用メッシュファイルフォーマット
 
-# int型     4byte
-# float型   4byte
-# stringは固定長 256byte
 # 拡張子 : globj
 
+=====【型情報】==============
+# int型     4byte
+# float型   4byte
+
+# string型 (文字数 * 文字)
+# int * char
+
 # ""で囲まれているのは固定長文字列として扱う
+=============================
 
 ## ファイルヘッダ ##
 
-- シグネチャ          : "GLOBJFILE"
+- シグネチャ          : "GLOBJFILE"  : 9byte
 - バージョン          : int
-- エンディアン情報    : "LE" or "BE"
+- エンディアン情報    : "LE" or "BE" : 2byte
 
 ## 頂点データ ##
     
@@ -20,7 +25,7 @@
 - 頂点座標            : float * 3
 - 法線                : float * 3
 - テクスチャ座標      : float * 2
-- ボーンイデックス    : int * 4
+- ボーンイデックス    : int   * 4
 - ボーンウェイト      : float * 4
 - 接ベクトル          : float * 4
 

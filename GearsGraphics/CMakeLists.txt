@@ -26,6 +26,8 @@ set(SOURCE_FILE
     ./src/Components/Animator.cpp
     ./src/TextureManager.cpp
     ./src/Texture.cpp
+    ./src/AnimationManager.cpp
+    ./src/AnimationClip.cpp
     ./src/SkyboxManager.cpp
     ./src/Skybox.cpp
     ./src/MeshManager.cpp
@@ -77,6 +79,8 @@ set(HEADER_FILE
     ./include/Components/Animator.h
     ./include/TextureManager.h
     ./include/Texture.h
+    ./include/AnimationManager.h
+    ./include/AnimationClip.h
     ./include/SkyboxManager.h
     ./include/Skybox.h
     ./include/Bone.h

@@ -174,6 +174,14 @@ struct PmxMaterial
 
 class PmxModel : public IModel
 {
+private:
+    bool ReadPmxHeader(std::ifstream& pmxFile, PmxHeader& header);
+    bool ReadVertices(std::ifstream& pmxFile, const PmxHeader& header);
+    bool ReadSurfaces(std::ifstream& pmxFile, const PmxHeader& header);
+    bool ReadTextures(std::ifstream& pmxFile, const PmxHeader& header);
+    bool ReadMaterials(std::ifstream& pmxFile, const PmxHeader& header);
+    bool ReadBones(std::ifstream& pmxFile, const PmxHeader& header);
+
 public:
     virtual bool LoadModel(std::string_view path) override;
     virtual bool WriteModel(std::string_view path) override;
