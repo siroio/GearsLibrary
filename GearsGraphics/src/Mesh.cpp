@@ -39,24 +39,24 @@ bool Glib::Mesh::Load(std::string_view path)
 
     for (const auto& subset : object.Subsets())
     {
-        subsets_.emplace_back(subset.indexStart, subset.indecCount, subset.material);
+        subsets_.emplace_back(subset.indexStart, subset.indexCount, subset.material);
     }
 
     const auto paramSize = sizeof(Color) * 3 + sizeof(float);
-    const auto& mat = object.Materials();
-    materials_.resize(mat.size());
-    for (int i = 0; i < mat.size(); i++)
+    const auto& materials = object.Materials();
+    materials_.resize(materials.size());
+    for (int i = 0; i < materials.size(); i++)
     {
         if (!materials_[i].params.Create(paramSize)) return false;
-        materials_[i].params.Update(paramSize, &mat[i]);
-        if (std::strlen(mat[i].texture) != 0)
+        materials_[i].params.Update(paramSize, &materials[i]);
+        if (!materials[i].texture.empty())
         {
-            auto texPath = folderPath.remove_filename().string() + std::string{ mat[i].texture };
+            auto texPath = folderPath.remove_filename().string() + materials[i].texture;
             materials_[i].albedo = s_textureManager.Load(texPath);
         }
-        if (std::strlen(mat[i].normal) != 0)
+        if (!materials[i].normal.empty())
         {
-            auto normalPath = folderPath.remove_filename().string() + std::string{ mat[i].normal };
+            auto normalPath = folderPath.remove_filename().string() + materials[i].normal;
             materials_[i].normal = s_textureManager.Load(normalPath);
         }
     }

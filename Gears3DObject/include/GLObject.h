@@ -31,7 +31,7 @@ namespace Glib
         struct Subset
         {
             int indexStart;
-            int indecCount;
+            int indexCount;
             int material;
         };
 
@@ -41,13 +41,13 @@ namespace Glib
             float       diffuse[4];
             float       specular[4];
             float       shininess;
-            char        texture[256];
-            char        normal[256];
+            std::string texture{ "" };
+            std::string normal{ "" };
         };
 
         struct Bone
         {
-            char        boneName[256];
+            std::string boneName{ "" };
             float       translate[3];
             int         parent;
         };
@@ -116,21 +116,21 @@ namespace Glib
     private:
         // == 各種読み込み用関数 == //
 
-        void ReadHeader(std::ifstream& stream);
-        void ReadVertex(std::ifstream& stream);
-        void ReadIndex(std::ifstream& stream);
-        void ReadSubset(std::ifstream& stream);
-        void ReadMaterial(std::ifstream& stream);
-        void ReadBone(std::ifstream& stream);
+        void ReadHeader(std::ifstream& file);
+        void ReadVertex(std::ifstream& file);
+        void ReadIndex(std::ifstream& file);
+        void ReadSubset(std::ifstream& file);
+        void ReadMaterial(std::ifstream& file);
+        void ReadBone(std::ifstream& file);
 
         // == 各種書き込み用関数 == //
 
-        void WriteHeader(std::ofstream& stream);
-        void WriteVertex(std::ofstream& stream);
-        void WriteIndex(std::ofstream& stream);
-        void WriteSubset(std::ofstream& stream);
-        void WriteMaterial(std::ofstream& stream);
-        void WriteBone(std::ofstream& stream);
+        void WriteHeader(std::ofstream& file);
+        void WriteVertex(std::ofstream& file);
+        void WriteIndex(std::ofstream& file);
+        void WriteSubset(std::ofstream& file);
+        void WriteMaterial(std::ofstream& file);
+        void WriteBone(std::ofstream& file);
 
     private:
         std::string                 signature_{ "" };

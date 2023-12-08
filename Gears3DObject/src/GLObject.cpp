@@ -1,10 +1,29 @@
 #include <GLObject.h>
-#include <GLObjectConstant.h>
-#include <ByteUtility.h>
+#include <Utility/ByteUtility.h>
+#include <Utility/StringUtility.h>
+#include <Utility/IOUtility.h>
 #include <fstream>
 #include <filesystem>
 #include <iostream>
 #include <string>
+
+namespace
+{
+    /**
+     * @brief 拡張子
+     */
+    constexpr char GL_OBJECT_EXTENSION[]{ "globj" };
+
+    /**
+     * @brief シグネチャ
+     */
+    constexpr char GL_OBJECT_SIGNATURE[]{ "GLOBJFILE" };
+
+    /**
+     * @brief ファイルバージョン
+     */
+    constexpr auto GL_OBJECT_VERSION{ 1.0f };
+}
 
 Glib::GLObject::GLObject
 (
@@ -29,9 +48,7 @@ bool Glib::GLObject::ReadFile(std::string_view path)
 
     try
     {
-        std::filesystem::path check{ path };
-        auto c = check.extension().generic_string();
-        if (!check.extension().generic_string().ends_with(GL_OBJECT_EXTENSION))
+        if (!CheckExt(path, GL_OBJECT_EXTENSION))
         {
             throw std::runtime_error{ "mismatch file extension." };
         }
@@ -55,7 +72,7 @@ bool Glib::GLObject::ReadFile(std::string_view path)
     }
     catch (const std::exception& e)
     {
-        puts(e.what());
+        std::cerr << e.what() << std::endl;
         return false;
     }
 }
@@ -66,10 +83,6 @@ bool Glib::GLObject::WriteFile(const std::string& path)
 
     try
     {
-        if (path.length() >= FILENAME_MAX)
-        {
-            throw std::runtime_error{ "file name is too long." };
-        }
         if (!file.is_open())
         {
             throw std::runtime_error{ "failed to open the file." };
@@ -86,7 +99,7 @@ bool Glib::GLObject::WriteFile(const std::string& path)
     }
     catch (const std::exception& e)
     {
-        std::cout << e.what() << std::endl;
+        std::cerr << e.what() << std::endl;
         return false;
     }
 }
@@ -116,11 +129,11 @@ std::vector<Glib::GLObject::Bone>& Glib::GLObject::Bones()
     return bones_;
 }
 
-void Glib::GLObject::ReadHeader(std::ifstream& stream)
+void Glib::GLObject::ReadHeader(std::ifstream& file)
 {
     // ヘッダの読み込み
     Header header{};
-    stream.read(reinterpret_cast<char*>(&header), sizeof(Header));
+    ReadToBinary(file, &header, sizeof(Header));
 
     // シグネチャが正しいか検証
     if (strncmp(header.signature, GL_OBJECT_SIGNATURE, 9) != 0)
@@ -138,11 +151,11 @@ void Glib::GLObject::ReadHeader(std::ifstream& stream)
     std::memcpy(endianInfo_, header.endian, 2);
 }
 
-void Glib::GLObject::ReadVertex(std::ifstream& stream)
+void Glib::GLObject::ReadVertex(std::ifstream& file)
 {
     // 頂点数読み込み
     int vertexCount{ 0 };
-    stream.read(reinterpret_cast<char*>(&vertexCount), sizeof(int));
+    ReadToBinary(file, &vertexCount, sizeof(int));
 
     if (vertexCount <= 0)
     {
@@ -152,7 +165,7 @@ void Glib::GLObject::ReadVertex(std::ifstream& stream)
 
     // 頂点読み込み
     std::vector<Vertex> vertices(vertexCount);
-    stream.read(reinterpret_cast<char*>(vertices.data()), sizeof(Vertex) * vertexCount);
+    ReadToBinary(file, vertices.data(), sizeof(Vertex) * vertexCount);
 
     if (vertices.size() <= 0)
     {
@@ -162,11 +175,11 @@ void Glib::GLObject::ReadVertex(std::ifstream& stream)
     vertices_ = std::move(vertices);
 }
 
-void Glib::GLObject::ReadIndex(std::ifstream& stream)
+void Glib::GLObject::ReadIndex(std::ifstream& file)
 {
     // インデックス数読み込み
     int indexCount{ 0 };
-    stream.read(reinterpret_cast<char*>(&indexCount), sizeof(int));
+    ReadToBinary(file, &indexCount, sizeof(int));
 
     if (indexCount <= 0)
     {
@@ -175,7 +188,7 @@ void Glib::GLObject::ReadIndex(std::ifstream& stream)
 
     // インデックス読み込み
     std::vector<unsigned int> indices(indexCount);
-    stream.read(reinterpret_cast<char*>(indices.data()), sizeof(unsigned int) * indexCount);
+    ReadToBinary(file, indices.data(), sizeof(unsigned int) * indexCount);
 
     if (indices.size() <= 0)
     {
@@ -185,11 +198,11 @@ void Glib::GLObject::ReadIndex(std::ifstream& stream)
     indices_ = std::move(indices);
 }
 
-void Glib::GLObject::ReadSubset(std::ifstream& stream)
+void Glib::GLObject::ReadSubset(std::ifstream& file)
 {
     // サブセット数の読み込み
     int subsetCount{ 0 };
-    stream.read(reinterpret_cast<char*>(&subsetCount), sizeof(int));
+    ReadToBinary(file, &subsetCount, sizeof(int));
 
     if (subsetCount <= 0)
     {
@@ -198,7 +211,7 @@ void Glib::GLObject::ReadSubset(std::ifstream& stream)
 
     // サブセットの読み込み
     std::vector<Subset> subsets(subsetCount);
-    stream.read(reinterpret_cast<char*>(subsets.data()), sizeof(Subset) * subsetCount);
+    ReadToBinary(file, subsets.data(), sizeof(Subset) * subsetCount);
 
     if (subsets.size() <= 0)
     {
@@ -208,11 +221,11 @@ void Glib::GLObject::ReadSubset(std::ifstream& stream)
     subsets_ = std::move(subsets);
 }
 
-void Glib::GLObject::ReadMaterial(std::ifstream& stream)
+void Glib::GLObject::ReadMaterial(std::ifstream& file)
 {
     // マテリアル数の読み込み
     int materialCount{ 0 };
-    stream.read(reinterpret_cast<char*>(&materialCount), sizeof(int));
+    ReadToBinary(file, &materialCount, sizeof(int));
 
     if (materialCount <= 0)
     {
@@ -221,7 +234,15 @@ void Glib::GLObject::ReadMaterial(std::ifstream& stream)
 
     // マテリアルの読み込み
     std::vector<Material> materials(materialCount);
-    stream.read(reinterpret_cast<char*>(materials.data()), sizeof(Material) * materialCount);
+    for (auto& material : materials)
+    {
+        ReadToBinary(file, &material.ambient, sizeof(Material::ambient));
+        ReadToBinary(file, &material.diffuse, sizeof(Material::diffuse));
+        ReadToBinary(file, &material.specular, sizeof(Material::specular));
+        ReadToBinary(file, &material.shininess, sizeof(Material::shininess));
+        ReadText(file, material.texture);
+        ReadText(file, material.normal);
+    }
 
     if (materials.size() <= 0)
     {
@@ -231,11 +252,11 @@ void Glib::GLObject::ReadMaterial(std::ifstream& stream)
     materials_ = std::move(materials);
 }
 
-void Glib::GLObject::ReadBone(std::ifstream& stream)
+void Glib::GLObject::ReadBone(std::ifstream& file)
 {
     // ボーン数の読み込み
     int boneCount{ 0 };
-    stream.read(reinterpret_cast<char*>(&boneCount), sizeof(int));
+    file.read(reinterpret_cast<char*>(&boneCount), sizeof(int));
 
     if (boneCount <= 0)
     {
@@ -244,12 +265,16 @@ void Glib::GLObject::ReadBone(std::ifstream& stream)
 
     // ボーンの読み込み
     std::vector<Bone> bones(boneCount);
-    stream.read(reinterpret_cast<char*>(bones.data()), sizeof(Bone) * boneCount);
-
+    for (auto& bone : bones)
+    {
+        ReadText(file, bone.boneName);
+        ReadToBinary(file, &bone.translate, sizeof(Bone::translate));
+        ReadToBinary(file, &bone.parent, sizeof(Bone::parent));
+    }
     bones_ = std::move(bones);
 }
 
-void Glib::GLObject::WriteHeader(std::ofstream& stream)
+void Glib::GLObject::WriteHeader(std::ofstream& file)
 {
     Header header{};
     if (signature_.empty())
@@ -266,60 +291,73 @@ void Glib::GLObject::WriteHeader(std::ofstream& stream)
         header.version = version_;
         std::memcpy(header.endian, endianInfo_, sizeof(header.endian));
     }
-    stream.write(reinterpret_cast<char*>(&header), sizeof(Header));
+    WriteToBinary(file, &header, sizeof(Header));
 }
 
-void Glib::GLObject::WriteVertex(std::ofstream& stream)
+void Glib::GLObject::WriteVertex(std::ofstream& file)
 {
     int vertexCount = static_cast<int>(vertices_.size());
 
     // 頂点数を書き込み
-    stream.write(reinterpret_cast<char*>(&vertexCount), sizeof(vertexCount));
+    WriteToBinary(file, &vertexCount, sizeof(int));
 
     // 頂点を書き込み
-    stream.write(reinterpret_cast<char*>(vertices_.data()), sizeof(Vertex) * vertexCount);
+    WriteToBinary(file, vertices_.data(), sizeof(Vertex) * vertexCount);
 }
 
-void Glib::GLObject::WriteIndex(std::ofstream& stream)
+void Glib::GLObject::WriteIndex(std::ofstream& file)
 {
     int indexCount = static_cast<int>(indices_.size());
 
     // インデックス数の書き込み
-    stream.write(reinterpret_cast<char*>(&indexCount), sizeof(indexCount));
+    WriteToBinary(file, &indexCount, sizeof(int));
 
     // インデックスの書き込み
-    stream.write(reinterpret_cast<char*>(indices_.data()), sizeof(unsigned int) * indexCount);
+    WriteToBinary(file, indices_.data(), sizeof(unsigned int) * indexCount);
 }
 
-void Glib::GLObject::WriteSubset(std::ofstream& stream)
+void Glib::GLObject::WriteSubset(std::ofstream& file)
 {
     int subsetCount = static_cast<int>(subsets_.size());
 
     // サブセット数の書き込み
-    stream.write(reinterpret_cast<char*>(&subsetCount), sizeof(subsetCount));
+    WriteToBinary(file, &subsetCount, sizeof(int));
 
     // サブセットの書き込み
-    stream.write(reinterpret_cast<char*>(subsets_.data()), sizeof(Subset) * subsetCount);
+    WriteToBinary(file, subsets_.data(), sizeof(Subset) * subsetCount);
 }
 
-void Glib::GLObject::WriteMaterial(std::ofstream& stream)
+void Glib::GLObject::WriteMaterial(std::ofstream& file)
 {
     int materialCount = static_cast<int>(subsets_.size());
 
     // マテリアル数の書き込み
-    stream.write(reinterpret_cast<char*>(&materialCount), sizeof(materialCount));
+    WriteToBinary(file, &materialCount, sizeof(int));
 
     // マテリアルの書き込み
-    stream.write(reinterpret_cast<char*>(materials_.data()), sizeof(Material) * materialCount);
+    for (auto& material : materials_)
+    {
+        WriteToBinary(file, &material.ambient, sizeof(Material::ambient));
+        WriteToBinary(file, &material.diffuse, sizeof(Material::diffuse));
+        WriteToBinary(file, &material.specular, sizeof(Material::specular));
+        WriteToBinary(file, &material.shininess, sizeof(Material::shininess));
+        WriteText(file, material.texture);
+        WriteText(file, material.normal);
+    }
 }
 
-void Glib::GLObject::WriteBone(std::ofstream& stream)
+void Glib::GLObject::WriteBone(std::ofstream& file)
 {
     int boneCount = static_cast<int>(bones_.size());
 
     // ボーン数の書き込み
-    stream.write(reinterpret_cast<char*>(&boneCount), sizeof(boneCount));
+    WriteToBinary(file, &boneCount, sizeof(int));
 
     // ボーンの書き込み
-    stream.write(reinterpret_cast<char*>(bones_.data()), sizeof(Bone) * boneCount);
+    for (auto& bone : bones_)
+    {
+        WriteText(file, bone.boneName);
+        WriteToBinary(file, &bone.translate, sizeof(Bone::translate));
+        WriteToBinary(file, &bone.parent, sizeof(Bone::parent));
+    }
 }

@@ -23,10 +23,11 @@ int main(int argc, char* argv[])
     if (!pmx.LoadModel(inputFile))
     {
         std::cerr << "This file is not supported." << std::endl;
+        return -1;
     }
     if (!pmx.WriteModel(outputFile))
     {
         std::cerr << "Write error." << std::endl;
+        return -1;
     }
-    return 0;
 }

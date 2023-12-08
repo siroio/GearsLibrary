@@ -3,12 +3,15 @@ cmake_minimum_required(VERSION 3.1)
 # == CONFIG ==
 set(SOURCE_FILE
 	./src/GLObject.cpp
+	./src/GLAnimation.cpp
 )
 
 set(HEADER_FILE
 	./include/GLObject.h
-    ./include/GLObjectConstant.h
-	./include/ByteUtility.h
+	./include/GLAnimation.h
+	./include/Utility/ByteUtility.h
+	./include/Utility/StringUtility.h
+	./include/Utility/IOUtility.h
 )
 
 set(LIB_NAME Gears3DObject)

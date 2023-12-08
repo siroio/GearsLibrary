@@ -60,16 +60,8 @@ namespace
     static constexpr int PMX_NO_DATA = -1;
 }
 
-bool PmxModel::LoadModel(std::string_view path)
+bool PmxModel::ReadPmxHeader(std::ifstream& pmxFile, PmxHeader& header)
 {
-    // 拡張子が間違っていたら失敗
-    if (GetExt(path) != ".pmx") return false;
-    std::ifstream pmxFile{ path.data(), std::ios::binary };
-    if (pmxFile.fail()) return false;
-
-    // ヘッダ
-    PmxHeader header{};
-
     // マジックナンバー読み込み
     std::array<unsigned char, 4> magicNum{};
     pmxFile.read(reinterpret_cast<char*>(magicNum.data()), 4);
@@ -96,7 +88,12 @@ bool PmxModel::LoadModel(std::string_view path)
         pmxFile.seekg(len, std::ios::cur);
     }
 
-    //頂点の読み込み
+    return true;
+}
+
+bool PmxModel::ReadVertices(std::ifstream& pmxFile, const PmxHeader& header)
+{
+    // 頂点
     int vertexSize{ 0 };
     pmxFile.read(reinterpret_cast<char*>(&vertexSize), 4);
     vertices.resize(vertexSize);
@@ -170,7 +167,11 @@ bool PmxModel::LoadModel(std::string_view path)
         pmxFile.seekg(4, std::ios::cur);
         if (vertex.weight.bone1 == PMX_NO_DATA) return false;
     }
+    return true;
+}
 
+bool PmxModel::ReadSurfaces(std::ifstream& pmxFile, const PmxHeader& header)
+{
     // 頂点インデックス
     int surfaceSize{ 0 };
     pmxFile.read(reinterpret_cast<char*>(&surfaceSize), 4);
@@ -182,7 +183,11 @@ bool PmxModel::LoadModel(std::string_view path)
         pmxFile.read(reinterpret_cast<char*>(&surface.vertexIndex), header.Info[1]);
         if (surface.vertexIndex == PMX_NO_DATA) return false;
     }
+    return true;
+}
 
+bool PmxModel::ReadTextures(std::ifstream& pmxFile, const PmxHeader& header)
+{
     // テクスチャ
     int textureSize{ 0 };
     pmxFile.read(reinterpret_cast<char*>(&textureSize), 4);
@@ -193,7 +198,11 @@ bool PmxModel::LoadModel(std::string_view path)
         texPath = fs::path{ texPath }.make_preferred().lexically_normal().string();
         texturePath.at(i) = texPath;
     }
+    return true;
+}
 
+bool PmxModel::ReadMaterials(std::ifstream& pmxFile, const PmxHeader& header)
+{
     // マテリアル
     int materialSize{ 0 };
     pmxFile.read(reinterpret_cast<char*>(&materialSize), 4);
@@ -237,7 +246,12 @@ bool PmxModel::LoadModel(std::string_view path)
 
         pmxFile.read(reinterpret_cast<char*>(&material.vertexNum), 4);
     }
+    return true;
+}
 
+bool PmxModel::ReadBones(std::ifstream& pmxFile, const PmxHeader& header)
+{
+    // ボーン
     int boneSize{ 0 };
     int ikLinkSize{ 0 };
     unsigned char angleLimit = 0;
@@ -325,6 +339,23 @@ bool PmxModel::LoadModel(std::string_view path)
     return true;
 }
 
+bool PmxModel::LoadModel(std::string_view path)
+{
+    // 拡張子が間違っていたら失敗
+    if (!GetExt(path).ends_with("pmx")) return false;
+    std::ifstream pmxFile{ path.data(), std::ios::binary };
+    if (pmxFile.fail()) return false;
+
+    PmxHeader header{};
+    if (!ReadPmxHeader(pmxFile, header)) return false;
+    if (!ReadVertices(pmxFile, header)) return false;
+    if (!ReadSurfaces(pmxFile, header)) return false;
+    if (!ReadTextures(pmxFile, header)) return false;
+    if (!ReadMaterials(pmxFile, header)) return false;
+    if (!ReadBones(pmxFile, header)) return false;
+    return true;
+}
+
 bool PmxModel::WriteModel(std::string_view path)
 {
     std::vector<Glib::GLObject::Vertex> glVertices;
@@ -378,7 +409,7 @@ bool PmxModel::WriteModel(std::string_view path)
         auto& mat = materials.at(i);
         gl::Subset subset{};
         subset.indexStart = startIndex;
-        subset.indecCount = mat.vertexNum;
+        subset.indexCount = mat.vertexNum;
         subset.material = i;
         startIndex += mat.vertexNum;
         glSubsets.push_back(subset);
@@ -390,7 +421,7 @@ bool PmxModel::WriteModel(std::string_view path)
         glMat.ambient[0] = mat.ambient.x;
         glMat.ambient[1] = mat.ambient.y;
         glMat.ambient[2] = mat.ambient.z;
-        glMat.ambient[3] = 1;
+        glMat.ambient[3] = 1.0f;
         glMat.diffuse[0] = mat.diffuse.x;
         glMat.diffuse[1] = mat.diffuse.y;
         glMat.diffuse[2] = mat.diffuse.z;
@@ -398,16 +429,11 @@ bool PmxModel::WriteModel(std::string_view path)
         glMat.specular[0] = mat.specular.x;
         glMat.specular[1] = mat.specular.y;
         glMat.specular[2] = mat.specular.z;
-        glMat.specular[3] = 1;
+        glMat.specular[3] = 1.0f;
         glMat.shininess = mat.specularFactor;
-        memset(glMat.texture, 0, sizeof(glMat.texture));
         if (mat.textureIndex != 0xFF)
         {
-            std::string albedo = texturePath.at(mat.textureIndex);
-            for (int i = 0; i < albedo.size(); i++)
-            {
-                glMat.texture[i] = albedo.at(i);
-            }
+            glMat.texture = texturePath.at(mat.textureIndex);
         }
         glMaterials.push_back(glMat);
     }
@@ -415,11 +441,7 @@ bool PmxModel::WriteModel(std::string_view path)
     for (auto& bone : bones)
     {
         gl::Bone glBone{};
-        memset(glBone.boneName, 0, 256);
-        for (int i = 0; i < bone.name.size(); i++)
-        {
-            glBone.boneName[i] = bone.name.at(i);
-        }
+        glBone.boneName = bone.name;
         glBone.parent = bone.parentBoneIndex;
         glBone.translate[0] = bone.position.x;
         glBone.translate[1] = bone.position.y;
