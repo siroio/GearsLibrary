@@ -8,9 +8,9 @@ namespace
 
 bool Glib::AnimationManager::Load(unsigned int id, std::string_view filePath)
 {
-    auto animation = std::make_shared<AnimationClip>();
-    if (animation->Load(filePath)) return false;
-    s_animations.emplace(animation);
+    //auto animation = std::make_shared<AnimationClip>();
+    //if (animation->Load(filePath)) return false;
+    //s_animations.emplace(id, animation);
     return true;
 }
 

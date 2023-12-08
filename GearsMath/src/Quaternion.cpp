@@ -182,7 +182,7 @@ Quaternion Quaternion::RotateTowards(const Quaternion& from, const Quaternion& t
 {
     float angle = Angle(from, to);
     if (angle == 0.0f) return to;
-    return SerpUnclamped(from, to, Mathf::Min(1.0f, maxDegreesDelta / angle));
+    return SlerpUnclamped(from, to, Mathf::Min(1.0f, maxDegreesDelta / angle));
 }
 
 void Quaternion::Set(const Quaternion& q)
@@ -236,7 +236,6 @@ Vector3 Quaternion::EulerAngles() const
         }
         else
         {
-            // Not a unique solution.
             result.x = Mathf::PI / 2.0f;
             result.y = -std::atan2(-ay.x, ax.x);
             result.z = 0.0f;
@@ -244,7 +243,6 @@ Vector3 Quaternion::EulerAngles() const
     }
     else
     {
-        // Not a unique solution.
         result.x = -Mathf::PI / 2.0f;
         result.y = std::atan2(-ay.x, ax.x);
         result.z = 0.0f;

@@ -96,7 +96,7 @@ bool PmxModel::ReadVertices(std::ifstream& pmxFile, const PmxHeader& header)
     // 頂点
     int vertexSize{ 0 };
     pmxFile.read(reinterpret_cast<char*>(&vertexSize), 4);
-    vertices.reserve(vertexSize);
+    vertices.resize(vertexSize);
     for (int i = 0; i < vertexSize; i++)
     {
         auto& vertex = vertices.at(i);
@@ -107,7 +107,7 @@ bool PmxModel::ReadVertices(std::ifstream& pmxFile, const PmxHeader& header)
         auto uvCount = header.Info[0];
         if (uvCount != 0)
         {
-            vertex.additionalUV.reserve(uvCount);
+            vertex.additionalUV.resize(uvCount);
             for (int uv = 0; uv < uvCount; uv++)
             {
                 pmxFile.read(reinterpret_cast<char*>(&vertex.additionalUV[uv]), 16);
@@ -175,7 +175,7 @@ bool PmxModel::ReadSurfaces(std::ifstream& pmxFile, const PmxHeader& header)
     // 頂点インデックス
     int surfaceSize{ 0 };
     pmxFile.read(reinterpret_cast<char*>(&surfaceSize), 4);
-    surfaces.reserve(surfaceSize);
+    surfaces.resize(surfaceSize);
 
     for (int i = 0; i < surfaceSize; i++)
     {
@@ -191,7 +191,7 @@ bool PmxModel::ReadTextures(std::ifstream& pmxFile, const PmxHeader& header)
     // テクスチャ
     int textureSize{ 0 };
     pmxFile.read(reinterpret_cast<char*>(&textureSize), 4);
-    texturePath.reserve(textureSize);
+    texturePath.resize(textureSize);
     for (int i = 0; i < textureSize; i++)
     {
         auto texPath = ReadTextBuf(pmxFile, header.encode);
@@ -206,7 +206,7 @@ bool PmxModel::ReadMaterials(std::ifstream& pmxFile, const PmxHeader& header)
     // マテリアル
     int materialSize{ 0 };
     pmxFile.read(reinterpret_cast<char*>(&materialSize), 4);
-    materials.reserve(materialSize);
+    materials.resize(materialSize);
     for (int i = 0; i < materialSize; i++)
     {
         // 素材名 & 素材名(英名)
@@ -246,7 +246,7 @@ bool PmxModel::ReadMaterials(std::ifstream& pmxFile, const PmxHeader& header)
 
         pmxFile.read(reinterpret_cast<char*>(&material.vertexNum), 4);
     }
-    return false;
+    return true;
 }
 
 bool PmxModel::ReadBones(std::ifstream& pmxFile, const PmxHeader& header)
@@ -256,7 +256,7 @@ bool PmxModel::ReadBones(std::ifstream& pmxFile, const PmxHeader& header)
     int ikLinkSize{ 0 };
     unsigned char angleLimit = 0;
     pmxFile.read(reinterpret_cast<char*>(&boneSize), 4);
-    bones.reserve(boneSize);
+    bones.resize(boneSize);
 
     for (int i = 0; i < boneSize; i++)
     {
@@ -316,7 +316,7 @@ bool PmxModel::ReadBones(std::ifstream& pmxFile, const PmxHeader& header)
             pmxFile.read(reinterpret_cast<char*>(&bone.ikLoopCount), 4);
             pmxFile.read(reinterpret_cast<char*>(&bone.ikUnitAngle), 4);
             pmxFile.read(reinterpret_cast<char*>(&ikLinkSize), 4);
-            bone.ikLinks.reserve(ikLinkSize);
+            bone.ikLinks.resize(ikLinkSize);
 
             for (int j = 0; j < ikLinkSize; ++j)
             {
@@ -348,12 +348,12 @@ bool PmxModel::LoadModel(std::string_view path)
 
     PmxHeader header{};
     if (!ReadPmxHeader(pmxFile, header)) return false;
-
-    return ReadVertices(pmxFile, header) &&
-        ReadSurfaces(pmxFile, header) &&
-        ReadTextures(pmxFile, header) &&
-        ReadMaterials(pmxFile, header) &&
-        ReadBones(pmxFile, header);
+    if (!ReadVertices(pmxFile, header)) return false;
+    if (!ReadSurfaces(pmxFile, header)) return false;
+    if (!ReadTextures(pmxFile, header)) return false;
+    if (!ReadMaterials(pmxFile, header)) return false;
+    if (!ReadBones(pmxFile, header)) return false;
+    return true;
 }
 
 bool PmxModel::WriteModel(std::string_view path)
@@ -409,7 +409,7 @@ bool PmxModel::WriteModel(std::string_view path)
         auto& mat = materials.at(i);
         gl::Subset subset{};
         subset.indexStart = startIndex;
-        subset.indecCount = mat.vertexNum;
+        subset.indexCount = mat.vertexNum;
         subset.material = i;
         startIndex += mat.vertexNum;
         glSubsets.push_back(subset);
@@ -421,7 +421,7 @@ bool PmxModel::WriteModel(std::string_view path)
         glMat.ambient[0] = mat.ambient.x;
         glMat.ambient[1] = mat.ambient.y;
         glMat.ambient[2] = mat.ambient.z;
-        glMat.ambient[3] = 1;
+        glMat.ambient[3] = 1.0f;
         glMat.diffuse[0] = mat.diffuse.x;
         glMat.diffuse[1] = mat.diffuse.y;
         glMat.diffuse[2] = mat.diffuse.z;
@@ -429,16 +429,11 @@ bool PmxModel::WriteModel(std::string_view path)
         glMat.specular[0] = mat.specular.x;
         glMat.specular[1] = mat.specular.y;
         glMat.specular[2] = mat.specular.z;
-        glMat.specular[3] = 1;
+        glMat.specular[3] = 1.0f;
         glMat.shininess = mat.specularFactor;
-        memset(glMat.texture, 0, sizeof(glMat.texture));
         if (mat.textureIndex != 0xFF)
         {
-            std::string albedo = texturePath.at(mat.textureIndex);
-            for (int i = 0; i < albedo.size(); i++)
-            {
-                glMat.texture[i] = albedo.at(i);
-            }
+            glMat.texture = texturePath.at(mat.textureIndex);
         }
         glMaterials.push_back(glMat);
     }
@@ -446,11 +441,7 @@ bool PmxModel::WriteModel(std::string_view path)
     for (auto& bone : bones)
     {
         gl::Bone glBone{};
-        memset(glBone.boneName, 0, 256);
-        for (int i = 0; i < bone.name.size(); i++)
-        {
-            glBone.boneName[i] = bone.name.at(i);
-        }
+        glBone.boneName = bone.name;
         glBone.parent = bone.parentBoneIndex;
         glBone.translate[0] = bone.position.x;
         glBone.translate[1] = bone.position.y;

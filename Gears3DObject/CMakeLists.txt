@@ -9,7 +9,9 @@ set(SOURCE_FILE
 set(HEADER_FILE
 	./include/GLObject.h
 	./include/GLAnimation.h
-	./include/ByteUtility.h
+	./include/Utility/ByteUtility.h
+	./include/Utility/StringUtility.h
+	./include/Utility/IOUtility.h
 )
 
 set(LIB_NAME Gears3DObject)
