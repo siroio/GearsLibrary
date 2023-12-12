@@ -70,12 +70,12 @@ namespace Glib::Graphics
         /**
          * @brief テクスチャとして利用
         */
-        void AsTexture() const;
+        void AsTexture();
 
         /**
          * @brief レンダーターゲットとして利用
         */
-        void AsRenderTarget() const;
+        void AsRenderTarget();
 
     private:
         bool CreateRenderTargetBuffer(DXGI_FORMAT format);
