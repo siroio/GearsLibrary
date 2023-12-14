@@ -27,16 +27,16 @@ namespace Glib::Internal
         /**
          * @brief ボーンの取得
          */
-        virtual const std::vector<Bone>& Bones() const;
+        virtual const std::vector<Bone>& Bones() const = 0;
 
         /**
          * @brief ボーンのトランスフォームを取得
          */
-        virtual const std::vector<WeakPtr<Transform>>& BoneTransforms() const;
+        virtual const std::vector<WeakPtr<Transform>>& BoneTransforms() const = 0;
 
         /**
          * @brief ボーンの行列を取得
          */
-        virtual std::array<Matrix4x4, 128>& BoneMatrix();
+        virtual std::array<Matrix4x4, 512>& BoneMatrix() = 0;
     };
 }

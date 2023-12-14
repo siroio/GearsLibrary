@@ -35,8 +35,8 @@ bool Glib::Internal::Graphics::GraphicsResource::Initialize()
     if (!CreateLinePipelineState()) return false;
     if (!CreateMeshPipelineState()) return false;
     if (!CreateMeshShadowPipelineState()) return false;
-    //if (!CreateSkinnedMeshPipelineState()) return false;
-    //if (!CreateSkinnedMeshShadowPipelineState()) return false;
+    if (!CreateSkinnedMeshPipelineState()) return false;
+    if (!CreateSkinnedMeshShadowPipelineState()) return false;
 
     if (!CreateWhiteTexture()) return false;
     if (!CreateMagentaTexture()) return false;
@@ -243,6 +243,8 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateSpritePipelineState()
     if (!s_pipelines[ID::SPRITE_PIPELINESTATE].CreateRootSignature(rootSigDesc)) return false;
     auto pipelineDesc = GraphicsPipeline::CreateDefaultPipelineDesc();
     pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE; //　カリングなし
+    pipelineDesc.BlendState.RenderTarget[0] = BlendDesc::Create(BlendState::Alpha);
+    pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_EQUAL;
     pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
     pipelineDesc.InputLayout.NumElements = static_cast<UINT>(std::size(inputLayout));
     pipelineDesc.DepthStencilState.DepthEnable = true;
@@ -343,8 +345,8 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateMeshPipelineState()
         InputLayout::POSITION_3D,
         InputLayout::NORMAL,
         InputLayout::TEXCOORD,
-        InputLayout::BONE_NO,
-        InputLayout::BONE_WEIGHT,
+        InputLayout::BONEINDEX,
+        InputLayout::BONEWEIGHT,
         InputLayout::TANGENT,
     };
 
@@ -362,6 +364,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateMeshPipelineState()
     {
         rootParams[i].InitAsDescriptorTable(1, &range[i]);
     }
+
     CD3DX12_STATIC_SAMPLER_DESC sampler[2]{};
     sampler[0].Init(0);
     sampler[1].Init(1, D3D12_FILTER_MIN_MAG_MIP_LINEAR,
@@ -397,8 +400,8 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateMeshShadowPipelineState()
         InputLayout::POSITION_3D,
         InputLayout::NORMAL,
         InputLayout::TEXCOORD,
-        InputLayout::BONE_NO,
-        InputLayout::BONE_WEIGHT
+        InputLayout::BONEINDEX,
+        InputLayout::BONEWEIGHT
     };
 
     CD3DX12_DESCRIPTOR_RANGE range[2]{};
@@ -436,8 +439,8 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateSkinnedMeshPipelineState(
         InputLayout::POSITION_3D,
         InputLayout::NORMAL,
         InputLayout::TEXCOORD,
-        InputLayout::BONE_NO,
-        InputLayout::BONE_WEIGHT,
+        InputLayout::BONEINDEX,
+        InputLayout::BONEWEIGHT,
         InputLayout::TANGENT
     };
 
@@ -459,7 +462,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateSkinnedMeshPipelineState(
 
     CD3DX12_STATIC_SAMPLER_DESC sampler[2]{};
     sampler[0].Init(0);
-    sampler[0].Init(1, D3D12_FILTER_MIN_MAG_MIP_LINEAR,
+    sampler[1].Init(1, D3D12_FILTER_MIN_MAG_MIP_LINEAR,
                     D3D12_TEXTURE_ADDRESS_MODE_BORDER,
                     D3D12_TEXTURE_ADDRESS_MODE_BORDER,
                     D3D12_TEXTURE_ADDRESS_MODE_BORDER);
@@ -471,16 +474,16 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateSkinnedMeshPipelineState(
     rootSigDesc.pParameters = rootParams;
     rootSigDesc.pStaticSamplers = sampler;
 
-    if (!s_pipelines[ID::MESH_SHADOW_PIPELINESTATE].CreateRootSignature(rootSigDesc)) return false;
+    if (!s_pipelines[ID::SKINNED_MESH_PIPELINESTATE].CreateRootSignature(rootSigDesc)) return false;
 
     auto pipelineDesc = GraphicsPipeline::CreateDefaultPipelineDesc();
     pipelineDesc.InputLayout.NumElements = static_cast<UINT32>(std::size(inputLayout));
     pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
 
-    s_shader->SetVertexShader(ID::MESH_SHADOW_SHADER, pipelineDesc);
-    s_shader->SetPixelShader(ID::MESH_SHADOW_SHADER, pipelineDesc);
+    s_shader->SetVertexShader(ID::SKINNED_MESH_SHADER, pipelineDesc);
+    s_shader->SetPixelShader(ID::SKINNED_MESH_SHADER, pipelineDesc);
 
-    return s_pipelines.at(ID::MESH_SHADOW_PIPELINESTATE).CreatePipelineState(pipelineDesc);
+    return s_pipelines.at(ID::SKINNED_MESH_PIPELINESTATE).CreatePipelineState(pipelineDesc);
 }
 
 bool Glib::Internal::Graphics::GraphicsResource::CreateSkinnedMeshShadowPipelineState()
@@ -490,14 +493,14 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateSkinnedMeshShadowPipeline
         InputLayout::POSITION_3D,
         InputLayout::NORMAL,
         InputLayout::TEXCOORD,
-        InputLayout::BONE_NO,
-        InputLayout::BONE_WEIGHT
+        InputLayout::BONEINDEX,
+        InputLayout::BONEWEIGHT
     };
 
     CD3DX12_DESCRIPTOR_RANGE range[3]{};
     range[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
     range[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 1);
-    range[2].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 2);
+    range[2].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 3);
 
     CD3DX12_ROOT_PARAMETER rootParams[3]{};
     rootParams[0].InitAsDescriptorTable(1, &range[0]);
@@ -518,8 +521,8 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateSkinnedMeshShadowPipeline
     pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R32G32_FLOAT;
 
     // シェーダーのセット
-    s_shader->SetVertexShader(ID::MESH_SHADOW_SHADER, pipelineDesc);
-    s_shader->SetPixelShader(ID::MESH_SHADOW_SHADER, pipelineDesc);
+    s_shader->SetVertexShader(ID::SKINNED_MESH_SHADOW_SHADER, pipelineDesc);
+    s_shader->SetPixelShader(ID::SKINNED_MESH_SHADOW_SHADER, pipelineDesc);
 
     return s_pipelines.at(ID::SKINNED_MESH_SHADOW_PIPELINESTATE).CreatePipelineState(pipelineDesc);
 }

@@ -343,7 +343,7 @@ void Glib::Camera::SetDepthStencil()
 
 void Glib::Camera::SetShadowMap(unsigned int rootParamIndex)
 {
-    //shadowMapBlur.SetTexture(rootParamIndex);
+    shadowMapBlur.SetTexture(rootParamIndex);
 }
 
 void Glib::Camera::ExecuteShadowBulr()

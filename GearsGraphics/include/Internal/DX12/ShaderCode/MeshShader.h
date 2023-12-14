@@ -16,7 +16,7 @@ namespace Glib::Internal::Graphics::ShaderCode
             float4x4 World;
         };
 
-        cbuffer Material : register(b2)
+        cbuffer MaterialConstant : register(b2)
         {
             float4 MatAmbient;
             float4 MatDiffuse;
@@ -25,7 +25,7 @@ namespace Glib::Internal::Graphics::ShaderCode
             float3 MatPadding;
         };
 
-        cbuffer DirectionalLight : register(b4)
+        cbuffer LightConstant : register(b4)
         {
             float4 LightAmbient;
             float4 LightDiffuse;
@@ -46,8 +46,8 @@ namespace Glib::Internal::Graphics::ShaderCode
             float4 position : POSITION;
             float3 normal : NORMAL;
             float2 uv : TEXCOORD;
-            int4 bones : BONE_NO;
-            float4 weight : BONE_WEIGHT;
+            int4 bones : BONEINDEX;
+            float4 weight : BONEWEIGHT;
             float4 tangent : TANGENT;
         };
 
@@ -68,15 +68,14 @@ namespace Glib::Internal::Graphics::ShaderCode
         {
             float4 worldPosition = mul(World, input.position);
             float4 viewPosition = mul(View, worldPosition);
-            float3 normal = normalize(mul((float3x3)World, input.normal));
             VSOutput o;
             o.position = mul(Projection, viewPosition);
             o.view = viewPosition.xyz;
             o.light = mul(LightVP, worldPosition);
-            o.normal = normal;
+            o.normal = normalize(mul(World, float4(input.normal, 0.0f)).xyz);
             o.uv = input.uv;
-            o.tangent = normalize(mul((float3x3)World, input.tangent.xyz));
-            o.binormal = cross(normal, o.tangent) * input.tangent.w;
+            o.tangent = normalize(mul(World, float4(input.tangent.xyz, 0.0f)));
+            o.binormal = cross(o.tangent.xyz, o.normal) * input.tangent.w;
             return o;
         }
 
@@ -87,9 +86,9 @@ namespace Glib::Internal::Graphics::ShaderCode
 
         float4 PSmain(PSInput input) : SV_TARGET
         {
-            float3 normal = normalTexture.Sample(albedoSampler, input.uv).xyz * 2.0f - 1.0f;
+            float3 normal = normalTexture.Sample(albedoSampler, input.uv) * 2.0f - 1.0f;
             
-            float3 N = normalize(input.tangent   * normal.x
+            float3 N = normalize( input.tangent  * normal.x
                                 + input.binormal * normal.y
                                 + input.normal   * normal.z);
 
@@ -131,11 +130,11 @@ namespace Glib::Internal::Graphics::ShaderCode
             }
 
             float4 ambient  = MatAmbient * LightAmbient;
-            float4 diffuse  = LightDiffuse * MatDiffuse * max(dot(N, L), 0.0f) * visibility;
-            float4 speculer = LightSpeculer * MatSpeculer * pow(max(dot(N, H), 0.0f), MatShininess) * visibility;
+            float4 diffuse  = LightDiffuse * MatDiffuse * max(dot(N, L), 0.0f);
+            float4 speculer = LightSpeculer * MatSpeculer * pow(max(dot(N, H), 0.0f), MatShininess);
             float4 baseColor = albedoTexture.Sample(albedoSampler, input.uv);
             float4 color = (ambient + diffuse) * baseColor + speculer;
-            return baseColor;
+            return (color.rgb, baseColor.a);
         })"
     };
 
@@ -158,8 +157,8 @@ namespace Glib::Internal::Graphics::ShaderCode
             float4 position : POSITION;
             float3 normal : NORMAL;
             float2 uv : TEXCOORD;
-            int4 bones : BONE_NO;
-            float4 weight : BONE_WEIGHT;
+            int4 bones : BONEINDEX;
+            float4 weight : BONEWEIGHT;
         };
 
         struct VSOutput

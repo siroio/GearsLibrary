@@ -38,12 +38,13 @@ D3D12_GRAPHICS_PIPELINE_STATE_DESC Glib::Internal::Graphics::GraphicsPipeline::C
 bool Glib::Internal::Graphics::GraphicsPipeline::CreateRootSignature(const D3D12_ROOT_SIGNATURE_DESC& desc)
 {
     ComPtr<ID3DBlob> signature{ nullptr };
-    if (FAILED(D3D12SerializeRootSignature(
+    auto hr = D3D12SerializeRootSignature(
         &desc,
-        D3D_ROOT_SIGNATURE_VERSION_1,
+        D3D_ROOT_SIGNATURE_VERSION_1_0,
         signature.ReleaseAndGetAddressOf(),
         nullptr
-        ))) return false;
+    );
+    if (FAILED(hr)) return false;
 
     if (FAILED(s_dx12->Device()->CreateRootSignature(
         0,

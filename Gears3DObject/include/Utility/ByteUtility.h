@@ -1,26 +1,20 @@
 #pragma once
+#include <bit>
+#include <cstdint>
 #include <algorithm>
 #include <string>
+#include <array>
 
 namespace Glib
 {
-    inline void ByteSwap16(unsigned char* bytes) noexcept
+    template<std::integral T>
+    constexpr T byteswap(T value) noexcept
     {
-        std::swap(bytes[0], bytes[1]);
-    }
-
-    inline void ByteSwap32(unsigned char* bytes) noexcept
-    {
-        std::swap(bytes[0], bytes[3]);
-        std::swap(bytes[1], bytes[2]);
-    }
-
-    inline void ByteSwap64(unsigned char* bytes) noexcept
-    {
-        std::swap(bytes[0], bytes[7]);
-        std::swap(bytes[1], bytes[6]);
-        std::swap(bytes[2], bytes[5]);
-        std::swap(bytes[3], bytes[4]);
+        static_assert(std::has_unique_object_representations_v<T>,
+                      "T may not have padding bits");
+        auto value_representation = std::bit_cast<std::array<std::byte, sizeof(T)>>(value);
+        std::ranges::reverse(value_representation);
+        return std::bit_cast<T>(value_representation);
     }
 
     /**
@@ -28,9 +22,15 @@ namespace Glib
      * @return リトルエンディアン : LE
      * @return ビッグエンディアン : BE
      */
-    inline std::string CheckEndian()
+    inline std::string GetEndian()
     {
-        int check = 1;
-        return *reinterpret_cast<char*>(&check) == 1 ? "LE" : "BE";
+        if (std::endian::native == std::endian::little)
+        {
+            return "LE";
+        }
+        else if (std::endian::native == std::endian::big)
+        {
+            return "BE";
+        }
     }
 }

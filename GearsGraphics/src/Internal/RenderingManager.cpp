@@ -52,15 +52,15 @@ void Glib::Internal::Graphics::RenderingManager::Update()
     buffer.specular = s_specular;
     buffer.direction = s_direction;
     buffer.shadowBias = s_shadowBias;
-    s_constantBuffer.Update(sizeof(buffer), &buffer);
+    s_constantBuffer.Update(sizeof(DirectionalLightConstant), &buffer);
 }
 
 void Glib::Internal::Graphics::RenderingManager::Draw()
 {
-    // 無効なコンポーネントをリストから削除
-    for (auto& component : renderers_ | std::ranges::views::values)
+    // 無効なレンダラーをリストから削除
+    for (auto& renderer : renderers_ | std::ranges::views::values)
     {
-        component.remove_if([](const auto& info)
+        renderer.remove_if([](const auto& info)
         {
             return info.function->IsDelete();
         });
@@ -71,7 +71,7 @@ void Glib::Internal::Graphics::RenderingManager::Draw()
     {
         if (!camera->Active()) continue;
 
-        //// シャドウマップ描画
+        // シャドウマップ描画
         //camera->SetDepthStencil();
         //for (const auto& info : renderers_[DrawType::Shadow])
         //{

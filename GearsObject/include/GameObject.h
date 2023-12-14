@@ -179,7 +179,7 @@ inline Glib::WeakPtr<T> GameObject::GetComponent() const
 {
     for (const auto& component : components_)
     {
-        if (typeid(T) != typeid(*(component.get()))) continue;
+        if (typeid(T) != typeid(*component.get())) continue;
         return Glib::WeakPtr<T>(std::dynamic_pointer_cast<T>(component));
     }
 

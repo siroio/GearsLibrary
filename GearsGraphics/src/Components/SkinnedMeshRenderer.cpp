@@ -5,6 +5,7 @@
 #include <GameObjectManager.h>
 #include <GameObject.h>
 #include <MeshManager.h>
+#include <Mathf.h>
 
 using namespace Glib::Internal::Graphics;
 
@@ -19,6 +20,7 @@ Glib::SkinnedMeshRenderer::SkinnedMeshRenderer()
 {
     worldConstantBuffer_.Create(sizeof(Matrix4x4));
     boneConstantBuffer_.Create(sizeof(Matrix4x4) * boneMatrix_.size());
+    boneMatrix_.fill(Matrix4x4::Identity());
 }
 
 void Glib::SkinnedMeshRenderer::Start()
@@ -38,7 +40,7 @@ void Glib::SkinnedMeshRenderer::LateUpdate()
     );
     worldConstantBuffer_.Update(sizeof(Matrix4x4), &worldMatrix);
     ComputeBone();
-    boneConstantBuffer_.Update(sizeof(Matrix4x4) * boneMatrix_.size(), boneMatrix_.data());
+    boneConstantBuffer_.Update(static_cast<UINT>(sizeof(Matrix4x4) * boneMatrix_.size()), boneMatrix_.data());
 }
 
 void Glib::SkinnedMeshRenderer::Draw(const WeakPtr<Internal::CameraBase>& camera)
@@ -79,10 +81,12 @@ void Glib::SkinnedMeshRenderer::MeshID(unsigned int id)
 
 void Glib::SkinnedMeshRenderer::ComputeBone()
 {
-    for (int i = 1; i < bones_.size(); i++)
+    auto boneSize = Mathf::Min(512, static_cast<int>(bones_.size()));
+    for (int i = 1; i < boneSize; i++)
     {
-        auto& parentIdx = bones_.at(i).parent;
-        boneMatrix_.at(i) *= boneMatrix_.at(parentIdx);
+        int parent = bones_.at(i).parent;
+        if (parent == -1) continue;
+        boneMatrix_.at(i) *= boneMatrix_.at(parent);
     }
 }
 
@@ -96,6 +100,7 @@ void Glib::SkinnedMeshRenderer::CreateBoneGameObject()
     {
         bone->GameObject()->Destroy();
     }
+    boneTransforms_.clear();
 
     // É{Å[ÉìÇê∂ê¨
     boneTransforms_.resize(bones_.size());
@@ -124,7 +129,7 @@ const std::vector<Glib::WeakPtr<Glib::Transform>>& Glib::SkinnedMeshRenderer::Bo
     return boneTransforms_;
 }
 
-std::array<Matrix4x4, 128>& Glib::SkinnedMeshRenderer::BoneMatrix()
+std::array<Matrix4x4, 512>& Glib::SkinnedMeshRenderer::BoneMatrix()
 {
     return boneMatrix_;
 }

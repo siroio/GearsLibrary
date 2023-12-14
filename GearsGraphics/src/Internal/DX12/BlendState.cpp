@@ -8,14 +8,14 @@ D3D12_RENDER_TARGET_BLEND_DESC Glib::Internal::Graphics::BlendDesc::Create(Blend
     {
         default:
         case BlendState::Default:
-            blendDesc.BlendEnable = false;
+            blendDesc.BlendEnable = true;
             blendDesc.LogicOpEnable = false;
             blendDesc.BlendOp = D3D12_BLEND_OP_ADD;
-            blendDesc.SrcBlend = D3D12_BLEND_ONE;
-            blendDesc.DestBlend = D3D12_BLEND_ZERO;
+            blendDesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+            blendDesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
             blendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
             blendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
-            blendDesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+            blendDesc.DestBlendAlpha = D3D12_BLEND_ONE;
             blendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
             return blendDesc;
         case BlendState::Alpha:
@@ -23,7 +23,7 @@ D3D12_RENDER_TARGET_BLEND_DESC Glib::Internal::Graphics::BlendDesc::Create(Blend
             blendDesc.LogicOpEnable = false;
             blendDesc.BlendOp = D3D12_BLEND_OP_ADD;
             blendDesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
-            blendDesc.DestBlend = D3D12_BLEND_DEST_ALPHA;
+            blendDesc.DestBlend = D3D12_BLEND_ONE;
             blendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
             blendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
             blendDesc.DestBlendAlpha = D3D12_BLEND_INV_SRC_ALPHA;

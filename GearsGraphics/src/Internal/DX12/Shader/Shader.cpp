@@ -54,7 +54,7 @@ std::string Glib::Graphics::Shader::ShaderModel() const
     {
         case ShaderType::VERTEX:  return "vs_5_0";
         case ShaderType::PIXEL:   return "ps_5_0";
-        default:                        return "";
+        default:                  return "";
     }
 }
 

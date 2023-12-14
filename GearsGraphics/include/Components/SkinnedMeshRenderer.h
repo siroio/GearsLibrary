@@ -56,11 +56,11 @@ namespace Glib
         /**
          * @brief ƒ{[ƒ“‚Ìs—ñ‚ğæ“¾
          */
-        virtual std::array<Matrix4x4, 128>& BoneMatrix() override;
+        virtual std::array<Matrix4x4, 512>& BoneMatrix() override;
 
     private:
         WeakPtr<Transform> transform_;
-        std::array<Matrix4x4, 128> boneMatrix_;
+        std::array<Matrix4x4, 512> boneMatrix_;
         std::vector<Bone> bones_;
         std::vector<WeakPtr<Transform>> boneTransforms_;
         Internal::Graphics::ConstantBuffer worldConstantBuffer_;

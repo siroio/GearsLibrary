@@ -1,6 +1,7 @@
 #include <GLAnimation.h>
 #include <filesystem>
 #include <fstream>
+#include <Utility/StringUtility.h>
 
 namespace
 {
@@ -26,7 +27,7 @@ Glib::GLAnimation::GLAnimation(const BoneInfo& boneInfo, const MotionInfo& motio
 
 bool Glib::GLAnimation::ReadFile(std::string_view path)
 {
-    std::filesystem::path{ path }.extension().string().ends_with(GL_OBJECT_EXTENSION);
+    if (!CheckExt(path, GL_OBJECT_EXTENSION)) return false;
     std::ofstream file{ path.data(), std::ios::binary };
     return false;
 }

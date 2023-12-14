@@ -72,9 +72,9 @@ namespace Glib::Internal::Graphics::InputLayout
     /**
      * @brief ボーンインデックス
      */
-    constexpr D3D12_INPUT_ELEMENT_DESC BONE_NO
+    constexpr D3D12_INPUT_ELEMENT_DESC BONEINDEX
     {
-        "BONE_NO", 0,
+        "BONEINDEX", 0,
         DXGI_FORMAT_R32G32B32A32_SINT, 0,
         D3D12_APPEND_ALIGNED_ELEMENT,
         D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
@@ -83,9 +83,9 @@ namespace Glib::Internal::Graphics::InputLayout
     /**
      * @brief ボーンウェイト
      */
-    constexpr D3D12_INPUT_ELEMENT_DESC BONE_WEIGHT
+    constexpr D3D12_INPUT_ELEMENT_DESC BONEWEIGHT
     {
-        "BONE_WEIGHT", 0,
+        "BONEWEIGHT", 0,
         DXGI_FORMAT_R32G32B32A32_FLOAT, 0,
         D3D12_APPEND_ALIGNED_ELEMENT,
         D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0

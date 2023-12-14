@@ -1,10 +1,11 @@
 #include <string>
 #include <mmd/PmxObject.h>
 #include <iostream>
+#include <filesystem>
 
 int main(int argc, char* argv[])
 {
-    if (argc != 2)
+    if (argc != 3)
     {
         std::cerr << "Usage: " << " <input_file> <output_file>" << std::endl;
     }
@@ -17,8 +18,6 @@ int main(int argc, char* argv[])
     auto outputFile = std::string{ argv[2] };
 #endif // DEBUG_ | DEBUG
 
-
-
     PmxModel pmx = PmxModel{};
     if (!pmx.LoadModel(inputFile))
     {
@@ -30,4 +29,9 @@ int main(int argc, char* argv[])
         std::cerr << "Write error." << std::endl;
         return -1;
     }
+
+    auto path = std::filesystem::path{ outputFile }.lexically_normal();
+    path = path.is_absolute() ? path : std::filesystem::absolute(path);
+    std::cout << "Output => " << path.remove_filename().string() << std::endl;
+
 }

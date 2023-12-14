@@ -1,5 +1,6 @@
 // テスト用実行cpp
 #include <iostream>
+#include <Glib.h>
 #include <Game.h>
 #include <GameTimer.h>
 #include <Scene.h>
@@ -14,7 +15,9 @@
 #include <Components/Camera.h>
 #include <Components/Canvas.h>
 #include <Components/Image.h>
+#include <Components/SpriteRenderer.h>
 #include <Components/MeshRenderer.h>
+#include <Components/SkinnedMeshRenderer.h>
 #include <Window.h>
 #include <InputSystem.h>
 #include <GLObject.h>
@@ -27,7 +30,7 @@ class TestMover : public Component
 public:
     void Start()
     {
-        Debug::Log("Enable TestComponent");
+        Debug::Log("Enable " + Glib::nameof<TestMover>());
     }
 
     void Update()
@@ -79,9 +82,9 @@ class TestScene : public Glib::Scene
 public:
     void Start() override
     {
-        if (!MeshManager::Instance().Load(0, "C:/Users/rukar/Desktop/MikuMikuDance_v932x64/初音ミクif v11/初音ミクif.globj"))
+        if (!Glib::MeshManager::Instance().Load(0, R"(C:\Users\rukar\Desktop\MMD\MMDモデル\Appearance Miku\Appearance Miku.globj)"))
         {
-            Debug::Error("ロード失敗");
+            return;
         }
 
         auto light = Internal::Graphics::RenderingManager::Instance();
@@ -91,7 +94,7 @@ public:
         light->LightDirection(Vector3{ 0.0f, -1.0f, 0.0f });
 
         auto mesh = GameObjectManager::Instantiate("Mesh");
-        auto renderer = mesh->AddComponent<MeshRenderer>();
+        auto renderer = mesh->AddComponent<SkinnedMeshRenderer>();
 
         mesh->AddComponent<TestMover>();
         renderer->MeshID(0);

@@ -5,8 +5,13 @@
 #include <Windows.h>
 #include <GLObject.h>
 
-
 namespace fs = std::filesystem;
+
+namespace
+{
+    static constexpr std::array<unsigned char, 4> PMX_MAGIC_NUMBER{ 0x50, 0x4d, 0x58, 0x20 };
+    static constexpr int PMX_NO_DATA = -1;
+}
 
 namespace
 {
@@ -16,13 +21,7 @@ namespace
         return fs::path{ file }.extension().string();
     }
 
-    // ƒtƒHƒ‹ƒ_‚ðŽæ“¾
-    std::string GetFolder(std::string_view file)
-    {
-        return fs::path{ file }.relative_path().string();
-    }
-
-    std::string ReadTextBuf(std::ifstream& file, EncodeType encode)
+    std::string ReadTextBuf(std::ifstream& file, const EncodeType& encode)
     {
         int bufLength{ 0 };
         file.read(reinterpret_cast<char*>(&bufLength), 4);
@@ -55,9 +54,6 @@ namespace
     {
         return ((unsigned int)bone.flag & (unsigned int)flag) != 0;
     }
-
-    static constexpr std::array<unsigned char, 4> PMX_MAGIC_NUMBER{ 0x50, 0x4d, 0x58, 0x20 };
-    static constexpr int PMX_NO_DATA = -1;
 }
 
 bool PmxModel::ReadPmxHeader(std::ifstream& pmxFile, PmxHeader& header)
