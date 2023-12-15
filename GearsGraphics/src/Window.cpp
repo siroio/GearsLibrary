@@ -1,25 +1,25 @@
 ﻿#include <Window.h>
 #include <Vector2.h>
-#include <unordered_set>
+#include <unordered_map>
 #include <Internal/DX12/DirectX12.h>
 
 namespace
 {
-    WNDCLASSEX s_windowClass_;
-    HINSTANCE s_hInstance_;
-    HWND s_windowHandle_;
-    std::unordered_set<Glib::WndProc> s_windowProcedures;
-    std::string s_windowName_{ "GameWindow" };
-    Vector2 s_windowSize_{ 1240.0f, 720.0f };
-    Vector2 s_windowDebugSize_{ 1240.0f, 720.0f };
+    WNDCLASSEX s_windowClass;
+    HINSTANCE s_hInstance;
+    HWND s_windowHandle;
+    std::unordered_map<int, Glib::WindowProcedure> s_windowProcedures;
+    std::string s_windowName{ "GameWindow" };
+    Vector2 s_windowSize{ 1240.0f, 720.0f };
+    Vector2 s_windowDebugSize{ 1240.0f, 720.0f };
     bool s_isFullScreen{ false };
 }
 
 LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    for (const auto& proc : s_windowProcedures)
+    for (const auto& [id, proc] : s_windowProcedures)
     {
-        std::invoke(proc, msg, wparam, lparam);
+        std::invoke(proc, hwnd, msg, wparam, lparam);
     }
 
     switch (msg)
@@ -37,39 +37,39 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 bool Glib::Window::Initialize()
 {
     // 作成済みかチェック
-    if (s_windowHandle_ != NULL) return false;
+    if (s_windowHandle != NULL) return false;
 
     // Comの初期化
     if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED))) return false;
 
     // ウィンドウの作成
-    s_windowClass_.cbSize = sizeof(WNDCLASSEX);
-    GetModuleHandleEx(0, nullptr, &s_hInstance_);
-    s_windowClass_.hInstance = s_hInstance_;
-    s_windowClass_.lpfnWndProc = (WNDPROC)WindowProcedure;
+    s_windowClass.cbSize = sizeof(WNDCLASSEX);
+    GetModuleHandleEx(0, nullptr, &s_hInstance);
+    s_windowClass.hInstance = s_hInstance;
+    s_windowClass.lpfnWndProc = (WNDPROC)::WindowProcedure;
     auto style = WS_OVERLAPPEDWINDOW;
 
 #ifdef UNICODE
-    std::wstring wstr{ s_windowName_.begin(), s_windowName_.end() };
-    s_windowClass_.lpszClassName = wstr.c_str();
+    std::wstring wstr{ s_windowName.begin(), s_windowName.end() };
+    s_windowClass.lpszClassName = wstr.c_str();
 #else
-    s_windowClass_.lpszClassName = s_windowName_.c_str();
+    s_windowClass.lpszClassName = s_windowName.c_str();
 #endif
 
 #if defined(DEBUG) || defined(_DEBUG)
-    RECT rect{ 0, 0, static_cast<LONG>(s_windowDebugSize_.x), static_cast<LONG>(s_windowDebugSize_.y) };
+    RECT rect{ 0, 0, static_cast<LONG>(s_windowDebugSize.x), static_cast<LONG>(s_windowDebugSize.y) };
 #else
-    RECT rect{ 0, 0, static_cast<LONG>(s_windowSize_.x), static_cast<LONG>(s_windowSize_.y) };
+    RECT rect{ 0, 0, static_cast<LONG>(s_windowSize.x), static_cast<LONG>(s_windowSize.y) };
 #endif
 
-    if (!RegisterClassEx(&s_windowClass_)) return false;
+    if (!RegisterClassEx(&s_windowClass)) return false;
     AdjustWindowRect(&rect, style, false);
 
     // ウィンドウ作成
-    s_windowHandle_ = CreateWindowEx(
+    s_windowHandle = CreateWindowEx(
         0,
-        s_windowClass_.lpszClassName,
-        s_windowClass_.lpszClassName,
+        s_windowClass.lpszClassName,
+        s_windowClass.lpszClassName,
         style,
         CW_USEDEFAULT,
         CW_USEDEFAULT,
@@ -77,76 +77,78 @@ bool Glib::Window::Initialize()
         rect.bottom - rect.top,
         nullptr,
         nullptr,
-        s_hInstance_,
+        s_hInstance,
         nullptr
     );
 
-    if (s_windowHandle_ == nullptr) return false;
+    if (s_windowHandle == nullptr) return false;
 
-    ShowWindow(s_windowHandle_, SW_SHOW);
-    UpdateWindow(s_windowHandle_);
-    SetFocus(s_windowHandle_);
+    ShowWindow(s_windowHandle, SW_SHOW);
+    UpdateWindow(s_windowHandle);
+    SetFocus(s_windowHandle);
 
     return true;
 }
 
 void Glib::Window::Finalize()
 {
-    UnregisterClass(s_windowClass_.lpszClassName, s_hInstance_);
-    s_hInstance_ = nullptr;
-    s_windowHandle_ = nullptr;
+    UnregisterClass(s_windowClass.lpszClassName, s_hInstance);
+    s_hInstance = nullptr;
+    s_windowHandle = nullptr;
 }
 
 HINSTANCE Glib::Window::InstanceHandle()
 {
-    return s_hInstance_;
+    return s_hInstance;
 }
 
 HWND Glib::Window::WindowHandle()
 {
-    return s_windowHandle_;
+    return s_windowHandle;
 }
 
-void Glib::Window::WndProc(const Glib::WndProc& proc)
+bool Glib::Window::RegisterProcedure(int id, const WindowProcedure& proc)
 {
-    s_windowProcedures.emplace(proc);
+    if (s_windowProcedures.contains(id)) return false;
+    s_windowProcedures.emplace(id, proc);
+    return true;
 }
 
-void Glib::Window::ClearWndProc(const Glib::WndProc& proc)
+void Glib::Window::UnRegisterProcedure(int id)
 {
-    if (!s_windowProcedures.contains(proc)) return;
-    s_windowProcedures.erase(proc);
+    if (!s_windowProcedures.contains(id)) return;
+    s_windowProcedures.erase(id);
 }
 
 std::string& Glib::Window::WindowName()
 {
-    return s_windowName_;
+    return s_windowName;
 }
 
 void Glib::Window::WindowName(const std::string& name)
 {
-    if (s_windowHandle_ != NULL) return;
-    s_windowName_ = name;
+    if (s_windowHandle != NULL) return;
+    s_windowName = name;
 }
 
 const Vector2& Glib::Window::WindowSize()
 {
-    return s_windowSize_;
+    return s_windowSize;
 }
 
 void Glib::Window::WindowSize(const Vector2& size)
 {
-    if (s_windowHandle_ != NULL) return;
-    s_windowSize_ = size;
+    if (s_windowHandle != NULL) return;
+    s_windowSize = size;
 }
 
 const Vector2& Glib::Window::WindowDebugSize()
 {
-    return s_windowDebugSize_;
+    return s_windowDebugSize;
 }
 
 void Glib::Window::WindowDebugSize(const Vector2& size)
 {
-    if (s_windowHandle_ != NULL) return;
-    s_windowDebugSize_ = size;
+    if (s_windowHandle != NULL) return;
+    s_windowDebugSize = size;
 }

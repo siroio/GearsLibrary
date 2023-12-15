@@ -7,6 +7,11 @@
 
 namespace Glib
 {
+    /**
+     * @brief バイトをスワップ
+     * @param value
+     * @return
+     */
     template<std::integral T>
     constexpr T byteswap(T value) noexcept
     {

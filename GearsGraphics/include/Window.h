@@ -1,14 +1,16 @@
 #pragma once
 #include <Windows.h>
-#include <string>
 #include <Singleton.h>
+#include <string>
+#include <functional>
 
 struct Vector2;
+
 LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 namespace Glib
 {
-    using WndProc = LRESULT(*)(UINT, WPARAM, LPARAM);
+    using WindowProcedure = std::function<LRESULT(HWND, UINT, WPARAM, LPARAM)>;
 
     class Window : public Singleton<Window>
     {
@@ -40,16 +42,16 @@ namespace Glib
         static HWND WindowHandle();
 
         /**
-         * @brief ウィンドウプロシージャを追加
+         * @brief ウィンドウプロシージャを登録
          * @param proc
          */
-        static void WndProc(const Glib::WndProc& proc);
+        static bool RegisterProcedure(int id, const Glib::WindowProcedure& proc);
 
         /**
-         * @brief ウィンドウプロシージャを削除
+         * @brief ウィンドウプロシージャを解除
          * @param proc
          */
-        static void ClearWndProc(const Glib::WndProc& proc);
+        static void UnRegisterProcedure(int id);
 
         /**
          * @brief ウィンドウの名前を取得

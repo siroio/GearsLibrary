@@ -43,11 +43,11 @@ Glib::GLObject::GLObject
 
 bool Glib::GLObject::ReadFile(std::string_view path)
 {
-    // バイナリモードで開く
-    std::ifstream file{ path.data(), std::ios::binary };
-
     try
     {
+        // バイナリモードで開く
+        std::ifstream file{ path.data(), std::ios::binary };
+
         if (!CheckExt(path, GL_OBJECT_EXTENSION))
         {
             throw std::runtime_error{ "mismatch file extension." };
@@ -77,12 +77,11 @@ bool Glib::GLObject::ReadFile(std::string_view path)
     }
 }
 
-bool Glib::GLObject::WriteFile(const std::string& path)
+bool Glib::GLObject::WriteFile(std::string_view path)
 {
-    std::ofstream file{ path, std::ios::binary | std::ios::out | std::ios::trunc };
-
     try
     {
+        std::ofstream file{ path.data(), std::ios::binary | std::ios::out | std::ios::trunc };
         if (!file.is_open())
         {
             throw std::runtime_error{ "failed to open the file." };
@@ -133,7 +132,7 @@ void Glib::GLObject::ReadHeader(std::ifstream& file)
 {
     // ヘッダの読み込み
     Header header{};
-    ReadToBinary(file, &header, sizeof(Header));
+    ReadForBinary(file, &header, sizeof(Header));
 
     // シグネチャが正しいか検証
     if (strncmp(header.signature, GL_OBJECT_SIGNATURE, 9) != 0)
@@ -148,14 +147,14 @@ void Glib::GLObject::ReadHeader(std::ifstream& file)
 
     version_ = header.version;
     signature_ = header.signature;
-    std::memcpy(endianInfo_, header.endian, 2);
+    endianInfo_ = header.endian;
 }
 
 void Glib::GLObject::ReadVertex(std::ifstream& file)
 {
     // 頂点数読み込み
     int vertexCount{ 0 };
-    ReadToBinary(file, &vertexCount, sizeof(int));
+    ReadForBinary(file, &vertexCount, sizeof(int));
 
     if (vertexCount <= 0)
     {
@@ -165,7 +164,7 @@ void Glib::GLObject::ReadVertex(std::ifstream& file)
 
     // 頂点読み込み
     vertices_.resize(vertexCount);
-    ReadToBinary(file, vertices_.data(), sizeof(Vertex) * vertexCount);
+    ReadForBinary(file, vertices_.data(), sizeof(Vertex) * vertexCount);
 
     if (vertices_.empty())
     {
@@ -177,7 +176,7 @@ void Glib::GLObject::ReadIndex(std::ifstream& file)
 {
     // インデックス数読み込み
     int indexCount{ 0 };
-    ReadToBinary(file, &indexCount, sizeof(int));
+    ReadForBinary(file, &indexCount, sizeof(int));
 
     if (indexCount <= 0)
     {
@@ -186,7 +185,7 @@ void Glib::GLObject::ReadIndex(std::ifstream& file)
 
     // インデックス読み込み
     indices_.resize(indexCount);
-    ReadToBinary(file, indices_.data(), sizeof(unsigned int) * indexCount);
+    ReadForBinary(file, indices_.data(), sizeof(unsigned int) * indexCount);
 
     if (indices_.empty())
     {
@@ -198,7 +197,7 @@ void Glib::GLObject::ReadSubset(std::ifstream& file)
 {
     // サブセット数の読み込み
     int subsetCount{ 0 };
-    ReadToBinary(file, &subsetCount, sizeof(int));
+    ReadForBinary(file, &subsetCount, sizeof(int));
 
     if (subsetCount <= 0)
     {
@@ -207,7 +206,7 @@ void Glib::GLObject::ReadSubset(std::ifstream& file)
 
     // サブセットの読み込み
     subsets_.resize(subsetCount);
-    ReadToBinary(file, subsets_.data(), sizeof(Subset) * subsetCount);
+    ReadForBinary(file, subsets_.data(), sizeof(Subset) * subsetCount);
 
     if (subsets_.empty())
     {
@@ -219,7 +218,7 @@ void Glib::GLObject::ReadMaterial(std::ifstream& file)
 {
     // マテリアル数の読み込み
     int materialCount{ 0 };
-    ReadToBinary(file, &materialCount, sizeof(int));
+    ReadForBinary(file, &materialCount, sizeof(int));
 
     if (materialCount <= 0)
     {
@@ -230,10 +229,10 @@ void Glib::GLObject::ReadMaterial(std::ifstream& file)
     materials_.resize(materialCount);
     for (auto& material : materials_)
     {
-        ReadToBinary(file, &material.ambient, sizeof(Material::ambient));
-        ReadToBinary(file, &material.diffuse, sizeof(Material::diffuse));
-        ReadToBinary(file, &material.specular, sizeof(Material::specular));
-        ReadToBinary(file, &material.shininess, sizeof(Material::shininess));
+        ReadForBinary(file, &material.ambient, sizeof(Material::ambient));
+        ReadForBinary(file, &material.diffuse, sizeof(Material::diffuse));
+        ReadForBinary(file, &material.specular, sizeof(Material::specular));
+        ReadForBinary(file, &material.shininess, sizeof(Material::shininess));
         ReadText(file, material.texture);
         ReadText(file, material.normal);
     }
@@ -260,8 +259,8 @@ void Glib::GLObject::ReadBone(std::ifstream& file)
     for (auto& bone : bones_)
     {
         ReadText(file, bone.boneName);
-        ReadToBinary(file, &bone.translate, sizeof(Bone::translate));
-        ReadToBinary(file, &bone.parent, sizeof(Bone::parent));
+        ReadForBinary(file, &bone.translate, sizeof(Bone::translate));
+        ReadForBinary(file, &bone.parent, sizeof(Bone::parent));
     }
 }
 
@@ -281,7 +280,7 @@ void Glib::GLObject::WriteHeader(std::ofstream& file)
         // ヘッダの読み込み
         std::memcpy(header.signature, signature_.c_str(), sizeof(GL_OBJECT_SIGNATURE) - 1);
         header.version = version_;
-        std::memcpy(header.endian, endianInfo_, sizeof(header.endian));
+        std::memcpy(header.endian, &endianInfo_[0], sizeof(header.endian));
     }
     WriteToBinary(file, &header, sizeof(Header));
 }

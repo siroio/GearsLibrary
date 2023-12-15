@@ -83,7 +83,7 @@ class TestScene : public Glib::Scene
 public:
     void Start() override
     {
-        if (!Glib::MeshManager::Instance().Load(0, R"(C:\Users\rukar\Desktop\MMD\MMDƒ‚ƒfƒ‹\Appearance Miku\Appearance Miku.globj)"))
+        if (!Glib::MeshManager::Instance().Load(0, R"(C:\Users\rukar\Desktop\MikuMikuDance_v932x64\Appearance Miku\Appearance Miku.globj)"))
         {
             return;
         }

@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
         if (!fs::exists(inputFile)) throw std::runtime_error{ "File is not exist." };
         Converter::Initialize();
         auto inputExt = inputFile.extension().generic_string();
-        std::erase(inputExt, '.');
+        std::erase(inputExt, '.'); // erase extension "."
         auto converter = Converter::Create(inputExt);
         if (!converter->LoadFile(inputFile.generic_string()))
         {

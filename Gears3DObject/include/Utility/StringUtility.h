@@ -19,9 +19,9 @@ namespace Glib
     inline void ReadText(std::ifstream& file, std::string& str)
     {
         int size{ 0 };
-        ReadToBinary(file, &size, sizeof(int));
+        ReadForBinary(file, &size, sizeof(int));
         str.resize(size);
-        ReadToBinary(file, &str[0], sizeof(char) * size);
+        ReadForBinary(file, &str[0], sizeof(char) * size);
     }
 
     inline void WriteText(std::ofstream& file, std::string_view str)

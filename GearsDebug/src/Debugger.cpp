@@ -1,4 +1,12 @@
-#include "Debugger.h"
+#include <Debugger.h>
+#include <cassert>
+
+namespace
+{
+    constexpr char INFO_PREFIX[]{ "[INFO]" };
+    constexpr char WARN_PREFIX[]{ "[WARN]" };
+    constexpr char ERROR_PREFIX[]{ "[ERROR]" };
+}
 
 bool Glib::Debug::Enabled()
 {
@@ -8,7 +16,6 @@ bool Glib::Debug::Enabled()
     return false;
 #endif
 }
-
 
 void Glib::Debug::Assert(bool expression)
 {
@@ -32,9 +39,9 @@ void Glib::Debug::Log(std::string_view message, LogLevel loglevel)
     std::cout << Glib::TimeUtility::CurrentTimeStr();
     switch (loglevel)
     {
-        case LogLevel::Info: std::cout << "[INFO] " << message << std::endl; break;
-        case LogLevel::Warn: std::cout << "[WARN] " << message << std::endl; break;
-        case LogLevel::Error: std::cout << "[ERROR] " << message << std::endl; break;
+        case LogLevel::Info: std::cout << INFO_PREFIX << " " << message << std::endl; break;
+        case LogLevel::Warn: std::cout << WARN_PREFIX << " " << message << std::endl; break;
+        case LogLevel::Error: std::cout << ERROR_PREFIX << " " << message << std::endl; break;
     }
 #endif
 }

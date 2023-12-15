@@ -14,7 +14,7 @@ namespace Glib
         struct Header
         {
             char signature[9];
-            float version;
+            float version{};
             char endian[2];
         };
 
@@ -30,9 +30,9 @@ namespace Glib
 
         struct Subset
         {
-            int indexStart;
-            int indexCount;
-            int material;
+            int indexStart{};
+            int indexCount{};
+            int material{};
         };
 
         struct Material
@@ -40,7 +40,7 @@ namespace Glib
             float       ambient[4];
             float       diffuse[4];
             float       specular[4];
-            float       shininess;
+            float       shininess{};
             std::string texture{ "" };
             std::string normal{ "" };
         };
@@ -49,7 +49,7 @@ namespace Glib
         {
             std::string boneName{ "" };
             float       translate[3];
-            int         parent;
+            int         parent{};
         };
 #pragma pack(pop)
 
@@ -85,7 +85,7 @@ namespace Glib
          * @return ê¨å˜ : true
          * @return é∏îs : false
          */
-        bool WriteFile(const std::string& path);
+        bool WriteFile(const std::string_view path);
 
     public:
         /**
@@ -135,7 +135,7 @@ namespace Glib
     private:
         std::string                 signature_{ "" };
         float                       version_{ 1.0f };
-        char                        endianInfo_[2]{ "" };
+        std::string                 endianInfo_{ "" };
         std::vector<Vertex>         vertices_{};
         std::vector<unsigned int>   indices_{};
         std::vector<Subset>         subsets_{};

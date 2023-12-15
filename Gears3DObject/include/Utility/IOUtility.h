@@ -20,7 +20,7 @@ namespace Glib
      * @param data データへのポインタ
      * @param length データ長
      */
-    inline void ReadToBinary(std::ifstream& file, void* const data, const int length)
+    inline void ReadForBinary(std::ifstream& file, void* const data, const int length)
     {
         file.read(reinterpret_cast<char*>(data), length);
     }
