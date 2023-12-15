@@ -18,8 +18,8 @@ enum class EncodeType
  */
 struct PmxHeader
 {
-    float version;
-    unsigned char length;
+    float version{};
+    unsigned char length{};
     EncodeType encode;
     std::vector<unsigned char> Info;
 };
@@ -76,8 +76,8 @@ struct Weight
  */
 struct IKLink
 {
-    int index;
-    bool existAngleLimited;
+    int index{};
+    bool existAngleLimited{};
     Vector3f limitAngleMin;
     Vector3f limitAngleMax;
 };
@@ -163,12 +163,12 @@ struct PmxMaterial
 {
     Vector4f diffuse;
     Vector3f specular;
-    float specularFactor;
+    float specularFactor{};
     Vector3f ambient;
 
-    int textureIndex;
-    int toonTextureIndex;
-    int vertexNum;
+    int textureIndex{};
+    int toonTextureIndex{};
+    int vertexNum{};
 };
 
 
