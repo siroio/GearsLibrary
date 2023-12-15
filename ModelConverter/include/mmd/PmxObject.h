@@ -136,23 +136,23 @@ struct PmxBone
     // 位置
     Vector3f position;
     // 親
-    int parentBoneIndex;
+    int parentBoneIndex{};
     // 変形階層
-    int transformHierarchy;
+    int transformHierarchy{};
     // ボーンフラグ
     PmxBoneFlag flag;
 
     Vector3f offset;
-    int childrenIndex;
-    int impartParentIndex;
-    float impartRate;
+    int childrenIndex{};
+    int impartParentIndex{};
+    float impartRate{};
     Vector3f fixedAxis;
     Vector3f localAxisX;
     Vector3f localAxisZ;
-    int externalParentKey;
-    int ikTargetIndex;
-    int ikLoopCount;
-    float ikUnitAngle;
+    int externalParentKey{};
+    int ikTargetIndex{};
+    int ikLoopCount{};
+    float ikUnitAngle{};
     std::vector<IKLink> ikLinks;
 };
 
