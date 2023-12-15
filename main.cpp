@@ -21,6 +21,7 @@
 #include <Window.h>
 #include <InputSystem.h>
 #include <GLObject.h>
+#include <Components/Animator.h>
 
 using namespace Glib;
 
@@ -95,8 +96,9 @@ public:
 
         auto mesh = GameObjectManager::Instantiate("Mesh");
         auto renderer = mesh->AddComponent<SkinnedMeshRenderer>();
-
+        auto animator = mesh->AddComponent<Animator>();
         mesh->AddComponent<TestMover>();
+
         renderer->MeshID(0);
 
         auto camera = GameObjectManager::Instantiate("Camera");

@@ -51,12 +51,12 @@ bool Glib::Mesh::Load(std::string_view path)
         materials_[i].params.Update(paramSize, &materials[i]);
         if (!materials[i].texture.empty())
         {
-            auto texPath = folderPath.remove_filename().string() + materials[i].texture;
+            auto texPath = folderPath.remove_filename().generic_string() + materials[i].texture;
             materials_[i].albedo = s_textureManager.Load(texPath);
         }
         if (!materials[i].normal.empty())
         {
-            auto normalPath = folderPath.remove_filename().string() + materials[i].normal;
+            auto normalPath = folderPath.remove_filename().generic_string() + materials[i].normal;
             materials_[i].normal = s_textureManager.Load(normalPath);
         }
     }

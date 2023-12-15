@@ -13,7 +13,7 @@ namespace Glib
         path = path.lexically_normal(); // パスの正規化
         // 不正なパスかチェック
         if (path == ".") return false;
-        return path.extension().string().ends_with(extension);
+        return path.extension().generic_string().ends_with(extension);
     }
 
     inline void ReadText(std::ifstream& file, std::string& str)

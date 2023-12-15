@@ -1,8 +1,8 @@
 #include <GLAnimation.h>
 #include <filesystem>
 #include <fstream>
+#include <Utility/IOUtility.h>
 #include <Utility/StringUtility.h>
-
 namespace
 {
     /**

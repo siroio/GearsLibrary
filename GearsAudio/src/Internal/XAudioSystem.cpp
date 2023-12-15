@@ -107,7 +107,7 @@ bool Glib::Internal::Audio::XAudioSystem::LoadVoice(unsigned id, std::string_vie
 
     // Šg’£q‚ğ¬•¶š‚Å”²‚«o‚·
     const std::filesystem::path file{ path.data() };
-    std::string extension = file.filename().extension().string();
+    std::string extension = file.filename().extension().generic_string();
     XAUDIO2_BUFFER buffer{};
     std::transform(extension.begin(), extension.end(), extension.begin(), tolower);
 

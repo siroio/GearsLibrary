@@ -18,7 +18,7 @@ namespace
     // Šg’£Žq‚ðŽæ“¾
     std::string GetExt(std::string_view file)
     {
-        return fs::path{ file }.extension().string();
+        return fs::path{ file }.extension().generic_string();
     }
 
     std::string ReadTextBuf(std::ifstream& file, const EncodeType& encode)
@@ -191,7 +191,7 @@ bool PmxModel::ReadTextures(std::ifstream& pmxFile, const PmxHeader& header)
     for (int i = 0; i < textureSize; i++)
     {
         auto texPath = ReadTextBuf(pmxFile, header.encode);
-        texPath = fs::path{ texPath }.make_preferred().lexically_normal().string();
+        texPath = fs::path{ texPath }.make_preferred().lexically_normal().generic_string();
         texturePath.at(i) = texPath;
     }
     return true;

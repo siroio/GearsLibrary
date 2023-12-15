@@ -28,7 +28,7 @@ std::string Glib::Graphics::Shader::Name() const
 {
     if (shaderUnit_.index() == 1) return "";
     const std::filesystem::path path = std::get<0>(shaderUnit_);
-    return path.filename().stem().string();
+    return path.filename().stem().generic_string();
 }
 
 std::wstring Glib::Graphics::Shader::Path() const

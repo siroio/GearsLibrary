@@ -32,6 +32,6 @@ int main(int argc, char* argv[])
 
     auto path = std::filesystem::path{ outputFile }.lexically_normal();
     path = path.is_absolute() ? path : std::filesystem::absolute(path);
-    std::cout << "Output => " << path.remove_filename().string() << std::endl;
+    std::cout << "Output => " << path.remove_filename().generic_string() << std::endl;
 
 }

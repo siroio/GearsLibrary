@@ -45,13 +45,13 @@ bool Glib::Texture::CreateTexture(std::string_view path)
     if (!filePath.has_extension()) return false;
     DirectX::TexMetadata metadata{};
     DirectX::ScratchImage scratchImg{};
-    auto extension = filePath.extension().string();
+    auto extension = filePath.extension().generic_string();
     if ((extension != "tga") || (extension != "dds"))
         extension = "png";
     const auto& func = s_loadFunctions.at(extension);
 
     // テクスチャのロード
-    const auto result = func(filePath.wstring(), &metadata, scratchImg);
+    const auto result = func(filePath.generic_wstring(), &metadata, scratchImg);
     if (!result) return false;
 
     auto img = scratchImg.GetImage(0, 0, 0);
