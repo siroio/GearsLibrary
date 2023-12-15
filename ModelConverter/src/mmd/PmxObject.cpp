@@ -335,7 +335,7 @@ bool PmxModel::ReadBones(std::ifstream& pmxFile, const PmxHeader& header)
     return true;
 }
 
-bool PmxModel::LoadModel(std::string_view path)
+bool PmxModel::LoadFile(std::string_view path)
 {
     // Šg’£Žq‚ªŠÔˆá‚Á‚Ä‚¢‚½‚çŽ¸”s
     if (!GetExt(path).ends_with("pmx")) return false;
@@ -352,7 +352,7 @@ bool PmxModel::LoadModel(std::string_view path)
     return true;
 }
 
-bool PmxModel::WriteModel(std::string_view path)
+bool PmxModel::WriteFile(std::string_view path)
 {
     std::vector<Glib::GLObject::Vertex> glVertices;
     std::vector<unsigned int> glIndices;

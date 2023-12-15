@@ -1,7 +1,9 @@
 #include <string>
-#include <mmd/PmxObject.h>
 #include <iostream>
 #include <filesystem>
+#include <Converter.h>
+
+namespace fs = std::filesystem;
 
 int main(int argc, char* argv[])
 {
@@ -10,23 +12,34 @@ int main(int argc, char* argv[])
         std::cerr << "Usage: " << " <input_file> <output_file>" << std::endl;
     }
 
-    auto inputFile = std::string{ argv[1] };
-    auto outputFile = std::string{ argv[2] };
+    auto inputFile = fs::path{ argv[1] }.lexically_normal();
+    auto outputFile = fs::path{ argv[2] }.lexically_normal();
+    outputFile = outputFile.is_absolute() ? outputFile : std::filesystem::absolute(outputFile);
 
-    PmxModel pmx = PmxModel{};
-    if (!pmx.LoadModel(inputFile))
+    try
     {
-        std::cerr << "This file is not supported." << std::endl;
-        return -1;
-}
-    if (!pmx.WriteModel(outputFile))
+        if (!fs::exists(inputFile)) throw std::runtime_error{ "File is not exist." };
+        Converter::Initialize();
+        auto inputExt = inputFile.extension().generic_string();
+        std::erase(inputExt, '.');
+        auto converter = Converter::Create(inputExt);
+        if (!converter->LoadFile(inputFile.generic_string()))
+        {
+            throw std::runtime_error{ "Convert Failed." };
+            return -1;
+        }
+
+        if (!converter->WriteFile(outputFile.generic_string()))
+        {
+            throw std::runtime_error{ "File Write Failed." };
+            return -1;
+        }
+
+        std::cout << "OUTPUT DIR : " << outputFile.generic_string() << std::endl;
+    }
+    catch (const std::runtime_error& error)
     {
-        std::cerr << "Write error." << std::endl;
+        std::cerr << error.what() << std::endl;
         return -1;
     }
-
-    auto path = std::filesystem::path{ outputFile }.lexically_normal();
-    path = path.is_absolute() ? path : std::filesystem::absolute(path);
-    std::cout << "Output => " << path.remove_filename().generic_string() << std::endl;
-
 }

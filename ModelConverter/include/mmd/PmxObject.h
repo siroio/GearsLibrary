@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include <IModel.h>
+#include <IConverter.h>
 #include <mcMath.h>
 
 /**
@@ -172,7 +172,7 @@ struct PmxMaterial
 };
 
 
-class PmxModel : public IModel
+class PmxModel : public IConverter
 {
 private:
     bool ReadPmxHeader(std::ifstream& pmxFile, PmxHeader& header);
@@ -183,8 +183,8 @@ private:
     bool ReadBones(std::ifstream& pmxFile, const PmxHeader& header);
 
 public:
-    virtual bool LoadModel(std::string_view path) override;
-    virtual bool WriteModel(std::string_view path) override;
+    virtual bool LoadFile(std::string_view path) override;
+    virtual bool WriteFile(std::string_view path) override;
 
 private:
     std::vector<PmxVertex> vertices;
