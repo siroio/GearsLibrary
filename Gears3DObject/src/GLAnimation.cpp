@@ -125,10 +125,7 @@ void Glib::GLAnimation::ReadMotionData(std::ifstream& file)
     {
         ReadMotionInfo(file, data.info);
         data.frames.resize(data.info.keyFrameCount);
-        for (auto& keyFrame : data.frames)
-        {
-            ReadKeyFrame(file, keyFrame);
-        }
+        ReadKeyFrame(file, data.frames.front(), static_cast<int>(data.frames.size()));
     }
 }
 
@@ -138,9 +135,9 @@ void Glib::GLAnimation::ReadMotionInfo(std::ifstream& file, MotionInfo& info)
     ReadForBinary(file, &info.keyFrameCount, sizeof(info.keyFrameCount));
 }
 
-void Glib::GLAnimation::ReadKeyFrame(std::ifstream& file, KeyFrame& keyFrame)
+void Glib::GLAnimation::ReadKeyFrame(std::ifstream& file, KeyFrame& keyFrame, int length)
 {
-    ReadForBinary(file, &keyFrame, sizeof(keyFrame));
+    ReadForBinary(file, &keyFrame, sizeof(keyFrame) * length);
 }
 
 void Glib::GLAnimation::WriteHeader(std::ofstream& file)
@@ -180,10 +177,7 @@ void Glib::GLAnimation::WriteMotionData(std::ofstream& file)
     {
         // ÉÇÅ[ÉVÉáÉìÇÃèëÇ´èoÇµ
         WriteMotionInfo(file, data.info);
-        for (const auto& keyFrame : data.frames)
-        {
-            WriteKeyFrame(file, keyFrame);
-        }
+        WriteKeyFrame(file, data.frames.front(), static_cast<int>(data.frames.size()));
     }
 }
 
@@ -193,7 +187,7 @@ void Glib::GLAnimation::WriteMotionInfo(std::ofstream& file, const MotionInfo& i
     WriteToBinary(file, &info.keyFrameCount, sizeof(info));
 }
 
-void Glib::GLAnimation::WriteKeyFrame(std::ofstream& file, const KeyFrame& keyFrame)
+void Glib::GLAnimation::WriteKeyFrame(std::ofstream& file, const KeyFrame& keyFrame, int length)
 {
-    WriteToBinary(file, &keyFrame, sizeof(KeyFrame));
+    WriteToBinary(file, &keyFrame, sizeof(KeyFrame) * length);
 }

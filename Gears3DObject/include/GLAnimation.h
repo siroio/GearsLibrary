@@ -75,7 +75,7 @@ namespace Glib
         void ReadBoneInfo(std::ifstream& file);
         void ReadMotionData(std::ifstream& file);
         void ReadMotionInfo(std::ifstream& file, MotionInfo& info);
-        void ReadKeyFrame(std::ifstream& file, KeyFrame& keyFrame);
+        void ReadKeyFrame(std::ifstream& file, KeyFrame& keyFrame, int length);
 
         // == äeéÌèëÇ´çûÇ›ópä÷êî == //
 
@@ -83,7 +83,7 @@ namespace Glib
         void WriteBoneInfo(std::ofstream& file);
         void WriteMotionData(std::ofstream& file);
         void WriteMotionInfo(std::ofstream& file, const MotionInfo& info);
-        void WriteKeyFrame(std::ofstream& file, const KeyFrame& keyFrame);
+        void WriteKeyFrame(std::ofstream& file, const KeyFrame& keyFrame, int length);
 
     private:
         std::string             signature_{ "" };
