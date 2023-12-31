@@ -99,13 +99,18 @@ ComPtr<ID3DBlob> Glib::Internal::Graphics::ShaderManager::CompileFromFile(const 
 {
     ComPtr<ID3DBlob> shaderBinary{ nullptr };
     ComPtr<ID3DBlob> errorBlob{ nullptr };
+#if defined(DEBUG) || defined(_DEBUG)
+    UINT compileFlag{ D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION };
+#else
+    UINT compileFlag{ 0 };
+#endif
     bool result = SUCCEEDED(D3DCompileFromFile(
         shader.Path().c_str(),
         nullptr,
         D3D_COMPILE_STANDARD_FILE_INCLUDE,
         shader.EntryPoint().c_str(),
         shader.ShaderModel().c_str(),
-        D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0,
+        compileFlag, 0,
         shaderBinary.ReleaseAndGetAddressOf(),
         errorBlob.ReleaseAndGetAddressOf()
     ));
@@ -118,6 +123,11 @@ ComPtr<ID3DBlob> Glib::Internal::Graphics::ShaderManager::CompileFromCode(const 
 {
     ComPtr<ID3DBlob> shaderBinary{ nullptr };
     ComPtr<ID3DBlob> errorBlob{ nullptr };
+#if defined(DEBUG) || defined(_DEBUG)
+    UINT compileFlag{ D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION };
+#else
+    UINT compileFlag{ 0 };
+#endif
     bool result = SUCCEEDED(D3DCompile(
         shader.Code().c_str(),
         shader.Code().size(),
@@ -126,7 +136,7 @@ ComPtr<ID3DBlob> Glib::Internal::Graphics::ShaderManager::CompileFromCode(const 
         D3D_COMPILE_STANDARD_FILE_INCLUDE,
         shader.EntryPoint().c_str(),
         shader.ShaderModel().c_str(),
-        D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0,
+        compileFlag, 0,
         shaderBinary.ReleaseAndGetAddressOf(),
         errorBlob.ReleaseAndGetAddressOf()
     ));

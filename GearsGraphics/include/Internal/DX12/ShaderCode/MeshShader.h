@@ -4,7 +4,8 @@ namespace Glib::Internal::Graphics::ShaderCode
 {
     constexpr char MESH_SHADER[]
     {
-        R"(cbuffer CameraConstant : register(b0)
+        R"(
+        cbuffer CameraConstant : register(b0)
         {
             float4x4 View;
             float4x4 Projection;
@@ -75,7 +76,7 @@ namespace Glib::Internal::Graphics::ShaderCode
             o.normal = normalize(mul(World, float4(input.normal, 0.0f)).xyz);
             o.uv = input.uv;
             o.tangent = normalize(mul(World, float4(input.tangent.xyz, 0.0f)));
-            o.binormal = cross(o.tangent.xyz, o.normal) * input.tangent.w;
+            o.binormal = cross(input.tangent.xyz, o.normal) * input.tangent.w;
             return o;
         }
 
@@ -88,9 +89,7 @@ namespace Glib::Internal::Graphics::ShaderCode
         {
             float3 normal = normalTexture.Sample(albedoSampler, input.uv) * 2.0f - 1.0f;
             
-            float3 N = normalize( input.tangent  * normal.x
-                                + input.binormal * normal.y
-                                + input.normal   * normal.z);
+            float3 N = normalize(input.normal);
 
             float3 L = normalize(-LightDirection);
             float3 V = normalize(-input.view);
@@ -102,39 +101,12 @@ namespace Glib::Internal::Graphics::ShaderCode
             float bias = clamp(ShadowBias * tan(acos(dot(N, L))), 0, 0.01);
             float visibility = 1.0f;
 
-            float2 poissonDisk[16] =
-            {
-                { -0.94201624,  -0.39906216 },
-                {  0.94558609,  -0.76890725 },
-                { -0.094184101, -0.92938870 },
-                {  0.34495938,   0.29387760 },
-                { -0.20290487,   0.58051342 },
-                {  0.67258888,  -0.13125129 },
-                { -0.55066599,   0.77551898 },
-                {  0.04716250,   0.97484398 },
-                {  0.71373935,   0.26432821 },
-                {  0.02300153,  -0.66625530 },
-                {  0.82045635,   0.95136894 },
-                { -0.67458926,  -0.75558874 },
-                {  0.34873644,  -0.37458623 },
-                { -0.94071815,   0.84484976 },
-                { -0.50315495,  -0.19719433 },
-                {  0.98379229,  -0.18368212 }
-            };
-
-            for (int i = 0; i < 4; i++)
-            {
-                int idx = int(16.0 * random(input.position.xyy, i)) % 16;
-                float sampleVal = shadowTexture.Sample(shadowSampler, float3((shadowUV + poissonDisk[idx] / 700.0f).xy, posFromLightVP.z - bias));
-                visibility -= 0.2 * (1.0f - sampleVal);
-            }
-
-            float4 ambient  = MatAmbient * LightAmbient;
-            float4 diffuse  = LightDiffuse * MatDiffuse * max(dot(N, L), 0.0f);
-            float4 speculer = LightSpeculer * MatSpeculer * pow(max(dot(N, H), 0.0f), MatShininess);
+            float4 ambient  = LightAmbient * MatAmbient * visibility;
+            float4 diffuse  = LightDiffuse * MatDiffuse * max(dot(N, L), 0.0f) * visibility;
+            float4 speculer = LightSpeculer * MatSpeculer * pow(max(dot(N, H), 0.0f), MatShininess) * visibility;
             float4 baseColor = albedoTexture.Sample(albedoSampler, input.uv);
             float4 color = (ambient + diffuse) * baseColor + speculer;
-            return (color.rgb, baseColor.a);
+            return float4(color.rgb, baseColor.a);
         })"
     };
 

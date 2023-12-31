@@ -60,9 +60,9 @@ void Glib::Camera::LateUpdate()
     // レンダーターゲット、深度のクリア
     s_dx12->CommandList()->ClearRenderTargetView(rtvHandle_->CPU(), backGroundColor_.Raw(), 0, nullptr);
     s_dx12->CommandList()->ClearDepthStencilView(dsvHandle_->CPU(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-    //shadowMap_.AsRenderTarget();
-    //s_dx12->CommandList()->ClearRenderTargetView(shadowMap_.RTVHandle()->CPU(), Color::White().Raw(), 0, nullptr);
-    //s_dx12->CommandList()->ClearDepthStencilView(shadowMap_.DSVHandle()->CPU(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+    shadowMap_.AsRenderTarget();
+    s_dx12->CommandList()->ClearRenderTargetView(shadowMap_.RTVHandle()->CPU(), Color::White().Raw(), 0, nullptr);
+    s_dx12->CommandList()->ClearDepthStencilView(shadowMap_.DSVHandle()->CPU(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
 const Color& Glib::Camera::BackGroundColor()
@@ -330,15 +330,15 @@ void Glib::Camera::SetConstantBuffer(unsigned int rootParamIndex)
 
 void Glib::Camera::SetDepthStencil()
 {
-    //CD3DX12_VIEWPORT viewPort{ 0.0f, 0.0f, static_cast<float>(SHADOW_MAP_SIZE), static_cast<float>(SHADOW_MAP_SIZE) };
-    //CD3DX12_RECT rect{ 0, 0, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE };
+    CD3DX12_VIEWPORT viewPort{ 0.0f, 0.0f, static_cast<float>(SHADOW_MAP_SIZE), static_cast<float>(SHADOW_MAP_SIZE) };
+    CD3DX12_RECT rect{ 0, 0, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE };
 
-    //s_dx12->CommandList()->OMSetRenderTargets(
-    //    1, &shadowMap_.RTVHandle()->CPU(),
-    //    false, &shadowMap_.DSVHandle()->CPU());
+    s_dx12->CommandList()->OMSetRenderTargets(
+        1, &shadowMap_.RTVHandle()->CPU(),
+        false, &shadowMap_.DSVHandle()->CPU());
 
-    //s_dx12->CommandList()->RSSetViewports(1, &viewPort);
-    //s_dx12->CommandList()->RSSetScissorRects(1, &rect);
+    s_dx12->CommandList()->RSSetViewports(1, &viewPort);
+    s_dx12->CommandList()->RSSetScissorRects(1, &rect);
 }
 
 void Glib::Camera::SetShadowMap(unsigned int rootParamIndex)
@@ -348,6 +348,6 @@ void Glib::Camera::SetShadowMap(unsigned int rootParamIndex)
 
 void Glib::Camera::ExecuteShadowBulr()
 {
-    //shadowMap_.AsTexture();
-    //shadowMapBlur.Execute(1.0f);
+    shadowMap_.AsTexture();
+    shadowMapBlur.Execute(1.0f);
 }

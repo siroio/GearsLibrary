@@ -2,21 +2,14 @@
 #include <FuncOrderDefinition.h>
 #include <Internal/ISystem.h>
 #include <Singleton.h>
+#include <Debugger.h>
 
 struct ImVec2;
 struct Vector2;
 
 namespace Glib::Internal::Debug
 {
-    /**
-     * @brief ログレベル
-     */
-    enum class LogLevel
-    {
-        INFO,
-        WARN,
-        ERROR
-    };
+    using LogLevel = Glib::LogLevel;
 
     /**
      * @brief ログ保存用構造体
@@ -41,18 +34,15 @@ namespace Glib::Internal::Debug
         void Finalize();
 
     public:
-        void Log(const std::string message, LogLevel level);
-        void RenderTarget() const;
-        bool static WindowActive(const std::string& name);
+        void Log(std::string_view message, LogLevel loglevel = LogLevel::Info);
+        void SetRenderTarget() const;
+        bool static WindowActive(std::string_view windowName);
 
     private:
-        void CreateConsole();
+        void DrawConsole();
         void CreateDock();
-        void CreateGameScreen();
+        void DrawGameView();
         void ResetLayout();
-        void StyleColor();
+        void SetGUIStyle();
     };
-
-    static ImVec2 ToImVec2(const Vector2& v);
-    static Vector2 ToVector2(const ImVec2& v);
 }

@@ -90,6 +90,11 @@ public:
     void RemoveDeadComponents();
 
     /**
+     * @brief デバッグ用GUI描画
+     */
+    void DrawGUI();
+
+    /**
      * @brief ゲームオブジェクトの削除
      */
     void Destroy();
@@ -127,7 +132,7 @@ public:
      * @brief ゲームオブジェクトの名前を変更
      * @return name
      */
-    std::string_view Name() const;
+    std::string Name() const;
 
     /**
      * @brief ゲームオブジェクトのタグを設定
@@ -139,13 +144,29 @@ public:
      * @brief ゲームオブジェクトのタグを取得
      * @return tag
      */
-    std::string_view Tag() const;
+    std::string Tag() const;
+
+    /**
+     * @brief レイヤー
+     */
+    unsigned int Layer() const;
+
+    /**
+     * @brief レイヤーの設定
+     * @param layer
+     */
+    void Layer(unsigned int layer);
 
     /**
      * @brief ゲームオブジェクトが死亡状態か
      * @return bool
      */
     bool IsDead() const;
+
+    /**
+     * @brief ルートオブジェクトか
+     */
+    bool IsRoot() const;
 
     /**
      * @brief ゲームオブジェクトのトランスフォームを取得
@@ -160,6 +181,7 @@ private:
     bool isDead_{ false };
     bool isActive_{ true };
     bool isDontDestroyOnLoad_{ false };
+    unsigned int layer_{ 0 };
     std::string name_{ "" };
     std::string tag_{ "" };
     std::list<std::shared_ptr<Component>> components_;

@@ -7,7 +7,7 @@
 /**
  * @brief PMXエンコード
 */
-enum class EncodeType
+enum class PmxEncode : unsigned char
 {
     UTF16,
     UTF8
@@ -20,7 +20,7 @@ struct PmxHeader
 {
     float version{};
     unsigned char length{};
-    EncodeType encode;
+    PmxEncode encode;
     std::vector<unsigned char> Info;
 };
 

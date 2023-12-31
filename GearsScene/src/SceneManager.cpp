@@ -20,11 +20,12 @@ void Glib::SceneManager::Update()
 
 void Glib::SceneManager::LoadScene(const std::string& name)
 {
-    if (scenes_.contains(name))
+    if (!scenes_.contains(name))
     {
-        next_ = scenes_.at(name);
+        Debug::Log("Scene " + name + " was not found.");
+        return;
     }
-    Debug::Log("Scene " + name + " was not found.");
+    next_ = scenes_.at(name);
 }
 
 std::list<std::string> Glib::SceneManager::Scenes()

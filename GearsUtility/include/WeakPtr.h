@@ -48,7 +48,7 @@ namespace Glib
         std::shared_ptr<T> get() const noexcept(false)
         {
             auto ptr = ptr_.lock();
-            if (!ptr) throw std::bad_weak_ptr();
+            if (!ptr) return nullptr;
             return ptr;
         }
 

@@ -1,6 +1,8 @@
 #include <Debugger.h>
 #include <cassert>
 
+#if defined(DEBUG) || defined(_DEBUG)
+
 namespace
 {
     constexpr char INFO_PREFIX[]{ "[INFO]" };
@@ -10,52 +12,73 @@ namespace
 
 bool Glib::Debug::Enabled()
 {
-#if defined(DEBUG) || defined(_DEBUG)
     return true;
-#else
-    return false;
-#endif
 }
 
 void Glib::Debug::Assert(bool expression)
 {
-#if defined(DEBUG) || defined(_DEBUG)
     if (expression) return;
     Log("Assertion Failed.", LogLevel::Error);
-#endif
 }
 
 void Glib::Debug::Assert(bool expression, std::string_view message)
 {
-#if defined(DEBUG) || defined(_DEBUG)
     if (expression) return;
     Log(message, LogLevel::Error);
-#endif
 }
 
 void Glib::Debug::Log(std::string_view message, LogLevel loglevel)
 {
-#if defined(DEBUG) || defined(_DEBUG)
-    std::cout << Glib::TimeUtility::CurrentTimeStr();
-    switch (loglevel)
-    {
-        case LogLevel::Info: std::cout << INFO_PREFIX << " " << message << std::endl; break;
-        case LogLevel::Warn: std::cout << WARN_PREFIX << " " << message << std::endl; break;
-        case LogLevel::Error: std::cout << ERROR_PREFIX << " " << message << std::endl; break;
-    }
-#endif
+    std::cout
+        << Glib::TimeUtility::CurrentTimeStr()
+        << GetPrefix(loglevel) << " "
+        << message << "\n";
 }
 
 void Glib::Debug::Error(std::string_view message)
 {
-#if defined(DEBUG) || defined(_DEBUG)
     Log(message, LogLevel::Error);
-#endif
 }
 
 void Glib::Debug::Warn(std::string_view message)
 {
-#if defined(DEBUG) || defined(_DEBUG)
     Log(message, LogLevel::Warn);
-#endif
 }
+
+std::string Glib::Debug::GetPrefix(LogLevel loglevel)
+{
+    switch (loglevel)
+    {
+        case LogLevel::Info: return INFO_PREFIX;
+        case LogLevel::Warn: return WARN_PREFIX;
+        case LogLevel::Error: return ERROR_PREFIX;
+        default: return "[NONE]";
+    }
+}
+
+#else
+
+bool Glib::Debug::Enabled()
+{
+    return false;
+}
+
+void Glib::Debug::Assert(bool expression)
+{}
+
+void Glib::Debug::Assert(bool expression, std::string_view message)
+{}
+
+void Glib::Debug::Log(std::string_view message, LogLevel loglevel)
+{}
+
+void Glib::Debug::Error(std::string_view message)
+{}
+
+void Glib::Debug::Warn(std::string_view message)
+{}
+
+std::string Glib::Debug::GetPrefix(LogLevel loglevel)
+{}
+
+#endif

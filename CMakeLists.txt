@@ -15,29 +15,27 @@ project(GearsLibrary
 
 function(create_groups FILES_VAR)
     foreach(file ${${FILES_VAR}})
-        foreach(dir ${CMAKE_CURRENT_LIST_DIR})
-            # ファイルの相対パスを計算
-            file(RELATIVE_PATH relative ${CMAKE_CURRENT_LIST_DIR} ${file})
+         # ファイルの相対パスを計算
+        file(RELATIVE_PATH relative ${CMAKE_CURRENT_LIST_DIR} ${file})
 
-            # 相対パスを階層ごとに分割
-            string(REGEX MATCHALL "[^/]+" filters "${relative}")
-            list(LENGTH filters output_length)
-            math(EXPR iteration "${output_length} - 2")
+        # 相対パスを階層ごとに分割
+        string(REGEX MATCHALL "[^/]+" filters "${relative}")
+        list(LENGTH filters output_length)
+        math(EXPR iteration "${output_length} - 2")
 
-            # ルートディレクトリの場合は処理をスキップ
-            if(${iteration} LESS 0)
-                continue()
-            endif()
+        # ルートディレクトリの場合は処理をスキップ
+        if(${iteration} LESS 0)
+            continue()
+        endif()
 
-            set(group_string "")
-            foreach(i RANGE 0 ${iteration})
-                list(GET filters ${i} g)
-                set(group_string "${group_string}\\${g}")
-            endforeach()
-
-            # SOURCE_GROUPを使用してフィルタを作成
-            source_group("${group_string}" FILES ${file})
+        set(group_string "")
+        foreach(i RANGE 0 ${iteration})
+            list(GET filters ${i} g)
+            set(group_string "${group_string}\\${g}")
         endforeach()
+
+        # SOURCE_GROUPを使用してフィルタを作成
+        source_group("${group_string}" FILES ${file})
     endforeach()
 endfunction()
 
@@ -128,11 +126,6 @@ add_subdirectory(./ModelConverter)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBRARY} ${DIRECTX12_LIBS} ${EXTERNAL_LIBS})
 
-# imgui 設定
-set(IMGUI_SOURCE ./Modules/ImGui)
-set(IMGUI_BACKEND ${IMGUI_SOURCE}/backends)
-target_include_directories(GearsDebug PRIVATE ${IMGUI_SOURCE} ${IMGUI_BACKEND})
-
 # プロジェクトのフィルタ設定
 # DirectXTex
 set_target_properties(DirectXTex PROPERTIES FOLDER Modules/DirectXTex)
@@ -140,6 +133,7 @@ set_target_properties(texassemble PROPERTIES FOLDER Modules/DirectXTex)
 set_target_properties(texconv PROPERTIES FOLDER Modules/DirectXTex)
 set_target_properties(texdiag PROPERTIES FOLDER Modules/DirectXTex)
 set_target_properties(ddsview PROPERTIES FOLDER Modules/DirectXTex)
+
 
 # ドキュメントのビルドオプション
 if(BUILD_DOCUMENTATION)
@@ -159,4 +153,13 @@ foreach(lib ${LIBRARY} ${EXTERNAL_LIBS})
         set_target_properties(${lib} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${LIBRARY_OUTPUT_DIRECTORY})
         set_target_properties(${lib} PROPERTIES DEBUG_POSTFIX d)
     endif()
+endforeach()
+
+file(GLOB_RECURSE LIB_HEADERS "include/*.h" "include/*.hpp")
+foreach(header ${LIB_HEADERS})
+    get_filename_component(header_path ${header} DIRECTORY)
+    get_filename_component(relative_path ${header_path} RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    set(destination_path ${CMAKE_BINARY_DIR}/Lib/Include/${relative_path})
+    file(MAKE_DIRECTORY ${destination_path})
+    configure_file(${header} ${destination_path} COPYONLY)
 endforeach()

@@ -2,7 +2,7 @@
 #include <Internal/DX12/d3dx12Inc.h>
 #include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/DescriptorPool.h>
-
+#include <iostream>
 namespace
 {
     auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();

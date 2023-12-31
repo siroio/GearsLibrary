@@ -20,7 +20,6 @@ Glib::SkinnedMeshRenderer::SkinnedMeshRenderer()
 {
     worldConstantBuffer_.Create(sizeof(Matrix4x4));
     boneConstantBuffer_.Create(sizeof(Matrix4x4) * boneMatrix_.size());
-    boneMatrix_.fill(Matrix4x4::Identity());
 }
 
 void Glib::SkinnedMeshRenderer::Start()

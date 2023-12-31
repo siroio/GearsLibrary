@@ -22,8 +22,15 @@
 #include <InputSystem.h>
 #include <GLObject.h>
 #include <Components/Animator.h>
+#include <AnimationManager.h>
+#include <Internal/ImGuiManager.h>
 
 using namespace Glib;
+
+namespace
+{
+    auto imgui = Internal::Debug::ImGuiManager::Instance();
+}
 
 // テスト用コンポーネント
 class TestMover : public Component
@@ -31,7 +38,7 @@ class TestMover : public Component
 public:
     void Start()
     {
-        Debug::Log("Enable " + Glib::nameof<TestMover>());
+        imgui->Log("Enable " + nameof<TestMover>());
     }
 
     void Update()
@@ -78,55 +85,52 @@ public:
 };
 
 // テスト用シーンクラス
-class TestScene : public Glib::Scene
+class TestScene : public Scene
 {
 public:
     void Start() override
     {
-        if (!Glib::MeshManager::Instance().Load(0, R"(C:\Users\rukar\Desktop\銀狼\銀狼.globj)"))
+        if (!MeshManager::Instance().Load(0, R"(C:\Users\rukar\Desktop\MikuMikuDance_v932x64\Appearance Miku\Appearance Miku.globj)"))
         {
             return;
         }
-
-        auto light = Internal::Graphics::RenderingManager::Instance();
-        light->LightAmbient(Color{ 1.0f, 1.0f, 1.0f, 1.0f });
-        light->LightDiffuse(Color{ 1.0f, 1.0f, 1.0f });
-        light->LightSpecular(Color{ 1.0f, 1.0f, 1.0f });
-        light->LightDirection(Vector3{ 0.0f, -1.0f, 0.0f });
+        if (!AnimationManager::Instance().Load(0, R"(C:\Users\rukar\Desktop\MikuMikuDance_v932x64\いもができたモーション\にぼミクさん版\にぼミクさん_いもができた.glanim)"))
+        {
+            return;
+        }
 
         auto mesh = GameObjectManager::Instantiate("Mesh");
         auto renderer = mesh->AddComponent<SkinnedMeshRenderer>();
         auto animator = mesh->AddComponent<Animator>();
         mesh->AddComponent<TestMover>();
-
         renderer->MeshID(0);
+        animator->AnimationID(0);
 
         auto camera = GameObjectManager::Instantiate("Camera");
-        auto initPosition = Vector3{ 0.0f, 0.0f, -10.0f };
-
+        auto initPosition = Vector3{ 0.0f, 3.0f, -20.0f };
         camera->Transform()->Position(initPosition);
-        camera->AddComponent<Camera>()->ClearFlags(Glib::CameraClearFlags::Color);
+        camera->AddComponent<Camera>()->ClearFlags(CameraClearFlags::Color);
 
-        Debug::Log("Scene Loaded...");
+        imgui->Log("Scene Loading...");
     }
 
     void End() override
     {
-        Debug::Log("Scene Ended...");
+        imgui->Log("Scene End...");
     }
 };
 
 // ゲーム本体
-class MyGame : public Glib::Game
+class MyGame : public Game
 {
     void Start() override
     {
-        Debug::Log("GAME STARTTING");
+        imgui->Log("GAME STARTTING");
         SceneManager::Register<TestScene>();
-        Debug::Log("Scene: " + SceneManager::SceneName<TestScene>() + " Registered");
-        Debug::Log("TestScene Load Start");
+        imgui->Log("Scene: " + SceneManager::SceneName<TestScene>() + " Registered");
+        imgui->Log("TestScene Load Start");
         SceneManager::LoadScene("TestScene");
-        Debug::Log("TestScene Load Complete");
+        imgui->Log("TestScene Load Complete");
     }
 
     void End() override

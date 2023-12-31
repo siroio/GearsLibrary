@@ -661,9 +661,13 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories
 # with spaces.
 
-INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/GearsCore/include \
+INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/Gears3DObject/include\
+                        @CMAKE_CURRENT_SOURCE_DIR@/GearsAudio/include\
+                        @CMAKE_CURRENT_SOURCE_DIR@/GearsCore/include\
                         @CMAKE_CURRENT_SOURCE_DIR@/GearsComponent/include\
+                        @CMAKE_CURRENT_SOURCE_DIR@/GearsDebug/include\
                         @CMAKE_CURRENT_SOURCE_DIR@/GearsGraphics/include\
+                        @CMAKE_CURRENT_SOURCE_DIR@/GearsInput/include\
                         @CMAKE_CURRENT_SOURCE_DIR@/GearsMath/include\
                         @CMAKE_CURRENT_SOURCE_DIR@/GearsObject/include\
                         @CMAKE_CURRENT_SOURCE_DIR@/GearsScene/include\

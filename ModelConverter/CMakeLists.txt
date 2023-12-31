@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.1)
 # == CONFIG ==
 set(SOURCE_FILE
     ./src/mmd/PmxObject.cpp
+    ./src/mmd/VmdObject.cpp
+    ./src/utility/FileUtility.cpp
 )
 
 set(HEADER_FILE
@@ -10,12 +12,16 @@ set(HEADER_FILE
     ./include/IConverter.h
     ./include/Converter.h
     ./include/mmd/PmxObject.h
+    ./include/mmd/VmdObject.h
+    ./include/utility/FileUtility.h
 )
+
+set(ENTRY_POINT ./src/main.cpp)
 
 set(EXECUTABLE_NAME ModelConverter)
 create_filter()
 
-add_executable(${EXECUTABLE_NAME} ${HEADER_FILE} ${SOURCE_FILE} src/main.cpp)
+add_executable(${EXECUTABLE_NAME} ${HEADER_FILE} ${SOURCE_FILE} ${ENTRY_POINT})
 target_include_directories(${EXECUTABLE_NAME} PRIVATE ./include)
 target_compile_features(${EXECUTABLE_NAME} PRIVATE cxx_std_20)
 target_link_libraries(${EXECUTABLE_NAME} PRIVATE Gears3DObject)

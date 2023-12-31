@@ -6,6 +6,7 @@ namespace Glib
 {
     class GLAnimation
     {
+    public:
 #pragma pack(push, 1)
         struct Header
         {
@@ -16,9 +17,6 @@ namespace Glib
 
         struct BoneInfo
         {
-            BoneInfo() = default;
-            BoneInfo(int count) : boneCount{ count }
-            {};
             int boneCount;
         };
 
@@ -30,7 +28,7 @@ namespace Glib
 
         struct KeyFrame
         {
-            int keyFrame{};
+            int frameNo{};
             float scale[3];
             float rotation[4];
             float translation[3];
@@ -39,7 +37,7 @@ namespace Glib
         struct MotionData
         {
             MotionInfo info;
-            std::vector<KeyFrame> frames;
+            KeyFrame frame;
         };
 #pragma pack(pop)
 
@@ -66,7 +64,7 @@ namespace Glib
          * @return 成功 : true
          * @return 失敗 : false
          */
-        bool WriteFile(const std::string& path);
+        bool WriteFile(std::string_view path);
 
     private:
         // == 各種読み込み用関数 == //
@@ -75,7 +73,7 @@ namespace Glib
         void ReadBoneInfo(std::ifstream& file);
         void ReadMotionData(std::ifstream& file);
         void ReadMotionInfo(std::ifstream& file, MotionInfo& info);
-        void ReadKeyFrame(std::ifstream& file, KeyFrame& keyFrame, int length);
+        void ReadKeyFrames(std::ifstream& file, KeyFrame& keyFrames);
 
         // == 各種書き込み用関数 == //
 
@@ -83,13 +81,17 @@ namespace Glib
         void WriteBoneInfo(std::ofstream& file);
         void WriteMotionData(std::ofstream& file);
         void WriteMotionInfo(std::ofstream& file, const MotionInfo& info);
-        void WriteKeyFrame(std::ofstream& file, const KeyFrame& keyFrame, int length);
+        void WriteKeyFrame(std::ofstream& file, const KeyFrame& keyFrames);
+
+    public:
+        const std::vector<MotionData>& Motions() const;
+        const BoneInfo& FrameLength() const;
 
     private:
         std::string             signature_{ "" };
         float                   version_{ 1.0f };
         std::string             endianInfo_{ "" };
-        BoneInfo                boneInfo_{ -1 };
+        BoneInfo                boneInfo_;
         std::vector<MotionData> motionData_;
     };
 }

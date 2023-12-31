@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <format>
 #include <string_view>
@@ -5,6 +6,13 @@
 
 namespace Glib
 {
+    enum class LogLevel
+    {
+        Info,
+        Warn,
+        Error
+    };
+
     /**
      * @brief 簡易ロガークラス
      * @brief ファイル出力なし
@@ -17,12 +25,6 @@ namespace Glib
         Debug& operator = (const Debug&) = delete;
 
     public:
-        enum class LogLevel
-        {
-            Info,
-            Warn,
-            Error
-        };
 
         static bool Enabled();
 
@@ -43,15 +45,21 @@ namespace Glib
 
         /**
          * @brief エラーメッセージ出力
-         * @param message 
+         * @param message
         */
         static void Error(std::string_view message);
 
         /**
          * @brief 警告メッセージ出力
-         * @param message 
+         * @param message
         */
         static void Warn(std::string_view message);
+
+        /**
+         * @brief レベルごとのPrefixを取得
+         * @param loglevel
+         */
+        static std::string GetPrefix(LogLevel loglevel);
 
 #if defined(DEBUG) || defined(_DEBUG)
         /**

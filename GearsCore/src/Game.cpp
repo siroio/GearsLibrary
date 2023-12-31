@@ -17,6 +17,7 @@
 #include <Internal/DX12/Shader/ShaderManager.h>
 #include <Internal/RenderingManager.h>
 #include <Internal/CanvasManager.h>
+#include <Internal/ImGuiManager.h>
 #include <AudioManager.h>
 #include <GameObjectManager.h>
 #include <GameTimer.h>
@@ -32,7 +33,7 @@ namespace
 
 int Glib::Game::Run()
 {
-#if defined(DEBUG) | defined(_DEBUG)
+#if defined(DEBUG) || defined(_DEBUG)
     // メモリリーク検出開始
     _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG | _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
@@ -77,6 +78,12 @@ void Glib::Game::RegisterSystem()
     SystemManager::AddSystem<InputSystem>();
     SystemManager::AddSystem<Random>();
     SystemManager::AddSystem<SceneManager>();
+
+#if defined(DEBUG) || defined(_DEBUG)
+    // デバッグ用
+    SystemManager::AddSystem<Internal::Debug::ImGuiManager>();
+#endif // !
+
 }
 
 bool Glib::Game::Initialize()

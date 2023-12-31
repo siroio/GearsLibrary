@@ -1,10 +1,11 @@
 #include <Internal/CameraManager.h>
 #include <Internal/CameraBase.h>
 #include <Internal/DX12/DirectX12.h>
-
+#include <Internal/ImGuiManager.h>
 namespace
 {
     auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
+    auto s_imgui = Glib::Internal::Debug::ImGuiManager::Instance();
 }
 
 void Glib::Internal::Graphics::CameraManager::BeginDraw()
@@ -20,7 +21,7 @@ void Glib::Internal::Graphics::CameraManager::Draw()
     // RenderTargetの設定
 #if defined(DEBUG) || defined(_DEBUG)
     // TODO: デバッグ用のRenderTargetへ描画
-    s_dx12->SetDefaultRenderTarget();
+    s_imgui->SetRenderTarget();
 #else
     s_dx12->SetDefaultRenderTarget();
 #endif

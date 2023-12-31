@@ -40,7 +40,7 @@ bool Glib::Internal::Audio::XAudioSystem::Initialize()
 {
     // ƒtƒ‰ƒO‚Ìİ’è
     UINT flags = 0;
-#if defined(DEBUG) | defined(_DEBUG)
+#if defined(DEBUG) || defined(_DEBUG)
     flags |= XAUDIO2_DEBUG_ENGINE;
 #endif
     // XAudio2‚Ì‰Šú‰»

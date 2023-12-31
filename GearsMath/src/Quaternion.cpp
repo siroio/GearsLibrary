@@ -135,13 +135,13 @@ Quaternion Quaternion::LookRotation(const Vector3& view, const Vector3& up)
 
     Vector3 upwards = Vector3::Cross(forward, right);
     upwards.Normalize();
-    right = Vector3::Cross(forward, right);
+    right = Vector3::Cross(forward, upwards);
     Quaternion result;
     float radicand = right.x + upwards.y + forward.z;
     if (radicand > 0.0f)
     {
         result.w = Mathf::Sqrt(1.0f + radicand) * 0.5f;
-        float recip = Mathf::Inverse(4.0f * result.w);
+        float recip = 0.25f / result.w;
         result.x = (upwards.z - forward.y) * recip;
         result.y = (forward.x - right.z) * recip;
         result.z = (right.y - upwards.x) * recip;

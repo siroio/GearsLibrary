@@ -85,7 +85,7 @@ void Glib::Transform::Rotation(const Quaternion& rotation)
     }
     else
     {
-        local_rotation_ = Quaternion::Inverse(parent_->LocalRotation()) * rotation;
+        local_rotation_ = Quaternion::Inverse(parent_->Rotation()) * rotation;
     }
 }
 
@@ -259,12 +259,12 @@ Glib::WeakPtr<Glib::Transform> Glib::Transform::Parent() const
     return parent_;
 }
 
-void Glib::Transform::AddChild(const Glib::WeakPtr<Transform> child)
+void Glib::Transform::AddChild(const Glib::WeakPtr<Transform>& child)
 {
     children_.push_back(child);
 }
 
-void Glib::Transform::RemoveChild(const Glib::WeakPtr<Transform> child)
+void Glib::Transform::RemoveChild(const Glib::WeakPtr<Transform>& child)
 {
     children_.remove(child);
 }

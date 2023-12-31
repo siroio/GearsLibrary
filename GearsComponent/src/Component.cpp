@@ -1,5 +1,6 @@
 #include <Component.h>
 #include <GameObject.h>
+#include <GLGUI.h>
 
 bool Component::Active() const
 {
@@ -25,6 +26,11 @@ void Component::Destroy()
 bool Component::IsDead() const
 {
     return isDead_;
+}
+
+void Component::OnGUI()
+{
+    Glib::GLGUI::CheckBox("Active", &isActive_);
 }
 
 void Component::SetGameObject(const GameObjectPtr& gameObject)

@@ -71,8 +71,8 @@ namespace Glib
         void ClearChildren();
 
     private:
-        void AddChild(const Glib::WeakPtr<Transform> child);
-        void RemoveChild(const Glib::WeakPtr<Transform> child);
+        void AddChild(const Glib::WeakPtr<Transform>& child);
+        void RemoveChild(const Glib::WeakPtr<Transform>& child);
 
 
     private:

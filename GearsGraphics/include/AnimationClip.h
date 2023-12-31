@@ -38,7 +38,7 @@ namespace Glib
          * @param frameNo   フレーム番号
          * @return キーフレーム
          */
-        KeyFrame GetKeyFrame(std::string_view boneName, float frameNo) const;
+        KeyFrame GetKeyFrame(const std::string& boneName, float frameNo) const;
 
         /**
          * @brief 終了フレームを取得
@@ -52,6 +52,7 @@ namespace Glib
         std::pair<int, int> SearchKeyFrame(const KeyFrames& keys, float frameNo) const;
 
     private:
+        float endFrame_;
         std::unordered_map<std::string, KeyFrames> keyframes_;
     };
 }

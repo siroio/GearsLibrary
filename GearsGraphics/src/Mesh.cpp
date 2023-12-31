@@ -66,7 +66,7 @@ bool Glib::Mesh::Load(std::string_view path)
     {
         const auto& bone = object.Bones().at(i);
         Glib::Bone newBone{};
-        newBone.name = std::string{ bone.boneName };
+        newBone.name = bone.boneName;
         newBone.position = Vector3{ bone.translate[0], bone.translate[1], bone.translate[2] };
         newBone.parent = bone.parent;
         newBone.boneIndex = i;

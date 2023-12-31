@@ -2,8 +2,8 @@
 #include <filesystem>
 #include <fstream>
 #include <array>
-#include <Windows.h>
 #include <GLObject.h>
+#include <utility/FileUtility.h>
 
 namespace fs = std::filesystem;
 
@@ -11,48 +11,27 @@ namespace
 {
     static constexpr std::array<unsigned char, 4> PMX_MAGIC_NUMBER{ 0x50, 0x4d, 0x58, 0x20 };
     static constexpr int PMX_NO_DATA = -1;
+    static constexpr float PMX_VERSION = 2.0f;
 }
 
 namespace
 {
-    // 拡張子を取得
-    std::string GetExt(std::string_view file)
-    {
-        return fs::path{ file }.extension().generic_string();
-    }
-
-    std::string ReadTextBuf(std::ifstream& file, const EncodeType& encode)
-    {
-        int bufLength{ 0 };
-        file.read(reinterpret_cast<char*>(&bufLength), 4);
-        if (bufLength < 1) return "";
-        if (encode == EncodeType::UTF16)
-        {
-            std::wstring textBuf(bufLength / sizeof(wchar_t), L'\0');
-            file.read(reinterpret_cast<char*>(textBuf.data()), bufLength);
-
-            int bufferSize = WideCharToMultiByte(CP_ACP, 0, textBuf.c_str(), -1, nullptr, 0, nullptr, nullptr);
-            if (bufferSize == 0) return "";
-            std::string result(bufferSize, '\0');
-            if (WideCharToMultiByte(CP_ACP, 0, textBuf.data(), -1, result.data(), bufferSize, nullptr, nullptr) == 0)
-            {
-                return "";
-            }
-
-            return result;
-        }
-        else if (encode == EncodeType::UTF8)
-        {
-            std::string textBuf(bufLength, '\0');
-            file.read(textBuf.data(), bufLength);
-            return textBuf;
-        }
-        return "";
-    }
-
     bool CheckHasBoneFlag(const PmxBone& bone, const PmxBoneFlag& flag)
     {
         return ((unsigned int)bone.flag & (unsigned int)flag) != 0;
+    }
+
+    Encode ToEncode(PmxEncode encode)
+    {
+        switch (encode)
+        {
+            case PmxEncode::UTF16:
+                return Encode::UTF16;
+            case PmxEncode::UTF8:
+                return Encode::UTF8;
+            default:
+                return Encode::UTF8;
+        }
     }
 }
 
@@ -60,16 +39,16 @@ bool PmxModel::ReadPmxHeader(std::ifstream& pmxFile, PmxHeader& header)
 {
     // マジックナンバー読み込み
     std::array<unsigned char, 4> magicNum{};
-    pmxFile.read(reinterpret_cast<char*>(magicNum.data()), 4);
+    FileUtility::ReadForBinary(pmxFile, magicNum.data(), 4);
     if (magicNum != PMX_MAGIC_NUMBER) return false;
 
     // バージョン2.0のチェック
-    pmxFile.read(reinterpret_cast<char*>(&header.version), 4);
-    if (header.version != 2.0f) return false;
+    FileUtility::ReadForBinary(pmxFile, &header.version, 4);
+    if (header.version != PMX_VERSION) return false;
 
     // 追加情報の長さ
-    pmxFile.read(reinterpret_cast<char*>(&header.length), 1);
-    header.encode = static_cast<EncodeType>(pmxFile.get());
+    FileUtility::ReadForBinary(pmxFile, &header.length, 1);
+    FileUtility::ReadForBinary(pmxFile, &header.encode, 1);
 
     for (int i = 0; i < header.length - 1; i++)
     {
@@ -80,7 +59,7 @@ bool PmxModel::ReadPmxHeader(std::ifstream& pmxFile, PmxHeader& header)
     for (int i = 0; i < 4; i++)
     {
         int len{ 0 };
-        pmxFile.read(reinterpret_cast<char*>(&len), 4);
+        FileUtility::ReadForBinary(pmxFile, &len, sizeof(int));
         pmxFile.seekg(len, std::ios::cur);
     }
 
@@ -91,14 +70,16 @@ bool PmxModel::ReadVertices(std::ifstream& pmxFile, const PmxHeader& header)
 {
     // 頂点
     int vertexSize{ 0 };
-    pmxFile.read(reinterpret_cast<char*>(&vertexSize), 4);
+    FileUtility::ReadForBinary(pmxFile, &vertexSize, 4);
+
     vertices.resize(vertexSize);
     for (int i = 0; i < vertexSize; i++)
     {
         auto& vertex = vertices.at(i);
-        pmxFile.read(reinterpret_cast<char*>(&vertex.position), 12);
-        pmxFile.read(reinterpret_cast<char*>(&vertex.normal), 12);
-        pmxFile.read(reinterpret_cast<char*>(&vertex.uv), 8);
+        FileUtility::ReadForBinary(pmxFile, &vertex.position, sizeof(Vector3f));
+        FileUtility::ReadForBinary(pmxFile, &vertex.normal, sizeof(Vector3f));
+        FileUtility::ReadForBinary(pmxFile, &vertex.uv, sizeof(Vector2f));
+
         // 追加UV
         auto uvCount = header.Info[0];
         if (uvCount != 0)
@@ -117,7 +98,7 @@ bool PmxModel::ReadVertices(std::ifstream& pmxFile, const PmxHeader& header)
         {
             case WeightType::BDEF1:
                 vertex.weight.type = WeightType::BDEF1;
-                pmxFile.read(reinterpret_cast<char*>(&vertex.weight.bone1), header.Info[4]);
+                FileUtility::ReadForBinary(pmxFile, &vertex.weight.bone1, header.Info[4]);
                 vertex.weight.bone2 = PMX_NO_DATA;
                 vertex.weight.bone3 = PMX_NO_DATA;
                 vertex.weight.bone4 = PMX_NO_DATA;
@@ -125,35 +106,35 @@ bool PmxModel::ReadVertices(std::ifstream& pmxFile, const PmxHeader& header)
                 break;
             case WeightType::BDEF2:
                 vertex.weight.type = WeightType::BDEF2;
-                pmxFile.read(reinterpret_cast<char*>(&vertex.weight.bone1), header.Info[4]);
-                pmxFile.read(reinterpret_cast<char*>(&vertex.weight.bone2), header.Info[4]);
+                FileUtility::ReadForBinary(pmxFile, &vertex.weight.bone1, header.Info[4]);
+                FileUtility::ReadForBinary(pmxFile, &vertex.weight.bone2, header.Info[4]);
                 vertex.weight.bone3 = PMX_NO_DATA;
                 vertex.weight.bone4 = PMX_NO_DATA;
-                pmxFile.read(reinterpret_cast<char*>(&vertex.weight.weight1), 4);
+                FileUtility::ReadForBinary(pmxFile, &vertex.weight.weight1, sizeof(float));
                 vertex.weight.weight2 = 1.0f - vertex.weight.weight1;
                 break;
             case WeightType::BDEF4:
                 vertex.weight.type = WeightType::BDEF4;
                 for (int i = 0; i < 4; i++)
                 {
-                    pmxFile.read(reinterpret_cast<char*>(&vertex.weight.bones[i]), header.Info[4]);
+                    FileUtility::ReadForBinary(pmxFile, &vertex.weight.bones[i], header.Info[4]);
                 }
                 for (int i = 0; i < 4; i++)
                 {
-                    pmxFile.read(reinterpret_cast<char*>(&vertex.weight.weights[i]), 4);
+                    FileUtility::ReadForBinary(pmxFile, &vertex.weight.weights[i], header.Info[4]);
                 }
                 break;
             case WeightType::SDEF:
                 vertex.weight.type = WeightType::SDEF;
-                pmxFile.read(reinterpret_cast<char*>(&vertex.weight.bone1), header.Info[4]);
-                pmxFile.read(reinterpret_cast<char*>(&vertex.weight.bone2), header.Info[4]);
+                FileUtility::ReadForBinary(pmxFile, &vertex.weight.bone1, header.Info[4]);
+                FileUtility::ReadForBinary(pmxFile, &vertex.weight.bone2, header.Info[4]);
                 vertex.weight.bone3 = PMX_NO_DATA;
                 vertex.weight.bone4 = PMX_NO_DATA;
-                pmxFile.read(reinterpret_cast<char*>(&vertex.weight.weight1), 4);
+                FileUtility::ReadForBinary(pmxFile, &vertex.weight.weight1, sizeof(float));
                 vertex.weight.weight2 = 1.0f - vertex.weight.weight1;
-                pmxFile.read(reinterpret_cast<char*>(&vertex.weight.c), 12);
-                pmxFile.read(reinterpret_cast<char*>(&vertex.weight.r0), 12);
-                pmxFile.read(reinterpret_cast<char*>(&vertex.weight.r1), 12);
+                FileUtility::ReadForBinary(pmxFile, &vertex.weight.c, sizeof(Vector3f));
+                FileUtility::ReadForBinary(pmxFile, &vertex.weight.r0, sizeof(Vector3f));
+                FileUtility::ReadForBinary(pmxFile, &vertex.weight.r1, sizeof(Vector3f));
                 break;
             default:
                 return false;
@@ -170,13 +151,13 @@ bool PmxModel::ReadSurfaces(std::ifstream& pmxFile, const PmxHeader& header)
 {
     // 頂点インデックス
     int surfaceSize{ 0 };
-    pmxFile.read(reinterpret_cast<char*>(&surfaceSize), 4);
-    surfaces.resize(surfaceSize);
+    FileUtility::ReadForBinary(pmxFile, &surfaceSize, sizeof(int));
 
+    surfaces.resize(surfaceSize);
     for (int i = 0; i < surfaceSize; i++)
     {
         auto& surface = surfaces.at(i);
-        pmxFile.read(reinterpret_cast<char*>(&surface.vertexIndex), header.Info[1]);
+        FileUtility::ReadForBinary(pmxFile, &surface.vertexIndex, header.Info[1]);
         if (surface.vertexIndex == PMX_NO_DATA) return false;
     }
     return true;
@@ -186,13 +167,15 @@ bool PmxModel::ReadTextures(std::ifstream& pmxFile, const PmxHeader& header)
 {
     // テクスチャ
     int textureSize{ 0 };
-    pmxFile.read(reinterpret_cast<char*>(&textureSize), 4);
+    FileUtility::ReadForBinary(pmxFile, &textureSize, sizeof(int));
+
     texturePath.resize(textureSize);
     for (int i = 0; i < textureSize; i++)
     {
-        auto texPath = ReadTextBuf(pmxFile, header.encode);
-        texPath = fs::path{ texPath }.make_preferred().lexically_normal().generic_string();
-        texturePath.at(i) = texPath;
+        std::string textPath{ "" };
+        FileUtility::ReadText(pmxFile, textPath, ToEncode(header.encode));
+        textPath = fs::path{ textPath }.make_preferred().lexically_normal().generic_string();
+        texturePath.at(i) = textPath;
     }
     return true;
 }
@@ -201,22 +184,23 @@ bool PmxModel::ReadMaterials(std::ifstream& pmxFile, const PmxHeader& header)
 {
     // マテリアル
     int materialSize{ 0 };
-    pmxFile.read(reinterpret_cast<char*>(&materialSize), 4);
+    FileUtility::ReadForBinary(pmxFile, &materialSize, sizeof(4));
     materials.resize(materialSize);
+
     for (int i = 0; i < materialSize; i++)
     {
         // 素材名 & 素材名(英名)
         for (int i = 0; i < 2; i++)
         {
             int len{ 0 };
-            pmxFile.read(reinterpret_cast<char*>(&len), 4);
+            FileUtility::ReadForBinary(pmxFile, &len, sizeof(int));
             pmxFile.seekg(len, std::ios::cur);
         }
         auto& material = materials.at(i);
-        pmxFile.read(reinterpret_cast<char*>(&material.diffuse), 16);
-        pmxFile.read(reinterpret_cast<char*>(&material.specular), 12);
-        pmxFile.read(reinterpret_cast<char*>(&material.specularFactor), 4);
-        pmxFile.read(reinterpret_cast<char*>(&material.ambient), 12);
+        FileUtility::ReadForBinary(pmxFile, &material.diffuse, sizeof(Vector4f));
+        FileUtility::ReadForBinary(pmxFile, &material.specular, sizeof(Vector3f));
+        FileUtility::ReadForBinary(pmxFile, &material.specularFactor, sizeof(float));
+        FileUtility::ReadForBinary(pmxFile, &material.ambient, sizeof(Vector3f));
 
         // フラグ
         pmxFile.get();
@@ -227,20 +211,24 @@ bool PmxModel::ReadMaterials(std::ifstream& pmxFile, const PmxHeader& header)
         pmxFile.seekg(4, std::ios::cur);
 
         // テクスチャ
-        pmxFile.read(reinterpret_cast<char*>(&material.textureIndex), header.Info[2]);
+        FileUtility::ReadForBinary(pmxFile, &material.textureIndex, header.Info[2]);
         pmxFile.seekg(header.Info[2], std::ios::cur); // スフィアは飛ばす
         pmxFile.get();
 
         const unsigned char sharedToonFlag = pmxFile.get();
-        sharedToonFlag ?
-            pmxFile.seekg(1, std::ios::cur) :
-            pmxFile.read(reinterpret_cast<char*>(&material.toonTextureIndex), header.Info[2]);
+        if (sharedToonFlag)
+        {
+            pmxFile.seekg(1, std::ios::cur);
+        }
+        else
+        {
+            FileUtility::ReadForBinary(pmxFile, &material.toonTextureIndex, header.Info[2]);
+        }
 
         int memoLen{ 0 };
-        pmxFile.read(reinterpret_cast<char*>(&memoLen), 4);
+        FileUtility::ReadForBinary(pmxFile, &memoLen, sizeof(int));
         pmxFile.seekg(memoLen, std::ios::cur);
-
-        pmxFile.read(reinterpret_cast<char*>(&material.vertexNum), 4);
+        FileUtility::ReadForBinary(pmxFile, &material.vertexNum, sizeof(int));
     }
     return true;
 }
@@ -251,28 +239,29 @@ bool PmxModel::ReadBones(std::ifstream& pmxFile, const PmxHeader& header)
     int boneSize{ 0 };
     int ikLinkSize{ 0 };
     unsigned char angleLimit = 0;
-    pmxFile.read(reinterpret_cast<char*>(&boneSize), 4);
-    bones.resize(boneSize);
+    FileUtility::ReadForBinary(pmxFile, &boneSize, sizeof(int));
 
+    bones.resize(boneSize);
     for (int i = 0; i < boneSize; i++)
     {
         auto& bone = bones.at(i);
         // ボーン名
-        bone.name = ReadTextBuf(pmxFile, header.encode);
-        bone.nameBoneEng = ReadTextBuf(pmxFile, EncodeType::UTF8);
+        FileUtility::ReadText(pmxFile, bone.name, ToEncode(header.encode));
+        FileUtility::ReadText(pmxFile, bone.nameBoneEng, Encode::UTF8);
 
-        pmxFile.read(reinterpret_cast<char*>(&bone.position), 12);
-        pmxFile.read(reinterpret_cast<char*>(&bone.parentBoneIndex), header.Info[4]);
+        FileUtility::ReadForBinary(pmxFile, &bone.position, sizeof(Vector3f));
+        FileUtility::ReadForBinary(pmxFile, &bone.parentBoneIndex, header.Info[4]);
         if (boneSize <= bone.parentBoneIndex)
         {
             bone.parentBoneIndex = PMX_NO_DATA;
         }
-        pmxFile.read(reinterpret_cast<char*>(&bone.transformHierarchy), 4);
-        pmxFile.read(reinterpret_cast<char*>(&bone.flag), 2);
+        FileUtility::ReadForBinary(pmxFile, &bone.transformHierarchy, sizeof(int));
+        FileUtility::ReadForBinary(pmxFile, &bone.flag, 2);
 
+        // 各フラグのチェック
         if (CheckHasBoneFlag(bone, PmxBoneFlag::TargetShowMode))
         {
-            pmxFile.read(reinterpret_cast<char*>(&bone.childrenIndex), header.Info[4]);
+            FileUtility::ReadForBinary(pmxFile, &bone.childrenIndex, header.Info[4]);
             if (boneSize <= bone.childrenIndex)
             {
                 bone.childrenIndex = PMX_NO_DATA;
@@ -281,48 +270,48 @@ bool PmxModel::ReadBones(std::ifstream& pmxFile, const PmxHeader& header)
         else
         {
             bone.childrenIndex = PMX_NO_DATA;
-            pmxFile.read(reinterpret_cast<char*>(&bone.offset), 12);
+            FileUtility::ReadForBinary(pmxFile, &bone.offset, sizeof(Vector3f));
         }
 
         if (CheckHasBoneFlag(bone, PmxBoneFlag::AppendRotate) || CheckHasBoneFlag(bone, PmxBoneFlag::AppendTranslate))
         {
-            pmxFile.read(reinterpret_cast<char*>(&bone.impartParentIndex), header.Info[4]);
-            pmxFile.read(reinterpret_cast<char*>(&bone.impartRate), 4);
+            FileUtility::ReadForBinary(pmxFile, &bone.impartParentIndex, header.Info[4]);
+            FileUtility::ReadForBinary(pmxFile, &bone.impartRate, sizeof(float));
         }
 
         if (CheckHasBoneFlag(bone, PmxBoneFlag::FixedAxis))
         {
-            pmxFile.read(reinterpret_cast<char*>(&bone.fixedAxis), 12);
+            FileUtility::ReadForBinary(pmxFile, &bone.fixedAxis, sizeof(Vector3f));
         }
 
         if (CheckHasBoneFlag(bone, PmxBoneFlag::LocalAxis))
         {
-            pmxFile.read(reinterpret_cast<char*>(&bone.localAxisX), 12);
-            pmxFile.read(reinterpret_cast<char*>(&bone.localAxisZ), 12);
+            FileUtility::ReadForBinary(pmxFile, &bone.localAxisX, sizeof(Vector3f));
+            FileUtility::ReadForBinary(pmxFile, &bone.localAxisZ, sizeof(Vector3f));
         }
 
         if (CheckHasBoneFlag(bone, PmxBoneFlag::DeformOuterParent))
         {
-            pmxFile.read(reinterpret_cast<char*>(&bone.externalParentKey), 4);
+            FileUtility::ReadForBinary(pmxFile, &bone.externalParentKey, sizeof(int));
         }
 
         if (CheckHasBoneFlag(bone, PmxBoneFlag::IK))
         {
-            pmxFile.read(reinterpret_cast<char*>(&bone.ikTargetIndex), header.Info[4]);
-            pmxFile.read(reinterpret_cast<char*>(&bone.ikLoopCount), 4);
-            pmxFile.read(reinterpret_cast<char*>(&bone.ikUnitAngle), 4);
-            pmxFile.read(reinterpret_cast<char*>(&ikLinkSize), 4);
-            bone.ikLinks.resize(ikLinkSize);
+            FileUtility::ReadForBinary(pmxFile, &bone.ikTargetIndex, header.Info[4]);
+            FileUtility::ReadForBinary(pmxFile, &bone.ikLoopCount, sizeof(int));
+            FileUtility::ReadForBinary(pmxFile, &bone.ikUnitAngle, sizeof(float));
+            FileUtility::ReadForBinary(pmxFile, &ikLinkSize, sizeof(int));
 
+            bone.ikLinks.resize(ikLinkSize);
             for (int j = 0; j < ikLinkSize; ++j)
             {
-                pmxFile.read(reinterpret_cast<char*>(&bone.ikLinks[j].index), header.Info[4]);
+                FileUtility::ReadForBinary(pmxFile, &bone.ikLinks[j].index, header.Info[4]);
                 angleLimit = pmxFile.get();
                 bone.ikLinks[j].existAngleLimited = false;
                 if (angleLimit == 1)
                 {
-                    pmxFile.read(reinterpret_cast<char*>(&bone.ikLinks[j].limitAngleMin), 12);
-                    pmxFile.read(reinterpret_cast<char*>(&bone.ikLinks[j].limitAngleMax), 12);
+                    FileUtility::ReadForBinary(pmxFile, &bone.ikLinks[j].limitAngleMin, sizeof(Vector3f));
+                    FileUtility::ReadForBinary(pmxFile, &bone.ikLinks[j].limitAngleMax, sizeof(Vector3f));
                     bone.ikLinks[j].existAngleLimited = true;
                 }
             }
@@ -338,7 +327,7 @@ bool PmxModel::ReadBones(std::ifstream& pmxFile, const PmxHeader& header)
 bool PmxModel::LoadFile(std::string_view path)
 {
     // 拡張子が間違っていたら失敗
-    if (!GetExt(path).ends_with("pmx")) return false;
+    if (!FileUtility::GetExtension(path).ends_with("pmx")) return false;
     std::ifstream pmxFile{ path.data(), std::ios::binary };
     if (pmxFile.fail()) return false;
 
@@ -354,13 +343,14 @@ bool PmxModel::LoadFile(std::string_view path)
 
 bool PmxModel::WriteFile(std::string_view path)
 {
-    std::vector<Glib::GLObject::Vertex> glVertices;
-    std::vector<unsigned int> glIndices;
-    std::vector<Glib::GLObject::Subset> glSubsets;
-    std::vector<Glib::GLObject::Material> glMaterials;
-    std::vector<Glib::GLObject::Bone> glBones;
-
     using gl = Glib::GLObject;
+    std::vector<gl::Vertex> glVertices;
+    std::vector<unsigned int> glIndices;
+    std::vector<gl::Subset> glSubsets;
+    std::vector<gl::Material> glMaterials;
+    std::vector<gl::Bone> glBones;
+
+
     for (const auto& pmxVertex : vertices)
     {
         gl::Vertex glVertex{};
@@ -383,6 +373,11 @@ bool PmxModel::WriteFile(std::string_view path)
         {
             tangent = { 1.0f, 0.0f, 0.0f };
         }
+        glVertex.tangent[0] = tangent.x;
+        glVertex.tangent[1] = tangent.y;
+        glVertex.tangent[2] = tangent.z;
+        glVertex.tangent[3] = 1.0f;
+
         // ボーン情報
         for (size_t i = 0; i < 4; ++i)
         {

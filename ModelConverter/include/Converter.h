@@ -7,6 +7,7 @@
 #include <ranges>
 #include <IConverter.h>
 #include <mmd/PmxObject.h>
+#include <mmd/VmdObject.h>
 
 /**
  * @brief 例外クラス
@@ -14,8 +15,15 @@
 class UnsupportedFileTypeException : public std::runtime_error
 {
 public:
-    // コンストラクタ継承
+    // 継承コンストラクタ
     using std::runtime_error::runtime_error;
+};
+
+class IllegalConverterException : public std::logic_error
+{
+public:
+    // 継承コンストラクタ
+    using std::logic_error::logic_error;
 };
 
 class Converter
@@ -32,7 +40,9 @@ public:
 
     static void Initialize()
     {
+        // 変換用のクラスを登録
         RegisterConverter<PmxModel>("pmx");
+        RegisterConverter<VmdMotion>("vmd");
     }
 
     /**

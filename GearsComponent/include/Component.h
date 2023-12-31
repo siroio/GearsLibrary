@@ -19,6 +19,7 @@ public:
     const GameObjectPtr& GameObject() const;
     void Destroy();
     bool IsDead() const;
+    virtual void OnGUI();
 
 private:
     virtual void SetGameObject(const GameObjectPtr& gameObject) override;

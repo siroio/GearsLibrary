@@ -1,6 +1,7 @@
 #include <GameObject.h>
 #include <Component.h>
 #include <Components/Transform.h>
+#include <Internal/ImGuiInc.h>
 
 GameObject::GameObject(std::string_view name) : name_{ name }
 {}
@@ -28,6 +29,20 @@ void GameObject::RemoveDeadComponents()
     });
 }
 
+void GameObject::DrawGUI()
+{
+    for (const auto& component : components_)
+    {
+        std::string name = typeid(*component.get()).name();
+        ImGui::PushID(component.get());
+        if (ImGui::CollapsingHeader(name.data()))
+        {
+            component->OnGUI();
+        }
+        ImGui::PopID();
+    }
+}
+
 void GameObject::Destroy()
 {
     isActive_ = false;
@@ -51,7 +66,8 @@ void GameObject::DontDestroyOnLoad(bool dontDestroyOnLoad)
 
 bool GameObject::Active() const
 {
-    return isActive_;
+    const auto& parent = transform_->Parent();
+    return isActive_ && (parent.expired() || parent->GameObject()->Active());
 }
 
 void GameObject::Active(bool active)
@@ -59,13 +75,12 @@ void GameObject::Active(bool active)
     isActive_ = active;
 }
 
-
 void GameObject::Name(std::string_view name)
 {
     name_ = name;
 }
 
-std::string_view GameObject::Name() const
+std::string GameObject::Name() const
 {
     return name_;
 }
@@ -75,14 +90,29 @@ void GameObject::Tag(std::string_view tag)
     tag_ = tag;
 }
 
-std::string_view GameObject::Tag() const
+std::string GameObject::Tag() const
 {
     return tag_;
+}
+
+unsigned int GameObject::Layer() const
+{
+    return layer_;
+}
+
+void GameObject::Layer(unsigned int layer)
+{
+    layer_ = layer;
 }
 
 bool GameObject::IsDead() const
 {
     return isDead_;
+}
+
+bool GameObject::IsRoot() const
+{
+    return transform_->Parent().expired();
 }
 
 const Glib::WeakPtr<Glib::Transform>& GameObject::Transform() const

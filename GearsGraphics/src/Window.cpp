@@ -1,7 +1,8 @@
 ﻿#include <Window.h>
-#include <Vector2.h>
 #include <unordered_map>
 #include <Internal/DX12/DirectX12.h>
+#include <Vector2.h>
+#include <StringUtility.h>
 
 namespace
 {
@@ -11,7 +12,7 @@ namespace
     std::unordered_map<int, Glib::WindowProcedure> s_windowProcedures;
     std::string s_windowName{ "GameWindow" };
     Vector2 s_windowSize{ 1240.0f, 720.0f };
-    Vector2 s_windowDebugSize{ 1240.0f, 720.0f };
+    Vector2 s_windowDebugSize{ 1920.0f, 1040.0f };
     bool s_isFullScreen{ false };
 }
 
@@ -50,8 +51,7 @@ bool Glib::Window::Initialize()
     auto style = WS_OVERLAPPEDWINDOW;
 
 #ifdef UNICODE
-    std::wstring wstr{ s_windowName.begin(), s_windowName.end() };
-    s_windowClass.lpszClassName = wstr.c_str();
+    s_windowClass.lpszClassName = StringToWide(s_windowName).c_str();
 #else
     s_windowClass.lpszClassName = s_windowName.c_str();
 #endif

@@ -1,5 +1,6 @@
 #include <Internal/CanvasManager.h>
 #include <Internal/DX12/DirectX12.h>
+#include <Internal/ImGuiManager.h>
 #include <Internal/UIRenderer.h>
 #include <Components/Canvas.h>
 #include <unordered_map>
@@ -16,12 +17,16 @@ namespace
     std::unordered_map<std::uintptr_t, std::list<Glib::WeakPtr<Glib::Internal::UIRenderer>>> s_renderers;
 
     auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
+    auto s_imgui = Glib::Internal::Debug::ImGuiManager::Instance();
 }
 
 void Glib::Internal::Graphics::CanvasManager::Draw()
 {
+#if defined(DEBUG) || defined(_DEBUG)
+    s_imgui->SetRenderTarget();
+#else
     s_dx12->SetDefaultRenderTarget();
-
+#endif
     for (const auto& canvsList : s_canvas | std::ranges::views::values)
     {
         for (const auto& canvas : canvsList)

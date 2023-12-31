@@ -27,6 +27,9 @@ namespace Glib
         void Finalize();
         void ResetGameObjects();
 
+    private:
+        void DrawDebugParams(GameObjectPtr gameObject);
+
     public:
 
         /**

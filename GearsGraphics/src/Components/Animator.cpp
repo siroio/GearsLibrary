@@ -4,6 +4,7 @@
 #include <GameTimer.h>
 #include <AnimationManager.h>
 #include <Mathf.h>
+#include <Debugger.h>
 
 namespace
 {
@@ -25,14 +26,13 @@ void Glib::Animator::Update()
     auto& matrix = renderer_->BoneMatrix();
 
     if (matrix.empty()) return;
+    matrix.fill(Matrix4x4::Identity());
 
     // スキニング計算
     for (const auto& bone : bones)
     {
-        if (bone.boneIndex >= static_cast<int>(matrix.size())) continue;
-
         auto keyFrame = animation_->GetKeyFrame(bone.name, currentFrame);
-        Vector3 translate = keyFrame.position;
+        Vector3 translation = keyFrame.position;
         Quaternion rotation = keyFrame.rotation;
         Vector3 scale = keyFrame.scale;
 
@@ -40,31 +40,31 @@ void Glib::Animator::Update()
         if (!prevAnimation_.expired())
         {
             auto keyFrame = prevAnimation_->GetKeyFrame(bone.name, prevFrame);
-            Vector3 prevTranslate = keyFrame.position;
+            Vector3 prevtranslation = keyFrame.position;
             Quaternion prevRotation = keyFrame.rotation;
 
             float ratio = elapsedTime / animationBlendTime;
-            translate = Vector3::Lerp(prevTranslate, translate, ratio);
+            translation = Vector3::Lerp(prevtranslation, translation, ratio);
             rotation = Quaternion::Slerp(prevRotation, rotation, ratio);
         }
 
         matrix[bone.boneIndex] =
-            Matrix4x4::Translate(-translate) *
-            Matrix4x4::Rotate(rotation) * Matrix4x4::Translate(translate) *
-            Matrix4x4::Translate(translate);
+            Matrix4x4::Translate(-bone.position) *
+            Matrix4x4::Rotate(rotation) * Matrix4x4::Translate(translation) *
+            Matrix4x4::Translate(bone.position);
 
         // 相対位置計算
         const auto& transform = transforms[bone.boneIndex];
-        if (bone.parent != -1) translate -= bones[bone.parent].position;
+        if (bone.parent != -1) translation -= bones[bone.parent].position;
 
-        transform->LocalPosition(bone.position + translate);
+        transform->LocalPosition(bone.position + translation);
         transform->LocalRotation(rotation);
     }
 
     float deltaTime = GameTimer::DeltaTime() * animationSpeed;
     elapsedTime += deltaTime;
+    currentFrame += animationFrameRate * deltaTime;
 
-    currentFrame *= 60.0f + deltaTime;
     if (currentFrame > animation_->EndFrame())
     {
         currentFrame = isLoop ? 0.0f : animation_->EndFrame();
@@ -91,14 +91,14 @@ void Glib::Animator::Speed(float speed)
     animationSpeed = speed;
 }
 
-unsigned int Glib::Animator::AnimationClipID() const
+unsigned int Glib::Animator::AnimationID() const
 {
-    return animationClipID_;
+    return clipID_;
 }
 
-void Glib::Animator::AnimationClipID(unsigned int id, float offset)
+void Glib::Animator::AnimationID(unsigned int id, float offset)
 {
-    animationClipID_ = id;
+    clipID_ = id;
     if (elapsedTime > Mathf::EPSILON)
     {
         std::swap(prevAnimation_, animation_);
