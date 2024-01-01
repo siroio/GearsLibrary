@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 
 namespace Glib::Internal::Graphics::ShaderCode
 {
     /**
-* @brief ƒXƒJƒCƒ{ƒbƒNƒX•`‰æ—pƒVƒF[ƒ_[
+* @brief ã‚¹ã‚«ã‚¤ãƒœãƒƒã‚¯ã‚¹æç”»ç”¨ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
 */
     constexpr char SKYBOX_SHADER[]
     {
@@ -48,3 +48,4 @@ namespace Glib::Internal::Graphics::ShaderCode
         })"
     };
 }
+

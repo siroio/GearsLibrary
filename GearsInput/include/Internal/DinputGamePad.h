@@ -1,5 +1,5 @@
-#pragma once
-// DINPUTƒo[ƒWƒ‡ƒ“w’è
+ï»¿#pragma once
+// DINPUTãƒãƒ¼ã‚¸ãƒ§ãƒ³æŒ‡å®š
 #ifndef DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION 0x0800
 #endif
@@ -22,3 +22,4 @@ namespace Glib::Internal::Input
         float axisY_{ 0.0f };
     };
 }
+

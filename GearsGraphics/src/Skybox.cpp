@@ -1,4 +1,4 @@
-#include <Skybox.h>
+﻿#include <Skybox.h>
 #include <Internal/DX12/DirectX12.h>
 #include <Texture.h>
 
@@ -26,3 +26,4 @@ void Glib::Skybox::Draw() const
         s_dx12->CommandList()->DrawInstanced(0, 1, i * 4, 0);
     }
 }
+

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <string_view>
 #include <unordered_map>
 #include <Singleton.h>
@@ -14,7 +14,7 @@ namespace Glib
     public:
 
         /**
-         * @brief ƒƒbƒVƒ…‚ğ“Ç‚İ‚Ş
+         * @brief ãƒ¡ãƒƒã‚·ãƒ¥ã‚’èª­ã¿è¾¼ã‚€
          * @param id
          * @param path
          * @return
@@ -22,26 +22,27 @@ namespace Glib
         bool Load(unsigned int id, std::string_view path);
 
         /**
-         * @brief ƒƒbƒVƒ…‚ªƒ[ƒh‚³‚ê‚Ä‚¢‚é‚©’²‚×‚é
+         * @brief ãƒ¡ãƒƒã‚·ãƒ¥ãŒãƒ­ãƒ¼ãƒ‰ã•ã‚Œã¦ã„ã‚‹ã‹èª¿ã¹ã‚‹
          * @param id
          */
         bool Contains(unsigned int id) const;
 
         /**
-         * @brief ƒƒbƒVƒ…‚Ìƒ{[ƒ“‚ğæ“¾
+         * @brief ãƒ¡ãƒƒã‚·ãƒ¥ã®ãƒœãƒ¼ãƒ³ã‚’å–å¾—
          * @param id
          */
         const std::vector<Bone>& Bone(unsigned int id);
 
         /**
-         * @brief •`‰æ
+         * @brief æç”»
          */
         void Draw(unsigned int id) const;
 
         /**
-         * @brief ‰e‚ğ•`‰æ
+         * @brief å½±ã‚’æç”»
          */
         void DrawShadow(unsigned int id) const;
 
     };
 }
+

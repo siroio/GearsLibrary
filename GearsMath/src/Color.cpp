@@ -1,4 +1,4 @@
-#include <Color.h>
+﻿#include <Color.h>
 #include <Vector4.h>
 #include <Mathf.h>
 #include <sstream>
@@ -495,3 +495,4 @@ float Color::MaxColor() const
 {
     return Mathf::Max(Mathf::Max(r, g), b);
 }
+

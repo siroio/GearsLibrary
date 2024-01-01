@@ -1,4 +1,4 @@
-#include <Internal/DX12/Shader/Shader.h>
+﻿#include <Internal/DX12/Shader/Shader.h>
 #include <filesystem>
 
 Glib::Graphics::Shader::Shader(unsigned int id, ShaderType type, std::wstring_view filePath, std::string_view entryPoint)
@@ -62,3 +62,4 @@ bool Glib::Graphics::Shader::operator==(const Shader& shader) const
 {
     return id_ == shader.ID() && type_ == shader.Type();
 }
+

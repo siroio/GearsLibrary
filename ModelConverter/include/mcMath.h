@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <limits>
 #include <numbers>
 #include <cmath>
@@ -235,3 +235,4 @@ public:
 using Vector2f = Vector2<float>;
 using Vector3f = Vector3<float>;
 using Vector4f = Vector4<float>;
+

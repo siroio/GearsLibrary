@@ -1,4 +1,4 @@
-#include <Internal/ComponentEventFunctionList.h>
+﻿#include <Internal/ComponentEventFunctionList.h>
 
 bool Glib::Internal::ComponentEventFunctionList::Empty() const
 {
@@ -9,3 +9,4 @@ void Glib::Internal::ComponentEventFunctionList::Execute(FunctionType type, cons
 {
     ExecuteFromVariant<0>(type, gameObject);
 }
+

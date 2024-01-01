@@ -1,4 +1,4 @@
-#include <Internal/KeyBoardDevice.h>
+﻿#include <Internal/KeyBoardDevice.h>
 #include <Logger.h>
 
 bool Glib::Internal::Input::KeyBoardDevice::Initialize(ComPtr<IDirectInput8>& dinput)
@@ -41,3 +41,4 @@ bool Glib::Internal::Input::KeyBoardDevice::GetKeyUp(KeyCode key) const
     unsigned char currentState = ~(currentKeyState.at(static_cast<unsigned char>(key)) & 0x80);
     return prevState & currentState;
 }
+

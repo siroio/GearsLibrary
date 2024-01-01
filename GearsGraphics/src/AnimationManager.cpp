@@ -1,4 +1,4 @@
-#include <AnimationManager.h>
+﻿#include <AnimationManager.h>
 #include <unordered_map>
 
 namespace
@@ -19,3 +19,4 @@ Glib::WeakPtr<Glib::AnimationClip> Glib::AnimationManager::Animation(unsigned in
     if (!s_animations.contains(id)) return Glib::WeakPtr<AnimationClip>{ nullptr };
     return Glib::WeakPtr<AnimationClip>{ s_animations.at(id) };
 }
+

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Internal/ISystem.h>
 #include <Internal/FuncOrderConstant.h>
 #include <FuncOrderDefinition.h>
@@ -13,7 +13,7 @@ namespace Glib::Internal
 namespace Glib::Internal::Graphics
 {
     /**
-     * @brief ƒJƒƒ‰ŠÇ—ƒNƒ‰ƒX
+     * @brief ã‚«ãƒ¡ãƒ©ç®¡ç†ã‚¯ãƒ©ã‚¹
      */
     class CameraManager :
         public Interface::ISystem,
@@ -33,3 +33,4 @@ namespace Glib::Internal::Graphics
         std::list<WeakPtr<CameraBase>> cameras_;
     };
 }
+

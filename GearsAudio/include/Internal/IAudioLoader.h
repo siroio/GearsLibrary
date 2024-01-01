@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <string_view>
 #include <memory>
 
@@ -10,7 +10,7 @@ namespace Glib
 namespace Glib::Internal::Interface
 {
     /**
-     * @brief ‰¹ºƒ[ƒ_[—pƒCƒ“ƒ^[ƒtƒF[ƒX
+     * @brief éŸ³å£°ãƒ­ãƒ¼ãƒ€ãƒ¼ç”¨ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
      */
     class IAudioLoader
     {
@@ -19,3 +19,4 @@ namespace Glib::Internal::Interface
         virtual std::shared_ptr<AudioClip> Load(std::string_view file) = 0;
     };
 }
+

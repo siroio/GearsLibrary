@@ -1,4 +1,4 @@
-#include <Components/AudioListener.h>
+ï»¿#include <Components/AudioListener.h>
 #include <Internal/XAudioSystem.h>
 #include <Components/Transform.h>
 #include <GameObject.h>
@@ -15,10 +15,11 @@ void Glib::AudioListener::Start()
 
 void Glib::AudioListener::LateUpdate()
 {
-    // ƒpƒ‰ƒ[ƒ^[‚ÌXV
+    // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼ã®æ›´æ–°
     s_xAudio2->SetListenerParameter(
         transform_->Position(),
         transform_->Forward(),
         transform_->Up()
     );
 }
+

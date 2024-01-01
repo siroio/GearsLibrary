@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 #include <string_view>
 
 /**
- * @brief •ÏŠ·—pƒCƒ“ƒ^[ƒtƒF[ƒX
+ * @brief å¤‰æ›ç”¨ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
  */
 class IConverter
 {
@@ -11,18 +11,19 @@ public:
     virtual ~IConverter() = default;
 
     /**
-     * @brief ƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ
-     * @param path ƒtƒ@ƒCƒ‹‚Ö‚ÌƒpƒX
-     * @return true : ¬Œ÷
-     * @return false : ¸”s
+     * @brief ãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿
+     * @param path ãƒ•ã‚¡ã‚¤ãƒ«ã¸ã®ãƒ‘ã‚¹
+     * @return true : æˆåŠŸ
+     * @return false : å¤±æ•—
      */
     virtual bool LoadFile(std::string_view path) = 0;
 
     /**
-     * @brief ƒtƒ@ƒCƒ‹‚Ì‘‚«o‚µ
-     * @param path Šg’£qŠÜ‚ß‚½ƒtƒ@ƒCƒ‹ƒpƒX
-     * @return true : ¬Œ÷
-     * @return false : ¸”s
+     * @brief ãƒ•ã‚¡ã‚¤ãƒ«ã®æ›¸ãå‡ºã—
+     * @param path æ‹¡å¼µå­å«ã‚ãŸãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+     * @return true : æˆåŠŸ
+     * @return false : å¤±æ•—
      */
     virtual bool WriteFile(std::string_view path) = 0;
 };
+

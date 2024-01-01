@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <ComPtr.h>
 #include <memory>
 #include <d3d12.h>
@@ -11,28 +11,28 @@ namespace Glib::Internal::Graphics
 namespace Glib::Internal::Graphics
 {
     /**
-     * @brief ’è”ƒoƒbƒtƒ@[
+     * @brief å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ¼
      */
     class ConstantBuffer
     {
     public:
         /**
-         * @brief ’è”ƒoƒbƒtƒ@[‚Ìì¬
-         * @param bufferSize ƒoƒbƒtƒ@[‚ÌƒTƒCƒY
-         * @return ¬Œ÷ true
+         * @brief å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ¼ã®ä½œæˆ
+         * @param bufferSize ãƒãƒƒãƒ•ã‚¡ãƒ¼ã®ã‚µã‚¤ã‚º
+         * @return æˆåŠŸ true
          */
         bool Create(UINT64 bufferSize);
 
         /**
-         * @brief ’è”ƒoƒbƒtƒ@[‚ÌƒoƒCƒ“ƒh
+         * @brief å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ¼ã®ãƒã‚¤ãƒ³ãƒ‰
          * @param rootParameterIndex
          */
         void SetBuffer(unsigned int rootParameterIndex) const;
 
         /**
-         * @brief ’è”ƒoƒbƒtƒ@‚ÌXV
-         * @param size ƒf[ƒ^ƒTƒCƒY
-         * @param data ƒf[ƒ^
+         * @brief å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®æ›´æ–°
+         * @param size ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚º
+         * @param data ãƒ‡ãƒ¼ã‚¿
          */
         void Update(unsigned int size, const void* data);
 
@@ -41,3 +41,4 @@ namespace Glib::Internal::Graphics
         std::shared_ptr<DescriptorHandle> handle_{ nullptr };
     };
 }
+

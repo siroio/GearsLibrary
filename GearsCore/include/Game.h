@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 
 namespace Glib
 {
     /**
- * @brief ƒƒCƒ“ƒQ[ƒ€ƒNƒ‰ƒX
+ * @brief ãƒ¡ã‚¤ãƒ³ã‚²ãƒ¼ãƒ ã‚¯ãƒ©ã‚¹
  */
     class Game
     {
@@ -12,23 +12,23 @@ namespace Glib
         virtual ~Game() = default;
 
         /**
-         * @brief ŠJnˆ—
+         * @brief é–‹å§‹å‡¦ç†
          */
         virtual void Start() = 0;
 
         /**
-         * @brief I—¹ˆ—
+         * @brief çµ‚äº†å‡¦ç†
          */
         virtual void End() = 0;
 
     public:
         /**
-         * @brief Às
+         * @brief å®Ÿè¡Œ
          */
         int Run();
 
         /**
-         * @brief I—¹
+         * @brief çµ‚äº†
          */
         inline static void Exit()
         {
@@ -37,27 +37,27 @@ namespace Glib
 
     private:
         /**
-         * @brief ƒVƒXƒeƒ€‚Ì“o˜^
+         * @brief ã‚·ã‚¹ãƒ†ãƒ ã®ç™»éŒ²
         */
         void RegisterSystem();
 
         /**
-         * @brief ‰Šú‰»
+         * @brief åˆæœŸåŒ–
         */
         bool Initialize();
 
         /**
-         * @brief XV
+         * @brief æ›´æ–°
         */
         void Update();
 
         /**
-         * @brief •`‰æ
+         * @brief æç”»
         */
         void Draw();
 
         /**
-         * @brief I—¹ˆ—
+         * @brief çµ‚äº†å‡¦ç†
         */
         void Finalize();
 
@@ -65,3 +65,4 @@ namespace Glib
         inline static bool isExit{ false };
     };
 }
+

@@ -1,10 +1,10 @@
-#pragma once
+ï»¿#pragma once
 #include <Component.h>
 
 namespace Glib::Internal
 {
     /**
-     * @brief •`‰æ—pŠî’êƒRƒ“ƒ|[ƒlƒ“ƒg
+     * @brief æç”»ç”¨åŸºåº•ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
      */
     class Renderer : public Component
     {
@@ -13,3 +13,4 @@ namespace Glib::Internal
         virtual ~Renderer() = default;
     };
 }
+

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <mutex>
 #include <vector>
 #include <string>
@@ -7,7 +7,7 @@
 namespace Glib
 {
     /**
-     * @brief CSVƒ[ƒhƒNƒ‰ƒX
+     * @brief CSVãƒ­ãƒ¼ãƒ‰ã‚¯ãƒ©ã‚¹
      */
     class CSVLoader
     {
@@ -18,15 +18,16 @@ namespace Glib
 
     public:
         /**
-         * @brief ƒ[ƒ_[‚Ì¶¬
-         * @param path CSV‚Ìƒtƒ@ƒCƒ‹ƒpƒX
+         * @brief ãƒ­ãƒ¼ãƒ€ãƒ¼ã®ç”Ÿæˆ
+         * @param path CSVã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
          */
         CSVLoader(std::string_view path);
         ~CSVLoader();
         /**
-         * @brief CSV‚ğƒ[ƒh
-         * @return 2ŸŒ³”z—ñ
+         * @brief CSVã‚’ãƒ­ãƒ¼ãƒ‰
+         * @return 2æ¬¡å…ƒé…åˆ—
          */
         strings Load() noexcept(false);
     };
 }
+

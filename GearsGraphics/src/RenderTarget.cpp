@@ -1,4 +1,4 @@
-#include <RenderTarget.h>
+﻿#include <RenderTarget.h>
 #include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/d3dx12Inc.h>
 
@@ -184,3 +184,4 @@ void Glib::Graphics::RenderTarget::AsRenderTarget()
         D3D12_RESOURCE_STATE_RENDER_TARGET
     );
 }
+

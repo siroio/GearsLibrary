@@ -1,4 +1,4 @@
-#include <GaussianBlur.h>
+Ôªø#include <GaussianBlur.h>
 #include <Internal/DX12/d3dx12Inc.h>
 #include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/GraphicsPipeline.h>
@@ -35,7 +35,7 @@ bool Glib::Graphics::GaussianBlur::Initialize(const ComPtr<ID3D12Resource>& text
 
 void Glib::Graphics::GaussianBlur::Execute(float power)
 {
-    // íËêîÉoÉbÉtÉ@çXêV
+    // ÂÆöÊï∞„Éê„ÉÉ„Éï„Ç°Êõ¥Êñ∞
     GaussianBlurConstant buffer{};
     float total = 0.0f;
 
@@ -57,7 +57,7 @@ void Glib::Graphics::GaussianBlur::Execute(float power)
     float clearColor[4]{ 1.0f, 1.0f, 1.0f, 1.0f };
 
     {
-        // â°ÉuÉâÅ[
+        // Ê®™„Éñ„É©„Éº
         s_dx12->Barrier(
             xBlurResource_.Get(),
             D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
@@ -92,7 +92,7 @@ void Glib::Graphics::GaussianBlur::Execute(float power)
         s_dx12->CommandList()->OMSetRenderTargets(1, &rtvHandle_[1]->CPU(), false, nullptr);
         s_dx12->CommandList()->ClearRenderTargetView(rtvHandle_[1]->CPU(), clearColor, 0, nullptr);
 
-        // ècÉuÉâÅ[
+        // Á∏¶„Éñ„É©„Éº
         CD3DX12_VIEWPORT viewPort{ yBlurResource_.Get() };
         CD3DX12_RECT rect{ 0, 0, static_cast<LONG>(viewPort.Width), static_cast<LONG>(viewPort.Height) };
         s_dx12->CommandList()->RSSetViewports(1, &viewPort);
@@ -172,7 +172,7 @@ bool Glib::Graphics::GaussianBlur::CreateBlurResource(UINT64 width, UINT height,
     float clearColor[4]{ 1.0f, 1.0f, 1.0f, 1.0f };
     auto clearValue = CD3DX12_CLEAR_VALUE{ format, clearColor };
 
-    // â°ÉuÉâÅ[óp
+    // Ê®™„Éñ„É©„ÉºÁî®
     if (FAILED(s_dx12->Device()->CreateCommittedResource(
         &heapProp,
         D3D12_HEAP_FLAG_NONE,
@@ -184,7 +184,7 @@ bool Glib::Graphics::GaussianBlur::CreateBlurResource(UINT64 width, UINT height,
 
     resDesc.Height = static_cast<UINT>(resDesc.Height * 0.5f);
 
-    // ècÉuÉâÅ[óp
+    // Á∏¶„Éñ„É©„ÉºÁî®
     if (FAILED(s_dx12->Device()->CreateCommittedResource(
         &heapProp,
         D3D12_HEAP_FLAG_NONE,
@@ -212,7 +212,7 @@ void Glib::Graphics::GaussianBlur::CreateViews(const ComPtr<ID3D12Resource>& tex
     srvDesc.Texture2D.MipLevels = 1;
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
-    // HandleÇéÊìæ
+    // Handle„ÇíÂèñÂæó
     for (auto& ptr : rtvHandle_)
     {
         ptr = rtvPool->GetHandle();
@@ -223,12 +223,13 @@ void Glib::Graphics::GaussianBlur::CreateViews(const ComPtr<ID3D12Resource>& tex
         ptr = srvPool->GetHandle();
     }
 
-    // RTVçÏê¨
+    // RTV‰ΩúÊàê
     s_dx12->Device()->CreateRenderTargetView(xBlurResource_.Get(), &rtvDesc, rtvHandle_[0]->CPU());
     s_dx12->Device()->CreateRenderTargetView(yBlurResource_.Get(), &rtvDesc, rtvHandle_[1]->CPU());
 
-    // SRVçÏê¨
+    // SRV‰ΩúÊàê
     s_dx12->Device()->CreateShaderResourceView(texture.Get(), &srvDesc, srvHandle_[0]->CPU());
     s_dx12->Device()->CreateShaderResourceView(xBlurResource_.Get(), &srvDesc, srvHandle_[1]->CPU());
     s_dx12->Device()->CreateShaderResourceView(yBlurResource_.Get(), &srvDesc, srvHandle_[2]->CPU());
 }
+

@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 
 /**
- * @brief ƒRƒ“ƒ|[ƒlƒ“ƒg‚ÌŠÖ”
+ * @brief ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®é–¢æ•°
  */
 enum class ComponentFunctionType
 {
@@ -17,3 +17,4 @@ enum class ComponentFunctionType
     OnCollisionStay,
     OnCollisionExit,
 };
+

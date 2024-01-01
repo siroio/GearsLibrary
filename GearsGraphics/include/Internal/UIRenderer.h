@@ -1,10 +1,10 @@
-#pragma once
+ï»¿#pragma once
 #include <Component.h>
 
 namespace Glib::Internal
 {
     /**
-     * @brief ‰æ‘œ•\¦—pŠî’êƒRƒ“ƒ|[ƒlƒ“ƒg
+     * @brief ç”»åƒè¡¨ç¤ºç”¨åŸºåº•ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
      */
     class UIRenderer : public Component
     {
@@ -16,3 +16,4 @@ namespace Glib::Internal
         virtual void DrawUI() = 0;
     };
 }
+

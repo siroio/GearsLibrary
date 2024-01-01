@@ -1,4 +1,4 @@
-#include <Component.h>
+﻿#include <Component.h>
 #include <GameObject.h>
 #include <GLGUI.h>
 
@@ -40,3 +40,4 @@ void Component::SetGameObject(const GameObjectPtr& gameObject)
         gameObject_ = gameObject;
     }
 }
+

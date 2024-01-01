@@ -1,4 +1,4 @@
-#include <MsgBox.h>
+﻿#include <MsgBox.h>
 #include <StringUtility.h>
 
 Glib::MsgBox::RESULT Glib::MsgBox::Show(std::string_view msg, std::string_view title, STYLE style, ICON icon, std::function<void(RESULT)> callback)
@@ -29,3 +29,4 @@ Glib::MsgBox::RESULT Glib::MsgBox::Show(std::string_view msg, std::function<void
 {
     return Show(msg, "", STYLE::OK, ICON::ASTERISK_ICON, callback);
 }
+

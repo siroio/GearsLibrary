@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Internal/DX12/Shader/Shader.h>
 #include <Internal/ISystem.h>
 #include <Singleton.h>
@@ -23,24 +23,24 @@ namespace Glib::Internal::Graphics
     public:
 
         /**
-         * @brief ƒVƒF[ƒ_[‚Ì‰Šú‰»
+         * @brief ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®åˆæœŸåŒ–
          */
         bool Initialize();
 
         /**
-         * @brief ’¸“_ƒVƒF[ƒ_[‚Ìİ’è
+         * @brief é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®è¨­å®š
          */
         void SetVertexShader(unsigned int id, D3D12_GRAPHICS_PIPELINE_STATE_DESC& desc);
 
         /**
-         * @brief ƒsƒNƒZƒ‹ƒVƒF[ƒ_[‚Ìİ’è
+         * @brief ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®è¨­å®š
          */
         void SetPixelShader(unsigned int id, D3D12_GRAPHICS_PIPELINE_STATE_DESC& desc);
 
     public:
         /**
-         * @brief ƒVƒF[ƒ_[‚ğƒRƒ“ƒpƒCƒ‹
-         * @param shader ƒVƒF[ƒ_[î•ñ
+         * @brief ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«
+         * @param shader ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼æƒ…å ±
          * @return
          */
         bool CompileShader(const Glib::Graphics::Shader& shader);
@@ -51,3 +51,4 @@ namespace Glib::Internal::Graphics
         void ShaderError(const ComPtr<ID3DBlob>& error) const;
     };
 }
+

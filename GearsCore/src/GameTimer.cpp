@@ -1,4 +1,4 @@
-#include <GameTimer.h>
+﻿#include <GameTimer.h>
 
 void Glib::GameTimer::Update()
 {
@@ -55,3 +55,4 @@ float Glib::GameTimer::UnscaledDeltaTime()
 {
     return unscaledDeltaTime_.count();
 }
+

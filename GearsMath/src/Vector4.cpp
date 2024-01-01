@@ -1,4 +1,4 @@
-#include <Vector4.h>
+﻿#include <Vector4.h>
 #include <Vector3.h>
 #include <Mathf.h>
 #include <sstream>
@@ -269,3 +269,4 @@ std::ostream& operator<<(std::ostream& stream, const Vector4& v)
 {
     return stream << v.ToString();
 }
+

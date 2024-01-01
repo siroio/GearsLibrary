@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include  <Internal/ISystem.h>
 #include  <Singleton.h>
 
@@ -13,21 +13,22 @@ namespace Glib
 
     public:
         /**
-         * @brief ƒOƒ‹[ƒv‚Ì’Ç‰Á
-         * @param groupId ƒOƒ‹[ƒvID
+         * @brief ã‚°ãƒ«ãƒ¼ãƒ—ã®è¿½åŠ 
+         * @param groupId ã‚°ãƒ«ãƒ¼ãƒ—ID
          */
         void AddSoundGroup(unsigned int groupId);
 
         /**
-         * @brief ƒOƒ‹[ƒv‚Ì‰¹—Ê‚ğƒZƒbƒg
-         * @param groupId ƒOƒ‹[ƒvID
-         * @param volume ‰¹—Ê
+         * @brief ã‚°ãƒ«ãƒ¼ãƒ—ã®éŸ³é‡ã‚’ã‚»ãƒƒãƒˆ
+         * @param groupId ã‚°ãƒ«ãƒ¼ãƒ—ID
+         * @param volume éŸ³é‡
          */
         void SetSoundGroupVolume(unsigned int groupId, float volume);
 
         /**
-         * @brief ‰¹º‚ğ“Ç‚İ‚Ş
+         * @brief éŸ³å£°ã‚’èª­ã¿è¾¼ã‚€
          */
         void LoadVoice(unsigned int groupId, std::string_view path);
     };
 }
+

@@ -1,10 +1,10 @@
-#ifndef GEARS_IGAME_OBJECT_H
+Ôªø#ifndef GEARS_IGAME_OBJECT_H
 #define GEARS_IGAME_OBJECT_H
 
 namespace Glib::Internal::Interface
 {
     /**
-     * @brief ÉQÅ[ÉÄÉIÉuÉWÉFÉNÉgÉCÉìÉ^Å[ÉtÉFÅ[ÉX
+     * @brief „Ç≤„Éº„É†„Ç™„Éñ„Ç∏„Çß„ÇØ„Éà„Ç§„É≥„Çø„Éº„Éï„Çß„Éº„Çπ
      */
     class IGameObject
     {
@@ -18,3 +18,4 @@ namespace Glib::Internal::Interface
 }
 
 #endif // !GEARS_IGAME_OBJECT_H
+

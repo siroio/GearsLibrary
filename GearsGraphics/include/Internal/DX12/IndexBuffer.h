@@ -1,33 +1,33 @@
-#pragma once
+ï»¿#pragma once
 #include <d3d12.h>
 #include <ComPtr.h>
 
 namespace Glib::Internal::Graphics
 {
     /**
-     * @brief ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@[
+     * @brief ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ãƒ¼
      */
     class IndexBuffer
     {
     public:
         /**
-         * @brief ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@[‚Ìì¬
-         * @param sizePerIndex ƒCƒ“ƒfƒbƒNƒX‚²‚Æ‚ÌƒTƒCƒY
-         * @param indexCount ƒCƒ“ƒfƒbƒNƒX‚ÌƒTƒCƒY
-         * @return ¬Œ÷ true
+         * @brief ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ãƒ¼ã®ä½œæˆ
+         * @param sizePerIndex ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã”ã¨ã®ã‚µã‚¤ã‚º
+         * @param indexCount ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®ã‚µã‚¤ã‚º
+         * @return æˆåŠŸ true
          */
         bool Create(unsigned int sizePerIndex, unsigned int indexCount);
 
         /**
-         * @brief ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@[‚ğƒZƒbƒg
+         * @brief ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
          * @param rootParameterIndex
          */
         void SetBuffer();
 
         /**
-         * @brief ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚ÌXV
-         * @param size ƒf[ƒ^ƒTƒCƒY
-         * @param data ƒf[ƒ^
+         * @brief ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã®æ›´æ–°
+         * @param size ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚º
+         * @param data ãƒ‡ãƒ¼ã‚¿
          */
         void Update(void* indicies);
 
@@ -36,3 +36,4 @@ namespace Glib::Internal::Graphics
         D3D12_INDEX_BUFFER_VIEW view_{};
     };
 }
+

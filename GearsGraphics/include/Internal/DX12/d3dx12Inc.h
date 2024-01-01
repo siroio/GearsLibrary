@@ -1,8 +1,9 @@
-#pragma once
+ï»¿#pragma once
 #pragma warning(push)
 #pragma warning(disable: 6001)
 
-/* d3dx12ƒwƒbƒ_[ ƒCƒ“ƒNƒ‹[ƒhê—p */
+/* d3dx12ãƒ˜ãƒƒãƒ€ãƒ¼ ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰å°‚ç”¨ */
 #include <d3dx12.h>
 
 #pragma warning(pop)
+

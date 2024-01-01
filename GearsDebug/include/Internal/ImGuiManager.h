@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <FuncOrderDefinition.h>
 #include <Internal/ISystem.h>
 #include <Singleton.h>
@@ -12,7 +12,7 @@ namespace Glib::Internal::Debug
     using LogLevel = Glib::LogLevel;
 
     /**
-     * @brief ƒƒO•Û‘¶—p\‘¢‘Ì
+     * @brief ãƒ­ã‚°ä¿å­˜ç”¨æ§‹é€ ä½“
      */
     struct LogMessage
     {
@@ -46,3 +46,4 @@ namespace Glib::Internal::Debug
         void SetGUIStyle();
     };
 }
+

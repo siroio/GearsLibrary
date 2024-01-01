@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <string>
 #include <vector>
 
@@ -45,29 +45,29 @@ namespace Glib
         GLAnimation() = default;
 
         /**
-         * @brief ƒIƒuƒWƒFƒNƒg‚ğì¬
-         * @param motion ƒ‚[ƒVƒ‡ƒ“ƒf[ƒ^
+         * @brief ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
+         * @param motion ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ãƒ‡ãƒ¼ã‚¿
          */
         GLAnimation(const BoneInfo& boneInfo, const std::vector<MotionData>& motion);
 
         /**
-         * @brief ƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ
+         * @brief ãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿
          * @param path
-         * @return ¬Œ÷ : true
-         * @return ¸”s : false
+         * @return æˆåŠŸ : true
+         * @return å¤±æ•— : false
          */
         bool ReadFile(std::string_view path);
 
         /**
-         * @brief ƒtƒ@ƒCƒ‹‚Ö‘‚«‚İ
+         * @brief ãƒ•ã‚¡ã‚¤ãƒ«ã¸æ›¸ãè¾¼ã¿
          * @param path
-         * @return ¬Œ÷ : true
-         * @return ¸”s : false
+         * @return æˆåŠŸ : true
+         * @return å¤±æ•— : false
          */
         bool WriteFile(std::string_view path);
 
     private:
-        // == Šeí“Ç‚İ‚İ—pŠÖ” == //
+        // == å„ç¨®èª­ã¿è¾¼ã¿ç”¨é–¢æ•° == //
 
         void ReadHeader(std::ifstream& file);
         void ReadBoneInfo(std::ifstream& file);
@@ -75,7 +75,7 @@ namespace Glib
         void ReadMotionInfo(std::ifstream& file, MotionInfo& info);
         void ReadKeyFrames(std::ifstream& file, KeyFrame& keyFrames);
 
-        // == Šeí‘‚«‚İ—pŠÖ” == //
+        // == å„ç¨®æ›¸ãè¾¼ã¿ç”¨é–¢æ•° == //
 
         void WriteHeader(std::ofstream& file);
         void WriteBoneInfo(std::ofstream& file);
@@ -95,3 +95,4 @@ namespace Glib
         std::vector<MotionData> motionData_;
     };
 }
+

@@ -1,16 +1,16 @@
-#pragma once
+ï»¿#pragma once
 #include <concepts>
 #include <bitset>
 namespace Glib
 {
     /**
-     * @brief ƒrƒbƒgƒtƒ‰ƒO
+     * @brief ãƒ“ãƒƒãƒˆãƒ•ãƒ©ã‚°
      */
     template<class Enum> requires std::is_enum_v<Enum>
     class BitFlag
     {
     public:
-        // enum‚ÌŠî’êŒ^: "char" "int" etc...
+        // enumã®åŸºåº•å‹: "char" "int" etc...
         using EnumType = std::underlying_type_t<Enum>;
 
         BitFlag() : value_{ EnumType{} }
@@ -20,37 +20,37 @@ namespace Glib
         {}
 
         /**
-         * @brief ƒtƒ‰ƒO‚ÌƒZƒbƒg
+         * @brief ãƒ•ãƒ©ã‚°ã®ã‚»ãƒƒãƒˆ
          * @param flag
          */
         void Set(Enum flag);
 
         /**
-         * @brief ƒtƒ‰ƒO‚ÌƒZƒbƒg
+         * @brief ãƒ•ãƒ©ã‚°ã®ã‚»ãƒƒãƒˆ
          * @param flag
          * @param enable
          */
         void Set(Enum flag, bool enable);
 
         /**
-         * @brief ƒtƒ‰ƒO‚ªƒZƒbƒg‚³‚ê‚Ä‚¢‚ê‚é‚©
+         * @brief ãƒ•ãƒ©ã‚°ãŒã‚»ãƒƒãƒˆã•ã‚Œã¦ã„ã‚Œã‚‹ã‹
          * @param flag
          * @return bool
          */
         bool Has(Enum flag) const;
 
         /**
-         * @brief ƒtƒ‰ƒO‚ÌƒNƒŠƒA
+         * @brief ãƒ•ãƒ©ã‚°ã®ã‚¯ãƒªã‚¢
          * @param flag
          */
         void Clear(Enum flag);
 
         /**
-         * @brief ’l‚Ìæ“¾
+         * @brief å€¤ã®å–å¾—
          */
         EnumType ToValue() const;
 
-        /* ‰‰Zq */
+        /* æ¼”ç®—å­ */
 
         BitFlag& operator |= (Enum&& flag);
         BitFlag& operator &= (Enum&& flag);
@@ -160,3 +160,4 @@ namespace Glib
         return value_ != other.value_;
     }
 }
+

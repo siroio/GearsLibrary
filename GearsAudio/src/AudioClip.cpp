@@ -1,4 +1,4 @@
-#include <AudioClip.h>
+﻿#include <AudioClip.h>
 #include <Internal/XAudioSystem.h>
 
 namespace
@@ -11,7 +11,7 @@ Glib::AudioClip::AudioClip(std::string_view name, const WAVEFORMATEX& format, co
     format_{ format },
     audioData_{ data }
 {
-    // �o�b�t�@�̍쐬
+    // バッファの作成
     XAUDIO2_BUFFER buffer{};
     buffer.pAudioData = audioData_.data();
     buffer.Flags = XAUDIO2_END_OF_STREAM;
@@ -59,3 +59,4 @@ bool Glib::AudioClip::Load(unsigned int id, std::string_view filePath)
 {
     return s_xAudio2->LoadVoice(id, filePath);
 }
+

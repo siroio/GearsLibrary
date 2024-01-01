@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 #include <string>
 #include <vector>
 #include <IConverter.h>
 #include <mcMath.h>
 
 /**
- * @brief PMXƒGƒ“ƒR[ƒh
+ * @brief PMXã‚¨ãƒ³ã‚³ãƒ¼ãƒ‰
 */
 enum class PmxEncode : unsigned char
 {
@@ -14,7 +14,7 @@ enum class PmxEncode : unsigned char
 };
 
 /**
- * @brief ƒwƒbƒ_[
+ * @brief ãƒ˜ãƒƒãƒ€ãƒ¼
  */
 struct PmxHeader
 {
@@ -25,7 +25,7 @@ struct PmxHeader
 };
 
 /**
- * @brief ƒEƒFƒCƒgƒ^ƒCƒv
+ * @brief ã‚¦ã‚§ã‚¤ãƒˆã‚¿ã‚¤ãƒ—
  */
 enum class WeightType
 {
@@ -36,7 +36,7 @@ enum class WeightType
 };
 
 /**
- * @brief ƒEƒFƒCƒg
+ * @brief ã‚¦ã‚§ã‚¤ãƒˆ
  */
 struct Weight
 {
@@ -72,7 +72,7 @@ struct Weight
 };
 
 /**
- * @brief IKƒŠƒ“ƒN
+ * @brief IKãƒªãƒ³ã‚¯
  */
 struct IKLink
 {
@@ -83,24 +83,24 @@ struct IKLink
 };
 
 /**
- * @brief ’¸“_ƒf[ƒ^
+ * @brief é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿
  */
 struct PmxVertex
 {
-    // ’¸“_À•W
+    // é ‚ç‚¹åº§æ¨™
     Vector3f position;
-    // –@ü
+    // æ³•ç·š
     Vector3f normal;
-    // uvÀ•W
+    // uvåº§æ¨™
     Vector2f uv;
-    // ’Ç‰ÁuvÀ•W
+    // è¿½åŠ uvåº§æ¨™
     std::vector<Vector2f> additionalUV;
-    // ƒ{[ƒ“ƒEƒFƒCƒg
+    // ãƒœãƒ¼ãƒ³ã‚¦ã‚§ã‚¤ãƒˆ
     Weight weight;
 };
 
 /**
- * @brief ’¸“_ƒCƒ“ƒfƒbƒNƒX
+ * @brief é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
  */
 struct PmxSurface
 {
@@ -125,21 +125,21 @@ enum class PmxBoneFlag : unsigned int
 };
 
 /**
- * @brief ƒ{[ƒ“
+ * @brief ãƒœãƒ¼ãƒ³
 */
 struct PmxBone
 {
-    // ƒ{[ƒ“–¼
+    // ãƒœãƒ¼ãƒ³å
     std::string name;
-    // ƒ{[ƒ“–¼(‰p–¼)
+    // ãƒœãƒ¼ãƒ³å(è‹±å)
     std::string nameBoneEng;
-    // ˆÊ’u
+    // ä½ç½®
     Vector3f position;
-    // e
+    // è¦ª
     int parentBoneIndex{};
-    // •ÏŒ`ŠK‘w
+    // å¤‰å½¢éšå±¤
     int transformHierarchy{};
-    // ƒ{[ƒ“ƒtƒ‰ƒO
+    // ãƒœãƒ¼ãƒ³ãƒ•ãƒ©ã‚°
     PmxBoneFlag flag;
 
     Vector3f offset;
@@ -157,7 +157,7 @@ struct PmxBone
 };
 
 /**
- * @brief ƒ}ƒeƒŠƒAƒ‹
+ * @brief ãƒãƒ†ãƒªã‚¢ãƒ«
  */
 struct PmxMaterial
 {
@@ -193,3 +193,4 @@ private:
     std::vector<PmxMaterial> materials;
     std::vector<PmxBone> bones;
 };
+

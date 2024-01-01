@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 #include <Internal/IComponent.h>
 #include <GameObjectPtr.h>
 
 /**
- * @brief ƒRƒ“ƒ|[ƒlƒ“ƒgŠî’êƒNƒ‰ƒX
+ * @brief ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆåŸºåº•ã‚¯ãƒ©ã‚¹
  */
 class Component :
     public Glib::Internal::Interface::IComponent,
@@ -29,3 +29,4 @@ private:
     bool isDead_{ false };
     GameObjectPtr gameObject_{ nullptr };
 };
+

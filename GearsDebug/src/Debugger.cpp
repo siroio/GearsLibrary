@@ -1,4 +1,4 @@
-#include <Debugger.h>
+﻿#include <Debugger.h>
 #include <cassert>
 
 #if defined(DEBUG) || defined(_DEBUG)
@@ -82,3 +82,4 @@ std::string Glib::Debug::GetPrefix(LogLevel loglevel)
 {}
 
 #endif
+

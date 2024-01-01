@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <iostream>
 #include <format>
 #include <string_view>
@@ -14,8 +14,8 @@ namespace Glib
     };
 
     /**
-     * @brief ŠÈˆÕƒƒK[ƒNƒ‰ƒX
-     * @brief ƒtƒ@ƒCƒ‹o—Í‚È‚µ
+     * @brief ç°¡æ˜“ãƒ­ã‚¬ãƒ¼ã‚¯ãƒ©ã‚¹
+     * @brief ãƒ•ã‚¡ã‚¤ãƒ«å‡ºåŠ›ãªã—
      */
     class Debug final
     {
@@ -29,41 +29,41 @@ namespace Glib
         static bool Enabled();
 
         /**
-         * @brief ƒƒbƒZ[ƒWw’è‚È‚µassert
+         * @brief ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸æŒ‡å®šãªã—assert
          */
         static void Assert(bool expression);
 
         /**
-         * @brief ƒƒbƒZ[ƒWw’è‚ ‚èassert
+         * @brief ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸æŒ‡å®šã‚ã‚Šassert
          */
         static void Assert(bool expression, std::string_view message);
 
         /**
-         * @brief ƒƒbƒZ[ƒWo—Í
+         * @brief ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡ºåŠ›
          */
         static void Log(std::string_view message, LogLevel loglevel = LogLevel::Info);
 
         /**
-         * @brief ƒGƒ‰[ƒƒbƒZ[ƒWo—Í
+         * @brief ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡ºåŠ›
          * @param message
         */
         static void Error(std::string_view message);
 
         /**
-         * @brief ŒxƒƒbƒZ[ƒWo—Í
+         * @brief è­¦å‘Šãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡ºåŠ›
          * @param message
         */
         static void Warn(std::string_view message);
 
         /**
-         * @brief ƒŒƒxƒ‹‚²‚Æ‚ÌPrefix‚ğæ“¾
+         * @brief ãƒ¬ãƒ™ãƒ«ã”ã¨ã®Prefixã‚’å–å¾—
          * @param loglevel
          */
         static std::string GetPrefix(LogLevel loglevel);
 
 #if defined(DEBUG) || defined(_DEBUG)
         /**
-         * @brief ƒtƒH[ƒ}ƒbƒgw’è‚Åo—Í
+         * @brief ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆæŒ‡å®šã§å‡ºåŠ›
          */
         template<class... Args>
         static void Format(std::string_view fmt, const Args&... args)
@@ -74,3 +74,4 @@ namespace Glib
 #endif
     };
 }
+

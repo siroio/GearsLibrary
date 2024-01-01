@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <d3d12.h>
 #include <Internal/DX12/d3dx12Inc.h>
 #include <Internal/DX12/DescriptorHandle.h>
@@ -28,3 +28,4 @@ namespace Glib
         ComPtr<ID3D12Resource> texture_{ nullptr };
     };
 }
+

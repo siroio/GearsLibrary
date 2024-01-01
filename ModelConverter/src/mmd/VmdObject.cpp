@@ -1,4 +1,4 @@
-#include <mmd/VmdObject.h>
+ï»¿#include <mmd/VmdObject.h>
 #include <utility/FileUtility.h>
 #include <GLAnimation.h>
 #include <fstream>
@@ -13,12 +13,12 @@ namespace
 
 bool VmdMotion::LoadFile(std::string_view path)
 {
-    // Šg’£q‚ªŠÔˆá‚Á‚Ä‚¢‚½‚ç¸”s
+    // æ‹¡å¼µå­ãŒé–“é•ã£ã¦ã„ãŸã‚‰å¤±æ•—
     if (!FileUtility::GetExtension(path).ends_with(VMD_FILE_EXTENSION)) return false;
     std::ifstream vmdFile{ path.data(), std::ios::binary };
     if (vmdFile.fail()) return false;
 
-    // ƒwƒbƒ_‚ğƒXƒLƒbƒv(50ƒoƒCƒg)
+    // ãƒ˜ãƒƒãƒ€ã‚’ã‚¹ã‚­ãƒƒãƒ—(50ãƒã‚¤ãƒˆ)
     vmdFile.seekg(50, std::ios::beg);
     ReadKeyFrames(vmdFile);
 
@@ -35,7 +35,7 @@ bool VmdMotion::WriteFile(std::string_view path)
     for (auto& keyFrame : keyFrames_)
     {
         gl::MotionData motionData{};
-        // ƒ‚[ƒVƒ‡ƒ“‚Ìî•ñ
+        // ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã®æƒ…å ±
         std::string boneName = std::string{ keyFrame.boneName };
         if (!boneName.empty() && boneName.back() != '\0')
         {
@@ -44,7 +44,7 @@ bool VmdMotion::WriteFile(std::string_view path)
         motionData.info.boneName = std::move(boneName);
         motionData.info.keyFrameCount = keyFrame.frameNo;
 
-        // ƒL[ƒtƒŒ[ƒ€‚Ì•ÏŠ·
+        // ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã®å¤‰æ›
         gl::KeyFrame destKeyFrame{};
         destKeyFrame.frameNo = keyFrame.frameNo;
         std::copy(std::begin(keyFrame.translate.elem), std::end(keyFrame.translate.elem), destKeyFrame.translation);
@@ -54,7 +54,7 @@ bool VmdMotion::WriteFile(std::string_view path)
         destKeyFrame.scale[2] = 1.0f;
         motionData.frame = std::move(destKeyFrame);
 
-        // ƒL[ƒtƒŒ[ƒ€‚Ì’Ç‰Á
+        // ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã®è¿½åŠ 
         motionDatas.push_back(motionData);
     }
 
@@ -80,3 +80,4 @@ void VmdMotion::ReadKeyFrames(std::ifstream& file)
     }
     keyFrames_.shrink_to_fit();
 }
+

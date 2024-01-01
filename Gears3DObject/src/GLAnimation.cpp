@@ -1,4 +1,4 @@
-#include <GLAnimation.h>
+ï»¿#include <GLAnimation.h>
 #include <filesystem>
 #include <iostream>
 #include <fstream>
@@ -9,17 +9,17 @@
 namespace
 {
     /**
-     * @brief Šg’£q
+     * @brief æ‹¡å¼µå­
      */
     constexpr char GL_ANIM_EXTENSION[]{ "glanim" };
 
     /**
-     * @brief ƒVƒOƒlƒ`ƒƒ
+     * @brief ã‚·ã‚°ãƒãƒãƒ£
      */
     constexpr char GL_ANIM_SIGNATURE[]{ "GLANIMFILE" };
 
     /**
-     * @brief ƒtƒ@ƒCƒ‹ƒo[ƒWƒ‡ƒ“
+     * @brief ãƒ•ã‚¡ã‚¤ãƒ«ãƒãƒ¼ã‚¸ãƒ§ãƒ³
      */
     constexpr auto GL_ANIM_VERSION{ 1.0f };
 }
@@ -34,7 +34,7 @@ bool Glib::GLAnimation::ReadFile(std::string_view path)
     {
         std::ifstream file{ path.data(), std::ios::binary };
 
-        // ³‚µ‚¢ƒtƒ@ƒCƒ‹‚©ƒ`ƒFƒbƒN
+        // æ­£ã—ã„ãƒ•ã‚¡ã‚¤ãƒ«ã‹ãƒã‚§ãƒƒã‚¯
         if (!CheckExt(path, GL_ANIM_EXTENSION))
         {
             throw std::runtime_error{ "mismatch file extension." };
@@ -48,7 +48,7 @@ bool Glib::GLAnimation::ReadFile(std::string_view path)
             throw std::runtime_error{ "failed to open the file." };
         }
 
-        // “Ç‚İ‚İ
+        // èª­ã¿è¾¼ã¿
         ReadHeader(file);
         ReadBoneInfo(file);
         ReadMotionData(file);
@@ -91,7 +91,7 @@ void Glib::GLAnimation::ReadHeader(std::ifstream& file)
     Header header{};
     ReadForBinary(file, &header, sizeof(header));
 
-    // ƒVƒOƒlƒ`ƒƒ‚ª³‚µ‚¢‚©ŒŸØ
+    // ã‚·ã‚°ãƒãƒãƒ£ãŒæ­£ã—ã„ã‹æ¤œè¨¼
     if (strncmp(header.signature, GL_ANIM_SIGNATURE, 10) != 0)
     {
         throw std::runtime_error{ "invalid file signature." };
@@ -141,17 +141,17 @@ void Glib::GLAnimation::ReadKeyFrames(std::ifstream& file, KeyFrame& keyFrames)
 void Glib::GLAnimation::WriteHeader(std::ofstream& file)
 {
     Header header{};
-    // signature ‚Ì -1 ‚Ínull•¶š‚ğŠÜ‚Ü‚¹‚È‚¢‚½‚ß
+    // signature ã® -1 ã¯nullæ–‡å­—ã‚’å«ã¾ã›ãªã„ãŸã‚
     if (signature_.empty())
     {
-        // ƒwƒbƒ_[‚ª‚È‚¢ê‡V‹K‚Éì¬
+        // ãƒ˜ãƒƒãƒ€ãƒ¼ãŒãªã„å ´åˆæ–°è¦ã«ä½œæˆ
         std::memcpy(header.signature, GL_ANIM_SIGNATURE, sizeof(GL_ANIM_SIGNATURE) - 1);
         header.version = GL_ANIM_VERSION;
         std::memcpy(header.endian, Glib::GetEndian().c_str(), sizeof(header.endian));
     }
     else
     {
-        // ƒwƒbƒ_‚Ì“Ç‚İ‚İ
+        // ãƒ˜ãƒƒãƒ€ã®èª­ã¿è¾¼ã¿
         std::memcpy(header.signature, signature_.c_str(), sizeof(GL_ANIM_SIGNATURE) - 1);
         header.version = version_;
         std::memcpy(header.endian, &endianInfo_[0], sizeof(header.endian));
@@ -173,7 +173,7 @@ void Glib::GLAnimation::WriteMotionData(std::ofstream& file)
 
     for (const auto& data : motionData_)
     {
-        // ƒ‚[ƒVƒ‡ƒ“‚Ì‘‚«o‚µ
+        // ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã®æ›¸ãå‡ºã—
         WriteMotionInfo(file, data.info);
         WriteKeyFrame(file, data.frame);
     }
@@ -199,3 +199,4 @@ const Glib::GLAnimation::BoneInfo& Glib::GLAnimation::FrameLength() const
 {
     return boneInfo_;
 }
+

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <variant>
 #include <list>
 #include <unordered_map>
@@ -127,3 +127,4 @@ namespace Glib::Internal
         );
     }
 }
+

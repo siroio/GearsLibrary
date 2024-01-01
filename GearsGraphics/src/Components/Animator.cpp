@@ -1,10 +1,12 @@
-#include <Components/Animator.h>
+Ôªø#include <Components/Animator.h>
 #include <Components/SkinnedMeshRenderer.h>
 #include <GameObject.h>
 #include <GameTimer.h>
 #include <AnimationManager.h>
 #include <Mathf.h>
 #include <Debugger.h>
+#include <GLGUI.h>
+#include <Vector4.h>
 
 namespace
 {
@@ -28,22 +30,22 @@ void Glib::Animator::Update()
     if (matrix.empty()) return;
     matrix.fill(Matrix4x4::Identity());
 
-    // ÉXÉLÉjÉìÉOåvéZ
+    // „Çπ„Ç≠„Éã„É≥„Ç∞Ë®àÁÆó
     for (const auto& bone : bones)
     {
-        auto keyFrame = animation_->GetKeyFrame(bone.name, currentFrame);
+        auto keyFrame = animation_->GetKeyFrame(bone.name, currentFrame_);
         Vector3 translation = keyFrame.position;
         Quaternion rotation = keyFrame.rotation;
         Vector3 scale = keyFrame.scale;
 
-        // ëOÇÃÉAÉjÉÅÅ[ÉVÉáÉìÇÉuÉåÉìÉh
+        // Ââç„ÅÆ„Ç¢„Éã„É°„Éº„Ç∑„Éß„É≥„Çí„Éñ„É¨„É≥„Éâ
         if (!prevAnimation_.expired())
         {
-            auto keyFrame = prevAnimation_->GetKeyFrame(bone.name, prevFrame);
+            auto keyFrame = prevAnimation_->GetKeyFrame(bone.name, prevFrame_);
             Vector3 prevtranslation = keyFrame.position;
             Quaternion prevRotation = keyFrame.rotation;
 
-            float ratio = elapsedTime / animationBlendTime;
+            float ratio = elapsedTime_ / animationBlendTime_;
             translation = Vector3::Lerp(prevtranslation, translation, ratio);
             rotation = Quaternion::Slerp(prevRotation, rotation, ratio);
         }
@@ -53,7 +55,7 @@ void Glib::Animator::Update()
             Matrix4x4::Rotate(rotation) * Matrix4x4::Translate(translation) *
             Matrix4x4::Translate(bone.position);
 
-        // ëäëŒà íuåvéZ
+        // Áõ∏ÂØæ‰ΩçÁΩÆË®àÁÆó
         const auto& transform = transforms[bone.boneIndex];
         if (bone.parent != -1) translation -= bones[bone.parent].position;
 
@@ -61,34 +63,45 @@ void Glib::Animator::Update()
         transform->LocalRotation(rotation);
     }
 
-    float deltaTime = GameTimer::DeltaTime() * animationSpeed;
-    elapsedTime += deltaTime;
-    currentFrame += animationFrameRate * deltaTime;
+    if (isResume_) return;
+    float deltaTime = GameTimer::DeltaTime() * animationSpeed_;
+    elapsedTime_ += deltaTime;
+    currentFrame_ += animationFrameRate_ * deltaTime;
 
-    if (currentFrame > animation_->EndFrame())
+    if (currentFrame_ > animation_->EndFrame())
     {
-        currentFrame = isLoop ? 0.0f : animation_->EndFrame();
+        currentFrame_ = isLoop_ ? 0.0f : animation_->EndFrame();
     }
 }
 
 bool Glib::Animator::Loop() const
 {
-    return isLoop;
+    return isLoop_;
 }
 
 void Glib::Animator::Loop(bool loop)
 {
-    isLoop = loop;
+    isLoop_ = loop;
 }
 
 float Glib::Animator::Speed() const
 {
-    return animationSpeed;
+    return animationSpeed_;
 }
 
 void Glib::Animator::Speed(float speed)
 {
-    animationSpeed = speed;
+    animationSpeed_ = speed;
+}
+
+bool Glib::Animator::Resume() const
+{
+    return isResume_;
+}
+
+void Glib::Animator::Resume(bool enable)
+{
+    isResume_ = enable;
 }
 
 unsigned int Glib::Animator::AnimationID() const
@@ -99,13 +112,31 @@ unsigned int Glib::Animator::AnimationID() const
 void Glib::Animator::AnimationID(unsigned int id, float offset)
 {
     clipID_ = id;
-    if (elapsedTime > Mathf::EPSILON)
+    if (elapsedTime_ > Mathf::EPSILON)
     {
         std::swap(prevAnimation_, animation_);
-        prevFrame = currentFrame;
+        prevFrame_ = currentFrame_;
     }
 
     animation_ = s_animationManager.Animation(id);
-    currentFrame = offset;
-    elapsedTime = 0.0f;
+    currentFrame_ = offset;
+    elapsedTime_ = 0.0f;
+}
+
+static float prev = 0.0f;
+
+void Glib::Animator::OnGUI()
+{
+    int clipID = clipID_;
+    if (GLGUI::InputInt("ClipID: ", &clipID))
+    {
+        AnimationID(clipID);
+    }
+    GLGUI::Text("„ÅÇ„Å´„ÇÅ");
+    GLGUI::CheckBox("Loop: ", &isLoop_);
+    GLGUI::CheckBox("Resume: ", &isResume_);
+    GLGUI::DragFloat("Speed: ", &animationSpeed_, 0.01, Mathf::EPSILON);
+    GLGUI::SliderFloat("BlendTime: ", &animationBlendTime_, 0.0f, 1.0f);
+    GLGUI::Separator();
+    GLGUI::InputFloat("Frame", &currentFrame_);
 }

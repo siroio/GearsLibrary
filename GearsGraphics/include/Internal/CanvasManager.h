@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Internal/ISystem.h>
 #include <Singleton.h>
 #include <FuncOrderDefinition.h>
@@ -17,7 +17,7 @@ namespace Glib
 namespace Glib::Internal::Graphics
 {
     /**
-     * @brief ƒLƒƒƒ“ƒoƒX—pŠÇ—ƒNƒ‰ƒX
+     * @brief ã‚­ãƒ£ãƒ³ãƒã‚¹ç”¨ç®¡ç†ã‚¯ãƒ©ã‚¹
      */
     class CanvasManager :
         public Interface::ISystem,
@@ -29,23 +29,23 @@ namespace Glib::Internal::Graphics
 
     public:
         /**
-         * @brief •`‰æ
+         * @brief æç”»
          */
         void Draw();
 
         /**
-         * @brief ƒLƒƒƒ“ƒoƒX‚ğ’Ç‰Á
+         * @brief ã‚­ãƒ£ãƒ³ãƒã‚¹ã‚’è¿½åŠ 
          * @param canvas
          */
         void AddCanvas(const WeakPtr<Canvas>& canvas);
 
         /**
-         * @brief UI‚ğ’Ç‰Á
+         * @brief UIã‚’è¿½åŠ 
          */
         void AddUI(const WeakPtr<Internal::UIRenderer>& renderer, const WeakPtr<Canvas>& canvas);
 
         /**
-         * @brief ƒLƒƒƒ“ƒoƒX‚Ì•`‰æ‡”Ô‚ğ•ÏX
+         * @brief ã‚­ãƒ£ãƒ³ãƒã‚¹ã®æç”»é †ç•ªã‚’å¤‰æ›´
          */
         void ChangeCanvasOrder(const WeakPtr<Canvas>& canvas, int order);
 
@@ -54,3 +54,4 @@ namespace Glib::Internal::Graphics
         void DrawUI(const WeakPtr<Canvas>& canvas) const;
     };
 }
+

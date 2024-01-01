@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Internal/DX12/ConstantBuffer.h>
 #include <Internal/Renderer.h>
 #include <Internal/CameraBase.h>
@@ -16,12 +16,12 @@ namespace Glib
         void DrawShadow(const WeakPtr<Internal::CameraBase>& camera);
 
         /**
-         * @brief ƒƒbƒVƒ…‚ÌID‚ğæ“¾
+         * @brief ãƒ¡ãƒƒã‚·ãƒ¥ã®IDã‚’å–å¾—
          */
         unsigned int MeshID() const;
 
         /**
-         * @brief ƒƒbƒVƒ…‚ÌID‚ğİ’è
+         * @brief ãƒ¡ãƒƒã‚·ãƒ¥ã®IDã‚’è¨­å®š
          */
         void MeshID(unsigned int id);
 
@@ -32,3 +32,4 @@ namespace Glib
         bool isEnabled_{ false };
     };
 }
+

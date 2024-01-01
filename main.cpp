@@ -1,4 +1,4 @@
-// ƒeƒXƒg—pÀscpp
+ï»¿// ãƒ†ã‚¹ãƒˆç”¨å®Ÿè¡Œcpp
 #include <iostream>
 #include <Glib.h>
 #include <Game.h>
@@ -32,13 +32,13 @@ namespace
     auto imgui = Internal::Debug::ImGuiManager::Instance();
 }
 
-// ƒeƒXƒg—pƒRƒ“ƒ|[ƒlƒ“ƒg
+// ãƒ†ã‚¹ãƒˆç”¨ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
 class TestMover : public Component
 {
 public:
     void Start()
     {
-        imgui->Log("Enable " + nameof<TestMover>());
+        imgui->Log("Enable " + nameof(*this));
     }
 
     void Update()
@@ -84,32 +84,35 @@ public:
     }
 };
 
-// ƒeƒXƒg—pƒV[ƒ“ƒNƒ‰ƒX
+// ãƒ†ã‚¹ãƒˆç”¨ã‚·ãƒ¼ãƒ³ã‚¯ãƒ©ã‚¹
 class TestScene : public Scene
 {
 public:
     void Start() override
     {
+        // ã‚«ãƒ¡ãƒ©ä½œæˆ
+        auto camera = GameObjectManager::Instantiate("Camera");
+        auto initPosition = Vector3{ 0.0f, 3.0f, -20.0f };
+        camera->Transform()->Position(initPosition);
+        camera->AddComponent<Camera>()->ClearFlags(CameraClearFlags::Color);
+
+        // ã‚¢ã‚»ãƒƒãƒˆèª­ã¿è¾¼ã¿
         if (!MeshManager::Instance().Load(0, R"(C:\Users\rukar\Desktop\MikuMikuDance_v932x64\Appearance Miku\Appearance Miku.globj)"))
         {
             return;
         }
-        if (!AnimationManager::Instance().Load(0, R"(C:\Users\rukar\Desktop\MikuMikuDance_v932x64\‚¢‚à‚ª‚Å‚«‚½ƒ‚[ƒVƒ‡ƒ“\‚É‚Úƒ~ƒN‚³‚ñ”Å\‚É‚Úƒ~ƒN‚³‚ñ_‚¢‚à‚ª‚Å‚«‚½.glanim)"))
+        if (!AnimationManager::Instance().Load(0, R"(C:\Users\rukar\Desktop\MikuMikuDance_v932x64\ã„ã‚‚ãŒã§ããŸãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³\ã«ã¼ãƒŸã‚¯ã•ã‚“ç‰ˆ\ã«ã¼ãƒŸã‚¯ã•ã‚“_ã„ã‚‚ãŒã§ããŸ.glanim)"))
         {
             return;
         }
 
+        // ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆ
         auto mesh = GameObjectManager::Instantiate("Mesh");
         auto renderer = mesh->AddComponent<SkinnedMeshRenderer>();
         auto animator = mesh->AddComponent<Animator>();
         mesh->AddComponent<TestMover>();
         renderer->MeshID(0);
         animator->AnimationID(0);
-
-        auto camera = GameObjectManager::Instantiate("Camera");
-        auto initPosition = Vector3{ 0.0f, 3.0f, -20.0f };
-        camera->Transform()->Position(initPosition);
-        camera->AddComponent<Camera>()->ClearFlags(CameraClearFlags::Color);
 
         imgui->Log("Scene Loading...");
     }
@@ -120,7 +123,7 @@ public:
     }
 };
 
-// ƒQ[ƒ€–{‘Ì
+// ã‚²ãƒ¼ãƒ æœ¬ä½“
 class MyGame : public Game
 {
     void Start() override
@@ -139,7 +142,7 @@ class MyGame : public Game
     }
 };
 
-int main()
+int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
     MyGame{}.Run();
 }

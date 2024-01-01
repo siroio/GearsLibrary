@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Internal/DX12/ConstantBuffer.h>
 #include <Internal/Renderer.h>
 #include <Internal/SkinnedRenderer.h>
@@ -23,38 +23,38 @@ namespace Glib
         void DrawShadow(const WeakPtr<Internal::CameraBase>& camera);
 
         /**
-         * @brief ƒƒbƒVƒ…‚ÌID‚ğæ“¾
+         * @brief ãƒ¡ãƒƒã‚·ãƒ¥ã®IDã‚’å–å¾—
          */
         unsigned int MeshID() const;
 
         /**
-         * @brief ƒƒbƒVƒ…‚ÌID‚ğİ’è
+         * @brief ãƒ¡ãƒƒã‚·ãƒ¥ã®IDã‚’è¨­å®š
          */
         void MeshID(unsigned int id);
 
     private:
         /**
-         * @brief ƒ{[ƒ“‚ÌŒvZ
+         * @brief ãƒœãƒ¼ãƒ³ã®è¨ˆç®—
          */
         void ComputeBone();
 
         /**
-         * @brief ƒ{[ƒ“‚ÌƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚ğ¶¬
+         * @brief ãƒœãƒ¼ãƒ³ã®ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆ
          */
         void CreateBoneGameObject();
 
         /**
-         * @brief ƒ{[ƒ“‚Ìæ“¾
+         * @brief ãƒœãƒ¼ãƒ³ã®å–å¾—
          */
         virtual const std::vector<Bone>& Bones() const override;
 
         /**
-         * @brief ƒ{[ƒ“‚Ìƒgƒ‰ƒ“ƒXƒtƒH[ƒ€‚ğæ“¾
+         * @brief ãƒœãƒ¼ãƒ³ã®ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ã‚’å–å¾—
          */
         virtual const std::vector<WeakPtr<Transform>>& BoneTransforms() const override;
 
         /**
-         * @brief ƒ{[ƒ“‚Ìs—ñ‚ğæ“¾
+         * @brief ãƒœãƒ¼ãƒ³ã®è¡Œåˆ—ã‚’å–å¾—
          */
         virtual std::array<Matrix4x4, 512>& BoneMatrix() override;
 
@@ -69,3 +69,4 @@ namespace Glib
         bool isEnabled_{ false };
     };
 }
+

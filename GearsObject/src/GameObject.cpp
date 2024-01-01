@@ -1,7 +1,8 @@
-#include <GameObject.h>
+﻿#include <GameObject.h>
 #include <Component.h>
 #include <Components/Transform.h>
 #include <Internal/ImGuiInc.h>
+#include <StringUtility.h>
 
 GameObject::GameObject(std::string_view name) : name_{ name }
 {}
@@ -33,7 +34,7 @@ void GameObject::DrawGUI()
 {
     for (const auto& component : components_)
     {
-        std::string name = typeid(*component.get()).name();
+        std::string name = Glib::nameof(*component.get());
         ImGui::PushID(component.get());
         if (ImGui::CollapsingHeader(name.data()))
         {

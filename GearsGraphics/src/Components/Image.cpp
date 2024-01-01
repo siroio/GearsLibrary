@@ -1,4 +1,4 @@
-#include <Components/Image.h>
+﻿#include <Components/Image.h>
 #include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/GraphicsResource.h>
 #include <Internal/DX12/GraphicsResourceID.h>
@@ -97,3 +97,4 @@ void Glib::Image::TextureID(unsigned int id)
     textureID_ = id;
     enabled_ = s_textureManager.Contains(id);
 }
+

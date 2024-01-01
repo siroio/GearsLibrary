@@ -1,4 +1,4 @@
-#include <Matrix4x4.h>
+﻿#include <Matrix4x4.h>
 #include <Quaternion.h>
 #include <Vector3.h>
 #include <Mathf.h>
@@ -673,3 +673,4 @@ std::ostream& operator<<(std::ostream& stream, const Matrix4x4& m)
 {
     return stream << m.ToString();
 }
+

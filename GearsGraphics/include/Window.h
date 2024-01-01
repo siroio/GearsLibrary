@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Windows.h>
 #include <Singleton.h>
 #include <string>
@@ -20,69 +20,70 @@ namespace Glib
     public:
 
         /**
-         * @brief Window‚Ì‰Šú‰»
+         * @brief Windowã®åˆæœŸåŒ–
          */
         bool Initialize();
 
         /**
-         * @brief Window‚ÌI—¹
+         * @brief Windowã®çµ‚äº†
         */
         void Finalize();
 
     public:
 
         /**
-         * @brief ƒCƒ“ƒXƒ^ƒ“ƒXƒnƒ“ƒhƒ‹‚Ìæ“¾
+         * @brief ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãƒãƒ³ãƒ‰ãƒ«ã®å–å¾—
          */
         static HINSTANCE InstanceHandle();
 
         /**
-         * @brief ƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹‚Ìæ“¾
+         * @brief ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«ã®å–å¾—
          */
         static HWND WindowHandle();
 
         /**
-         * @brief ƒEƒBƒ“ƒhƒEƒvƒƒV[ƒWƒƒ‚ğ“o˜^
+         * @brief ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£ã‚’ç™»éŒ²
          * @param proc
          */
         static bool RegisterProcedure(int id, const Glib::WindowProcedure& proc);
 
         /**
-         * @brief ƒEƒBƒ“ƒhƒEƒvƒƒV[ƒWƒƒ‚ğ‰ğœ
+         * @brief ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£ã‚’è§£é™¤
          * @param proc
          */
         static void UnRegisterProcedure(int id);
 
         /**
-         * @brief ƒEƒBƒ“ƒhƒE‚Ì–¼‘O‚ğæ“¾
+         * @brief ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®åå‰ã‚’å–å¾—
          */
         static std::string& WindowName();
 
         /**
-         * @brief ƒEƒBƒ“ƒhƒE‚Ì–¼‘O‚ğİ’è
+         * @brief ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®åå‰ã‚’è¨­å®š
          * @param name
          */
         static void WindowName(const std::string& name);
 
         /**
-         * @brief ƒEƒBƒ“ƒhƒE‚ÌƒTƒCƒY‚ğæ“¾
+         * @brief ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚µã‚¤ã‚ºã‚’å–å¾—
          */
         static const Vector2& WindowSize();
 
         /**
-         * @brief ƒEƒBƒ“ƒhƒE‚ÌƒTƒCƒY‚ğİ’è
+         * @brief ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚µã‚¤ã‚ºã‚’è¨­å®š
          * @param size
          */
         static void WindowSize(const Vector2& size);
 
         /**
-         * @brief ƒfƒoƒbƒO‚ÌƒEƒBƒ“ƒhƒEƒTƒCƒY‚ğæ“¾
+         * @brief ãƒ‡ãƒãƒƒã‚°æ™‚ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚ºã‚’å–å¾—
          */
         static const Vector2& WindowDebugSize();
 
         /**
-         * @brief ƒfƒoƒbƒO‚ÌƒEƒBƒ“ƒhƒEƒTƒCƒY‚ğİ’è
+         * @brief ãƒ‡ãƒãƒƒã‚°æ™‚ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚ºã‚’è¨­å®š
          */
         static void WindowDebugSize(const Vector2& size);
     };
 }
+

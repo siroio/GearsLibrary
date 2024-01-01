@@ -1,4 +1,4 @@
-#include <Internal/DX12/BlendState.h>
+﻿#include <Internal/DX12/BlendState.h>
 #include <d3d12.h>
 
 D3D12_RENDER_TARGET_BLEND_DESC Glib::Internal::Graphics::BlendDesc::Create(BlendState state)
@@ -53,3 +53,4 @@ D3D12_RENDER_TARGET_BLEND_DESC Glib::Internal::Graphics::BlendDesc::Create(Blend
             return blendDesc;
     }
 }
+

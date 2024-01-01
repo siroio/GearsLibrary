@@ -1,4 +1,4 @@
-#include "Matrix3x3.h"
+﻿#include "Matrix3x3.h"
 #include <Matrix3x3.h>
 #include <Vector2.h>
 #include <Mathf.h>
@@ -305,3 +305,4 @@ std::ostream& operator<<(std::ostream& stream, const Matrix3x3& m)
 {
     return stream << m.ToString();
 }
+

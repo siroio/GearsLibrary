@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace Glib
 {
@@ -11,3 +11,4 @@ namespace Glib
         Button5
     };
 }
+

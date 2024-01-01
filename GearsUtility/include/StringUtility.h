@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <string_view>
 #include <string>
 #include <vector>
@@ -7,9 +7,9 @@
 namespace Glib
 {
     /**
-    * @brief •¶š—ñ‚ğ•ªŠ„‚µ‚Ä•Ô‚·
-    * @param str •¶š—ñ
-    * @param delim ‹æØ‚è•¶š
+    * @brief æ–‡å­—åˆ—ã‚’åˆ†å‰²ã—ã¦è¿”ã™
+    * @param str æ–‡å­—åˆ—
+    * @param delim åŒºåˆ‡ã‚Šæ–‡å­—
     */
     static constexpr std::vector<std::string> Split(std::string_view str, char delim)
     {
@@ -29,8 +29,25 @@ namespace Glib
     }
 
     /**
-     * @brief w’è‚µ‚½ƒNƒ‰ƒX‚Ì–¼‘O‚ğæ“¾
-     * @return ƒNƒ‰ƒX–¼
+     * @brief æŒ‡å®šã—ãŸã‚¯ãƒ©ã‚¹ã®åå‰ã‚’å–å¾—
+     * @return ã‚¯ãƒ©ã‚¹å
+     */
+    template<class T>
+    static constexpr std::string nameof(const T& object)
+    {
+        std::string name = typeid(object).name();
+        std::size_t start = name.find(' ');
+        if (start != std::string::npos) name = name.substr(start + 1);
+
+        std::size_t end = name.rfind("::");
+        if (end != std::string::npos) name = name.substr(end + 2);
+
+        return name;
+    }
+
+    /**
+     * @brief æŒ‡å®šã—ãŸã‚¯ãƒ©ã‚¹ã®åå‰ã‚’å–å¾—
+     * @return ã‚¯ãƒ©ã‚¹å
      */
     template<class T>
     static constexpr std::string nameof()
@@ -46,7 +63,7 @@ namespace Glib
     }
 
     /**
-     * @brief string‚ğƒRƒs[
+     * @brief stringã‚’ã‚³ãƒ”ãƒ¼
      */
     static constexpr std::string ToString(std::string_view sv)
     {
@@ -54,7 +71,7 @@ namespace Glib
     }
 
     /**
-     * @brief ƒ}ƒ‹ƒ`ƒoƒCƒg•¶š—ñ‚É•ÏŠ·
+     * @brief ãƒãƒ«ãƒãƒã‚¤ãƒˆæ–‡å­—åˆ—ã«å¤‰æ›
      */
     static inline std::wstring StringToWide(std::string_view sv)
     {
@@ -68,7 +85,7 @@ namespace Glib
         if (size == 0) return L"";
 
         std::wstring wstr{};
-        wstr.resize(size - 1);
+        wstr.resize(static_cast<size_t>(size) - 1);
         MultiByteToWideChar(
             CP_ACP,
             MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
@@ -78,5 +95,18 @@ namespace Glib
             size);
 
         return wstr;
+    }
+
+    /**
+     * @brief æ–‡å­—åˆ—ã«å¤‰æ›
+     */
+    static inline std::string WideToString(std::wstring_view sv)
+    {
+        int bufferSize = WideCharToMultiByte(CP_ACP, 0, &sv[0], -1, nullptr, 0, nullptr, nullptr);
+        if (bufferSize == 0) return "";
+
+        std::string result(bufferSize, '\0');
+        return WideCharToMultiByte(CP_ACP, 0, &sv[0], -1, result.data(), bufferSize, nullptr, nullptr) == 0 ?
+            "" : result;
     }
 };

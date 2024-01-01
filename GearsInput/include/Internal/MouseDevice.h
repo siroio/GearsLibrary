@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <Windows.h>
 #include <Vector2.h>
 #include <Internal/MouseButton.h>
@@ -31,3 +31,4 @@ namespace Glib::Internal::Input
         std::array<unsigned char, 2> currentMouseButton_;
     };
 }
+

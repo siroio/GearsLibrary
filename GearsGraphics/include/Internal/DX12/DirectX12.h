@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Singleton.h>
 #include <Internal/ISystem.h>
 #include <FuncOrderDefinition.h>
@@ -27,7 +27,7 @@ namespace Glib::Internal::Graphics
 
     public:
         /**
-         * @brief DescriptorPool‚Ìí—Ş
+         * @brief DescriptorPoolã®ç¨®é¡
          */
         enum class PoolType : unsigned int
         {
@@ -41,107 +41,108 @@ namespace Glib::Internal::Graphics
     public:
 
         /**
-         * @brief ‰Šú‰»
+         * @brief åˆæœŸåŒ–
          */
         bool Initialize();
 
         /**
-         * @brief •`‰æŠJn
+         * @brief æç”»é–‹å§‹
          */
         void BeginDraw();
 
         /**
-         * @brief •`‰æI—¹
+         * @brief æç”»çµ‚äº†
          */
         void EndDraw();
 
         /**
-         * @brief I—¹
+         * @brief çµ‚äº†
          */
         void Finalize();
 
         /**
-         * @brief ƒRƒ}ƒ“ƒhƒŠƒXƒg‚ÌÀs
+         * @brief ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆã®å®Ÿè¡Œ
          */
         void ExecuteCommandList();
 
         /**
-         * @brief ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚Ìİ’è
+         * @brief ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®è¨­å®š
          */
         void SetDefaultRenderTarget();
 
         /**
-         * @brief ƒfƒoƒCƒX‚ğæ“¾
+         * @brief ãƒ‡ãƒã‚¤ã‚¹ã‚’å–å¾—
          */
         ComPtr<ID3D12Device> Device() const;
 
         /**
-         * @brief ƒRƒ}ƒ“ƒhƒŠƒXƒg‚ğæ“¾
+         * @brief ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆã‚’å–å¾—
          */
         ComPtr<ID3D12GraphicsCommandList> CommandList() const;
 
         /**
-         * @brief ƒRƒ}ƒ“ƒhƒLƒ…[‚ğæ“¾
+         * @brief ã‚³ãƒãƒ³ãƒ‰ã‚­ãƒ¥ãƒ¼ã‚’å–å¾—
          */
         ComPtr<ID3D12CommandQueue> CommandQueue() const;
 
         /**
-         * @brief ƒfƒBƒXƒNƒŠƒvƒ^ƒv[ƒ‹‚ğæ“¾
+         * @brief ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ—ãƒ¼ãƒ«ã‚’å–å¾—
          */
         std::shared_ptr<DescriptorPool> DescriptorPool(PoolType type) const;
 
         /**
-         * @brief ƒŠƒ\[ƒXƒfƒXƒN‚ğæ“¾
+         * @brief ãƒªã‚½ãƒ¼ã‚¹ãƒ‡ã‚¹ã‚¯ã‚’å–å¾—
          */
         D3D12_RESOURCE_DESC BackBufferResourceDesc() const;
 
         /**
-         * @brief ƒoƒŠƒA‚Ì„ˆÚ
+         * @brief ãƒãƒªã‚¢ã®æ¨ç§»
         */
         void Barrier(ID3D12Resource* resource, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after);
 
         /**
-         * @brief ”wŒiF‚Ìæ“¾
-         * @return ”wŒiF
+         * @brief èƒŒæ™¯è‰²ã®å–å¾—
+         * @return èƒŒæ™¯è‰²
          */
         static const Color& BackGroundColor();
 
         /**
-         * @brief ”wŒiF‚Ìİ’è
-         * @param ”wŒiF
+         * @brief èƒŒæ™¯è‰²ã®è¨­å®š
+         * @param èƒŒæ™¯è‰²
          */
         static void BackGroundColor(const Color& color);
 
     private:
 
         /**
-         * @brief ƒfƒoƒCƒX‚Ì‰Šú‰»
+         * @brief ãƒ‡ãƒã‚¤ã‚¹ã®åˆæœŸåŒ–
          */
         bool InitDevice();
 
         /**
-         * @brief ƒRƒ}ƒ“ƒh‚Ì‰Šú‰»
+         * @brief ã‚³ãƒãƒ³ãƒ‰ã®åˆæœŸåŒ–
          */
         bool InitCommand();
 
         /**
-         * @brief ƒXƒƒbƒvƒ`ƒF[ƒ“‚Ìì¬
+         * @brief ã‚¹ãƒ¯ãƒƒãƒ—ãƒã‚§ãƒ¼ãƒ³ã®ä½œæˆ
          */
         bool CreateSwapChain();
 
         /**
-         * @brief ƒv[ƒ‹‚Ìì¬
+         * @brief ãƒ—ãƒ¼ãƒ«ã®ä½œæˆ
          */
         bool CreateDescriptorPool();
 
         /**
-         * @brief ƒfƒoƒbƒOƒŒƒCƒ„[‚Ì—LŒø‰»
+         * @brief ãƒ‡ãƒãƒƒã‚°ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æœ‰åŠ¹åŒ–
          */
         void EnableDebugLayer();
 
         /**
-         * @brief GPU‚Ìˆ—‘Ò‹@
+         * @brief GPUã®å‡¦ç†å¾…æ©Ÿ
          */
         void WaitGPU();
     };
 }
+

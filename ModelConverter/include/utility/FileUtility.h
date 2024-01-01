@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 #include <string>
 #include <iosfwd>
 
 /**
- * @brief ƒtƒ@ƒCƒ‹‚ÌƒGƒ“ƒR[ƒh
+ * @brief ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚¨ãƒ³ã‚³ãƒ¼ãƒ‰
  */
 enum class Encode : unsigned char
 {
@@ -15,15 +15,15 @@ class FileUtility
 {
 public:
     /**
-     * @brief Šg’£q‚Ìæ“¾
-     * @param path ƒtƒ@ƒCƒ‹ƒpƒX
-     * @param removePeriod Šg’£q‚Ì[ . ]‚ğíœ‚·‚é‚©
-     * @return Šg’£q
+     * @brief æ‹¡å¼µå­ã®å–å¾—
+     * @param path ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+     * @param removePeriod æ‹¡å¼µå­ã®[ . ]ã‚’å‰Šé™¤ã™ã‚‹ã‹
+     * @return æ‹¡å¼µå­
      */
     static std::string GetExtension(std::string_view path, bool removePeriod = true);
 
     /**
-     * @brief ƒoƒCƒiƒŠ‚Ö‘‚«‚İ
+     * @brief ãƒã‚¤ãƒŠãƒªã¸æ›¸ãè¾¼ã¿
      * @param file
      * @param data
      * @param length
@@ -31,7 +31,7 @@ public:
     static void WriteToBinary(std::ofstream& file, const void* const data, const int length);
 
     /**
-     * @brief ƒoƒCƒiƒŠ‚©‚ç“Ç‚İ‚İ
+     * @brief ãƒã‚¤ãƒŠãƒªã‹ã‚‰èª­ã¿è¾¼ã¿
      * @param file
      * @param data
      * @param length
@@ -39,10 +39,11 @@ public:
     static void ReadForBinary(std::ifstream& file, void* const data, const int length);
 
     /**
-     * @brief [ƒeƒLƒXƒg’· + ƒeƒLƒXƒg–{•¶]‚ÌŒ`®‚ğƒoƒbƒtƒ@‚Ö“Ç‚İ‚İ
-     * @param file ƒtƒ@ƒCƒ‹‚ğŠJ‚¢‚Ä‚¢‚éƒXƒgƒŠ[ƒ€
-     * @param text ƒoƒbƒtƒ@
-     * @param encode “Ç‚İ‚İƒGƒ“ƒR[ƒh
+     * @brief [ãƒ†ã‚­ã‚¹ãƒˆé•· + ãƒ†ã‚­ã‚¹ãƒˆæœ¬æ–‡]ã®å½¢å¼ã‚’ãƒãƒƒãƒ•ã‚¡ã¸èª­ã¿è¾¼ã¿
+     * @param file ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã„ã¦ã„ã‚‹ã‚¹ãƒˆãƒªãƒ¼ãƒ 
+     * @param text ãƒãƒƒãƒ•ã‚¡
+     * @param encode èª­ã¿è¾¼ã¿ã‚¨ãƒ³ã‚³ãƒ¼ãƒ‰
      */
     static void ReadText(std::ifstream& file, std::string& text, Encode encode = Encode::UTF8);
 };
+

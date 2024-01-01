@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <WeakPtr.h>
 
 class Component;
@@ -24,3 +24,4 @@ namespace Glib::Internal
         std::shared_ptr<Interface::IFunc<ReturnType, Args...>> function;
     };
 }
+

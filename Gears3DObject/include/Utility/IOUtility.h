@@ -1,13 +1,13 @@
-#pragma once
+ï»¿#pragma once
 #include <fstream>
 
 namespace Glib
 {
     /**
-     * @brief ƒoƒCƒiƒŠƒtƒ@ƒCƒ‹‚Ö‘‚«o‚µ
-     * @param file ƒoƒCƒiƒŠƒtƒ@ƒCƒ‹
-     * @param data ƒf[ƒ^‚Ö‚Ìƒ|ƒCƒ“ƒ^
-     * @param length ƒf[ƒ^’·
+     * @brief ãƒã‚¤ãƒŠãƒªãƒ•ã‚¡ã‚¤ãƒ«ã¸æ›¸ãå‡ºã—
+     * @param file ãƒã‚¤ãƒŠãƒªãƒ•ã‚¡ã‚¤ãƒ«
+     * @param data ãƒ‡ãƒ¼ã‚¿ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+     * @param length ãƒ‡ãƒ¼ã‚¿é•·
      */
     inline void WriteToBinary(std::ofstream& file, const void* const data, const int length)
     {
@@ -15,13 +15,14 @@ namespace Glib
     }
 
     /**
-     * @brief ƒoƒCƒiƒŠ‚©‚ç“Ç‚İo‚µ
-     * @param file ƒoƒCƒiƒŠƒtƒ@ƒCƒ‹
-     * @param data ƒf[ƒ^‚Ö‚Ìƒ|ƒCƒ“ƒ^
-     * @param length ƒf[ƒ^’·
+     * @brief ãƒã‚¤ãƒŠãƒªã‹ã‚‰èª­ã¿å‡ºã—
+     * @param file ãƒã‚¤ãƒŠãƒªãƒ•ã‚¡ã‚¤ãƒ«
+     * @param data ãƒ‡ãƒ¼ã‚¿ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+     * @param length ãƒ‡ãƒ¼ã‚¿é•·
      */
     inline void ReadForBinary(std::ifstream& file, void* const data, const int length)
     {
         file.read(reinterpret_cast<char*>(data), length);
     }
 }
+

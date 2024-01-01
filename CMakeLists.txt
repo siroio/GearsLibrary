@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.4)
 set(CMAKE_CXX_STANDARD 20)
 
 option(BUILD_DOCUMENTATION "Build Doxygen documentation" ON)
@@ -101,8 +101,11 @@ set(JSON_BuildTests OFF CACHE INTERNAL "")
 # 文字コードをUNICODEに設定
 # add_definitions(-UNICODE -D_UNICODE)
 
+# UTF8に変更
+add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+
 # メインの実行可能ファイル
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} WIN32 main.cpp $<$<CXX_COMPILER_ID:MSVC>:utf8api.manifest>)
 
 # サブディレクトリの追加
 add_subdirectory(./GearsCore)

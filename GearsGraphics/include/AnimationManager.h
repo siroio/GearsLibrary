@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Singleton.h>
 #include <AnimationClip.h>
 
@@ -11,18 +11,19 @@ namespace Glib
 
     public:
         /**
-         * @brief ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì“Ç‚İ‚İ
-         * @param id ƒAƒjƒ[ƒVƒ‡ƒ“ID
-         * @param filePath ƒtƒ@ƒCƒ‹ƒpƒX
-         * @return ¬Œ÷ : true
-         * @return ¸”s : false
+         * @brief ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®èª­ã¿è¾¼ã¿
+         * @param id ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ID
+         * @param filePath ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+         * @return æˆåŠŸ : true
+         * @return å¤±æ•— : false
          */
         static bool Load(unsigned int id, std::string_view filePath);
 
         /**
-         * @brief ƒAƒjƒ[ƒVƒ‡ƒ“‚ğæ“¾
-         * @param id ƒAƒjƒ[ƒVƒ‡ƒ“ID
+         * @brief ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å–å¾—
+         * @param id ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ID
          */
         WeakPtr<AnimationClip> Animation(unsigned int id);
     };
 }
+

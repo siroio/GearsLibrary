@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Internal/ISystem.h>
 #include <Internal/FuncOrderConstant.h>
 #include <Singleton.h>
@@ -18,35 +18,36 @@ namespace Glib
 
     public:
         /**
-         * @brief “ü—ÍƒfƒoƒCƒX‚Ì‰Šú‰»
+         * @brief å…¥åŠ›ãƒ‡ãƒã‚¤ã‚¹ã®åˆæœŸåŒ–
          */
         bool Initialize();
 
         /**
-         * @brief “ü—Í‚ğæ“¾
+         * @brief å…¥åŠ›ã‚’å–å¾—
          */
         void Update();
 
         /**
-        * @brief ƒL[‚ğ‰Ÿ‚µ‚Ä‚¢‚é‚©
-        * @param key ƒL[‚Ìí—Ş
-        * @return ‰Ÿ‚µ‚Ä‚¢‚é true
-        * @return —£‚µ‚Ä‚¢‚é false
+        * @brief ã‚­ãƒ¼ã‚’æŠ¼ã—ã¦ã„ã‚‹ã‹
+        * @param key ã‚­ãƒ¼ã®ç¨®é¡
+        * @return æŠ¼ã—ã¦ã„ã‚‹ true
+        * @return é›¢ã—ã¦ã„ã‚‹ false
        */
         static bool GetKey(KeyCode key);
 
         /**
-         * @brief ƒL[‚ğ‰Ÿ‚µ‚½‚©
-         * @param key ƒL[‚Ìí—Ş
-         * @return ‰Ÿ‚µ‚½ true
+         * @brief ã‚­ãƒ¼ã‚’æŠ¼ã—ãŸã‹
+         * @param key ã‚­ãƒ¼ã®ç¨®é¡
+         * @return æŠ¼ã—ãŸ true
         */
         static bool GetKeyDown(KeyCode key);
 
         /**
-         * @brief ƒL[‚ğ—£‚µ‚½‚©
-         * @param key ƒL[‚Ìí—Ş
-         * @return —£‚µ‚½ true
+         * @brief ã‚­ãƒ¼ã‚’é›¢ã—ãŸã‹
+         * @param key ã‚­ãƒ¼ã®ç¨®é¡
+         * @return é›¢ã—ãŸ true
         */
         static bool GetKeyUp(KeyCode key);
     };
 }
+

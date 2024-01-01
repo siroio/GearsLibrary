@@ -1,4 +1,4 @@
-#include <Internal/WavLoader.h>
+ï»¿#include <Internal/WavLoader.h>
 #include <AudioClip.h>
 #include <xaudio2.h>
 #include <fstream>
@@ -10,14 +10,14 @@ std::shared_ptr<Glib::AudioClip> Glib::Internal::Audio::WavLoader::Load(std::str
     if (exists(wavPath) || wavPath.extension().generic_string().ends_with("wav")) return nullptr;
     std::ifstream wavFile{ file.data(), std::ios::in, std::ios::binary };
 
-    // ŠJ‚¯‚é‚©Šm”F
+    // é–‹ã‘ã‚‹ã‹ç¢ºèª
     if (!wavFile.is_open()) return nullptr;
 
-    // riffƒ`ƒƒƒ“ƒN‚Ìæ“¾
+    // riffãƒãƒ£ãƒ³ã‚¯ã®å–å¾—
     RIFF riff{};
     wavFile.read(reinterpret_cast<char*>(&riff), sizeof(riff));
 
-    // fmtƒ`ƒƒƒ“ƒN‚Ìæ“¾
+    // fmtãƒãƒ£ãƒ³ã‚¯ã®å–å¾—
     const auto size = FindChunk(wavFile, "fmt ");
     WAVEFORMATEX format{};
 
@@ -31,7 +31,7 @@ std::shared_ptr<Glib::AudioClip> Glib::Internal::Audio::WavLoader::Load(std::str
         wavFile.seekg(static_cast<std::streamoff>(size) - sizeof(format), std::ios::cur);
     }
 
-    // ƒf[ƒ^ƒTƒCƒYæ“¾
+    // ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºå–å¾—
     const size_t dataSize = FindChunk(wavFile, "data ");
     if (dataSize <= 0) return nullptr;
     const auto dataBuffer = std::vector<BYTE>(dataSize);
@@ -57,3 +57,4 @@ size_t Glib::Internal::Audio::WavLoader::FindChunk(std::ifstream& stream, std::s
     }
     return 0;
 }
+

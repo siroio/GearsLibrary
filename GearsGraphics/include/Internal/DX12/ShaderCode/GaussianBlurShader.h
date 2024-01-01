@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 
 namespace Glib::Internal::Graphics::ShaderCode
 {
     /**
-     * @brief X•ûŒüƒuƒ‰[ƒVƒF[ƒ_[
+     * @brief Xæ–¹å‘ãƒ–ãƒ©ãƒ¼ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
      */
     constexpr char XBLUR_VERTEX_SHADER[]
     {
@@ -45,7 +45,7 @@ namespace Glib::Internal::Graphics::ShaderCode
     };
 
     /**
-     * @brief Y•ûŒüƒuƒ‰[ƒVƒF[ƒ_[
+     * @brief Yæ–¹å‘ãƒ–ãƒ©ãƒ¼ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
      */
     constexpr char YBLUR_VERTEX_SHADER[]
     {
@@ -87,7 +87,7 @@ namespace Glib::Internal::Graphics::ShaderCode
     };
 
     /**
-     * @brief ƒuƒ‰[—pƒsƒNƒZƒ‹ƒVƒF[ƒ_[
+     * @brief ãƒ–ãƒ©ãƒ¼ç”¨ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
      */
     constexpr char GAUSSIAN_BLUR_SHADER[]
     {
@@ -121,3 +121,4 @@ namespace Glib::Internal::Graphics::ShaderCode
 	    })"
     };
 }
+

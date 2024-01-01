@@ -1,17 +1,17 @@
-#pragma once
+ï»¿#pragma once
 /**
- * @brief ŠeŠÖ”‚ÌÀs‡˜‚ğ§Œä‚·‚é‚½‚ß‚Ì’è”
+ * @brief å„é–¢æ•°ã®å®Ÿè¡Œé †åºã‚’åˆ¶å¾¡ã™ã‚‹ãŸã‚ã®å®šæ•°
  */
 namespace Glib::Internal::Order
 {
-    /* ‰Šú‰»‡”Ôˆê—— */
+    /* åˆæœŸåŒ–é †ç•ªä¸€è¦§ */
     namespace Initialzie
     {
         constexpr int DX12 = -100;
         constexpr int SHADER = DX12 + 1;
     }
 
-    /* XV‡”Ôˆê—— */
+    /* æ›´æ–°é †ç•ªä¸€è¦§ */
     namespace Update
     {
         constexpr int INPUT = -100;
@@ -21,13 +21,13 @@ namespace Glib::Internal::Order
         constexpr int COMPONENT = 100;
     }
 
-    /* •`‰æ‘O‡”Ôˆê—— */
+    /* æç”»å‰é †ç•ªä¸€è¦§ */
     namespace BeginDraw
     {
         constexpr int DX12 = -100;
     }
 
-    /* •`‰æ‡”Ôˆê—— */
+    /* æç”»é †ç•ªä¸€è¦§ */
     namespace Draw
     {
         constexpr int SKYBOX = -100;
@@ -38,9 +38,10 @@ namespace Glib::Internal::Order
         constexpr int UI = CAMERA + 1;
     }
 
-    /* I—¹‡”Ôˆê—— */
+    /* çµ‚äº†é †ç•ªä¸€è¦§ */
     namespace Finalize
     {
         constexpr int GAMEOBJECT = -100;
     }
 }
+

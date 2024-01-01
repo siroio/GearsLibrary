@@ -1,4 +1,4 @@
-#include <CSVLoader.h>
+﻿#include <CSVLoader.h>
 
 #include <vector>
 #include <fstream>
@@ -33,3 +33,4 @@ namespace Glib
         return result;
     }
 }
+

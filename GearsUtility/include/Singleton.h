@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 #include <WeakPtr.h>
 #include <mutex>
 
 namespace Glib
 {
     /**
-     * @brief ’Êí‚ÌSingletonƒNƒ‰ƒX
+     * @brief é€šå¸¸ã®Singletonã‚¯ãƒ©ã‚¹
      */
     template<class T>
     class Singleton
@@ -21,7 +21,7 @@ namespace Glib
 
     public:
         /**
-         * @brief ƒCƒ“ƒXƒ^ƒ“ƒX‚Ìæ“¾
+         * @brief ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å–å¾—
          */
         static inline T& Instance()
         {
@@ -32,7 +32,7 @@ namespace Glib
     };
 
     /**
-     * @brief ƒ|ƒCƒ“ƒ^”ÅSingletonƒNƒ‰ƒX
+     * @brief ãƒã‚¤ãƒ³ã‚¿ç‰ˆSingletonã‚¯ãƒ©ã‚¹
      */
     template<class T>
     class SingletonPtr
@@ -49,7 +49,7 @@ namespace Glib
 
     public:
         /**
-         * @brief ƒCƒ“ƒXƒ^ƒ“ƒX‚Ìæ“¾
+         * @brief ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å–å¾—
          */
         template<class... Args>
         static inline WeakPtr<T> Instance(const Args&... args)
@@ -63,7 +63,7 @@ namespace Glib
         }
 
         /**
-         * @brief ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì‰ğ•ú
+         * @brief ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®è§£æ”¾
          */
         static inline void Release()
         {
@@ -75,3 +75,4 @@ namespace Glib
         }
     };
 };
+

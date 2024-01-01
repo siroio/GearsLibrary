@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <concepts>
 #include <string_view>
 #include <algorithm>
@@ -15,7 +15,7 @@ template<class T>
 concept IsComponent = std::derived_from<T, Component>;
 
 /**
- * @brief ƒQ[ƒ€ƒIƒuƒWƒFƒNƒgƒNƒ‰ƒX
+ * @brief ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚¯ãƒ©ã‚¹
  */
 class GameObject final :
     public Glib::Internal::Interface::IGameObject,
@@ -23,153 +23,153 @@ class GameObject final :
 {
 public:
     /**
-     * @brief ƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚ğ¶¬
-     * @param ƒIƒuƒWƒFƒNƒg–¼
+     * @brief ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆ
+     * @param ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå
      */
     explicit GameObject(std::string_view name);
 
     ~GameObject();
 
     /**
-     * @brief ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ì’Ç‰Á
-     * @return ƒRƒ“ƒ|[ƒlƒ“ƒg
+     * @brief ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®è¿½åŠ 
+     * @return ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
      */
     template<class T, class... Args> requires IsComponent<T>
     Glib::WeakPtr<T> AddComponent(Args&&... args);
 
     /**
-     * @brief ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìæ“¾
-     * @return ƒRƒ“ƒ|[ƒlƒ“ƒg
+     * @brief ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®å–å¾—
+     * @return ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
      */
     template<class T> requires IsComponent<T>
     Glib::WeakPtr<T> GetComponent() const;
 
     /**
-     * @brief eqŠÖŒW‚É‚ ‚éqƒIƒuƒWƒFƒNƒg‚©‚çƒRƒ“ƒ|[ƒlƒ“ƒg‚ğæ“¾
-     * @return ƒRƒ“ƒ|[ƒlƒ“ƒg
+     * @brief è¦ªå­é–¢ä¿‚ã«ã‚ã‚‹å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹ã‚‰ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’å–å¾—
+     * @return ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
      */
     template<class T> requires IsComponent<T>
     Glib::WeakPtr<T> GetComponentInChildren() const;
 
     /**
-     * @brief eqŠÖŒW‚É‚ ‚éeƒIƒuƒWƒFƒNƒg‚©‚çƒRƒ“ƒ|[ƒlƒ“ƒg‚ğæ“¾
-     * @return ƒRƒ“ƒ|[ƒlƒ“ƒg
+     * @brief è¦ªå­é–¢ä¿‚ã«ã‚ã‚‹è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹ã‚‰ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’å–å¾—
+     * @return ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
      */
     template<class T> requires IsComponent<T>
     Glib::WeakPtr<T> GetComponentInParent() const;
 
     /**
-     * @brief ƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚Ì‚·‚×‚Ä‚ÌƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ‚·‚×‚Äæ“¾
-     * @return ƒRƒ“ƒ|[ƒlƒ“ƒgˆê——
+     * @brief ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã™ã¹ã¦ã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’ã™ã¹ã¦å–å¾—
+     * @return ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆä¸€è¦§
      */
     template<class T> requires IsComponent<T>
     std::list<Glib::WeakPtr<T>> GetComponents() const;
 
     /**
-     * @brief eqŠÖŒW‚É‚ ‚éqƒIƒuƒWƒFƒNƒg‚©‚çƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ‚·‚×‚Äæ“¾
-     * @return ƒRƒ“ƒ|[ƒlƒ“ƒgˆê——
+     * @brief è¦ªå­é–¢ä¿‚ã«ã‚ã‚‹å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹ã‚‰ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’ã™ã¹ã¦å–å¾—
+     * @return ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆä¸€è¦§
      */
     template<class T> requires IsComponent<T>
     Glib::WeakPtr<T> GetComponentsInChildren() const;
 
     /**
-     * @brief eqŠÖŒW‚É‚ ‚éeƒIƒuƒWƒFƒNƒg‚©‚çƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ‚·‚×‚Äæ“¾
-     * @return ƒRƒ“ƒ|[ƒlƒ“ƒgˆê——
+     * @brief è¦ªå­é–¢ä¿‚ã«ã‚ã‚‹è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹ã‚‰ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’ã™ã¹ã¦å–å¾—
+     * @return ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆä¸€è¦§
      */
     template<class T> requires IsComponent<T>
     Glib::WeakPtr<T> GetComponentsInParent() const;
 
     /**
-     * @brief ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìíœ
+     * @brief ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®å‰Šé™¤
      */
     void RemoveComponents();
 
     /**
-     * @brief €–S‚µ‚½ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìíœ
+     * @brief æ­»äº¡ã—ãŸã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®å‰Šé™¤
      */
     void RemoveDeadComponents();
 
     /**
-     * @brief ƒfƒoƒbƒO—pGUI•`‰æ
+     * @brief ãƒ‡ãƒãƒƒã‚°ç”¨GUIæç”»
      */
     void DrawGUI();
 
     /**
-     * @brief ƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚Ìíœ
+     * @brief ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å‰Šé™¤
      */
     void Destroy();
 
     /**
-     * @brief ƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚ªíœ‚³‚ê‚È‚¢‚©
+     * @brief ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒå‰Šé™¤ã•ã‚Œãªã„ã‹
      */
     bool DontDestroyOnLoad() const;
 
     /**
-     * @brief ƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚ÌDestroy‚ğ–h‚®
+     * @brief ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®Destroyã‚’é˜²ã
      * @param dontDestroyOnLoad
      */
     void DontDestroyOnLoad(bool dontDestroyOnLoad);
 
     /**
-     * @brief ƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚ªƒAƒNƒeƒBƒu‚©
+     * @brief ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã‹
      * @return bool
      */
     bool Active() const;
 
     /**
-     * @brief ƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚ÌƒAƒNƒeƒBƒu‚ğİ’è
+     * @brief ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã‚’è¨­å®š
      * @param active
      */
     void Active(bool active);
 
     /**
-     * @brief ƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚Ì–¼‘O‚ğİ’è
+     * @brief ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®åå‰ã‚’è¨­å®š
      * @param name
      */
     void Name(std::string_view name);
 
     /**
-     * @brief ƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚Ì–¼‘O‚ğ•ÏX
+     * @brief ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®åå‰ã‚’å¤‰æ›´
      * @return name
      */
     std::string Name() const;
 
     /**
-     * @brief ƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚Ìƒ^ƒO‚ğİ’è
+     * @brief ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¿ã‚°ã‚’è¨­å®š
      * @param tag
      */
     void Tag(std::string_view tag);
 
     /**
-     * @brief ƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚Ìƒ^ƒO‚ğæ“¾
+     * @brief ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¿ã‚°ã‚’å–å¾—
      * @return tag
      */
     std::string Tag() const;
 
     /**
-     * @brief ƒŒƒCƒ„[
+     * @brief ãƒ¬ã‚¤ãƒ¤ãƒ¼
      */
     unsigned int Layer() const;
 
     /**
-     * @brief ƒŒƒCƒ„[‚Ìİ’è
+     * @brief ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è¨­å®š
      * @param layer
      */
     void Layer(unsigned int layer);
 
     /**
-     * @brief ƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚ª€–Só‘Ô‚©
+     * @brief ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒæ­»äº¡çŠ¶æ…‹ã‹
      * @return bool
      */
     bool IsDead() const;
 
     /**
-     * @brief ƒ‹[ƒgƒIƒuƒWƒFƒNƒg‚©
+     * @brief ãƒ«ãƒ¼ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹
      */
     bool IsRoot() const;
 
     /**
-     * @brief ƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚Ìƒgƒ‰ƒ“ƒXƒtƒH[ƒ€‚ğæ“¾
+     * @brief ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ã‚’å–å¾—
      * @return
      */
     const Glib::WeakPtr<Glib::Transform>& Transform() const;
@@ -275,3 +275,4 @@ inline Glib::WeakPtr<T> GameObject::GetComponentsInParent() const
 
     return components;
 }
+

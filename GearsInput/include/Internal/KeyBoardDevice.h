@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <dinput.h>
 #include <array>
 #include <ComPtr.h>
@@ -13,17 +13,17 @@ namespace Glib::Internal::Input
         void Update();
 
         /**
-         * @brief ƒL[‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©
+         * @brief ã‚­ãƒ¼ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹
         */
         bool GetKey(KeyCode key) const;
 
         /**
-         * @brief ƒL[‚ª—£‚³‚ê‚½‚©
+         * @brief ã‚­ãƒ¼ãŒé›¢ã•ã‚ŒãŸã‹
         */
         bool GetKeyDown(KeyCode key) const;
 
         /**
-         * @brief ƒL[‚ª‰Ÿ‚³‚ê‚½‚©
+         * @brief ã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸã‹
         */
         bool GetKeyUp(KeyCode key) const;
     private:
@@ -32,3 +32,4 @@ namespace Glib::Internal::Input
         std::array<unsigned char, 256U> currentKeyState{ 0U };
     };
 }
+

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Internal/ISystem.h>
 #include <Internal/FuncOrderConstant.h>
 #include <FuncOrderDefinition.h>
@@ -14,7 +14,7 @@ namespace Glib
     class Scene;
 
     /**
-     * @brief ƒV[ƒ“ŠÇ—ƒNƒ‰ƒX
+     * @brief ã‚·ãƒ¼ãƒ³ç®¡ç†ã‚¯ãƒ©ã‚¹
      */
     class SceneManager :
         public Internal::Interface::ISystem,
@@ -27,31 +27,31 @@ namespace Glib
     public:
 
         /**
-         * @brief ƒV[ƒ“‚Ìƒ[ƒh
+         * @brief ã‚·ãƒ¼ãƒ³ã®ãƒ­ãƒ¼ãƒ‰
          */
         void Update();
 
         /**
-         * @brief ƒV[ƒ“‚Ì“o˜^
+         * @brief ã‚·ãƒ¼ãƒ³ã®ç™»éŒ²
          */
         template<class Scene>
         static void Register();
 
         /**
-         * @brief ƒV[ƒ“‚Ì“Ç‚İ‚İ
+         * @brief ã‚·ãƒ¼ãƒ³ã®èª­ã¿è¾¼ã¿
          *
-         * @param ƒV[ƒ“–¼
+         * @param ã‚·ãƒ¼ãƒ³å
          */
         static void LoadScene(const std::string& name);
 
         /**
-         * @brief ƒV[ƒ“‚©‚ç–¼‘O‚ğæ“¾
+         * @brief ã‚·ãƒ¼ãƒ³ã‹ã‚‰åå‰ã‚’å–å¾—
          */
         template<class Scene>
         static std::string SceneName();
 
         /**
-         * @brief “o˜^‚³‚ê‚½ƒV[ƒ“ˆê—— 
+         * @brief ç™»éŒ²ã•ã‚ŒãŸã‚·ãƒ¼ãƒ³ä¸€è¦§
          */
         static std::list<std::string> Scenes();
 

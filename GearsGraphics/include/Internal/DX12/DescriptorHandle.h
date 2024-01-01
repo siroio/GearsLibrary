@@ -1,10 +1,10 @@
-#pragma once
+ï»¿#pragma once
 #include <d3d12.h>
 
 namespace Glib::Internal::Graphics
 {
     /**
-     * @brief ƒfƒBƒXƒNƒŠƒvƒ^ƒnƒ“ƒhƒ‹
+     * @brief ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒãƒ³ãƒ‰ãƒ«
      */
     class DescriptorHandle
     {
@@ -21,3 +21,4 @@ namespace Glib::Internal::Graphics
         D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle_;
     };
 }
+

@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 
 namespace Glib::Internal::Graphics::ShaderCode
 {
     /**
-     * @brief ƒXƒvƒ‰ƒCƒg•`‰æ—pƒVƒF[ƒ_[
+     * @brief ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»ç”¨ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
      */
     constexpr char SPRITE_SHADER[]
     {
@@ -68,3 +68,4 @@ namespace Glib::Internal::Graphics::ShaderCode
         })"
     };
 }
+

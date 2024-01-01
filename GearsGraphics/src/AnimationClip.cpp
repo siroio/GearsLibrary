@@ -1,4 +1,4 @@
-#include <AnimationClip.h>
+ï»¿#include <AnimationClip.h>
 #include <algorithm>
 #include <ranges>
 #include <Mathf.h>
@@ -26,7 +26,7 @@ bool Glib::AnimationClip::Load(std::string_view fileName)
         endFrame_ = std::max(endFrame_, keyFrame.frameNo);
     }
 
-    // ƒƒ‚ƒŠ‚ğsize‚É‡‚í‚¹‚é
+    // ãƒ¡ãƒ¢ãƒªã‚’sizeã«åˆã‚ã›ã‚‹
     for (auto& [bone, frame] : keyframes_)
     {
         frame.shrink_to_fit();
@@ -36,7 +36,7 @@ bool Glib::AnimationClip::Load(std::string_view fileName)
 
 Glib::AnimationClip::KeyFrame Glib::AnimationClip::GetKeyFrame(const std::string& boneName, float frameNo) const
 {
-    // ƒL[ƒtƒŒ[ƒ€‚ğŒŸõ
+    // ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’æ¤œç´¢
     if (!keyframes_.contains(boneName))
     {
         KeyFrame keyframe{};
@@ -50,13 +50,13 @@ Glib::AnimationClip::KeyFrame Glib::AnimationClip::GetKeyFrame(const std::string
     const auto& keyframes = keyframes_.at(boneName);
     auto segment = SearchKeyFrame(keyframes, frameNo);
 
-    // ˆê’v‚µ‚½‚ç‚»‚Ì‚Ü‚Ü•Ô‚·
+    // ä¸€è‡´ã—ãŸã‚‰ãã®ã¾ã¾è¿”ã™
     if (segment.first == segment.second) return keyframes.at(segment.first);
 
     const auto& start = keyframes.at(segment.first);
     const auto& end = keyframes.at(segment.second);
 
-    // ƒtƒŒ[ƒ€•âŠÔ
+    // ãƒ•ãƒ¬ãƒ¼ãƒ è£œé–“
     KeyFrame interpolate{};
     const float t = Mathf::Remap01(frameNo, start.frameNo, end.frameNo);
     interpolate.frameNo = frameNo;
@@ -105,3 +105,4 @@ std::pair<int, int> Glib::AnimationClip::SearchKeyFrame(const KeyFrames& keys, f
 
     return std::pair<int, int>{ start, end };
 }
+

@@ -1,4 +1,4 @@
-#include <AudioManager.h>
+﻿#include <AudioManager.h>
 #include <Internal/XAudioSystem.h>
 
 namespace
@@ -20,3 +20,4 @@ void Glib::AudioManager::LoadVoice(unsigned int groupId, std::string_view path)
 {
     s_xAudio->LoadVoice(groupId, path);
 }
+

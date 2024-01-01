@@ -1,4 +1,4 @@
-#include <Internal/DX12/Shader/ShaderManager.h>
+Ôªø#include <Internal/DX12/Shader/ShaderManager.h>
 #include <Internal/DX12/ShaderCode/CameraShader.h>
 #include <Internal/DX12/ShaderCode/GaussianBlurShader.h>
 #include <Internal/DX12/ShaderCode/ImageShader.h>
@@ -18,16 +18,16 @@
 
 namespace
 {
-    /* í∏ì_ÉVÉFÅ[É_Å[ */
+    /* È†ÇÁÇπ„Ç∑„Çß„Éº„ÉÄ„Éº */
     std::unordered_map<unsigned int, ComPtr<ID3DBlob>> s_vertexShader;
 
-    /* ÉsÉNÉZÉãÉVÉFÅ[É_Å[ */
+    /* „Éî„ÇØ„Çª„É´„Ç∑„Çß„Éº„ÉÄ„Éº */
     std::unordered_map<unsigned int, ComPtr<ID3DBlob>> s_pixelShader;
 }
 
 bool Glib::Internal::Graphics::ShaderManager::Initialize()
 {
-    // ÉVÉFÅ[É_Å[ÇÃÉRÉìÉpÉCÉã
+    // „Ç∑„Çß„Éº„ÉÄ„Éº„ÅÆ„Ç≥„É≥„Éë„Ç§„É´
     std::vector<Glib::Graphics::Shader> shaders;
     shaders.emplace_back(ID::SPRITE_SHADER, ShaderType::VERTEX, ShaderCode::SPRITE_SHADER, "VSmain");
     shaders.emplace_back(ID::SPRITE_SHADER, ShaderType::PIXEL, ShaderCode::SPRITE_SHADER, "PSmain");
@@ -156,3 +156,4 @@ void Glib::Internal::Graphics::ShaderManager::ShaderError(const ComPtr<ID3DBlob>
         MsgBox::ICON::ERROR_ICON                                    // icon
     );
 }
+

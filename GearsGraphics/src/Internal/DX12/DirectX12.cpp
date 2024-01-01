@@ -1,4 +1,4 @@
-#include <Internal/DX12/DirectX12.h>
+ï»¿#include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/d3dx12Inc.h>
 #include <Internal/DX12/CommandList.h>
 #include <RenderTarget.h>
@@ -14,50 +14,50 @@
 
 namespace
 {
-    /* ƒfƒoƒCƒX */
+    /* ãƒ‡ãƒã‚¤ã‚¹ */
     ComPtr<ID3D12Device> s_device{ nullptr };
 
-    /* ƒtƒ@ƒNƒgƒŠ[ */
+    /* ãƒ•ã‚¡ã‚¯ãƒˆãƒªãƒ¼ */
     ComPtr<IDXGIFactory6> s_dxgiFactory{ nullptr };
 
-    /* ƒXƒƒbƒvƒ`ƒF[ƒ“ */
+    /* ã‚¹ãƒ¯ãƒƒãƒ—ãƒã‚§ãƒ¼ãƒ³ */
     ComPtr<IDXGISwapChain4> s_swapChain{ nullptr };
 
-    /* ƒRƒ}ƒ“ƒhƒŠƒXƒg */
+    /* ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆ */
     std::shared_ptr<Glib::Internal::Graphics::CommandList> s_cmdList;
 
-    /* ƒtƒFƒ“ƒX */
+    /* ãƒ•ã‚§ãƒ³ã‚¹ */
     ComPtr<ID3D12Fence> s_fence{ nullptr };
 
-    /* ƒtƒFƒ“ƒX’l */
+    /* ãƒ•ã‚§ãƒ³ã‚¹å€¤ */
     UINT64 s_fenceValue{ 0 };
 
-    /* ƒfƒBƒXƒNƒŠƒvƒ^ƒv[ƒ‹ */
+    /* ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ—ãƒ¼ãƒ« */
     std::array<std::shared_ptr<Glib::Internal::Graphics::DescriptorPool>,
         static_cast<int>(Glib::Internal::Graphics::DirectX12::PoolType::COUNT)> s_descriptors;
 
-    /* ƒoƒbƒNƒoƒbƒtƒ@ƒtƒŒ[ƒ€” */
+    /* ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ãƒ•ãƒ¬ãƒ¼ãƒ æ•° */
     constexpr unsigned int FRAME_COUNT{ 2 };
 
-    /* ƒoƒbƒNƒoƒbƒtƒ@ */
+    /* ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ */
     std::array<Glib::Graphics::RenderTarget, FRAME_COUNT> s_backBuffers;
 
-    /* ƒVƒU[‹éŒ` */
+    /* ã‚·ã‚¶ãƒ¼çŸ©å½¢ */
     D3D12_RECT s_scissorRect{};
 
-    /* ƒrƒ…[ƒ|[ƒg */
+    /* ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆ */
     D3D12_VIEWPORT s_viewPort{};
 
-    /* ”wŒiF */
+    /* èƒŒæ™¯è‰² */
     Color s_backGroundColor = Color::Black();
 
-    /* WindowƒCƒ“ƒXƒ^ƒ“ƒX */
+    /* Windowã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ */
     Glib::Window& s_window = Glib::Window::Instance();
 }
 
 namespace
 {
-    /* ƒfƒBƒXƒNƒŠƒvƒ^ƒv[ƒ‹‚ÌƒTƒCƒY */
+    /* ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ—ãƒ¼ãƒ«ã®ã‚µã‚¤ã‚º */
 
     constexpr int RESOURCE_POOL_SIZE = 512;
     constexpr int SAMPLER_POOL_SIZE = 256;
@@ -69,7 +69,7 @@ bool Glib::Internal::Graphics::DirectX12::Initialize()
 {
     if (!s_window.Initialize()) return false;
     EnableDebugLayer();
-    // ƒtƒ@ƒNƒgƒŠ[‚Ìì¬
+    // ãƒ•ã‚¡ã‚¯ãƒˆãƒªãƒ¼ã®ä½œæˆ
 #if defined(DEBUG) || defined(_DEBUG)
     if (FAILED(CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(s_dxgiFactory.ReleaseAndGetAddressOf())))) return false;
 #else
@@ -80,10 +80,10 @@ bool Glib::Internal::Graphics::DirectX12::Initialize()
     if (!CreateSwapChain()) return false;
     if (!CreateDescriptorPool()) return false;
 
-    // ’x‰„ƒtƒŒ[ƒ€”‚ğ1‚Éİ’è
+    // é…å»¶ãƒ•ãƒ¬ãƒ¼ãƒ æ•°ã‚’1ã«è¨­å®š
     s_swapChain->SetMaximumFrameLatency(1);
 
-    // ƒoƒbƒNƒoƒbƒtƒ@‚Ìì¬
+    // ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ã®ä½œæˆ
     for (auto idx = 0; idx < FRAME_COUNT; idx++)
     {
         if (!s_backBuffers[idx].Create(idx, s_swapChain)) return false;
@@ -97,7 +97,7 @@ bool Glib::Internal::Graphics::DirectX12::Initialize()
     const auto& windowSize = Window::WindowSize();
 #endif
 
-    // ƒrƒ…[ƒ|[ƒgİ’è
+    // ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆè¨­å®š
     s_viewPort.Width = windowSize.x;
     s_viewPort.Height = windowSize.y;
     s_viewPort.TopLeftX = 0;
@@ -105,7 +105,7 @@ bool Glib::Internal::Graphics::DirectX12::Initialize()
     s_viewPort.MaxDepth = 1.0f;
     s_viewPort.MinDepth = 0.0f;
 
-    // ƒVƒU[‹éŒ`İ’è
+    // ã‚·ã‚¶ãƒ¼çŸ©å½¢è¨­å®š
     s_scissorRect.left = 0;
     s_scissorRect.top = 0;
     s_scissorRect.right = s_scissorRect.left + static_cast<long>(windowSize.x);
@@ -252,7 +252,7 @@ bool Glib::Internal::Graphics::DirectX12::InitDevice()
 
 bool Glib::Internal::Graphics::DirectX12::InitCommand()
 {
-    // ƒLƒ…[‚Ìİ’è
+    // ã‚­ãƒ¥ãƒ¼ã®è¨­å®š
     D3D12_COMMAND_QUEUE_DESC cmdQueueDesc{};
     cmdQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
     cmdQueueDesc.NodeMask = 0;
@@ -342,3 +342,4 @@ void Glib::Internal::Graphics::DirectX12::WaitGPU()
         CloseHandle(event);
     }
 }
+

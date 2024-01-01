@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <array>
 #include <string>
 
@@ -64,3 +64,4 @@ Matrix3x3 operator * (const Matrix3x3& m1, const Matrix3x3& m2);
 Matrix3x3 operator / (const Matrix3x3& m, float scalar);
 
 std::ostream& operator << (std::ostream& stream, const Matrix3x3& m);
+

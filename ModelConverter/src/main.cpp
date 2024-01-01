@@ -1,4 +1,4 @@
-#include <string>
+ï»¿#include <string>
 #include <iostream>
 #include <filesystem>
 #include <Converter.h>
@@ -13,50 +13,51 @@ int main(int argc, char* argv[])
     //    return -1;
     //}
 
-    ////ƒtƒ@ƒCƒ‹ƒpƒX‚Ìæ“¾‚Æ³‹K‰»
+    ////ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã®å–å¾—ã¨æ­£è¦åŒ–
     //auto inputFile = fs::path{ argv[1] }.lexically_normal();
     //auto outputFile = fs::path{ argv[2] }.lexically_normal();
 
     auto inputFile = fs::path{ R"(C:\Users\rukar\Desktop\MikuMikuDance_v932x64\Appearance Miku\Appearance Miku.pmx)" };
     auto outputFile = fs::path{ R"(C:\Users\rukar\Desktop\MikuMikuDance_v932x64\Appearance Miku\Appearance Miku)" };
 
-    //auto inputFile = fs::path{ R"(C:\Users\rukar\Desktop\MikuMikuDance_v932x64\‚¢‚à‚ª‚Å‚«‚½ƒ‚[ƒVƒ‡ƒ“\‚É‚Úƒ~ƒN‚³‚ñ”Å\‚É‚Úƒ~ƒN‚³‚ñ_‚¢‚à‚ª‚Å‚«‚½.vmd)" };
-    //auto outputFile = fs::path{ R"(C:\Users\rukar\Desktop\MikuMikuDance_v932x64\‚¢‚à‚ª‚Å‚«‚½ƒ‚[ƒVƒ‡ƒ“\‚É‚Úƒ~ƒN‚³‚ñ”Å\‚É‚Úƒ~ƒN‚³‚ñ_‚¢‚à‚ª‚Å‚«‚½)" };
+    //auto inputFile = fs::path{ R"(C:\Users\rukar\Desktop\MikuMikuDance_v932x64\ã„ã‚‚ãŒã§ããŸãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³\ã«ã¼ãƒŸã‚¯ã•ã‚“ç‰ˆ\ã«ã¼ãƒŸã‚¯ã•ã‚“_ã„ã‚‚ãŒã§ããŸ.vmd)" };
+    //auto outputFile = fs::path{ R"(C:\Users\rukar\Desktop\MikuMikuDance_v932x64\ã„ã‚‚ãŒã§ããŸãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³\ã«ã¼ãƒŸã‚¯ã•ã‚“ç‰ˆ\ã«ã¼ãƒŸã‚¯ã•ã‚“_ã„ã‚‚ãŒã§ããŸ)" };
 
 
-    // ‘Š‘ÎƒpƒX‚©‚çâ‘ÎƒpƒX‚É•ÏŠ·
+    // ç›¸å¯¾ãƒ‘ã‚¹ã‹ã‚‰çµ¶å¯¾ãƒ‘ã‚¹ã«å¤‰æ›
     outputFile = outputFile.is_absolute() ? outputFile : fs::absolute(outputFile);
 
     try
     {
-        // ƒtƒ@ƒCƒ‹‚ÌŠm”F
+        // ãƒ•ã‚¡ã‚¤ãƒ«ã®ç¢ºèª
         if (!fs::exists(inputFile)) throw std::runtime_error{ "File is not exist." };
         Converter::Initialize();
         auto inputExt = inputFile.extension().generic_string();
         std::erase(inputExt, '.'); // erase extension "."
         auto converter = Converter::Create(inputExt);
 
-        // ƒtƒ@ƒCƒ‹‚Ì•ÏŠ·
+        // ãƒ•ã‚¡ã‚¤ãƒ«ã®å¤‰æ›
         if (!converter->LoadFile(inputFile.generic_string()))
         {
             throw std::runtime_error{ "Convert Failed." };
             return -1;
         }
 
-        // ƒtƒ@ƒCƒ‹‚Ì‘‚«o‚µ
+        // ãƒ•ã‚¡ã‚¤ãƒ«ã®æ›¸ãå‡ºã—
         if (!converter->WriteFile(outputFile.generic_string()))
         {
             throw std::runtime_error{ "File Write Failed." };
             return -1;
         }
 
-        // o—Íæ•\¦
+        // å‡ºåŠ›å…ˆè¡¨ç¤º
         std::cout << "OUTPUT DIR : " << outputFile.generic_string() << std::endl;
     }
     catch (const std::runtime_error& error)
     {
-        // ƒGƒ‰[ƒƒbƒZ[ƒWo—Í
+        // ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡ºåŠ›
         std::cerr << error.what() << std::endl;
         return -1;
     }
 }
+

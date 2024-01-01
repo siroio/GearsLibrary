@@ -1,4 +1,4 @@
-#include <TextureManager.h>
+﻿#include <TextureManager.h>
 #include <WeakPtr.h>
 #include <Texture.h>
 #include <unordered_map>
@@ -45,3 +45,4 @@ void Glib::TextureManager::SetTexture(unsigned int id, unsigned int rootParamInd
 {
     s_textureResource.at(id)->SetTexture(rootParamIndex);
 }
+

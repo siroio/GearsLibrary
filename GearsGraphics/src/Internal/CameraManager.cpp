@@ -1,4 +1,4 @@
-#include <Internal/CameraManager.h>
+ï»¿#include <Internal/CameraManager.h>
 #include <Internal/CameraBase.h>
 #include <Internal/DX12/DirectX12.h>
 #include <Internal/ImGuiManager.h>
@@ -18,16 +18,16 @@ void Glib::Internal::Graphics::CameraManager::BeginDraw()
 
 void Glib::Internal::Graphics::CameraManager::Draw()
 {
-    // RenderTarget‚ÌÝ’è
+    // RenderTargetã®è¨­å®š
 #if defined(DEBUG) || defined(_DEBUG)
-    // TODO: ƒfƒoƒbƒO—p‚ÌRenderTarget‚Ö•`‰æ
+    // TODO: ãƒ‡ãƒãƒƒã‚°ç”¨ã®RenderTargetã¸æç”»
     s_imgui->SetRenderTarget();
 #else
     s_dx12->SetDefaultRenderTarget();
 #endif
     for (const auto& camera : cameras_)
     {
-        // ƒJƒƒ‰‚ª–³Œø‚Ìê‡‚Í•`‰æ‚µ‚È‚¢
+        // ã‚«ãƒ¡ãƒ©ãŒç„¡åŠ¹ã®å ´åˆã¯æç”»ã—ãªã„
         if (!camera->Active()) continue;
         camera->Draw();
     }
@@ -42,3 +42,4 @@ const std::list<Glib::WeakPtr<Glib::Internal::CameraBase>> Glib::Internal::Graph
 {
     return cameras_;
 }
+

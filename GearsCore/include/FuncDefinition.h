@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <Internal/HasFunctionObject.h>
 
 /* Normal Function */
@@ -23,3 +23,4 @@ HAS_FUNC_OBJECT(OnTriggerExit);
 HAS_FUNC_OBJECT(OnCollisionEnter);
 HAS_FUNC_OBJECT(OnCollisionStay);
 HAS_FUNC_OBJECT(OnCollisionExit);
+

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <iosfwd>
 #include <string>
 #include <array>
@@ -88,3 +88,4 @@ Color operator * (float scaler, const Color& color);
 Color operator / (const Color& color, float scaler);
 
 std::ostream& operator << (std::ostream& stream, const Color& color);
+

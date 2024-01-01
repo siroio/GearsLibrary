@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <variant>
 #include <deque>
 #include <unordered_map>
@@ -145,3 +145,4 @@ namespace Glib::Internal
         );
     }
 }
+

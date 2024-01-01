@@ -1,37 +1,37 @@
-#pragma once
+ï»¿#pragma once
 
 struct D3D12_RENDER_TARGET_BLEND_DESC;
 
 namespace Glib::Internal::Graphics
 {
     /**
-     * @brief ƒuƒŒƒ“ƒhƒXƒe[ƒg
+     * @brief ãƒ–ãƒ¬ãƒ³ãƒ‰ã‚¹ãƒ†ãƒ¼ãƒˆ
      */
     enum class BlendState : unsigned char
     {
         /**
-         * @brief “§‰ß‚È‚µ
+         * @brief é€éãªã—
          */
         Default,
 
         /**
-         * @brief ƒ¿ƒuƒŒƒ“ƒh
+         * @brief Î±ãƒ–ãƒ¬ãƒ³ãƒ‰
          */
         Alpha,
 
         /**
-         * @brief ‰ÁZƒuƒŒƒ“ƒh
+         * @brief åŠ ç®—ãƒ–ãƒ¬ãƒ³ãƒ‰
          */
         Add,
 
         /**
-         * @brief Œ¸ZƒuƒŒƒ“ƒh
+         * @brief æ¸›ç®—ãƒ–ãƒ¬ãƒ³ãƒ‰
          */
         Substract
     };
 
     /**
-     * @brief D3D12_RENDER_TARGET_BLEND_DESC ì¬—pƒNƒ‰ƒX
+     * @brief D3D12_RENDER_TARGET_BLEND_DESC ä½œæˆç”¨ã‚¯ãƒ©ã‚¹
      */
     class BlendDesc
     {
@@ -39,3 +39,4 @@ namespace Glib::Internal::Graphics
         static D3D12_RENDER_TARGET_BLEND_DESC Create(BlendState state);
     };
 }
+

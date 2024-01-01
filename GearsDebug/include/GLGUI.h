@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <string_view>
 #include <vector>
 
@@ -10,50 +10,50 @@ struct Color;
 namespace Glib
 {
     /**
-     * @brief ImGuiƒ‰ƒbƒp[ƒNƒ‰ƒX
+     * @brief ImGuiãƒ©ãƒƒãƒ‘ãƒ¼ã‚¯ãƒ©ã‚¹
      */
     class GLGUI
     {
     public:
         /**
-         * @brief ŠÔŠu‚ğŠJ‚¯‚é
+         * @brief é–“éš”ã‚’é–‹ã‘ã‚‹
          */
         static void Space();
 
         /**
-         * @brief ƒZƒpƒŒ[ƒ^‚Ì’Ç‰Á
+         * @brief ã‚»ãƒ‘ãƒ¬ãƒ¼ã‚¿ã®è¿½åŠ 
          */
         static void Separator();
 
         /**
-         * @brief ƒeƒLƒXƒg‚Ì•\¦
+         * @brief ãƒ†ã‚­ã‚¹ãƒˆã®è¡¨ç¤º
          * @param text
          */
         static void Text(std::string_view fmt, ...);
 
         /**
-         * @brief ƒ{ƒ^ƒ“‚ğ•\¦
-         * @param label •\¦–¼
-         * @param sameLine “¯‚¶s‚É•\¦‚³‚¹‚é‚©
-         * @return ‰Ÿ‚µ‚½‚©
+         * @brief ãƒœã‚¿ãƒ³ã‚’è¡¨ç¤º
+         * @param label è¡¨ç¤ºå
+         * @param sameLine åŒã˜è¡Œã«è¡¨ç¤ºã•ã›ã‚‹ã‹
+         * @return æŠ¼ã—ãŸã‹
          */
         static bool Button(std::string_view label, bool sameLine = false);
 
         /**
-         * @brief ƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚Ì•\¦
-         * @param label •\¦–¼
-         * @param checked ƒ`ƒFƒbƒNó‘Ô
-         * @param sameLine “¯‚¶s‚É•\¦‚³‚¹‚é‚©
-         * @return ‰Ÿ‚µ‚½‚©
+         * @brief ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹ã®è¡¨ç¤º
+         * @param label è¡¨ç¤ºå
+         * @param checked ãƒã‚§ãƒƒã‚¯çŠ¶æ…‹
+         * @param sameLine åŒã˜è¡Œã«è¡¨ç¤ºã•ã›ã‚‹ã‹
+         * @return æŠ¼ã—ãŸã‹
          */
         static bool CheckBox(std::string_view label, bool* checked, bool sameLine = false);
 
         /**
-         * @brief ƒhƒƒbƒvƒ_ƒEƒ“ƒŠƒXƒg‚Ì•\¦
-         * @param label •\¦–¼
-         * @param curerntItem ‘I‘ğƒAƒCƒeƒ€
-         * @param items ‘I‘ğˆ
-         * @return ‰Ÿ‚µ‚½‚©
+         * @brief ãƒ‰ãƒ­ãƒƒãƒ—ãƒ€ã‚¦ãƒ³ãƒªã‚¹ãƒˆã®è¡¨ç¤º
+         * @param label è¡¨ç¤ºå
+         * @param curerntItem é¸æŠã‚¢ã‚¤ãƒ†ãƒ 
+         * @param items é¸æŠè‚¢
+         * @return æŠ¼ã—ãŸã‹
          */
         static bool ComboBox(std::string_view label, std::string& curerntItem, const std::vector<std::string>& items);
 
@@ -63,8 +63,10 @@ namespace Glib
         static bool InputInt(std::string_view label, int* value, bool sameLine = false);
         static bool InputFloat(std::string_view label, float* value, bool sameLine = false);
 
-        static bool DragInt(std::string_view label, int* value, int min = 0, int max = 0, float speed = 1.0f, bool sameLine = false);
-        static bool DragFloat(std::string_view label, float* value, float min = 0.0f, float max = 0.0f, float speed = 1.0f, bool sameLine = false);
+        static bool DragInt(std::string_view label, int* value, float speed = 1.0f, int min = 0, int max = 0, bool sameLine = false);
+        static bool DragFloat(std::string_view label, float* value, float speed = 1.0f, float min = 0.0f, float max = 0.0f, bool sameLine = false);
+        static bool DragFloat3(std::string_view label, Vector3* value, float speed = 1.0f, float min = 0.0f, float max = 0.0f, bool sameLine = false);
+        static bool DragFloat4(std::string_view label, Vector4* value, float speed = 1.0f, float min = 0.0f, float max = 0.0f, bool sameLine = false);
 
         static bool SliderInt(std::string_view label, int* value, int min, int max, bool sameLine = false);
         static bool SliderFloat(std::string_view label, float* value, float min, float max, bool sameLine = false);

@@ -1,4 +1,4 @@
-#include <GameObjectManager.h>
+ï»¿#include <GameObjectManager.h>
 #include <Internal/IGameObject.h>
 #include <Internal/ImGuiInc.h>
 #include <GLGUI.h>
@@ -41,10 +41,9 @@ void Glib::GameObjectManager::DebugDraw()
     if (s_enableHierarchy)
     {
         ImGui::Begin("Hierarchy", &s_enableHierarchy);
-
         for (const auto& go : gameObjects_)
         {
-            // ƒpƒ‰ƒ[ƒ^[•\¦
+            // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼è¡¨ç¤º
             if (!go->IsRoot()) continue;
             DrawDebugParams(go);
         }
@@ -58,17 +57,15 @@ void Glib::GameObjectManager::DebugDraw()
 
         if (!s_selectObject.expired())
         {
-            // ƒAƒNƒeƒBƒuƒtƒ‰ƒO‚Ì•\¦
+            // ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãƒ•ãƒ©ã‚°ã®è¡¨ç¤º
             bool active = s_selectObject->Active();
             if (ImGui::Checkbox("##Active", &active))
             {
                 s_selectObject->Active(active);
-            }
-            ImGui::SameLine();
-            ImGui::Text("Name");
+            };
             ImGui::SameLine();
 
-            // –¼‘O‚Ì•\¦
+            // åå‰ã®è¡¨ç¤º
             std::string name = s_selectObject->Name();
             name.resize(64);
             if (ImGui::InputText("##Name", name.data(), name.size(), ImGuiInputTextFlags_AutoSelectAll))
@@ -76,13 +73,13 @@ void Glib::GameObjectManager::DebugDraw()
                 s_selectObject->Name(name);
             }
 
-            // ƒŒƒCƒ„[‚Ì•\¦
+            // ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è¡¨ç¤º
             std::string layer = "Layer: " + std::to_string(s_selectObject->Layer());
             ImGui::Text(layer.c_str());
 
             ImGui::Separator();
 
-            // ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ì•\¦
+            // ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®è¡¨ç¤º
             s_selectObject->DrawGUI();
         }
 
@@ -106,10 +103,9 @@ void Glib::GameObjectManager::ResetGameObjects()
 
 void Glib::GameObjectManager::DrawDebugParams(GameObjectPtr gameObject)
 {
-    ImGuiTreeNodeFlags flag{
+    ImGuiTreeNodeFlags flag =
         ImGuiTreeNodeFlags_OpenOnArrow |
-        ImGuiTreeNodeFlags_OpenOnDoubleClick
-    };
+        ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
     if (gameObject->Transform()->Children().empty())
         flag |= ImGuiTreeNodeFlags_Leaf;
@@ -119,7 +115,7 @@ void Glib::GameObjectManager::DrawDebugParams(GameObjectPtr gameObject)
 
     bool opened{ ImGui::TreeNodeEx(gameObject.get().get(), flag, "%s", gameObject->Name().c_str()) };
 
-    // ‘I‘ğ‚µ‚½ƒIƒuƒWƒFƒNƒg‚ğæ“¾
+    // é¸æŠã—ãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å–å¾—
     if (ImGui::IsItemClicked())
         s_selectObject = gameObject;
 
@@ -151,7 +147,7 @@ GameObjectPtr Glib::GameObjectManager::Instantiate(std::string_view name)
 
 GameObjectPtr Glib::GameObjectManager::Find(std::string_view name)
 {
-    const auto& it = std::ranges::find_if(gameObjects_.begin(), gameObjects_.end(), [name](const std::shared_ptr<GameObject>& gameObject)
+    const auto& it = std::ranges::find_if(gameObjects_, [name](const std::shared_ptr<GameObject>& gameObject)
     {
         return gameObject->Name().compare(name);
     });
@@ -163,7 +159,7 @@ std::list<GameObjectPtr> Glib::GameObjectManager::FindGameObjectsWithTag(std::st
 {
     std::list<GameObjectPtr> result;
 
-    std::ranges::copy_if(gameObjects_.begin(), gameObjects_.end(), std::back_inserter(result), [tag](const std::shared_ptr<GameObject>& gameObject)
+    std::ranges::copy_if(gameObjects_, std::back_inserter(result), [tag](const std::shared_ptr<GameObject>& gameObject)
     {
         return gameObject->Tag().compare(tag);
     });

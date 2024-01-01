@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 
 namespace Glib
 {
     /**
-     * @brief ”wŒi‚ÌƒNƒŠƒA•û–@
+     * @brief èƒŒæ™¯ã®ã‚¯ãƒªã‚¢æ–¹æ³•
      */
     enum class CameraClearFlags
     {
@@ -11,3 +11,4 @@ namespace Glib
         SkyBox
     };
 };
+

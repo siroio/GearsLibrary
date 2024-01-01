@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <IConverter.h>
 #include <mcMath.h>
 #include <string>
@@ -27,3 +27,4 @@ private:
     unsigned int keyFrameCount_;
     std::vector<KeyFrame> keyFrames_;
 };
+

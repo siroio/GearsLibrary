@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <Windows.h>
 #include <Xinput.h>
 
@@ -13,3 +13,4 @@ namespace Glib::Internal::Input
         bool isVibrating{ false };
     };
 }
+

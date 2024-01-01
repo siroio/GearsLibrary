@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <unordered_map>
 #include <GameObjectPtr.h>
 #include <FuncOrderDefinition.h>
@@ -16,7 +16,7 @@ namespace Glib::Internal
     }
 
     /**
-     * @brief ƒRƒ“ƒ|[ƒlƒ“ƒgŠÇ—ƒNƒ‰ƒX
+     * @brief ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆç®¡ç†ã‚¯ãƒ©ã‚¹
      */
     class ComponentManager final :
         public Interface::ISystem,
@@ -81,3 +81,4 @@ namespace Glib::Internal
         eventFunction_[ptr].Execute(type, args...);
     }
 }
+

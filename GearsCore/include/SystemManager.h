@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Singleton.h>
 #include <Internal/IFunc.h>
 #include <Internal/SystemFunctionType.h>
@@ -19,7 +19,7 @@ namespace Glib::Internal
     namespace Concepts
     {
         /**
-         * @brief ƒVƒXƒeƒ€”»’è—p
+         * @brief ã‚·ã‚¹ãƒ†ãƒ åˆ¤å®šç”¨
          */
         template<class T>
         concept HasSingletonSystem = std::derived_from<T, Interface::ISystem>&&
@@ -28,7 +28,7 @@ namespace Glib::Internal
 }
 
 /**
- * @brief ƒVƒXƒeƒ€ŠÇ—ƒNƒ‰ƒX
+ * @brief ã‚·ã‚¹ãƒ†ãƒ ç®¡ç†ã‚¯ãƒ©ã‚¹
  */
 class SystemManager : public Glib::Singleton<SystemManager>
 {
@@ -149,3 +149,4 @@ inline void SystemManager::AddFinalize(const Glib::WeakPtr<T>& instance)
 {
     systemFunctions_[SystemFunctionType::Finalize].push_back(std::make_shared<Glib::Internal::Function::HasFinalizeObject<T, void>>(instance));
 }
+

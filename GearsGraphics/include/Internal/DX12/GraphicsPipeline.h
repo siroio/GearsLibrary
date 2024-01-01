@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <ComPtr.h>
 
 struct D3D12_ROOT_SIGNATURE_DESC;
@@ -9,29 +9,29 @@ struct ID3D12PipelineState;
 namespace Glib::Internal::Graphics
 {
     /**
-     * @brief ƒOƒ‰ƒtƒBƒbƒNƒXƒpƒCƒvƒ‰ƒCƒ“
+     * @brief ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
      */
     class GraphicsPipeline
     {
     public:
 
         /**
-         * @brief •W€‚ÈƒOƒ‰ƒtƒBƒbƒNƒXƒpƒCƒvƒ‰ƒCƒ“‚Ìİ’è‚ğì¬
+         * @brief æ¨™æº–ãªã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã®è¨­å®šã‚’ä½œæˆ
          */
         static D3D12_GRAPHICS_PIPELINE_STATE_DESC CreateDefaultPipelineDesc();
 
         /**
-         * @brief ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ‚Ìì¬
+         * @brief ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£ã®ä½œæˆ
          */
         bool CreateRootSignature(const D3D12_ROOT_SIGNATURE_DESC& desc);
 
         /**
-         * @brief ƒpƒCƒvƒ‰ƒCƒ“ƒXƒe[ƒg‚Ìì¬
+         * @brief ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚¹ãƒ†ãƒ¼ãƒˆã®ä½œæˆ
          */
         bool CreatePipelineState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& desc);
 
         /**
-         * @brief ƒOƒ‰ƒtƒBƒbƒNƒXƒpƒCƒvƒ‰ƒCƒ“‚ğƒZƒbƒg
+         * @brief ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚’ã‚»ãƒƒãƒˆ
          */
         void SetPipeline();
 
@@ -41,3 +41,4 @@ namespace Glib::Internal::Graphics
     };
 
 }
+

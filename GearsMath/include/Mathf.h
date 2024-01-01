@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <numbers>
 #include <limits>
 
@@ -84,3 +84,4 @@ public:
     static float Erf(float x);
     static float Erfc(float x);
 };
+

@@ -1,4 +1,4 @@
-#include <Internal/DX12/DescriptorHandle.h>
+﻿#include <Internal/DX12/DescriptorHandle.h>
 
 void Glib::Internal::Graphics::DescriptorHandle::CPU(D3D12_CPU_DESCRIPTOR_HANDLE handle)
 {
@@ -29,3 +29,4 @@ bool Glib::Internal::Graphics::DescriptorHandle::HasGPU() const
 {
     return gpuHandle_.ptr != 0;
 }
+

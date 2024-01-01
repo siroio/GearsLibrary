@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 struct Matrix4x4;
 
@@ -10,7 +10,7 @@ namespace Glib
 namespace Glib::Internal::Interface
 {
     /**
-     * @brief ƒJƒƒ‰ƒCƒ“ƒ^[ƒtƒF[ƒX
+     * @brief ã‚«ãƒ¡ãƒ©ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
      */
     class ICamera
     {
@@ -19,50 +19,51 @@ namespace Glib::Internal::Interface
 
     public:
         /**
-         * @brief ƒoƒbƒNƒoƒbƒtƒ@‚É•`‰æ
+         * @brief ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ã«æç”»
          */
         virtual void Draw() = 0;
 
         /**
-         * @brief ‰æ–ÊƒNƒŠƒA‚Ìí—Ş
+         * @brief ç”»é¢ã‚¯ãƒªã‚¢ã®ç¨®é¡
          */
         virtual CameraClearFlags ClearFlags() = 0;
 
         /**
-         * @brief ƒrƒ…[s—ñ
+         * @brief ãƒ“ãƒ¥ãƒ¼è¡Œåˆ—
          */
         virtual Matrix4x4 ViewMatrix() const = 0;
 
         /**
-         * @brief ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ
+         * @brief ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—
          */
         virtual Matrix4x4 ProjectionMatrix() const = 0;
 
         /**
-         * @brief ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚ğİ’è
+         * @brief ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’è¨­å®š
          */
         virtual void SetRenderTarget() = 0;
 
         /**
-         * @brief ’è”ƒoƒbƒtƒ@‚ğİ’è
+         * @brief å®šæ•°ãƒãƒƒãƒ•ã‚¡ã‚’è¨­å®š
          * @param rootParamIndex
          */
         virtual void SetConstantBuffer(unsigned int rootParamIndex) = 0;
 
         /**
-         * @brief [“xƒXƒeƒ“ƒVƒ‹‚ğİ’è
+         * @brief æ·±åº¦ã‚¹ãƒ†ãƒ³ã‚·ãƒ«ã‚’è¨­å®š
          */
         virtual void SetDepthStencil() = 0;
 
         /**
-         * @brief ƒVƒƒƒhƒEƒ}ƒbƒv‚ğİ’è
+         * @brief ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã‚’è¨­å®š
          * @param rootParamIndex
          */
         virtual void SetShadowMap(unsigned int rootParamIndex) = 0;
 
         /**
-         * @brief ƒVƒƒƒhƒEƒ}ƒbƒv‚Éƒuƒ‰[‚ğ‚©‚¯‚é
+         * @brief ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã«ãƒ–ãƒ©ãƒ¼ã‚’ã‹ã‘ã‚‹
          */
         virtual void ExecuteShadowBulr() = 0;
     };
 };
+

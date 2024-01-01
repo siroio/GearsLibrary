@@ -1,4 +1,4 @@
-#include <Components/SpriteRenderer.h>
+ï»¿#include <Components/SpriteRenderer.h>
 #include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/GraphicsResource.h>
 #include <Internal/DX12/GraphicsResourceID.h>
@@ -53,7 +53,7 @@ void Glib::SpriteRenderer::LateUpdate()
 {
     if (!enabled_) return;
 
-    // ’è”ƒoƒbƒtƒ@
+    // å®šæ•°ãƒãƒƒãƒ•ã‚¡
     SpriteConstant buffer{};
     buffer.position = transform_->Position();
     buffer.angle = transform_->EulerAngles().z * Mathf::DEG2RAD;
@@ -63,22 +63,22 @@ void Glib::SpriteRenderer::LateUpdate()
     buffer.color = color_;
     constantBuffer_.Update(sizeof(buffer), &buffer);
 
-    //Ø‚èæ‚è‚µ‚½UV À•WŒvZ
-    // ¶ã
+    //åˆ‡ã‚Šå–ã‚Šã—ãŸUV åº§æ¨™è¨ˆç®—
+    // å·¦ä¸Š
     Vector2 leftTopUV = clippingPosition_;
     leftTopUV.x /= textureSize_.x;
     leftTopUV.y /= textureSize_.y;
 
-    // ‰E‰º
+    // å³ä¸‹
     Vector2 rightBottomUV;
     rightBottomUV.x = leftTopUV.x + (clippingSize_.x / textureSize_.x);
     rightBottomUV.y = leftTopUV.y + (clippingSize_.y / textureSize_.y);
 
-    // UV”½“]
+    // UVåè»¢
     if (flipX_) std::swap(leftTopUV.x, rightBottomUV.x);
     if (flipY_) std::swap(leftTopUV.y, rightBottomUV.y);
 
-    // ’¸“_ƒoƒbƒtƒ@
+    // é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡
     SpriteVertex vertices[]
     {
         // position, uv
@@ -88,7 +88,7 @@ void Glib::SpriteRenderer::LateUpdate()
         { Vector2{ 1.0f,-1.0f }, Vector2{ rightBottomUV.x,  rightBottomUV.y } }
     };
 
-    // ’¸“_ƒoƒbƒtƒ@XV
+    // é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡æ›´æ–°
     vertexBuffer_.Update(vertices);
 }
 
@@ -179,3 +179,4 @@ void Glib::SpriteRenderer::TextureID(unsigned int id, bool isResetSize)
     textureSize_ = s_textureManager.TextureSize(id);
     if (isResetSize) clippingSize_ = textureSize_;
 }
+

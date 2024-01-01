@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <bit>
 #include <cstdint>
 #include <algorithm>
@@ -8,7 +8,7 @@
 namespace Glib
 {
     /**
-     * @brief ƒoƒCƒg‚ğƒXƒƒbƒv
+     * @brief ãƒã‚¤ãƒˆã‚’ã‚¹ãƒ¯ãƒƒãƒ—
      * @param value
      * @return
      */
@@ -23,9 +23,9 @@ namespace Glib
     }
 
     /**
-     * @brief ƒGƒ“ƒfƒBƒAƒ“‚Ìƒ`ƒFƒbƒN
-     * @return ƒŠƒgƒ‹ƒGƒ“ƒfƒBƒAƒ“ : LE
-     * @return ƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“ : BE
+     * @brief ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã®ãƒã‚§ãƒƒã‚¯
+     * @return ãƒªãƒˆãƒ«ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ : LE
+     * @return ãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ : BE
      */
     inline std::string GetEndian()
     {
@@ -39,3 +39,4 @@ namespace Glib
         }
     }
 }
+

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <atomic>
 #include <memory>
 #include <Singleton.h>
@@ -8,7 +8,7 @@
 namespace Glib
 {
     /**
-     * @brief Permuted Congruential Generator ‹^——”¶¬Ší
+     * @brief Permuted Congruential Generator ç–‘ä¼¼ä¹±æ•°ç”Ÿæˆå™¨
      */
     class Pcg32Fast
     {
@@ -16,17 +16,17 @@ namespace Glib
         explicit Pcg32Fast(uint64_t seed);
 
         /**
-         * @brief Œ»İ‚ÌƒV[ƒh‚ğæ“¾
+         * @brief ç¾åœ¨ã®ã‚·ãƒ¼ãƒ‰ã‚’å–å¾—
          */
         uint64_t Seed() const;
 
         /**
-         * @brief ƒV[ƒh‚ğİ’è
+         * @brief ã‚·ãƒ¼ãƒ‰ã‚’è¨­å®š
          */
         void Seed(uint64_t seed = 0x853c49e6748fea9bull);
 
         /**
-         * @brief ¶¬
+         * @brief ç”Ÿæˆ
          */
         uint32_t Gen();
 
@@ -41,7 +41,7 @@ namespace Glib
     };
 
     /**
-     * @brief —”¶¬ ƒ‰ƒbƒp[ƒNƒ‰ƒX
+     * @brief ä¹±æ•°ç”Ÿæˆ ãƒ©ãƒƒãƒ‘ãƒ¼ã‚¯ãƒ©ã‚¹
      */
     class Random :
         public Internal::Interface::ISystem,
@@ -53,30 +53,30 @@ namespace Glib
     public:
 
         /**
-         * @brief ‰Šú‰»
+         * @brief åˆæœŸåŒ–
          */
         bool Initialize();
 
         /**
-         * @brief ƒV[ƒh’l‚Ìİ’è
+         * @brief ã‚·ãƒ¼ãƒ‰å€¤ã®è¨­å®š
          * @param seed
          */
         static void Seed(uint64_t seed);
 
         /**
-         * @brief —”‚ğ¶¬
+         * @brief ä¹±æ•°ã‚’ç”Ÿæˆ
          * @return
          */
         static uint32_t Next();
 
         /**
-         * @brief ¬”“_‚Ì—”‚ğ¶¬
+         * @brief å°æ•°ç‚¹ã®ä¹±æ•°ã‚’ç”Ÿæˆ
          * @return
          */
         static float Nextf();
 
         /**
-         * @brief min ~ max”ÍˆÍ‚Å—”‚ğ¶¬
+         * @brief min ~ maxç¯„å›²ã§ä¹±æ•°ã‚’ç”Ÿæˆ
          * @param min
          * @param max
          * @return
@@ -84,7 +84,7 @@ namespace Glib
         static int Range(int min, int max);
 
         /**
-         * @brief min ~ max”ÍˆÍ‚Å¬”“_‚Ì—”‚ğ¶¬
+         * @brief min ~ maxç¯„å›²ã§å°æ•°ç‚¹ã®ä¹±æ•°ã‚’ç”Ÿæˆ
          * @param min
          * @param max
          * @return
@@ -95,3 +95,4 @@ namespace Glib
         static inline std::unique_ptr<Pcg32Fast> generator;
     };
 }
+

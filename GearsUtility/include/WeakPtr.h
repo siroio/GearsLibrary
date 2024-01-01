@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 #include <memory>
 #include <concepts>
 
 namespace Glib
 {
     /**
-     * @brief WeakPtr ƒ‰ƒbƒp[ƒNƒ‰ƒX
+     * @brief WeakPtr ãƒ©ãƒƒãƒ‘ãƒ¼ã‚¯ãƒ©ã‚¹
      */
     template<class T>
     class WeakPtr
@@ -21,7 +21,7 @@ namespace Glib
         WeakPtr(std::nullptr_t null) : ptr_{ std::shared_ptr<T>{ null } }
         {}
 
-        // ƒ_ƒEƒ“ƒLƒƒƒXƒg
+        // ãƒ€ã‚¦ãƒ³ã‚­ãƒ£ã‚¹ãƒˆ
         template <class Base> requires std::derived_from<T, Base>
         inline WeakPtr(const std::shared_ptr<Base>& ptr) : ptr_{ std::dynamic_pointer_cast<T>(ptr) }
         {}
@@ -34,7 +34,7 @@ namespace Glib
         inline WeakPtr(const WeakPtr<Base>& ptr) : ptr_{ std::dynamic_pointer_cast<T>(ptr.get()) }
         {}
 
-        // ƒAƒbƒvƒLƒƒƒXƒg
+        // ã‚¢ãƒƒãƒ—ã‚­ãƒ£ã‚¹ãƒˆ
         template <class Drived> requires std::derived_from<Drived, T>
         inline WeakPtr(const std::shared_ptr<Drived>& ptr) : ptr_{ ptr }
         {}
@@ -98,3 +98,4 @@ namespace Glib
         std::weak_ptr<T> ptr_;
     };
 }
+

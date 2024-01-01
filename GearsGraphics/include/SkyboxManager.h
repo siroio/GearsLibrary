@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Internal/ISystem.h>
 #include <Singleton.h>
 #include <Internal/FuncOrderConstant.h>
@@ -16,15 +16,15 @@ namespace Glib
 
     public:
         /**
-         * @brief ƒXƒJƒCƒ{ƒbƒNƒX—pƒeƒNƒXƒ`ƒƒ‚Ì“Ç‚İ‚İ
+         * @brief ã‚¹ã‚«ã‚¤ãƒœãƒƒã‚¯ã‚¹ç”¨ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®èª­ã¿è¾¼ã¿
          * @param up
          * @param down
          * @param left
          * @param right
          * @param front
          * @param back
-         * @return ¬Œ÷ : true
-         * @return ¸”s : false
+         * @return æˆåŠŸ : true
+         * @return å¤±æ•— : false
         */
         bool Load(unsigned int id,
                   std::string_view up,
@@ -35,19 +35,20 @@ namespace Glib
                   std::string_view back);
 
         /**
-         * @brief •`‰æƒXƒJƒCƒ{ƒbƒNƒX‚ğw’è
+         * @brief æç”»ã‚¹ã‚«ã‚¤ãƒœãƒƒã‚¯ã‚¹ã‚’æŒ‡å®š
          * @param id
         */
         void SetSkybox(unsigned int id);
 
         /**
-         * @brief ‰Šú‰»
+         * @brief åˆæœŸåŒ–
         */
         bool Initialize();
 
         /**
-         * @brief •`‰æ
+         * @brief æç”»
         */
         void Draw();
     };
 }
+

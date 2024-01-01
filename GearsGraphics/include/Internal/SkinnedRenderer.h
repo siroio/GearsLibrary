@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <array>
 #include <vector>
 
@@ -15,7 +15,7 @@ namespace Glib
 namespace Glib::Internal
 {
     /**
-     * @brief ƒXƒLƒjƒ“ƒO•`‰æ—pŠî’êƒRƒ“ƒ|[ƒlƒ“ƒg
+     * @brief ã‚¹ã‚­ãƒ‹ãƒ³ã‚°æç”»ç”¨åŸºåº•ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
      */
     class SkinnedRenderer
     {
@@ -25,18 +25,19 @@ namespace Glib::Internal
 
     public:
         /**
-         * @brief ƒ{[ƒ“‚Ìæ“¾
+         * @brief ãƒœãƒ¼ãƒ³ã®å–å¾—
          */
         virtual const std::vector<Bone>& Bones() const = 0;
 
         /**
-         * @brief ƒ{[ƒ“‚Ìƒgƒ‰ƒ“ƒXƒtƒH[ƒ€‚ğæ“¾
+         * @brief ãƒœãƒ¼ãƒ³ã®ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ã‚’å–å¾—
          */
         virtual const std::vector<WeakPtr<Transform>>& BoneTransforms() const = 0;
 
         /**
-         * @brief ƒ{[ƒ“‚Ìs—ñ‚ğæ“¾
+         * @brief ãƒœãƒ¼ãƒ³ã®è¡Œåˆ—ã‚’å–å¾—
          */
         virtual std::array<Matrix4x4, 512>& BoneMatrix() = 0;
     };
 }
+

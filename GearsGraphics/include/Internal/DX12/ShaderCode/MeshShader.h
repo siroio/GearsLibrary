@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace Glib::Internal::Graphics::ShaderCode
 {
@@ -155,3 +155,4 @@ namespace Glib::Internal::Graphics::ShaderCode
         })"
     };
 }
+

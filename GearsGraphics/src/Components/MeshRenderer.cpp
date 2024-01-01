@@ -1,4 +1,4 @@
-#include <Components/MeshRenderer.h>
+﻿#include <Components/MeshRenderer.h>
 #include <Internal/RenderingManager.h>
 #include <Internal/DX12/GraphicsResource.h>
 #include <Internal/DX12/GraphicsResourceID.h>
@@ -86,3 +86,4 @@ void Glib::MeshRenderer::MeshID(unsigned int id)
     meshID_ = id;
     isEnabled_ = s_meshManager.Contains(id);
 }
+

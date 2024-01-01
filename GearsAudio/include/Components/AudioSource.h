@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Component.h>
 #include <BitFlag.h>
 #include <AudioClip.h>
@@ -25,73 +25,73 @@ namespace Glib
         void LateUpdate();
 
         /**
-         * @brief Ä¶
+         * @brief å†ç”Ÿ
          */
         void Play();
 
         /**
-         * @brief ˆê’â~
+         * @brief ä¸€æ™‚åœæ­¢
          */
         void Pause();
 
         /**
-         * @brief ’â~
+         * @brief åœæ­¢
          */
         void Stop();
 
         /**
-         * @brief ƒXƒ^[ƒg‚ÉÄ¶‚·‚é‚©
+         * @brief ã‚¹ã‚¿ãƒ¼ãƒˆæ™‚ã«å†ç”Ÿã™ã‚‹ã‹
          */
         bool PlayOnStart() const;
 
         /**
-         * @brief ƒXƒ^[ƒg‚ÉÄ¶‚·‚é‚©
+         * @brief ã‚¹ã‚¿ãƒ¼ãƒˆæ™‚ã«å†ç”Ÿã™ã‚‹ã‹
          */
         void PlayOnStart(bool enable);
 
         /**
-         * @brief 3DƒTƒEƒ“ƒh‚©
+         * @brief 3Dã‚µã‚¦ãƒ³ãƒ‰ã‹
          */
         bool Is3DSound() const;
 
         /**
-         * @brief 3DƒTƒEƒ“ƒh‚©
+         * @brief 3Dã‚µã‚¦ãƒ³ãƒ‰ã‹
          */
         void Is3DSound(bool enable);
 
         /**
-         * @brief ƒ‹[ƒv‚·‚é‚©
+         * @brief ãƒ«ãƒ¼ãƒ—ã™ã‚‹ã‹
          */
         bool Loop() const;
 
         /**
-         * @brief ƒ‹[ƒv‚·‚é‚©
+         * @brief ãƒ«ãƒ¼ãƒ—ã™ã‚‹ã‹
          */
         void Loop(bool enable);
 
         /**
-         * @brief ‰¹—Ê
+         * @brief éŸ³é‡
          */
         float Volume() const;
 
         /**
-         * @brief ‰¹—Ê‚Ìİ’è
+         * @brief éŸ³é‡ã®è¨­å®š
          * @param volume
          */
         void Volume(float volume);
 
         /**
-         * @brief ID‚Ìæ“¾
+         * @brief IDã®å–å¾—
          */
         unsigned int AudioID() const;
 
         /**
-         * @brief ID‚ğİ’è
+         * @brief IDã‚’è¨­å®š
          */
         void AudioID(unsigned int id);
 
         /**
-         * @brief ƒOƒ‹[ƒv‚ğİ’è
+         * @brief ã‚°ãƒ«ãƒ¼ãƒ—ã‚’è¨­å®š
          */
         void SetGroup(int group);
 
@@ -108,3 +108,4 @@ namespace Glib
         int groupId_{ -1 };
     };
 }
+

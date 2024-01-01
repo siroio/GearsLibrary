@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Internal/IAudioLoader.h>
 #include <array>
 
@@ -20,19 +20,20 @@ namespace Glib::Internal::Audio
 
     public:
         /**
-         * @brief ƒtƒ@ƒCƒ‹‚ğŠJ‚­
-         * @param file wavƒtƒ@ƒCƒ‹‚ÌƒpƒX
+         * @brief ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
+         * @param file wavãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹
          * @return
          */
         std::shared_ptr<AudioClip> Load(std::string_view file) override;
 
     private:
         /**
-         * @brief Wav“à‚Ìƒ`ƒƒƒ“ƒN‚ğ’Tõ
-         * @param stream Wavƒtƒ@ƒCƒ‹‚ÌƒXƒgƒŠ[ƒ€
-         * @param name ƒ`ƒƒƒ“ƒN–¼
+         * @brief Wavå†…ã®ãƒãƒ£ãƒ³ã‚¯ã‚’æ¢ç´¢
+         * @param stream Wavãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚¹ãƒˆãƒªãƒ¼ãƒ 
+         * @param name ãƒãƒ£ãƒ³ã‚¯å
          * @return
          */
         static size_t FindChunk(std::ifstream& stream, std::string_view name);
     };
 }
+

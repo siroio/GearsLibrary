@@ -1,4 +1,4 @@
-#include <Internal/CanvasManager.h>
+ï»¿#include <Internal/CanvasManager.h>
 #include <Internal/DX12/DirectX12.h>
 #include <Internal/ImGuiManager.h>
 #include <Internal/UIRenderer.h>
@@ -10,10 +10,10 @@
 
 namespace
 {
-    // ƒLƒƒƒ“ƒoƒXˆê——
+    // ã‚­ãƒ£ãƒ³ãƒã‚¹ä¸€è¦§
     std::map<int, std::list<Glib::WeakPtr<Glib::Canvas>>> s_canvas;
 
-    // ƒLƒƒƒ“ƒoƒX“à‚ÌƒŒƒ“ƒ_ƒ‰[ˆê——
+    // ã‚­ãƒ£ãƒ³ãƒã‚¹å†…ã®ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ä¸€è¦§
     std::unordered_map<std::uintptr_t, std::list<Glib::WeakPtr<Glib::Internal::UIRenderer>>> s_renderers;
 
     auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
@@ -50,7 +50,7 @@ void Glib::Internal::Graphics::CanvasManager::AddUI(const WeakPtr<Internal::UIRe
 void Glib::Internal::Graphics::CanvasManager::ChangeCanvasOrder(const WeakPtr<Canvas>& canvas, int order)
 {
     if (s_renderers.contains(canvas.getId())) return;
-    // V‚µ‚¢‡˜‚É•ÏX
+    // æ–°ã—ã„é †åºã«å¤‰æ›´
     s_canvas[canvas->Order()].remove(canvas);
     s_canvas[order].push_back(canvas);
 }
@@ -59,15 +59,16 @@ void Glib::Internal::Graphics::CanvasManager::DrawUI(const WeakPtr<Canvas>& canv
 {
     if (canvas.expired())
     {
-        //–³Œø‚ÈƒLƒƒƒ“ƒoƒX‚ğíœ
+        //ç„¡åŠ¹ãªã‚­ãƒ£ãƒ³ãƒã‚¹ã‚’å‰Šé™¤
         s_renderers.erase(canvas.getId());
     }
     else if (canvas->Active())
     {
-        // —LŒø‚ÈUI‚ğ•`‰æ
+        // æœ‰åŠ¹ãªUIã‚’æç”»
         for (const auto& renderer : s_renderers[canvas.getId()])
         {
             renderer->DrawUI();
         }
     }
 }
+

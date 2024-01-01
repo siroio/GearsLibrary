@@ -1,4 +1,4 @@
-#include <Internal/DX12/GraphicsPipeline.h>
+﻿#include <Internal/DX12/GraphicsPipeline.h>
 #include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/BlendState.h>
 #include <Internal/DX12/d3dx12Inc.h>
@@ -67,3 +67,4 @@ void Glib::Internal::Graphics::GraphicsPipeline::SetPipeline()
     s_dx12->CommandList()->SetGraphicsRootSignature(rootSignature_.Get());
     s_dx12->CommandList()->SetPipelineState(pipelineState_.Get());
 }
+

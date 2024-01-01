@@ -1,4 +1,4 @@
-#include <Internal/XAudioSystem.h>
+ï»¿#include <Internal/XAudioSystem.h>
 #include <Internal/AudioChannels.h>
 #include <Internal/AudioLoaderFactory.h>
 #include <xaudio2.h>
@@ -38,19 +38,19 @@ namespace
 
 bool Glib::Internal::Audio::XAudioSystem::Initialize()
 {
-    // ƒtƒ‰ƒO‚ÌÝ’è
+    // ãƒ•ãƒ©ã‚°ã®è¨­å®š
     UINT flags = 0;
 #if defined(DEBUG) || defined(_DEBUG)
     flags |= XAUDIO2_DEBUG_ENGINE;
 #endif
-    // XAudio2‚Ì‰Šú‰»
+    // XAudio2ã®åˆæœŸåŒ–
     if (FAILED(XAudio2Create(s_xAudio2.ReleaseAndGetAddressOf(), flags, XAUDIO2_DEFAULT_PROCESSOR)))
         return false;
 
     if (FAILED(s_xAudio2->CreateMasteringVoice(&s_masterVoice)))
         return false;
 
-    // X3DAudio‚Ì‰Šú‰»
+    // X3DAudioã®åˆæœŸåŒ–
     DWORD dwChannelMask{};
     if (FAILED(s_masterVoice->GetChannelMask(&dwChannelMask)))
         return false;
@@ -105,17 +105,17 @@ bool Glib::Internal::Audio::XAudioSystem::LoadVoice(unsigned id, std::string_vie
 {
     if (s_audioClips.contains(id)) return true;
 
-    // Šg’£Žq‚ð¬•¶Žš‚Å”²‚«o‚·
+    // æ‹¡å¼µå­ã‚’å°æ–‡å­—ã§æŠœãå‡ºã™
     const std::filesystem::path file{ path.data() };
     std::string extension = file.filename().extension().generic_string();
     XAUDIO2_BUFFER buffer{};
     std::transform(extension.begin(), extension.end(), extension.begin(), tolower);
 
-    // ƒ[ƒ_[‚Ìì¬
+    // ãƒ­ãƒ¼ãƒ€ãƒ¼ã®ä½œæˆ
     const auto loader = AudioLoaderFactory::Create(extension);
     if (loader == nullptr) return false;
 
-    // AudioClip‚Ì“Çž‚Æ“o˜^
+    // AudioClipã®èª­è¾¼ã¨ç™»éŒ²
     const auto audioClip = loader->Load(path);
     s_audioClips.emplace(id, audioClip);
     return true;
@@ -145,7 +145,7 @@ void Glib::Internal::Audio::XAudioSystem::Audio3DCalculate(const X3DAUDIO_EMITTE
 
 void Glib::Internal::Audio::XAudioSystem::CreateSourceVoice(unsigned id, bool loop, WeakPtr<AudioClip>& clip, IXAudio2SourceVoice** voice)
 {
-    // voice‚ð‰Šú‰»
+    // voiceã‚’åˆæœŸåŒ–
     if (auto* pVoice = *voice; pVoice != nullptr)
     {
         pVoice->Stop();
@@ -192,7 +192,7 @@ void Glib::Internal::Audio::XAudioSystem::SetListenerParameter(const Vector3& po
         position.z - s_X3DAudioListener.Position.z
     };
 
-    // velocity‚ÌŒvŽZ
+    // velocityã®è¨ˆç®—
     const float deltaTime = GameTimer::DeltaTime();
     velocity = deltaTime == 0.0f ?
         Vector3::Zero() :
@@ -209,3 +209,4 @@ void Glib::Internal::Audio::XAudioSystem::SetGroupVolume(unsigned int groupId, f
     if (!s_subMixVoice.contains(groupId)) return;
     s_subMixVoice.at(groupId)->SetVolume(volume);
 }
+

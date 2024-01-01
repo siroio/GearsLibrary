@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Internal/XinputGamePad.h>
 #include <GameTimer.h>
 
@@ -20,7 +20,7 @@ void Glib::Internal::Input::XinputGamePad::Update()
 
     if (currentPadState_.isVibrating) return;
 
-    // U“®’âŽ~
+    // æŒ¯å‹•åœæ­¢
     if (now - currentPadState_.vibratingStartTime >= currentPadState_.vibratingTime)
     {
         XINPUT_VIBRATION vibration{};
@@ -32,3 +32,4 @@ void Glib::Internal::Input::XinputGamePad::Update()
         currentPadState_.vibratingTime = 0.0f;
     }
 }
+

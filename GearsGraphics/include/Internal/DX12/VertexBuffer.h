@@ -1,33 +1,33 @@
-#pragma once
+ï»¿#pragma once
 #include <d3d12.h>
 #include <ComPtr.h>
 
 namespace Glib::Internal::Graphics
 {
     /**
-     * @brief ’¸“_ƒoƒbƒtƒ@[
+     * @brief é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãƒ¼
      */
     class VertexBuffer
     {
     public:
         /**
-         * @brief ’¸“_ƒoƒbƒtƒ@[‚Ìì¬
-         * @param sizePerIndex ’¸“_‚²‚Æ‚ÌƒTƒCƒY
-         * @param indexCount ’¸“_‚ÌƒTƒCƒY
-         * @return ¬Œ÷ true
+         * @brief é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãƒ¼ã®ä½œæˆ
+         * @param sizePerIndex é ‚ç‚¹ã”ã¨ã®ã‚µã‚¤ã‚º
+         * @param indexCount é ‚ç‚¹ã®ã‚µã‚¤ã‚º
+         * @return æˆåŠŸ true
          */
         bool Create(unsigned int sizePerVetex, unsigned int vertexCount);
 
         /**
-         * @brief ’¸“_ƒoƒbƒtƒ@[‚ğƒZƒbƒg
+         * @brief é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
          * @param rootParameterIndex
          */
         void SetBuffer();
 
         /**
-         * @brief ’¸“_ƒoƒbƒtƒ@‚ÌXV
-         * @param size ƒf[ƒ^ƒTƒCƒY
-         * @param data ƒf[ƒ^
+         * @brief é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®æ›´æ–°
+         * @param size ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚º
+         * @param data ãƒ‡ãƒ¼ã‚¿
          */
         void Update(void* vertices);
 
@@ -36,3 +36,4 @@ namespace Glib::Internal::Graphics
         D3D12_VERTEX_BUFFER_VIEW view_{};
     };
 }
+

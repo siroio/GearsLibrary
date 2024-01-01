@@ -1,4 +1,4 @@
-#include <Internal/AudioLoaderFactory.h>
+﻿#include <Internal/AudioLoaderFactory.h>
 #include <Internal/WavLoader.h>
 
 std::unique_ptr<Glib::Internal::Interface::IAudioLoader> Glib::Internal::Audio::AudioLoaderFactory::Create(std::string_view extension)
@@ -7,3 +7,4 @@ std::unique_ptr<Glib::Internal::Interface::IAudioLoader> Glib::Internal::Audio::
     if (extension == "ogg") return nullptr;
     return nullptr;
 }
+

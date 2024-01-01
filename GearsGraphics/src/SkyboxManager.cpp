@@ -1,4 +1,4 @@
-#include <SkyboxManager.h>
+ï»¿#include <SkyboxManager.h>
 #include <unordered_map>
 #include <Internal/DX12/d3dx12Inc.h>
 #include <Internal/DX12/DirectX12.h>
@@ -50,7 +50,7 @@ void Glib::SkyboxManager::SetSkybox(unsigned int id)
 
 bool Glib::SkyboxManager::Initialize()
 {
-    // ƒXƒJƒCƒ{ƒbƒNƒX—p’¸“_
+    // ã‚¹ã‚«ã‚¤ãƒœãƒƒã‚¯ã‚¹ç”¨é ‚ç‚¹
     SkyboxVertex vertices[]
     {
         // TOP
@@ -85,7 +85,7 @@ bool Glib::SkyboxManager::Initialize()
         { Vector3(1.0f, -1.0f, 1.0f), Vector2(1.0f, 1.0f) }
     };
 
-    //’¸“_ƒoƒbƒtƒ@ì¬
+    //é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ä½œæˆ
     if (!s_vertexBuffer.Create(sizeof(SkyboxVertex), static_cast<unsigned int>(std::size(vertices)))) return false;
     s_vertexBuffer.Update(vertices);
 
@@ -95,8 +95,8 @@ bool Glib::SkyboxManager::Initialize()
         Internal::Graphics::InputLayout::TEXCOORD,
     };
 
-    // ƒpƒCƒvƒ‰ƒCƒ“ì¬
-    // ƒeƒNƒXƒ`ƒƒ ’è”ƒoƒbƒtƒ@
+    // ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ä½œæˆ
+    // ãƒ†ã‚¯ã‚¹ãƒãƒ£ å®šæ•°ãƒãƒƒãƒ•ã‚¡
     CD3DX12_DESCRIPTOR_RANGE range[2]{};
     range[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
     range[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
@@ -135,7 +135,7 @@ void Glib::SkyboxManager::Draw()
     s_pipeline.SetPipeline();
     s_dx12->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-    // ƒXƒJƒCƒ{ƒbƒNƒX‚ğ•`‰æ
+    // ã‚¹ã‚«ã‚¤ãƒœãƒƒã‚¯ã‚¹ã‚’æç”»
     for (const auto& camera : s_cameraManager->Cameras())
     {
         if (!camera->Active() || camera->ClearFlags() == CameraClearFlags::Color) continue;
@@ -145,3 +145,4 @@ void Glib::SkyboxManager::Draw()
         s_skyboxs.at(s_drawSkyboxId).Draw();
     }
 }
+

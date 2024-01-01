@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 
 namespace Glib
 {
     /**
-     * @brief ƒV[ƒ“ƒNƒ‰ƒX
+     * @brief ã‚·ãƒ¼ãƒ³ã‚¯ãƒ©ã‚¹
      */
     class Scene
     {
@@ -15,13 +15,14 @@ namespace Glib
 
     public:
         /**
-         * @brief ƒV[ƒ“ŠJn
+         * @brief ã‚·ãƒ¼ãƒ³é–‹å§‹
          */
         virtual void Start() = 0;
 
         /**
-         * @brief ƒV[ƒ“‚ÌI—¹
+         * @brief ã‚·ãƒ¼ãƒ³ã®çµ‚äº†
          */
         virtual void End() = 0;
     };
 }
+

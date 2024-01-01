@@ -1,4 +1,4 @@
-#include <Random.h>
+﻿#include <Random.h>
 #include <random>
 
 void Glib::Pcg32Fast::Seed(uint64_t seed)
@@ -62,3 +62,4 @@ uint64_t Glib::Pcg32Fast::Seed() const
 {
     return seed.load();
 }
+

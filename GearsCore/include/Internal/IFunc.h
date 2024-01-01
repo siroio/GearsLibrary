@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 
 namespace Glib::Internal::Interface
 {
     /**
-     * @brief ŠÖ”ŠÇ——pƒCƒ“ƒ^[ƒtƒF[ƒX
+     * @brief é–¢æ•°ç®¡ç†ç”¨ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
      */
     template<class ReturnType, class... Args>
     class IFunc
@@ -16,3 +16,4 @@ namespace Glib::Internal::Interface
         virtual int Order() = 0;
     };
 }
+

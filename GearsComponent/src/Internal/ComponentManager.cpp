@@ -1,4 +1,4 @@
-#include <Internal/ComponentManager.h>
+ï»¿#include <Internal/ComponentManager.h>
 #include <GameTimer.h>
 
 namespace
@@ -14,7 +14,7 @@ void Glib::Internal::ComponentManager::Update()
     const float deltaTime{ GameTimer::DeltaTime() };
     s_accumulatedTime = std::fminf(s_accumulatedTime + deltaTime, GameTimer::MaximumAllowedTimeStep());
 
-    // fixedUpdate‚ð—­‚Ü‚Á‚½ŽžŠÔ•ªi‚ß‚é
+    // fixedUpdateã‚’æºœã¾ã£ãŸæ™‚é–“åˆ†é€²ã‚ã‚‹
     while (s_accumulatedTime > GameTimer::FixedTimeStep())
     {
         normalFunction_.Execute(ComponentFunctionType::FixedUpdate);
@@ -30,3 +30,4 @@ void Glib::Internal::ComponentManager::Finalize()
     normalFunction_.Clear();
     eventFunction_.clear();
 }
+

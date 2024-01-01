@@ -1,4 +1,4 @@
-#include <Internal/ImGuiManager.h>
+ï»¿#include <Internal/ImGuiManager.h>
 #include <Internal/ImGuiInc.h>
 #include <Internal/ImGuiFont.h>
 #include <Internal/DX12/d3dx12Inc.h>
@@ -34,6 +34,7 @@ namespace
     bool s_enableGameView{ true };
     bool s_enableConsole{ true };
     bool s_resetLayout{ false };
+    std::string fontPaht{ "C:\\Windows\\Fonts\\meiryo.ttc" };
 }
 #endif
 
@@ -101,7 +102,7 @@ bool Glib::Internal::Debug::ImGuiManager::Initialize()
         &srvDesc, handle
     );
 
-    // IMGUI‚Ì‰Šú‰»
+    // IMGUIã®åˆæœŸåŒ–
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     auto& io = ImGui::GetIO();
@@ -110,12 +111,18 @@ bool Glib::Internal::Debug::ImGuiManager::Initialize()
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
-    io.Fonts->AddFontFromFileTTF(
-        "C:\\Windows\\Fonts\\meiryo.ttc",
-        18,
-        NULL,
-        io.Fonts->GetGlyphRangesJapanese()
-    );
+    ImFontConfig fontConfig;
+    fontConfig.MergeMode = false;
+
+    if (std::filesystem::exists("C:\\Windows\\Fonts\\meiryo.ttc"))
+    {
+        io.Fonts->AddFontFromFileTTF(
+            "C:\\Windows\\Fonts\\meiryo.ttc",
+            18,
+            &fontConfig,
+            ImGuiGlyphRangesJapanese
+        );
+    }
 
     ImGui::StyleColorsDark();
 
@@ -143,7 +150,7 @@ bool Glib::Internal::Debug::ImGuiManager::Initialize()
 
     SetGUIStyle();
 
-    // ƒŒƒCƒAƒEƒg‚ðƒŠƒZƒbƒg‚·‚é‚©
+    // ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹ã‹
     s_resetLayout =
         io.IniFilename == nullptr ||
         io.IniFilename == "" ||
@@ -282,7 +289,8 @@ void Glib::Internal::Debug::ImGuiManager::CreateDock()
         ImGuiWindowFlags_NoResize |
         ImGuiWindowFlags_NoMove |
         ImGuiWindowFlags_NoBringToFrontOnFocus |
-        ImGuiWindowFlags_NoNavFocus;
+        ImGuiWindowFlags_NoNavFocus |
+        ImGuiDockNodeFlags_NoCloseButton;
 
     ImGuiViewport* viewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(viewport->WorkPos);
@@ -293,7 +301,7 @@ void Glib::Internal::Debug::ImGuiManager::CreateDock()
     ImGui::Begin("MainDockSpace", nullptr, windowFlags);
     ImGui::PopStyleVar();
 
-    // ƒŒƒCƒAƒEƒg‚Ì‰Šú‰»
+    // ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã®åˆæœŸåŒ–
     if (s_resetLayout) ResetLayout();
 
     auto mainDockID = ImGui::GetID("MainDockSpace");
@@ -322,7 +330,7 @@ void Glib::Internal::Debug::ImGuiManager::DrawGameView()
     auto curPos = ImGui::GetCursorPos();
     Vector2 pos = Vector2{ curPos.x, curPos.y };
 
-    ImGui::SetCursorPos(ImVec2{ 0.0f, 0.0f });
+    ImGui::SetCursorPos(ImVec2{ pos.x, pos.y });
 
     auto handle = s_ImGuiHaeps->GetGPUDescriptorHandleForHeapStart();
     handle.ptr += s_dx12->Device()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
@@ -346,7 +354,7 @@ void Glib::Internal::Debug::ImGuiManager::ResetLayout()
 
     ImGui::DockBuilderSplitNode(dockSpaceID, ImGuiDir_Right, 0.2f, &inspectorDockID, &gameViewDockID);
     ImGui::DockBuilderSplitNode(gameViewDockID, ImGuiDir_Right, 0.2f, &hierarchyDockID, &gameViewDockID);
-    ImGui::DockBuilderSplitNode(gameViewDockID, ImGuiDir_Down, 0.2f, &consoleDockID, &gameViewDockID);
+    ImGui::DockBuilderSplitNode(gameViewDockID, ImGuiDir_Down, 0.3f, &consoleDockID, &gameViewDockID);
 
     ImGui::DockBuilderDockWindow("Inspector", inspectorDockID);
     ImGui::DockBuilderDockWindow("Console", consoleDockID);
@@ -437,4 +445,5 @@ void Glib::Internal::Debug::ImGuiManager::SetGUIStyle()
     style.GrabRounding = 3;
     style.LogSliderDeadzone = 4;
     style.TabRounding = 4;
+    style.WindowMenuButtonPosition = ImGuiDir_None;
 }

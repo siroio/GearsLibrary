@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Internal/ISystem.h>
 #include <Singleton.h>
 #include <Internal/FuncOrderConstant.h>
@@ -23,7 +23,7 @@ namespace Glib::Internal
 namespace Glib::Internal::Concepts
 {
     /**
-     * @brief ƒŒƒ“ƒ_ƒ‰[”»’è—p
+     * @brief ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼åˆ¤å®šç”¨
      */
     template<class T>
     concept IsRenderer = std::derived_from<T, Renderer>;
@@ -41,7 +41,7 @@ namespace Glib::Internal::Graphics
 
     private:
         /**
-         * @brief •`‰æŠÖ”‚Ìí—Ş
+         * @brief æç”»é–¢æ•°ã®ç¨®é¡
          */
         enum class DrawType
         {
@@ -55,69 +55,69 @@ namespace Glib::Internal::Graphics
         void Draw();
 
         /**
-         * @brief ŠÂ‹«Œõ‚ÌF
+         * @brief ç’°å¢ƒå…‰ã®è‰²
          */
         static const Color& LightAmbient();
 
         /**
-         * @brief ŠÂ‹«Œõ‚ÌF‚ğİ’è
+         * @brief ç’°å¢ƒå…‰ã®è‰²ã‚’è¨­å®š
          */
         static void LightAmbient(const Color& color);
 
         /**
-         * @brief ŠgUŒõ‚ÌF
+         * @brief æ‹¡æ•£å…‰ã®è‰²
          */
         static const Color& LightDiffuse();
 
         /**
-         * @brief ŠgUŒõ‚ÌF‚ğİ’è
+         * @brief æ‹¡æ•£å…‰ã®è‰²ã‚’è¨­å®š
          */
         static void LightDiffuse(const Color& color);
 
         /**
-         * @brief ‹¾–ÊŒõ‚ÌF
+         * @brief é¡é¢å…‰ã®è‰²
          */
         static const Color& LightSpecular();
 
         /**
-         * @brief ‹¾–ÊŒõ‚ÌF‚ğİ’è
+         * @brief é¡é¢å…‰ã®è‰²ã‚’è¨­å®š
          */
         static void LightSpecular(const Color& specular);
 
         /**
-         * @brief ŠÂ‹«Œõ‚Ì•ûŒü
+         * @brief ç’°å¢ƒå…‰ã®æ–¹å‘
          */
         static const Vector3& LightDirection();
 
         /**
-         * @brief ŠÂ‹«Œõ‚Ì•ûŒü‚ğİ’è
+         * @brief ç’°å¢ƒå…‰ã®æ–¹å‘ã‚’è¨­å®š
          * @param direction
          */
         static void LightDirection(const Vector3& direction);
 
         /**
-         * @brief ƒVƒƒƒhƒEƒ}ƒbƒv—p‚Ì•ÏŠ·s—ñ‚ğŒvZ
-         * @param gazePoint ’‹“_
+         * @brief ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ç”¨ã®å¤‰æ›è¡Œåˆ—ã‚’è¨ˆç®—
+         * @param gazePoint æ³¨è¦–ç‚¹
          */
         Matrix4x4 CalculateMatrixForShadowMap(const Vector3& gazePoint) const;
 
         /**
-         * @brief ƒVƒƒƒhƒEƒ}ƒbƒv‚ÌƒoƒCƒAƒX‚ğİ’è
+         * @brief ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã®ãƒã‚¤ã‚¢ã‚¹ã‚’è¨­å®š
          */
         static void ShadowMapBias(float bias);
 
         /**
-         * @brief ƒVƒƒƒhƒEƒ}ƒbƒv‚ÌNear‚ÆFar‚ğİ’è
+         * @brief ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã®Nearã¨Farã‚’è¨­å®š
          */
         static void ShadowMapClip(float nearZ, float farZ);
 
         /**
-         * @brief ƒVƒƒƒhƒEƒ}ƒbƒv‚Ì•`‰æ”ÍˆÍ
+         * @brief ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã®æç”»ç¯„å›²
          */
         static void ShadowMapRange(const Vector2& range);
 
         /**
-         * @brief ŠÂ‹«Œõ‚Ì’è”‚ğİ’è
+         * @brief ç’°å¢ƒå…‰ã®å®šæ•°ã‚’è¨­å®š
          * @param rootParamIndex
          */
         void SetDirectionalLightConstant(unsigned int rootParamIndex);
@@ -163,3 +163,4 @@ namespace Glib::Internal::Graphics
         );
     }
 }
+

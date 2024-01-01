@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <Internal/FuncOrder.h>
 
 /* Function Call Order Definition */
@@ -11,3 +11,4 @@ FUNC_ORDER(Draw)
 FUNC_ORDER(DebugDraw)
 FUNC_ORDER(EndDraw)
 FUNC_ORDER(Finalize)
+

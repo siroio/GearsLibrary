@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace Glib
 {
@@ -30,3 +30,4 @@ namespace Glib
         RIGHT_TRIGGER = 33
     };
 }
+

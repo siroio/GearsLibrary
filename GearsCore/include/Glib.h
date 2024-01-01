@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 /* Linker Header File  */
 
 /* DIRECTX12 LIB */
@@ -39,3 +39,4 @@
 #pragma comment(lib, "GearsUtility.lib")
 #pragma comment(lib, "DirectXTex.lib")
 #endif // _DEBUG
+

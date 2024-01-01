@@ -1,4 +1,4 @@
-#include <Internal/ComponentFunctionList.h>
+ï»¿#include <Internal/ComponentFunctionList.h>
 #include <Internal/CameraBase.h>
 #include <Component.h>
 
@@ -6,7 +6,7 @@ void Glib::Internal::ComponentFunctionList::Update()
 {
     for (auto it = addedFunction_.begin(); it != addedFunction_.end();)
     {
-        // ŠúŒÀ‚ðŠm”F
+        // æœŸé™ã‚’ç¢ºèª
         if (std::visit([](const auto& v)
         {
             return v.component.expired();
@@ -15,7 +15,7 @@ void Glib::Internal::ComponentFunctionList::Update()
             it = addedFunction_.erase(it);
         }
 
-        // ƒAƒNƒeƒBƒu‚ðŠm”F
+        // ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã‚’ç¢ºèª
         else if (std::visit([](const auto& v)
         {
             return v.component->Active();
@@ -69,3 +69,4 @@ void Glib::Internal::ComponentFunctionList::Remove(FunctionType type)
         }, variant);
     });
 }
+

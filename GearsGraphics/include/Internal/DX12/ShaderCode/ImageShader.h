@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 
 namespace Glib::Internal::Graphics::ShaderCode
 {
     /**
-     * @brief UI‰æ‘œ—pƒVƒF[ƒ_[
+     * @brief UIç”»åƒç”¨ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
      */
     constexpr char IMAGE_SHADER[]
     {
@@ -59,3 +59,4 @@ namespace Glib::Internal::Graphics::ShaderCode
         })"
     };
 }
+

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <memory>
 #include <WeakPtr.h>
 #include <ComPtr.h>
@@ -13,7 +13,7 @@ enum D3D12_COMMAND_LIST_TYPE;
 namespace Glib::Internal::Graphics
 {
     /**
-     * @brief ƒRƒ}ƒ“ƒhƒŠƒXƒgŠÇ—ƒNƒ‰ƒX
+     * @brief ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆç®¡ç†ã‚¯ãƒ©ã‚¹
      */
     class CommandList
     {
@@ -21,58 +21,58 @@ namespace Glib::Internal::Graphics
         CommandList() = default;
 
         /**
-         * @brief ƒRƒ}ƒ“ƒhƒŠƒXƒg‚Ìì¬
-         * @return ¬Œ÷ true
-         * @return ¸”s false
+         * @brief ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆã®ä½œæˆ
+         * @return æˆåŠŸ true
+         * @return å¤±æ•— false
          */
         static bool Create(D3D12_COMMAND_LIST_TYPE type, const D3D12_COMMAND_QUEUE_DESC& desc, std::shared_ptr<CommandList>& cmdList);
 
         /**
-         * @brief ƒoƒ“ƒhƒ‹—p‚ÌƒRƒ}ƒ“ƒhƒŠƒXƒg‚ğì¬
-         * @return ¬Œ÷ true
-         * @return ¸”s false
+         * @brief ãƒãƒ³ãƒ‰ãƒ«ç”¨ã®ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆã‚’ä½œæˆ
+         * @return æˆåŠŸ true
+         * @return å¤±æ•— false
          */
         static bool CreateBundle(std::shared_ptr<CommandList>& cmdList);
 
     public:
         /**
-         * @brief ƒRƒ}ƒ“ƒh‚ÌÀs
+         * @brief ã‚³ãƒãƒ³ãƒ‰ã®å®Ÿè¡Œ
          */
         void Execute() const;
 
         /**
-         * @brief ƒoƒ“ƒhƒ‹‚µ‚½ƒRƒ}ƒ“ƒh‚ğƒŠƒXƒg‚É’Ç‰Á
+         * @brief ãƒãƒ³ãƒ‰ãƒ«ã—ãŸã‚³ãƒãƒ³ãƒ‰ã‚’ãƒªã‚¹ãƒˆã«è¿½åŠ 
          */
         bool CloseAndBundleToList(const Glib::WeakPtr<CommandList>& lists) const;
 
         /**
-         * @brief ƒŠƒXƒg‚ÌƒNƒ[ƒY
+         * @brief ãƒªã‚¹ãƒˆã®ã‚¯ãƒ­ãƒ¼ã‚º
          */
         void CloseList();
 
         /**
-         * @brief ƒŠƒXƒg‚ÌƒŠƒZƒbƒg
+         * @brief ãƒªã‚¹ãƒˆã®ãƒªã‚»ãƒƒãƒˆ
          */
         void Reset();
 
         /**
-         * @brief ƒAƒƒP[ƒ^[‚Ìæ“¾
+         * @brief ã‚¢ãƒ­ã‚±ãƒ¼ã‚¿ãƒ¼ã®å–å¾—
          */
         ComPtr<ID3D12CommandAllocator> Allocator() const;
 
         /**
-         * @brief ƒŠƒXƒg‚Ìæ“¾
+         * @brief ãƒªã‚¹ãƒˆã®å–å¾—
          */
         ComPtr<ID3D12GraphicsCommandList> List() const;
 
         /**
-         * @brief ƒLƒ…[‚Ìæ“¾
+         * @brief ã‚­ãƒ¥ãƒ¼ã®å–å¾—
          */
         ComPtr<ID3D12CommandQueue> Queue() const;
 
         /**
-         * @brief ƒRƒ}ƒ“ƒhƒŠƒXƒg‚Ìƒ^ƒCƒv‚ğæ“¾
-         * @return ƒ^ƒCƒv
+         * @brief ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆã®ã‚¿ã‚¤ãƒ—ã‚’å–å¾—
+         * @return ã‚¿ã‚¤ãƒ—
          */
         D3D12_COMMAND_LIST_TYPE Type() const;
 
@@ -86,3 +86,4 @@ namespace Glib::Internal::Graphics
         ComPtr<ID3D12CommandQueue> cmdQueue_{ nullptr };
     };
 }
+

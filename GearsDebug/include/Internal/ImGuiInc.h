@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #pragma warning(push)
 #pragma warning(disable: 6385)
 #pragma warning(disable: 26495)
@@ -11,3 +11,4 @@
 #include <backends/imgui_impl_dx12.h>
 
 #pragma warning(pop)
+

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <Internal/DX12/ConstantBuffer.h>
 #include <Internal/DX12/GraphicsPipeline.h>
 #include <ComPtr.h>

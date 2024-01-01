@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Internal/Renderer.h>
 #include <Internal/DX12/ConstantBuffer.h>
 #include <Internal/DX12/VertexBuffer.h>
@@ -28,76 +28,76 @@ namespace Glib
 
 
         /**
-         * @brief ’†SˆÊ’u‚ğæ“¾
+         * @brief ä¸­å¿ƒä½ç½®ã‚’å–å¾—
          */
         const Vector2& Center() const;
 
         /**
-         * @brief ’†SˆÊ’u‚ğİ’è
+         * @brief ä¸­å¿ƒä½ç½®ã‚’è¨­å®š
          */
         void Center(const Vector2& center);
 
         /**
-         * @brief F‚ğæ“¾ 
+         * @brief è‰²ã‚’å–å¾— 
          */
         const Color& Color() const;
 
         /**
-         * @brief F‚ğİ’è
+         * @brief è‰²ã‚’è¨­å®š
          */
         void Color(const ::Color& color);
 
         /**
-         * @brief ¶‰E”½“]‚µ‚Ä‚¢‚é‚© 
+         * @brief å·¦å³åè»¢ã—ã¦ã„ã‚‹ã‹ 
          */
         bool FlipX() const;
 
         /**
-         * @brief ¶‰E”½“]‚ğİ’è
+         * @brief å·¦å³åè»¢ã‚’è¨­å®š
          */
         void FlipX(bool flip);
 
         /**
-         * @brief ã‰º”½“]‚µ‚Ä‚¢‚é‚©
+         * @brief ä¸Šä¸‹åè»¢ã—ã¦ã„ã‚‹ã‹
          */
         bool FlipY() const;
 
         /**
-         * @brief ã‰º”½“]‚ğİ’è
+         * @brief ä¸Šä¸‹åè»¢ã‚’è¨­å®š
          */
         void FlipY(bool flip);
 
         /**
-         * @brief ƒNƒŠƒbƒsƒ“ƒOˆÊ’u‚ğæ“¾ 
-         * @brief (ƒsƒNƒZƒ‹’PˆÊ)
+         * @brief ã‚¯ãƒªãƒƒãƒ”ãƒ³ã‚°ä½ç½®ã‚’å–å¾— 
+         * @brief (ãƒ”ã‚¯ã‚»ãƒ«å˜ä½)
          */
         const Vector2& ClippingPosition() const;
 
         /**
-         * @brief ƒNƒŠƒbƒsƒ“ƒOˆÊ’u‚ğİ’è
-         * @brief (ƒsƒNƒZƒ‹’PˆÊ)
+         * @brief ã‚¯ãƒªãƒƒãƒ”ãƒ³ã‚°ä½ç½®ã‚’è¨­å®š
+         * @brief (ãƒ”ã‚¯ã‚»ãƒ«å˜ä½)
          */
         void ClippingPosition(const Vector2& position);
 
         /**
-         * @brief ƒNƒŠƒbƒsƒ“ƒOƒTƒCƒY‚ğæ“¾
-         * @brief (ƒsƒNƒZƒ‹’PˆÊ)
+         * @brief ã‚¯ãƒªãƒƒãƒ”ãƒ³ã‚°ã‚µã‚¤ã‚ºã‚’å–å¾—
+         * @brief (ãƒ”ã‚¯ã‚»ãƒ«å˜ä½)
          */
         const Vector2& ClippingSize() const;
 
         /**
-         * @brief ƒNƒŠƒbƒsƒ“ƒOƒTƒCƒY‚ğİ’è
-         * @brief (ƒsƒNƒZƒ‹’PˆÊ)
+         * @brief ã‚¯ãƒªãƒƒãƒ”ãƒ³ã‚°ã‚µã‚¤ã‚ºã‚’è¨­å®š
+         * @brief (ãƒ”ã‚¯ã‚»ãƒ«å˜ä½)
          */
         void ClippingSize(const Vector2& size);
 
         /**
-         * @brief ƒeƒNƒXƒ`ƒƒID‚ğæ“¾
+         * @brief ãƒ†ã‚¯ã‚¹ãƒãƒ£IDã‚’å–å¾—
          */
         unsigned int TextureID() const;
 
         /**
-         * @brief ƒeƒNƒXƒ`ƒƒID‚ğİ’è
+         * @brief ãƒ†ã‚¯ã‚¹ãƒãƒ£IDã‚’è¨­å®š
          */
         void TextureID(unsigned int id, bool isResetSize = true);
 
@@ -116,3 +116,4 @@ namespace Glib
         WeakPtr<Transform> transform_;
     };
 }
+

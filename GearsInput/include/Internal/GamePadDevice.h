@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <Internal/DinputGamePad.h>
 #include <Internal/XinputGamePad.h>
 #include <Internal/GamePadKeys.h>
@@ -39,3 +39,4 @@ namespace Glib::Internal::Input
         std::array<GamePad, 4> devices_;
     };
 }
+

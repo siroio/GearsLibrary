@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <d3d12.h>
 #include <Internal/DX12/DescriptorHandle.h>
 #include <ComPtr.h>
@@ -9,17 +9,17 @@
 namespace Glib::Internal::Graphics
 {
     /**
-     * @brief ƒfƒBƒXƒNƒŠƒvƒ^ƒv[ƒ‹
+     * @brief ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ—ãƒ¼ãƒ«
      */
     class DescriptorPool
     {
     public:
         /**
-         * @brief ƒv[ƒ‹‚ğì¬
-         * @param desc ƒq[ƒv‚Ìİ’è
-         * @param pool ƒv[ƒ‹•Ï”‚Ö‚ÌQÆ
-         * @return true ¬Œ÷
-         * @return false ¸”s
+         * @brief ãƒ—ãƒ¼ãƒ«ã‚’ä½œæˆ
+         * @param desc ãƒ’ãƒ¼ãƒ—ã®è¨­å®š
+         * @param pool ãƒ—ãƒ¼ãƒ«å¤‰æ•°ã¸ã®å‚ç…§
+         * @return true æˆåŠŸ
+         * @return false å¤±æ•—
         */
         static bool Create(const D3D12_DESCRIPTOR_HEAP_DESC* desc, std::shared_ptr<DescriptorPool>& pool);
 
@@ -27,24 +27,24 @@ namespace Glib::Internal::Graphics
         ~DescriptorPool();
 
         /**
-         * @brief ƒq[ƒv‚Ìæ“¾
+         * @brief ãƒ’ãƒ¼ãƒ—ã®å–å¾—
          */
         const ComPtr<ID3D12DescriptorHeap> GetHeap() const;
 
         /**
-         * @brief ƒnƒ“ƒhƒ‹‚ğƒv[ƒ‹‚©‚çæ“¾
-         * @brief QÆ‚ª‚È‚¢ê‡ƒXƒR[ƒv‚ğ”²‚¯‚é‚Æ‰ğ•ú
+         * @brief ãƒãƒ³ãƒ‰ãƒ«ã‚’ãƒ—ãƒ¼ãƒ«ã‹ã‚‰å–å¾—
+         * @brief å‚ç…§ãŒãªã„å ´åˆã‚¹ã‚³ãƒ¼ãƒ—ã‚’æŠœã‘ã‚‹ã¨è§£æ”¾
          */
         std::shared_ptr<DescriptorHandle> GetHandle();
 
         /**
-         * @brief ƒnƒ“ƒhƒ‹‚ğ‰ğ•ú
+         * @brief ãƒãƒ³ãƒ‰ãƒ«ã‚’è§£æ”¾
          * @param handle
          */
         void Release(DescriptorHandle*& handle);
 
         /**
-         * @brief —˜—p’†‚Ìƒq[ƒv‚Ì”
+         * @brief åˆ©ç”¨ä¸­ã®ãƒ’ãƒ¼ãƒ—ã®æ•°
          */
         size_t UseHeapCount() const;
 
@@ -62,3 +62,4 @@ namespace Glib::Internal::Graphics
         uint32_t descriptorSize_;
     };
 }
+

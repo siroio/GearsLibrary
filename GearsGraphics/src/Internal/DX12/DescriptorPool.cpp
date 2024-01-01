@@ -1,4 +1,4 @@
-#include <Internal/DX12/DescriptorPool.h>
+Ôªø#include <Internal/DX12/DescriptorPool.h>
 #include <Internal/DX12/DirectX12.h>
 #include <cassert>
 
@@ -9,7 +9,7 @@ namespace
 
 Glib::Internal::Graphics::DescriptorPool::DescriptorPool() : handles_{}, heap_{}, descriptorSize_{ 0 }
 {
-    // èâä˙âªópÉRÅ[ÉãÉoÉbÉN
+    // ÂàùÊúüÂåñÁî®„Ç≥„Éº„É´„Éê„ÉÉ„ÇØ
     handles_.SetInitializeCallBack([&](size_t index, DescriptorHandle* handle)
     {
         auto cpuHandle = heap_->GetCPUDescriptorHandleForHeapStart();
@@ -35,16 +35,16 @@ bool Glib::Internal::Graphics::DescriptorPool::Create(const D3D12_DESCRIPTOR_HEA
     std::shared_ptr<DescriptorPool> instance{ new DescriptorPool };
     if (instance == nullptr) return false;
 
-    // ÉfÉBÉXÉNÉäÉvÉ^ÉqÅ[Évê∂ê¨
+    // „Éá„Ç£„Çπ„ÇØ„É™„Éó„Çø„Éí„Éº„ÉóÁîüÊàê
     if (FAILED(s_dx12->Device()->CreateDescriptorHeap(desc, IID_PPV_ARGS(instance->heap_.ReleaseAndGetAddressOf())))) return false;
 
-    // ÉnÉìÉhÉãâ¡éZÉTÉCÉYéÊìæ
+    // „Éè„É≥„Éâ„É´Âä†ÁÆó„Çµ„Ç§„Ç∫ÂèñÂæó
     instance->descriptorSize_ = s_dx12->Device()->GetDescriptorHandleIncrementSize(desc->Type);
 
-    // ÉvÅ[Éãèâä˙âª
+    // „Éó„Éº„É´ÂàùÊúüÂåñ
     if (!instance->handles_.Init(desc->NumDescriptors)) return false;
 
-    // ÉvÅ[ÉãÇÃê›íË
+    // „Éó„Éº„É´„ÅÆË®≠ÂÆö
     pool = std::move(instance);
 
     return true;
@@ -84,7 +84,7 @@ void Glib::Internal::Graphics::DescriptorPool::Resize(size_t numDescriptors)
     desc.NumDescriptors = static_cast<UINT>(numDescriptors);
     if (FAILED(s_dx12->Device()->CreateDescriptorHeap(&desc, IID_PPV_ARGS(newHeap.ReleaseAndGetAddressOf())))) return;
 
-    // ÉfÉBÉXÉNÉäÉvÉ^ÇÉRÉsÅ[
+    // „Éá„Ç£„Çπ„ÇØ„É™„Éó„Çø„Çí„Ç≥„Éî„Éº
     s_dx12->Device()->CopyDescriptorsSimple(
         heap_->GetDesc().NumDescriptors,
         newHeap->GetCPUDescriptorHandleForHeapStart(),
@@ -94,7 +94,7 @@ void Glib::Internal::Graphics::DescriptorPool::Resize(size_t numDescriptors)
 
     handles_.Expand(static_cast<size_t>(desc.NumDescriptors - heap_->GetDesc().NumDescriptors));
 
-    // êVÇµÇ¢ÉqÅ[ÉvÇ…ä˘ë∂ÇÃÉnÉìÉhÉãÇÉRÉsÅ[
+    // Êñ∞„Åó„ÅÑ„Éí„Éº„Éó„Å´Êó¢Â≠ò„ÅÆ„Éè„É≥„Éâ„É´„Çí„Ç≥„Éî„Éº
     auto result = handles_.Init([&](size_t index, DescriptorHandle* handle)
     {
         auto cpuHandle = newHeap->GetCPUDescriptorHandleForHeapStart();
@@ -110,3 +110,4 @@ void Glib::Internal::Graphics::DescriptorPool::Resize(size_t numDescriptors)
     if (!result) throw std::bad_alloc{};
     heap_.Swap(newHeap);
 }
+

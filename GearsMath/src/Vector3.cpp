@@ -1,4 +1,4 @@
-#include <Vector2.h>
+﻿#include <Vector2.h>
 #include <Vector3.h>
 #include <Matrix4x4.h>
 #include <Mathf.h>
@@ -511,3 +511,4 @@ std::ostream& operator<<(std::ostream& stream, const Vector3& v)
 {
     return stream << v.ToString();
 }
+

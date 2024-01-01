@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 #include <string>
 #include <Windows.h>
 #include <functional>
@@ -6,7 +6,7 @@
 namespace Glib
 {
     /**
-     * @brief ÉÅÉbÉZÅ[ÉWÉ{ÉbÉNÉXï\é¶
+     * @brief „É°„ÉÉ„Çª„Éº„Ç∏„Éú„ÉÉ„ÇØ„ÇπË°®Á§∫
     */
     class MsgBox final
     {
@@ -57,3 +57,4 @@ namespace Glib
         MsgBox& operator = (const MsgBox&) = delete;
     };
 }
+

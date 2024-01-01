@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Internal/UIRenderer.h>
 #include <Internal/DX12/ConstantBuffer.h>
 #include <Vector2.h>
@@ -18,32 +18,32 @@ namespace Glib
 
     public:
         /**
-         * @brief ’†SˆÊ’u‚ğæ“¾
+         * @brief ä¸­å¿ƒä½ç½®ã‚’å–å¾—
          */
         const Vector2& Center() const;
 
         /**
-         * @brief ’†SˆÊ’u‚ğİ’è
+         * @brief ä¸­å¿ƒä½ç½®ã‚’è¨­å®š
          */
         void Center(const Vector2& center);
 
         /**
-         * @brief F‚ğæ“¾ 
+         * @brief è‰²ã‚’å–å¾— 
          */
         const Color& Color() const;
 
         /**
-         * @brief F‚ğİ’è
+         * @brief è‰²ã‚’è¨­å®š
          */
         void Color(const ::Color& color);
 
         /**
-         * @brief ƒeƒNƒXƒ`ƒƒID‚ğæ“¾
+         * @brief ãƒ†ã‚¯ã‚¹ãƒãƒ£IDã‚’å–å¾—
          */
         unsigned int TextureID() const;
 
         /**
-         * @brief ƒeƒNƒXƒ`ƒƒID‚ğİ’è
+         * @brief ãƒ†ã‚¯ã‚¹ãƒãƒ£IDã‚’è¨­å®š
          */
         void TextureID(unsigned int id);
 
@@ -55,3 +55,4 @@ namespace Glib
         ::Color color_{ Color::White() };
     };
 }
+

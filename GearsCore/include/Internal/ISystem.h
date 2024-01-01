@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 
 namespace Glib::Internal::Interface
 {
     /**
-     * @brief “à•”ƒVƒXƒeƒ€—pƒCƒ“ƒ^[ƒtƒF[ƒX
+     * @brief å†…éƒ¨ã‚·ã‚¹ãƒ†ãƒ ç”¨ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
      */
     class ISystem
     {
@@ -12,3 +12,4 @@ namespace Glib::Internal::Interface
         virtual ~ISystem() = default;
     };
 }
+

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <Internal/InputState.h>
 
 namespace Glib::Internal::Input
@@ -15,3 +15,4 @@ namespace Glib::Internal::Input
         InputState prevPadState_{};
     };
 }
+

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Singleton.h>
 #include <string_view>
 
@@ -16,42 +16,43 @@ namespace Glib
 
     public:
         /**
-         * @brief ƒeƒNƒXƒ`ƒƒ‚Ì“Ç‚İ‚İ
-         * @param id ƒeƒNƒXƒ`ƒƒID
-         * @param filePath ƒtƒ@ƒCƒ‹ƒpƒX
-         * @return ¬Œ÷ true
-         * @return ¸”s false
+         * @brief ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®èª­ã¿è¾¼ã¿
+         * @param id ãƒ†ã‚¯ã‚¹ãƒãƒ£ID
+         * @param filePath ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+         * @return æˆåŠŸ true
+         * @return å¤±æ•— false
          */
         bool Load(unsigned int id, std::string_view filePath);
 
         /**
-         * @brief ƒƒbƒVƒ…—pƒeƒNƒXƒ`ƒƒ‚Ì“Ç‚İ‚İ
-         * @param filePath ƒtƒ@ƒCƒ‹ƒpƒX
-         * @return ¬Œ÷ true
-         * @return ¸”s false
+         * @brief ãƒ¡ãƒƒã‚·ãƒ¥ç”¨ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®èª­ã¿è¾¼ã¿
+         * @param filePath ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+         * @return æˆåŠŸ true
+         * @return å¤±æ•— false
          */
         WeakPtr<Texture> Load(std::string_view filePath);
 
         /**
-         * @brief ƒeƒNƒXƒ`ƒƒID‚ª—LŒø‚©Šm”F
-         * @param id ƒeƒNƒXƒ`ƒƒID
-         * @return —LŒø true
-         * @return –³Œø false
+         * @brief ãƒ†ã‚¯ã‚¹ãƒãƒ£IDãŒæœ‰åŠ¹ã‹ç¢ºèª
+         * @param id ãƒ†ã‚¯ã‚¹ãƒãƒ£ID
+         * @return æœ‰åŠ¹ true
+         * @return ç„¡åŠ¹ false
          */
         bool Contains(unsigned int id);
 
         /**
-         * @brief ƒeƒNƒXƒ`ƒƒ‚ÌƒTƒCƒY‚ğæ“¾
-         * @param id ƒeƒNƒXƒ`ƒƒID
-         * @return ƒTƒCƒY
+         * @brief ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ã‚µã‚¤ã‚ºã‚’å–å¾—
+         * @param id ãƒ†ã‚¯ã‚¹ãƒãƒ£ID
+         * @return ã‚µã‚¤ã‚º
          */
         static const Vector2& TextureSize(unsigned int id);
 
         /**
-         * @brief ƒeƒNƒXƒ`ƒƒ‚ğİ’è
-         * @param id ƒeƒNƒXƒ`ƒƒID
-         * @param rootParamIndex ƒ‹[ƒgƒpƒ‰ƒ[ƒ^
+         * @brief ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’è¨­å®š
+         * @param id ãƒ†ã‚¯ã‚¹ãƒãƒ£ID
+         * @param rootParamIndex ãƒ«ãƒ¼ãƒˆãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
          */
         void SetTexture(unsigned int id, unsigned int rootParamIndex);
     };
 }
+

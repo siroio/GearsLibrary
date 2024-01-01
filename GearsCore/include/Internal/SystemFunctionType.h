@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 enum class SystemFunctionType
 {
@@ -10,3 +10,4 @@ enum class SystemFunctionType
     EndDraw,
     Finalize,
 };
+

@@ -1,10 +1,10 @@
-#pragma once
+ï»¿#pragma once
 #include <concepts>
 #include <WeakPtr.h>
 #include <Internal/IFunc.h>
 
 /**
- * @brief “Á’è‚ÌŠÖ”‚ğ‚Á‚½ƒIƒuƒWƒFƒNƒg‚Ì’è‹`ì¬
+ * @brief ç‰¹å®šã®é–¢æ•°ã‚’æŒã£ãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å®šç¾©ä½œæˆ
  */
 #define HAS_FUNC_OBJECT(FuncName)                                                                                           \
                                                                                                                             \
@@ -80,3 +80,4 @@ namespace Glib::Internal                                                        
         };                                                                                                                  \
     }                                                                                                                       \
 }                                                                                                                           \
+

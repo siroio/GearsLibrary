@@ -1,4 +1,4 @@
-#include <Internal/MouseDevice.h>
+ï»¿#include <Internal/MouseDevice.h>
 #include <Window.h>
 #include <vector>
 
@@ -15,7 +15,7 @@ namespace
 
 bool Glib::Internal::Input::MouseDevice::Initialize()
 {
-    // ƒfƒoƒCƒX‚Ì“o˜^
+    // ãƒ‡ãƒã‚¤ã‚¹ã®ç™»éŒ²
     device_.usUsagePage = 1;
     device_.usUsage = 2;
     device_.dwFlags = 0;
@@ -57,12 +57,12 @@ Vector2 Glib::Internal::Input::MouseDevice::Delta()
 void Glib::Internal::Input::MouseDevice::RawInputMsgHandler(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     if (msg != WM_INPUT) return;
-    // ƒf[ƒ^ƒTƒCƒY‚Ìæ“¾
+    // ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºã®å–å¾—
     UINT dataSize{ 0 };
     GetRawInputData(reinterpret_cast<HRAWINPUT>(lparam), RID_INPUT, nullptr, &dataSize, sizeof(RAWINPUTHEADER));
 
     if (dataSize > 0) return;
-    // ƒf[ƒ^‚Ìæ“¾
+    // ãƒ‡ãƒ¼ã‚¿ã®å–å¾—
     std::vector<BYTE> rawInputData(dataSize);
     bool failed = GetRawInputData(
         reinterpret_cast<HRAWINPUT>(lparam),
@@ -87,6 +87,7 @@ void Glib::Internal::Input::MouseDevice::RawInputMsgHandler(UINT msg, WPARAM wpa
 
 Glib::Internal::Input::MouseDevice::~MouseDevice()
 {
-    // ƒfƒoƒCƒX‚Ì‰ğœ
+    // ãƒ‡ãƒã‚¤ã‚¹ã®è§£é™¤
 
 }
+

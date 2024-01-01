@@ -1,12 +1,13 @@
-#pragma once
+ï»¿#pragma once
 #include <string_view>
 
 /**
- * @brief 3Dƒ‚ƒfƒ‹—pƒCƒ“ƒ^[ƒtƒF[ƒX
- * @param ModelType 3Dƒ‚ƒfƒ‹‚Ìƒf[ƒ^Œ^
+ * @brief 3Dãƒ¢ãƒ‡ãƒ«ç”¨ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
+ * @param ModelType 3Dãƒ¢ãƒ‡ãƒ«ã®ãƒ‡ãƒ¼ã‚¿å‹
  */
 class IModel
 {
 public:
 
 };
+

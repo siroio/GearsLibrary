@@ -1,4 +1,4 @@
-#include <Mathf.h>
+﻿#include <Mathf.h>
 #include <cmath>
 
 float Mathf::DegToRad(float degree)
@@ -330,3 +330,4 @@ float Mathf::Erfc(float x)
 {
     return std::erfcf(x);
 }
+

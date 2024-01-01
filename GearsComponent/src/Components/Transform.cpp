@@ -1,5 +1,6 @@
-#include <Components/Transform.h>
+﻿#include <Components/Transform.h>
 #include <Matrix4x4.h>
+#include <GLGUI.h>
 
 Glib::Transform::~Transform()
 {
@@ -259,6 +260,17 @@ Glib::WeakPtr<Glib::Transform> Glib::Transform::Parent() const
     return parent_;
 }
 
+const std::list<Glib::WeakPtr<Glib::Transform>>& Glib::Transform::Children() const
+{
+    return children_;
+}
+
+void Glib::Transform::ClearChildren()
+{
+    children_.clear();
+}
+
+
 void Glib::Transform::AddChild(const Glib::WeakPtr<Transform>& child)
 {
     children_.push_back(child);
@@ -269,12 +281,15 @@ void Glib::Transform::RemoveChild(const Glib::WeakPtr<Transform>& child)
     children_.remove(child);
 }
 
-const std::list<Glib::WeakPtr<Glib::Transform>>& Glib::Transform::Children() const
+void Glib::Transform::OnGUI()
 {
-    return children_;
-}
+    GLGUI::DragFloat3("Position: ", &local_position_);
 
-void Glib::Transform::ClearChildren()
-{
-    children_.clear();
+    auto eulr = LocalEulerAngles();
+    if (GLGUI::DragFloat3("Rotation: ", &eulr))
+    {
+        LocalEulerAngles(eulr);
+    }
+
+    GLGUI::DragFloat3("Scale: ", &local_scale_);
 }

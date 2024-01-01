@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Internal/DinputGamePad.h>
 
 bool Glib::Internal::Input::DinputGamePad::Initialize(ComPtr<IDirectInput8>& dinput)
@@ -7,7 +7,7 @@ bool Glib::Internal::Input::DinputGamePad::Initialize(ComPtr<IDirectInput8>& din
     if (FAILED(device_->SetDataFormat(&c_dfDIJoystick))) return false;
     if (FAILED(device_->SetCooperativeLevel(GetActiveWindow(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE))) return false;
 
-    // ƒvƒƒpƒeƒB‚ğİ’è
+    // ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã‚’è¨­å®š
     DIPROPDWORD diprop{};
     diprop.diph.dwSize = sizeof(DIPROPDWORD);
     diprop.diph.dwHeaderSize = sizeof(DIPROPDWORD);
@@ -16,7 +16,7 @@ bool Glib::Internal::Input::DinputGamePad::Initialize(ComPtr<IDirectInput8>& din
     diprop.dwData = DIPROPAXISMODE_ABS;
     if (FAILED(device_->SetProperty(DIPROP_AXISMODE, &diprop.diph))) return false;
 
-    // ƒfƒoƒCƒX‚Ì—ñ‹“Œ`®
+    // ãƒ‡ãƒã‚¤ã‚¹ã®åˆ—æŒ™å½¢å¼
     DIDEVCAPS devCaps{};
     devCaps.dwSize = sizeof(DIDEVCAPS);
     if (FAILED(device_->GetCapabilities(&devCaps))) return false;
@@ -28,11 +28,11 @@ bool Glib::Internal::Input::DinputGamePad::Initialize(ComPtr<IDirectInput8>& din
 
 void Glib::Internal::Input::DinputGamePad::Update()
 {
-    // ó‘Ô‚ğæ“¾
+    // çŠ¶æ…‹ã‚’å–å¾—
     DIJOYSTATE joyState{};
     if (FAILED(device_->Poll()))
     {
-        // ƒfƒoƒCƒX‚ª–³Œø‚É‚È‚Á‚Ä‚¢‚éê‡‚ÍÄæ“¾‚ğ‚İ‚é
+        // ãƒ‡ãƒã‚¤ã‚¹ãŒç„¡åŠ¹ã«ãªã£ã¦ã„ã‚‹å ´åˆã¯å†å–å¾—ã‚’è©¦ã¿ã‚‹
         while (DIERR_INPUTLOST == device_->Acquire())
         {
             device_->Acquire();
@@ -47,7 +47,8 @@ void Glib::Internal::Input::DinputGamePad::Update()
         button_[i] = joyState.rgbButtons[i] & 0x80;
     }
 
-    // ²‚Ì’l‚ğXV
+    // è»¸ã®å€¤ã‚’æ›´æ–°
     axisX_ = static_cast<float>(joyState.lX) / 1000.0f;
     axisY_ = static_cast<float>(joyState.lY) / 1000.0f;
 }
+

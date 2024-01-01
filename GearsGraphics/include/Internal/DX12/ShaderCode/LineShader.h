@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 
 namespace Glib::Internal::Graphics::ShaderCode
 {
     /**
-     * @brief ü•`‰æ—pƒVƒF[ƒ_[
+     * @brief ç·šæç”»ç”¨ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
      */
     constexpr char LINE_SHADER[]
     {
@@ -42,3 +42,4 @@ namespace Glib::Internal::Graphics::ShaderCode
         })"
     };
 }
+

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <iosfwd>
 #include <string>
 #include <array>
@@ -94,3 +94,4 @@ Matrix4x4 operator * (const Matrix4x4& m1, const Matrix4x4& m2);
 Matrix4x4 operator / (const Matrix4x4& m, float scalar);
 
 std::ostream& operator << (std::ostream& stream, const Matrix4x4& m);
+

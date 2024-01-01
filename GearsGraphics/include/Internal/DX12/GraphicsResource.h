@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 #include <Internal/ISystem.h>
 #include <Singleton.h>
 
 namespace Glib::Internal::Graphics
 {
     /**
-     * @brief •W€‚Åg‚¤ƒŠƒ\[ƒXŠÇ—ƒNƒ‰ƒX
+     * @brief æ¨™æº–ã§ä½¿ã†ãƒªã‚½ãƒ¼ã‚¹ç®¡ç†ã‚¯ãƒ©ã‚¹
      */
     class GraphicsResource :
         public Glib::Internal::Interface::ISystem,
@@ -18,44 +18,44 @@ namespace Glib::Internal::Graphics
     public:
 
         /**
-         * @brief ƒŠƒ\[ƒX‚Ì‰Šú‰»
+         * @brief ãƒªã‚½ãƒ¼ã‚¹ã®åˆæœŸåŒ–
          */
         bool Initialize();
 
         /**
-         * @brief ’¸“_ƒoƒbƒtƒ@‚Ìİ’è
+         * @brief é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®è¨­å®š
          */
         void SetVertexBuffer(unsigned int id);
 
         /**
-         * @brief ƒpƒCƒvƒ‰ƒCƒ“ƒXƒe[ƒg‚Ìİ’è
+         * @brief ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚¹ãƒ†ãƒ¼ãƒˆã®è¨­å®š
          */
         void SetPipelineState(unsigned int id);
 
         /**
-         * @brief ƒeƒNƒXƒ`ƒƒ‚Ìİ’è
+         * @brief ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è¨­å®š
          */
         void SetTexture(unsigned int id, unsigned int rootParameterIndex);
 
     private:
 
         /**
-         * @brief ƒeƒNƒXƒ`ƒƒ‚Ìì¬
+         * @brief ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ä½œæˆ
          */
         bool CreateTexture(unsigned int id, unsigned char r, unsigned char g, unsigned char b, unsigned char a);
 
-        /*  ’¸“_ƒoƒbƒtƒ@ì¬  */
+        /*  é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ä½œæˆ  */
 
         bool CreateCameraVertexBuffer();
         bool CreateImageVertexBuffer();
 
-        /*  ƒeƒNƒXƒ`ƒƒì¬  */
+        /*  ãƒ†ã‚¯ã‚¹ãƒãƒ£ä½œæˆ  */
 
         bool CreateWhiteTexture();
         bool CreateMagentaTexture();
         bool CreateNormalMapTexture();
 
-        /*  ƒpƒCƒvƒ‰ƒCƒ“ì¬  */
+        /*  ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ä½œæˆ  */
 
         bool CreateCameraPipelineState();
         bool CreateSpritePipelineState();
@@ -67,3 +67,4 @@ namespace Glib::Internal::Graphics
         bool CreateSkinnedMeshShadowPipelineState();
     };
 }
+

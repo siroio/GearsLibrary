@@ -1,4 +1,4 @@
-#include <Components/Canvas.h>
+﻿#include <Components/Canvas.h>
 #include <Internal/CanvasManager.h>
 
 namespace
@@ -22,3 +22,4 @@ void Glib::Canvas::Order(int order)
     s_canvasManager->ChangeCanvasOrder(shared_from_this(), order);
     order_ = order;
 }
+

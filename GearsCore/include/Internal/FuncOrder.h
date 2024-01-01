@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 /**
- * @brief ŠÖ”‚ÌÀs‡¶¬
+ * @brief é–¢æ•°ã®å®Ÿè¡Œé †ç”Ÿæˆ
  */
 #define FUNC_ORDER(FuncName)                                            \
                                                                         \
@@ -31,3 +31,4 @@ namespace Glib::Internal                                                \
         };                                                              \
     }                                                                   \
 }
+

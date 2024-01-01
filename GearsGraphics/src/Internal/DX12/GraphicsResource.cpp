@@ -1,4 +1,4 @@
-#include <Internal/DX12/GraphicsResource.h>
+ï»¿#include <Internal/DX12/GraphicsResource.h>
 #include <Internal/DX12/d3dx12Inc.h>
 #include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/Shader/ShaderManager.h>
@@ -67,7 +67,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateTexture(unsigned int id, 
     const UINT64 height = 4;
     auto texHeapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0 };
     auto resDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R8G8B8A8_UNORM, width, height, 1, 1);
-    // ƒŠƒ\[ƒX‚Ìì¬
+    // ãƒªã‚½ãƒ¼ã‚¹ã®ä½œæˆ
     auto result = s_dx12->Device()->CreateCommittedResource(
         &texHeapProp,
         D3D12_HEAP_FLAG_NONE,
@@ -78,7 +78,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateTexture(unsigned int id, 
     );
     if (FAILED(result)) return false;
 
-    // • * ‚‚³ * RGBA •ªŠm•Û
+    // å¹… * é«˜ã• * RGBA åˆ†ç¢ºä¿
     unsigned char texData[width * height * 4]{};
     for (int i = 0; i < std::size(texData); i++)
     {
@@ -90,7 +90,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateTexture(unsigned int id, 
         else texData[i] = 0xff;
     }
 
-    // ƒf[ƒ^“]‘—
+    // ãƒ‡ãƒ¼ã‚¿è»¢é€
     result = s_textureResources.at(id)->WriteToSubresource(
         0,
         nullptr,
@@ -120,10 +120,10 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateTexture(unsigned int id, 
 
 bool Glib::Internal::Graphics::GraphicsResource::CreateCameraVertexBuffer()
 {
-    // ’¸“_ƒoƒbƒtƒ@ì¬
+    // é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ä½œæˆ
     if (!s_vertexBuffers[ID::CAMERA_VERTEX].Create(sizeof(Vector2), 4)) return false;
 
-    // ’¸“_
+    // é ‚ç‚¹
     Vector2 vertices[]
     {
         Vector2 { 0.0f, 1.0f },
@@ -132,7 +132,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateCameraVertexBuffer()
         Vector2 { 1.0f, 0.0f }
     };
 
-    // XV
+    // æ›´æ–°
     s_vertexBuffers.at(ID::CAMERA_VERTEX).Update(vertices);
 
     return true;
@@ -140,10 +140,10 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateCameraVertexBuffer()
 
 bool Glib::Internal::Graphics::GraphicsResource::CreateImageVertexBuffer()
 {
-    // ’¸“_ƒoƒbƒtƒ@ì¬
+    // é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ä½œæˆ
     if (!s_vertexBuffers[ID::IMAGE_VERTEX].Create(sizeof(Vector2), 4)) return false;
 
-    // ’¸“_
+    // é ‚ç‚¹
     Vector2 vertices[]
     {
         Vector2 { 0.0f, 1.0f },
@@ -152,7 +152,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateImageVertexBuffer()
         Vector2 { 1.0f, 0.0f }
     };
 
-    // XV
+    // æ›´æ–°
     s_vertexBuffers.at(ID::IMAGE_VERTEX).Update(vertices);
 
     return true;
@@ -186,7 +186,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateCameraPipelineState()
     CD3DX12_STATIC_SAMPLER_DESC sampler{};
     sampler.Init(0);
 
-    // ƒ‹[ƒgƒVƒOƒlƒ`ƒƒì¬
+    // ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£ä½œæˆ
     D3D12_ROOT_SIGNATURE_DESC rootSigDesc{};
     rootSigDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
     rootSigDesc.NumParameters = 1;
@@ -201,11 +201,11 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateCameraPipelineState()
     pipelineDesc.InputLayout.NumElements = 1;
     pipelineDesc.DepthStencilState.DepthEnable = false;
 
-    // ƒVƒF[ƒ_[‚ÌƒZƒbƒg
+    // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®ã‚»ãƒƒãƒˆ
     s_shader->SetVertexShader(ID::CAMERA_SHADER, pipelineDesc);
     s_shader->SetPixelShader(ID::CAMERA_SHADER, pipelineDesc);
 
-    // ƒpƒCƒvƒ‰ƒCƒ“ƒXƒe[ƒgì¬
+    // ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚¹ãƒ†ãƒ¼ãƒˆä½œæˆ
     if (!s_pipelines.at(ID::CAMERA_PIPELINESTATE).CreatePipelineState(pipelineDesc)) return false;
 
     return true;
@@ -232,7 +232,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateSpritePipelineState()
     CD3DX12_STATIC_SAMPLER_DESC sampler{};
     sampler.Init(0);
 
-    // ƒ‹[ƒgƒVƒOƒlƒ`ƒƒì¬
+    // ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£ä½œæˆ
     D3D12_ROOT_SIGNATURE_DESC rootSigDesc{};
     rootSigDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
     rootSigDesc.NumParameters = static_cast<UINT>(std::size(rootParams));
@@ -242,17 +242,17 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateSpritePipelineState()
 
     if (!s_pipelines[ID::SPRITE_PIPELINESTATE].CreateRootSignature(rootSigDesc)) return false;
     auto pipelineDesc = GraphicsPipeline::CreateDefaultPipelineDesc();
-    pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE; //@ƒJƒŠƒ“ƒO‚È‚µ
+    pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE; //ã€€ã‚«ãƒªãƒ³ã‚°ãªã—
     pipelineDesc.BlendState.RenderTarget[0] = BlendDesc::Create(BlendState::Alpha);
     pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_EQUAL;
     pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
     pipelineDesc.InputLayout.NumElements = static_cast<UINT>(std::size(inputLayout));
     pipelineDesc.DepthStencilState.DepthEnable = true;
-    // ƒVƒF[ƒ_[‚ÌƒZƒbƒg
+    // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®ã‚»ãƒƒãƒˆ
     s_shader->SetPixelShader(ID::SPRITE_SHADER, pipelineDesc);
     s_shader->SetVertexShader(ID::SPRITE_SHADER, pipelineDesc);
 
-    // ƒpƒCƒvƒ‰ƒCƒ“ƒXƒe[ƒgì¬
+    // ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚¹ãƒ†ãƒ¼ãƒˆä½œæˆ
     return s_pipelines.at(ID::SPRITE_PIPELINESTATE).CreatePipelineState(pipelineDesc);
 }
 
@@ -271,7 +271,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateImagePipelineState()
     CD3DX12_STATIC_SAMPLER_DESC sampler{};
     sampler.Init(0);
 
-    // ƒ‹[ƒgƒVƒOƒlƒ`ƒƒì¬
+    // ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£ä½œæˆ
     D3D12_ROOT_SIGNATURE_DESC rootSigDesc{};
     rootSigDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
     rootSigDesc.NumParameters = static_cast<UINT>(std::size(rootParams));
@@ -287,7 +287,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateImagePipelineState()
     pipelineDesc.InputLayout.pInputElementDescs = &inputLayout;
     pipelineDesc.InputLayout.NumElements = 1;
     pipelineDesc.DepthStencilState.DepthEnable = false;
-    // ƒVƒF[ƒ_[‚ÌƒZƒbƒg
+    // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®ã‚»ãƒƒãƒˆ
     s_shader->SetVertexShader(ID::IMAGE_SHADER, pipelineDesc);
     s_shader->SetPixelShader(ID::IMAGE_SHADER, pipelineDesc);
 
@@ -311,7 +311,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateLinePipelineState()
     CD3DX12_STATIC_SAMPLER_DESC sampler{};
     sampler.Init(0);
 
-    // ƒ‹[ƒgƒVƒOƒlƒ`ƒƒì¬
+    // ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£ä½œæˆ
     D3D12_ROOT_SIGNATURE_DESC rootSigDesc{};
     rootSigDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
     rootSigDesc.NumParameters = 1;
@@ -331,7 +331,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateLinePipelineState()
     pipelineDesc.DepthStencilState.StencilEnable = false;
     pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
 
-    // ƒVƒF[ƒ_[‚ÌƒZƒbƒg
+    // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®ã‚»ãƒƒãƒˆ
     s_shader->SetVertexShader(ID::LINE_SHADER, pipelineDesc);
     s_shader->SetPixelShader(ID::LINE_SHADER, pipelineDesc);
 
@@ -372,7 +372,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateMeshPipelineState()
                     D3D12_TEXTURE_ADDRESS_MODE_BORDER,
                     D3D12_TEXTURE_ADDRESS_MODE_BORDER);
 
-    // ƒ‹[ƒgƒVƒOƒlƒ`ƒƒì¬
+    // ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£ä½œæˆ
     D3D12_ROOT_SIGNATURE_DESC rootSigDesc{};
     rootSigDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
     rootSigDesc.NumParameters = static_cast<UINT32>(std::size(rootParams));
@@ -386,7 +386,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateMeshPipelineState()
     pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
     pipelineDesc.InputLayout.NumElements = static_cast<UINT32>(std::size(inputLayout));
 
-    // ƒVƒF[ƒ_[‚ÌƒZƒbƒg
+    // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®ã‚»ãƒƒãƒˆ
     s_shader->SetVertexShader(ID::MESH_SHADER, pipelineDesc);
     s_shader->SetPixelShader(ID::MESH_SHADER, pipelineDesc);
 
@@ -412,7 +412,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateMeshShadowPipelineState()
     rootParams[0].InitAsDescriptorTable(1, &range[0]);
     rootParams[1].InitAsDescriptorTable(1, &range[1]);
 
-    // ƒ‹[ƒgƒVƒOƒlƒ`ƒƒì¬
+    // ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£ä½œæˆ
     D3D12_ROOT_SIGNATURE_DESC rootSigDesc{};
     rootSigDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
     rootSigDesc.NumParameters = static_cast<UINT32>(std::size(rootParams));
@@ -425,7 +425,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateMeshShadowPipelineState()
     pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
     pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R32G32_FLOAT;
 
-    // ƒVƒF[ƒ_[‚ÌƒZƒbƒg
+    // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®ã‚»ãƒƒãƒˆ
     s_shader->SetVertexShader(ID::MESH_SHADOW_SHADER, pipelineDesc);
     s_shader->SetPixelShader(ID::MESH_SHADOW_SHADER, pipelineDesc);
 
@@ -507,7 +507,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateSkinnedMeshShadowPipeline
     rootParams[1].InitAsDescriptorTable(1, &range[1]);
     rootParams[2].InitAsDescriptorTable(1, &range[2]);
 
-    // ƒ‹[ƒgƒVƒOƒlƒ`ƒƒì¬
+    // ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£ä½œæˆ
     D3D12_ROOT_SIGNATURE_DESC rootSigDesc{};
     rootSigDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
     rootSigDesc.NumParameters = static_cast<UINT32>(std::size(rootParams));
@@ -520,9 +520,10 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateSkinnedMeshShadowPipeline
     pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
     pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R32G32_FLOAT;
 
-    // ƒVƒF[ƒ_[‚ÌƒZƒbƒg
+    // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®ã‚»ãƒƒãƒˆ
     s_shader->SetVertexShader(ID::SKINNED_MESH_SHADOW_SHADER, pipelineDesc);
     s_shader->SetPixelShader(ID::SKINNED_MESH_SHADOW_SHADER, pipelineDesc);
 
     return s_pipelines.at(ID::SKINNED_MESH_SHADOW_PIPELINESTATE).CreatePipelineState(pipelineDesc);
 }
+

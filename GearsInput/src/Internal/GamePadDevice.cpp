@@ -1,4 +1,4 @@
-#include <Internal/GamePadDevice.h>
+﻿#include <Internal/GamePadDevice.h>
 
 bool Glib::Internal::Input::GamePadDevice::Initialize(ComPtr<IDirectInput8>& dinput)
 {
@@ -30,3 +30,4 @@ void Glib::Internal::Input::GamePadDevice::Update()
         }, device);
     }
 }
+

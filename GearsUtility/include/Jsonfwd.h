@@ -1,10 +1,11 @@
-#pragma once
+ï»¿#pragma once
 #include <nlohmann/json_fwd.hpp>
 
 /**
- * @brief nlohmann JSON ‘O•ûéŒ¾ƒwƒbƒ_[
+ * @brief nlohmann JSON å‰æ–¹å®£è¨€ãƒ˜ãƒƒãƒ€ãƒ¼
  */
 namespace Glib
 {
     using namespace nlohmann;
 }
+

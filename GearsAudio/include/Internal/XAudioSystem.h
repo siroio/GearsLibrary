@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Internal/ISystem.h>
 #include <Singleton.h>
 
@@ -27,43 +27,44 @@ namespace Glib::Internal::Audio
         void Finalize();
 
         /**
-         * @brief ‰¹º‚ğ“Ç‚İ‚İ
+         * @brief éŸ³å£°ã‚’èª­ã¿è¾¼ã¿
          */
         bool LoadVoice(unsigned int id, std::string_view path);
 
         /**
-         * @brief 3DAudio‚ÌŒvZ
+         * @brief 3DAudioã®è¨ˆç®—
          */
         void Audio3DCalculate(const X3DAUDIO_EMITTER* emitter, IXAudio2SourceVoice* voice, unsigned int groupId);
 
         /**
-         * @brief SourceVoice‚ğì¬
+         * @brief SourceVoiceã‚’ä½œæˆ
          */
         void CreateSourceVoice(unsigned int id, bool loop, WeakPtr<AudioClip>& clip, IXAudio2SourceVoice** voice);
 
         /**
-         * @brief SubMixVoice‚ğì¬
+         * @brief SubMixVoiceã‚’ä½œæˆ
          */
         void CreateSubMixVoice(unsigned int groupId);
 
         /**
-         * @brief SubMixVoice‚Ìo—Íæ‚ğw’è
+         * @brief SubMixVoiceã®å‡ºåŠ›å…ˆã‚’æŒ‡å®š
          */
         void SetOutputSubMixVoice(IXAudio2SourceVoice* sourceVoice, unsigned int groupId);
 
         /**
-         * @brief ƒŠƒXƒi[‚Ìƒpƒ‰ƒ[ƒ^[‚ğİ’è
-         * @param position ˆÊ’u
-         * @param forward ‘O
-         * @param up ã
+         * @brief ãƒªã‚¹ãƒŠãƒ¼ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼ã‚’è¨­å®š
+         * @param position ä½ç½®
+         * @param forward å‰
+         * @param up ä¸Š
          */
         void SetListenerParameter(const Vector3& position, const Vector3& forward, const Vector3& up);
 
         /**
          * @brief
-         * @param groupId ƒOƒ‹[ƒv‚Ì‰¹—Ê‚ğİ’è
-         * @param volume ‰¹—Ê
+         * @param groupId ã‚°ãƒ«ãƒ¼ãƒ—ã®éŸ³é‡ã‚’è¨­å®š
+         * @param volume éŸ³é‡
          */
         void SetGroupVolume(unsigned int groupId, float volume);
     };
 }
+

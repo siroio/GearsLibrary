@@ -1,4 +1,4 @@
-#include <Internal/RenderingManager.h>
+ï»¿#include <Internal/RenderingManager.h>
 #include <Internal/DX12/d3dx12Inc.h>
 #include <Internal/CameraManager.h>
 #include <Internal/CameraBase.h>
@@ -27,7 +27,7 @@ namespace
     float s_shadowDistance{ 100.0f };
     Vector2 s_shadowRange{ 25.0f, 25.0f };
 
-    // •½sŒõŒ¹—p’è”ƒoƒbƒtƒ@\‘¢‘Ì
+    // å¹³è¡Œå…‰æºç”¨å®šæ•°ãƒãƒƒãƒ•ã‚¡æ§‹é€ ä½“
     struct DirectionalLightConstant
     {
         Color ambient;
@@ -45,7 +45,7 @@ bool Glib::Internal::Graphics::RenderingManager::Initialize()
 
 void Glib::Internal::Graphics::RenderingManager::Update()
 {
-    // ’è”ƒoƒbƒtƒ@‚ÌXV
+    // å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®æ›´æ–°
     DirectionalLightConstant buffer;
     buffer.ambient = s_ambient;
     buffer.diffuse = s_diffuse;
@@ -57,7 +57,7 @@ void Glib::Internal::Graphics::RenderingManager::Update()
 
 void Glib::Internal::Graphics::RenderingManager::Draw()
 {
-    // –³Œø‚ÈƒŒƒ“ƒ_ƒ‰[‚ðƒŠƒXƒg‚©‚çíœ
+    // ç„¡åŠ¹ãªãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã‚’ãƒªã‚¹ãƒˆã‹ã‚‰å‰Šé™¤
     for (auto& renderer : renderers_ | std::ranges::views::values)
     {
         renderer.remove_if([](const auto& info)
@@ -66,12 +66,12 @@ void Glib::Internal::Graphics::RenderingManager::Draw()
         });
     }
 
-    // —LŒø‚ÈƒJƒƒ‰‚Ì”‚¾‚¯•`‰æ
+    // æœ‰åŠ¹ãªã‚«ãƒ¡ãƒ©ã®æ•°ã ã‘æç”»
     for (const auto& camera : s_cameraManager->Cameras())
     {
         if (!camera->Active()) continue;
 
-        // ƒVƒƒƒhƒEƒ}ƒbƒv•`‰æ
+        // ã‚·ãƒ£ãƒ‰ã‚¦ãƒžãƒƒãƒ—æç”»
         camera->SetDepthStencil();
         for (const auto& info : renderers_[DrawType::Shadow])
         {
@@ -81,10 +81,10 @@ void Glib::Internal::Graphics::RenderingManager::Draw()
             }
         }
 
-        //ƒVƒƒƒhƒEƒ}ƒbƒv‚Éƒuƒ‰[‚ð‚©‚¯‚é
+        //ã‚·ãƒ£ãƒ‰ã‚¦ãƒžãƒƒãƒ—ã«ãƒ–ãƒ©ãƒ¼ã‚’ã‹ã‘ã‚‹
         camera->ExecuteShadowBulr();
 
-        // ƒIƒuƒWƒFƒNƒg‚Ì•`‰æ
+        // ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æç”»
         camera->SetRenderTarget();
         for (const auto& info : renderers_[DrawType::Draw])
         {
@@ -163,3 +163,4 @@ void Glib::Internal::Graphics::RenderingManager::SetDirectionalLightConstant(uns
 {
     s_constantBuffer.SetBuffer(rootParamIndex);
 }
+

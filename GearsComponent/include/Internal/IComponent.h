@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 class GameObject;
 
 namespace Glib
@@ -10,7 +10,7 @@ namespace Glib
 namespace Glib::Internal::Interface
 {
     /**
-     * @brief ƒRƒ“ƒ|[ƒlƒ“ƒgƒCƒ“ƒ^[ƒtƒF[ƒX
+     * @brief ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
      */
     class IComponent
     {
@@ -21,3 +21,4 @@ namespace Glib::Internal::Interface
         virtual void SetGameObject(const Glib::WeakPtr<GameObject>& gameObject) = 0;
     };
 }
+

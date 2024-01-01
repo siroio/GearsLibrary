@@ -1,9 +1,13 @@
-#include <GLGUI.h>
+﻿#include <GLGUI.h>
 #include <Internal/ImGuiInc.h>
+#include <Vector2.h>
+#include <Vector3.h>
+#include <Vector4.h>
+#include <Color.h>
 
 #define GL_SLIDER_CLAMP ImGuiSliderFlags_AlwaysClamp
 #define GL_ENTER_RETURN ImGuiInputTextFlags_EnterReturnsTrue
-#define GL_TREE_NODE ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth
+#define GL_TREE_NODE ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_OpenOnDoubleClick
 #define GL_TREE_LEAF GL_TREE_NODE | ImGuiTreeNodeFlags_Leaf
 
 void Glib::GLGUI::Space()
@@ -78,16 +82,29 @@ bool Glib::GLGUI::InputFloat(std::string_view label, float* value, bool sameLine
     return ImGui::InputFloat(label.data(), value, 0.0f, 0.0f, "%.3f", GL_ENTER_RETURN);
 }
 
-bool Glib::GLGUI::DragInt(std::string_view label, int* value, int min, int max, float speed, bool sameLine)
+
+bool Glib::GLGUI::DragInt(std::string_view label, int* value, float speed, int min, int max, bool sameLine)
 {
     if (sameLine) ImGui::SameLine();
     return ImGui::DragInt(label.data(), value, speed, min, max, "%d", GL_SLIDER_CLAMP);
 }
 
-bool Glib::GLGUI::DragFloat(std::string_view label, float* value, float min, float max, float speed, bool sameLine)
+bool Glib::GLGUI::DragFloat(std::string_view label, float* value, float speed, float min, float max, bool sameLine)
 {
     if (sameLine) ImGui::SameLine();
     return ImGui::DragFloat(label.data(), value, speed, min, max, "%.3f", GL_SLIDER_CLAMP);
+}
+
+bool Glib::GLGUI::DragFloat3(std::string_view label, Vector3* value, float speed, float min, float max, bool sameLine)
+{
+    if (sameLine) ImGui::SameLine();
+    return ImGui::DragFloat3(label.data(), value->xyz.data(), speed, min, max, "%.3f", GL_SLIDER_CLAMP);
+}
+
+bool Glib::GLGUI::DragFloat4(std::string_view label, Vector4* value, float speed, float min, float max, bool sameLine)
+{
+    if (sameLine) ImGui::SameLine();
+    return ImGui::DragFloat(label.data(), value->xyzw.data(), speed, min, max, "%.3f", GL_SLIDER_CLAMP);
 }
 
 bool Glib::GLGUI::SliderInt(std::string_view label, int* value, int min, int max, bool sameLine)

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <string>
 #include <unordered_map>
 #include <Vector3.h>
@@ -8,7 +8,7 @@
 namespace Glib
 {
     /**
-     * @brief ƒAƒjƒ[ƒVƒ‡ƒ“ŠÇ—ƒNƒ‰ƒX
+     * @brief ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ç®¡ç†ã‚¯ãƒ©ã‚¹
      */
     class AnimationClip
     {
@@ -27,27 +27,27 @@ namespace Glib
 
     public:
         /**
-         * @brief ƒAƒjƒ[ƒVƒ‡ƒ“‚ğ“Ç‚İ‚İ
-         * @param fileName ƒtƒ@ƒCƒ‹ƒpƒX
+         * @brief ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’èª­ã¿è¾¼ã¿
+         * @param fileName ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
          */
         bool Load(std::string_view fileName);
 
         /**
-         * @brief ƒL[ƒtƒŒ[ƒ€‚Ìæ“¾
-         * @param boneName  ƒ{[ƒ“–¼
-         * @param frameNo   ƒtƒŒ[ƒ€”Ô†
-         * @return ƒL[ƒtƒŒ[ƒ€
+         * @brief ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã®å–å¾—
+         * @param boneName  ãƒœãƒ¼ãƒ³å
+         * @param frameNo   ãƒ•ãƒ¬ãƒ¼ãƒ ç•ªå·
+         * @return ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ 
          */
         KeyFrame GetKeyFrame(const std::string& boneName, float frameNo) const;
 
         /**
-         * @brief I—¹ƒtƒŒ[ƒ€‚ğæ“¾
+         * @brief çµ‚äº†ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’å–å¾—
          */
         float EndFrame() const;
 
     private:
         /**
-         * @brief ƒL[ƒtƒŒ[ƒ€‚ğŒŸõ
+         * @brief ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’æ¤œç´¢
          */
         std::pair<int, int> SearchKeyFrame(const KeyFrames& keys, float frameNo) const;
 
@@ -56,3 +56,4 @@ namespace Glib
         std::unordered_map<std::string, KeyFrames> keyframes_;
     };
 }
+

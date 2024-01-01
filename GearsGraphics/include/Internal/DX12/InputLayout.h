@@ -1,10 +1,10 @@
-#pragma once
+Ôªø#pragma once
 #include <d3d12.h>
 
 namespace Glib::Internal::Graphics::InputLayout
 {
     /**
-     * @brief 2Dç¿ïW
+     * @brief 2DÂ∫ßÊ®ô
      */
     constexpr D3D12_INPUT_ELEMENT_DESC POSITION_2D
     {
@@ -15,7 +15,7 @@ namespace Glib::Internal::Graphics::InputLayout
     };
 
     /**
-     * @brief 3Dç¿ïW
+     * @brief 3DÂ∫ßÊ®ô
      */
     constexpr D3D12_INPUT_ELEMENT_DESC POSITION_3D
     {
@@ -26,7 +26,7 @@ namespace Glib::Internal::Graphics::InputLayout
     };
 
     /**
-     * @brief ñ@ê¸ç¿ïW
+     * @brief Ê≥ïÁ∑öÂ∫ßÊ®ô
      */
     constexpr D3D12_INPUT_ELEMENT_DESC NORMAL
     {
@@ -37,7 +37,7 @@ namespace Glib::Internal::Graphics::InputLayout
     };
 
     /**
-     * @brief UVç¿ïW
+     * @brief UVÂ∫ßÊ®ô
      */
     constexpr D3D12_INPUT_ELEMENT_DESC TEXCOORD
     {
@@ -48,7 +48,7 @@ namespace Glib::Internal::Graphics::InputLayout
     };
 
     /**
-     * @brief ê⁄ê¸
+     * @brief Êé•Á∑ö
      */
     constexpr D3D12_INPUT_ELEMENT_DESC TANGENT
     {
@@ -59,7 +59,7 @@ namespace Glib::Internal::Graphics::InputLayout
     };
 
     /**
-     * @brief êF
+     * @brief Ëâ≤
     */
     constexpr D3D12_INPUT_ELEMENT_DESC COLOR
     {
@@ -70,7 +70,7 @@ namespace Glib::Internal::Graphics::InputLayout
     };
 
     /**
-     * @brief É{Å[ÉìÉCÉìÉfÉbÉNÉX
+     * @brief „Éú„Éº„É≥„Ç§„É≥„Éá„ÉÉ„ÇØ„Çπ
      */
     constexpr D3D12_INPUT_ELEMENT_DESC BONEINDEX
     {
@@ -81,7 +81,7 @@ namespace Glib::Internal::Graphics::InputLayout
     };
 
     /**
-     * @brief É{Å[ÉìÉEÉFÉCÉg
+     * @brief „Éú„Éº„É≥„Ç¶„Çß„Ç§„Éà
      */
     constexpr D3D12_INPUT_ELEMENT_DESC BONEWEIGHT
     {
@@ -91,3 +91,4 @@ namespace Glib::Internal::Graphics::InputLayout
         D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
     };
 }
+

@@ -1,4 +1,4 @@
-#include <Internal/DX12/CommandList.h>
+ï»¿#include <Internal/DX12/CommandList.h>
 #include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/d3dx12Inc.h>
 
@@ -54,9 +54,9 @@ void Glib::Internal::Graphics::CommandList::Execute() const
 
 bool Glib::Internal::Graphics::CommandList::CloseAndBundleToList(const Glib::WeakPtr<CommandList>& list) const
 {
-    // ƒoƒ“ƒhƒ‹ƒ^ƒCƒv‚©Šm”F
+    // ãƒãƒ³ãƒ‰ãƒ«ã‚¿ã‚¤ãƒ—ã‹ç¢ºèª
     if (list.expired() || Type() != D3D12_COMMAND_LIST_TYPE_BUNDLE) return false;
-    // ƒoƒ“ƒhƒ‹‚ðƒNƒ[ƒY‚µ‚Ä’Ç‰Á
+    // ãƒãƒ³ãƒ‰ãƒ«ã‚’ã‚¯ãƒ­ãƒ¼ã‚ºã—ã¦è¿½åŠ 
     list->List()->Close();
     cmdList_->ExecuteBundle(list->List().Get());
     return true;
@@ -92,3 +92,4 @@ D3D12_COMMAND_LIST_TYPE Glib::Internal::Graphics::CommandList::Type() const
 {
     return cmdList_->GetType();
 }
+

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace Glib
 {
@@ -14,3 +14,4 @@ namespace Glib
         CONSTANT
     };
 }
+

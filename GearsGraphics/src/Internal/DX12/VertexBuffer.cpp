@@ -1,4 +1,4 @@
-#include <Internal/DX12/VertexBuffer.h>
+﻿#include <Internal/DX12/VertexBuffer.h>
 #include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/d3dx12Inc.h>
 
@@ -41,3 +41,4 @@ void Glib::Internal::Graphics::VertexBuffer::Update(void* vertices)
     std::memcpy(map, vertices, view_.SizeInBytes);
     buffer_->Unmap(0, nullptr);
 }
+

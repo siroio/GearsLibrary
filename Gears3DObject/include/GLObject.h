@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 #include <vector>
 #include <string>
 
 namespace Glib
 {
     /**
-     * @brief 3DƒIƒuƒWƒFƒNƒgƒf[ƒ^ƒNƒ‰ƒX
+     * @brief 3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãƒ‡ãƒ¼ã‚¿ã‚¯ãƒ©ã‚¹
      */
     class GLObject final
     {
@@ -57,11 +57,11 @@ namespace Glib
         GLObject() = default;
 
         /**
-         * @brief ƒIƒuƒWƒFƒNƒg‚ğì¬
-         * @param vertex ’¸“_
-         * @param indices ƒCƒ“ƒfƒbƒNƒX
-         * @param subsets ƒTƒuƒZƒbƒg
-         * @param materials ƒ}ƒeƒŠƒAƒ‹
+         * @brief ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
+         * @param vertex é ‚ç‚¹
+         * @param indices ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+         * @param subsets ã‚µãƒ–ã‚»ãƒƒãƒˆ
+         * @param materials ãƒãƒ†ãƒªã‚¢ãƒ«
          * @param bones
          */
         GLObject(
@@ -72,49 +72,49 @@ namespace Glib
             const std::vector<Bone>& bones);
 
         /**
-         * @brief ƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ
+         * @brief ãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿
          * @param path
-         * @return ¬Œ÷ : true
-         * @return ¸”s : false
+         * @return æˆåŠŸ : true
+         * @return å¤±æ•— : false
          */
         bool ReadFile(std::string_view path);
 
         /**
-         * @brief ƒtƒ@ƒCƒ‹‚Ö‘‚«‚İ
+         * @brief ãƒ•ã‚¡ã‚¤ãƒ«ã¸æ›¸ãè¾¼ã¿
          * @param path
-         * @return ¬Œ÷ : true
-         * @return ¸”s : false
+         * @return æˆåŠŸ : true
+         * @return å¤±æ•— : false
          */
         bool WriteFile(const std::string_view path);
 
     public:
         /**
-         * @brief ’¸“_
+         * @brief é ‚ç‚¹
          */
         std::vector<Vertex>& Vertices();
 
         /**
-         * @brief ƒCƒ“ƒfƒbƒNƒX
+         * @brief ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
          */
         std::vector<unsigned int>& Indices();
 
         /**
-         * @brief ƒTƒuƒZƒbƒg
+         * @brief ã‚µãƒ–ã‚»ãƒƒãƒˆ
          */
         std::vector<Subset>& Subsets();
 
         /**
-         * @brief ƒ}ƒeƒŠƒAƒ‹
+         * @brief ãƒãƒ†ãƒªã‚¢ãƒ«
          */
         std::vector<Material>& Materials();
 
         /**
-         * @brief ƒ{[ƒ“
+         * @brief ãƒœãƒ¼ãƒ³
          */
         std::vector<Bone>& Bones();
 
     private:
-        // == Šeí“Ç‚İ‚İ—pŠÖ” == //
+        // == å„ç¨®èª­ã¿è¾¼ã¿ç”¨é–¢æ•° == //
 
         void ReadHeader(std::ifstream& file);
         void ReadVertex(std::ifstream& file);
@@ -123,7 +123,7 @@ namespace Glib
         void ReadMaterial(std::ifstream& file);
         void ReadBone(std::ifstream& file);
 
-        // == Šeí‘‚«‚İ—pŠÖ” == //
+        // == å„ç¨®æ›¸ãè¾¼ã¿ç”¨é–¢æ•° == //
 
         void WriteHeader(std::ofstream& file);
         void WriteVertex(std::ofstream& file);
@@ -143,3 +143,4 @@ namespace Glib
         std::vector<Bone>           bones_{};
     };
 }
+

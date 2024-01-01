@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 #include <Component.h>
 #include <Vector3.h>
 #include <Quaternion.h>
@@ -7,7 +7,7 @@
 namespace Glib
 {
     /**
-     * @brief TransformÉRÉìÉ|Å[ÉlÉìÉg
+     * @brief Transform„Ç≥„É≥„Éù„Éº„Éç„É≥„Éà
      */
     class Transform : public Component
     {
@@ -74,6 +74,7 @@ namespace Glib
         void AddChild(const Glib::WeakPtr<Transform>& child);
         void RemoveChild(const Glib::WeakPtr<Transform>& child);
 
+        virtual void OnGUI() override;
 
     private:
         Vector3 local_position_{ Vector3::Zero() };

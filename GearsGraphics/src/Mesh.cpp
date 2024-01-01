@@ -1,4 +1,4 @@
-#include <Mesh.h>
+ï»¿#include <Mesh.h>
 #include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/GraphicsResource.h>
 #include <Internal/DX12/GraphicsResourceID.h>
@@ -86,7 +86,7 @@ void Glib::Mesh::Draw()
     {
         const auto& material = materials_.at(subset.materialID);
 
-        //ƒAƒ‹ƒxƒhƒeƒNƒXƒ`ƒƒ‚ðÝ’è
+        //ã‚¢ãƒ«ãƒ™ãƒ‰ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’è¨­å®š
         if (material.albedo.expired())
         {
             s_resource->SetTexture(ID::WHITE_TEXTURE, ID::MESH_ALBEDO);
@@ -97,7 +97,7 @@ void Glib::Mesh::Draw()
         }
 
 
-        // –@üƒ}ƒbƒv‚ðÝ’è
+        // æ³•ç·šãƒžãƒƒãƒ—ã‚’è¨­å®š
         if (material.normal.expired())
         {
             s_resource->SetTexture(ID::NORMAL_MAP_TEXTURE, ID::MESH_NORMAL_MAP);
@@ -107,10 +107,10 @@ void Glib::Mesh::Draw()
             material.normal->SetTexture(ID::MESH_NORMAL_MAP);
         }
 
-        // ’è”ƒoƒbƒtƒ@‚ðÝ’è
+        // å®šæ•°ãƒãƒƒãƒ•ã‚¡ã‚’è¨­å®š
         material.params.SetBuffer(ID::MESH_MATERIAL_BUFFER);
 
-        // •`‰æ
+        // æç”»
         s_dx12->CommandList()->DrawIndexedInstanced(subset.indexCount, 1, subset.indexStart, 0, 0);
     }
 }
@@ -131,3 +131,4 @@ const std::vector<Glib::Bone>& Glib::Mesh::Bone() const
 {
     return bones_;
 }
+

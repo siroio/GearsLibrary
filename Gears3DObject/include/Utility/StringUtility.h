@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <string>
 #include <string_view>
 #include <filesystem>
@@ -10,8 +10,8 @@ namespace Glib
     inline bool CheckExt(std::string_view view, std::string_view extension)
     {
         std::filesystem::path path{ view };
-        path = path.lexically_normal(); // ƒpƒX‚Ì³‹K‰»
-        // •s³‚ÈƒpƒX‚©ƒ`ƒFƒbƒN
+        path = path.lexically_normal(); // ãƒ‘ã‚¹ã®æ­£è¦åŒ–
+        // ä¸æ­£ãªãƒ‘ã‚¹ã‹ãƒã‚§ãƒƒã‚¯
         if (path == ".") return false;
         return path.extension().generic_string().ends_with(extension);
     }
@@ -31,3 +31,4 @@ namespace Glib
         WriteToBinary(file, str.data(), sizeof(char) * size);
     }
 }
+

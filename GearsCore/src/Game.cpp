@@ -1,4 +1,4 @@
-#if defined(DEBUG) || defined(_DEBUG)
+ï»¿#if defined(DEBUG) || defined(_DEBUG)
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
@@ -34,7 +34,7 @@ namespace
 int Glib::Game::Run()
 {
 #if defined(DEBUG) || defined(_DEBUG)
-    // ƒƒ‚ƒŠƒŠ[ƒNŒŸoŠJn
+    // ãƒ¡ãƒ¢ãƒªãƒªãƒ¼ã‚¯æ¤œå‡ºé–‹å§‹
     _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG | _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
@@ -80,7 +80,7 @@ void Glib::Game::RegisterSystem()
     SystemManager::AddSystem<SceneManager>();
 
 #if defined(DEBUG) || defined(_DEBUG)
-    // ƒfƒoƒbƒO—p
+    // ãƒ‡ãƒãƒƒã‚°ç”¨
     SystemManager::AddSystem<Internal::Debug::ImGuiManager>();
 #endif // !
 
@@ -110,3 +110,4 @@ void Glib::Game::Finalize()
 {
     s_systemManager.Finalize();
 }
+

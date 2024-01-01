@@ -1,4 +1,4 @@
-#include <SceneManager.h>
+﻿#include <SceneManager.h>
 #include <Scene.h>
 #include <GameObjectManager.h>
 #include <Debugger.h>
@@ -37,3 +37,4 @@ std::list<std::string> Glib::SceneManager::Scenes()
     }
     return scenes;
 }
+

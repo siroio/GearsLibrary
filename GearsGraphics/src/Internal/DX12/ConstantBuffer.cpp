@@ -1,4 +1,4 @@
-#include <Internal/DX12/ConstantBuffer.h>
+ï»¿#include <Internal/DX12/ConstantBuffer.h>
 #include <Internal/DX12/d3dx12Inc.h>
 #include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/DescriptorPool.h>
@@ -10,7 +10,7 @@ namespace
 
 bool Glib::Internal::Graphics::ConstantBuffer::Create(UINT64 bufferSize)
 {
-    // ƒoƒbƒtƒ@[ì¬
+    // ãƒãƒƒãƒ•ã‚¡ãƒ¼ä½œæˆ
     auto heapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_HEAP_TYPE_UPLOAD };
     auto resDesc = CD3DX12_RESOURCE_DESC::Buffer((bufferSize + 0xff) & ~0xff);
 
@@ -25,11 +25,11 @@ bool Glib::Internal::Graphics::ConstantBuffer::Create(UINT64 bufferSize)
 
     if (FAILED(result)) return false;
 
-    // ƒnƒ“ƒhƒ‹Žæ“¾
+    // ãƒãƒ³ãƒ‰ãƒ«å–å¾—
     auto pool = s_dx12->DescriptorPool(DirectX12::PoolType::RES);
     handle_ = pool->GetHandle();
 
-    // view‚Ìì¬
+    // viewã®ä½œæˆ
     D3D12_CONSTANT_BUFFER_VIEW_DESC viewDesc{};
     viewDesc.BufferLocation = buffer_->GetGPUVirtualAddress();
     viewDesc.SizeInBytes = (bufferSize + 0xff) & ~0xff;
@@ -49,3 +49,4 @@ void Glib::Internal::Graphics::ConstantBuffer::Update(unsigned int size, const v
     std::memcpy(map, data, size);
     buffer_->Unmap(0, nullptr);
 }
+

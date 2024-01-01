@@ -1,4 +1,4 @@
-#include <Texture.h>
+ï»¿#include <Texture.h>
 #include <Internal/DX12/DirectX12.h>
 #include <DirectXTex.h>
 #include <functional>
@@ -8,7 +8,7 @@ namespace
 {
     using TextureLoader = std::function<bool(std::wstring_view, DirectX::TexMetadata*, DirectX::ScratchImage&)>;
 
-    /* ‰æ‘œ“Ç‚İ‚İ—pŠÖ”ƒe[ƒuƒ‹ */
+    /* ç”»åƒèª­ã¿è¾¼ã¿ç”¨é–¢æ•°ãƒ†ãƒ¼ãƒ–ãƒ« */
     std::unordered_map<std::string, TextureLoader> s_loadFunctions
     {
         { "tga", [](std::wstring_view path, DirectX::TexMetadata* meta, DirectX::ScratchImage& img)
@@ -27,7 +27,7 @@ namespace
         } },
     };
 
-    /* ƒAƒ‰ƒCƒƒ“ƒgŒvZ */
+    /* ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆè¨ˆç®— */
     size_t AlignmentedSize(size_t size, size_t alignment)
     {
         return size + alignment - size % alignment;
@@ -50,13 +50,13 @@ bool Glib::Texture::CreateTexture(std::string_view path)
         extension = "png";
     const auto& func = s_loadFunctions.at(extension);
 
-    // ƒeƒNƒXƒ`ƒƒ‚Ìƒ[ƒh
+    // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒ­ãƒ¼ãƒ‰
     const auto result = func(filePath.generic_wstring(), &metadata, scratchImg);
     if (!result) return false;
 
     auto img = scratchImg.GetImage(0, 0, 0);
 
-    // ƒAƒbƒvƒ[ƒh—pƒoƒbƒtƒ@ì¬
+    // ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰ç”¨ãƒãƒƒãƒ•ã‚¡ä½œæˆ
     ComPtr<ID3D12Resource> uploadBuffer{ nullptr };
     auto heapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_HEAP_TYPE_UPLOAD };
     auto resDesc = CD3DX12_RESOURCE_DESC::Buffer(AlignmentedSize(img->rowPitch, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT) * img->height);
@@ -82,7 +82,7 @@ bool Glib::Texture::CreateTexture(std::string_view path)
     texResDesc.SampleDesc.Count = 1;
     texResDesc.SampleDesc.Quality = 0;
 
-    // ƒeƒNƒXƒ`ƒƒ‚Ìƒoƒbƒtƒ@‚ğì¬
+    // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒãƒƒãƒ•ã‚¡ã‚’ä½œæˆ
     auto texHeapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_HEAP_TYPE_DEFAULT };
     if (FAILED(s_dx12->Device()->CreateCommittedResource(
         &texHeapProp,
@@ -93,7 +93,7 @@ bool Glib::Texture::CreateTexture(std::string_view path)
         IID_PPV_ARGS(texture_.ReleaseAndGetAddressOf())
         ))) return false;
 
-    // ƒAƒbƒvƒ[ƒh—p‚Ìƒoƒbƒtƒ@‚ÉƒRƒs[
+    // ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰ç”¨ã®ãƒãƒƒãƒ•ã‚¡ã«ã‚³ãƒ”ãƒ¼
     uint8_t* mapped{ nullptr };
     if (FAILED(uploadBuffer->Map(0, nullptr, (void**)&mapped))) return false;
 
@@ -108,7 +108,7 @@ bool Glib::Texture::CreateTexture(std::string_view path)
     }
     uploadBuffer->Unmap(0, nullptr);
 
-    // ƒRƒs[‚Ìİ’è
+    // ã‚³ãƒ”ãƒ¼ã®è¨­å®š
     D3D12_TEXTURE_COPY_LOCATION src{};
     src.pResource = uploadBuffer.Get();
     src.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
@@ -124,19 +124,19 @@ bool Glib::Texture::CreateTexture(std::string_view path)
     dst.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
     dst.SubresourceIndex = 0;
 
-    // ƒeƒNƒXƒ`ƒƒ‚ÌƒRƒs[
+    // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ã‚³ãƒ”ãƒ¼
     s_dx12->CommandList()->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);
 
-    // ƒŠƒ\[ƒXƒoƒŠƒA‚ğİ’è
+    // ãƒªã‚½ãƒ¼ã‚¹ãƒãƒªã‚¢ã‚’è¨­å®š
     s_dx12->Barrier(texture_.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
-    // ƒeƒNƒXƒ`ƒƒƒTƒCƒY‚Ìİ’è
+    // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚µã‚¤ã‚ºã®è¨­å®š
     textureSize_ = Vector2{ static_cast<float>(img->width), static_cast<float>(img->height) };
 
-    // ShaderResourceView‚Ìì¬
+    // ShaderResourceViewã®ä½œæˆ
     CreateShaderResourceView(img->format);
 
-    // ƒRƒ}ƒ“ƒhƒŠƒXƒg‚ğÀs‚µ‚Äƒ[ƒh‚ğŠ®—¹‚³‚¹‚é
+    // ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆã‚’å®Ÿè¡Œã—ã¦ãƒ­ãƒ¼ãƒ‰ã‚’å®Œäº†ã•ã›ã‚‹
     s_dx12->ExecuteCommandList();
 
     return true;
@@ -169,7 +169,7 @@ bool Glib::Texture::CreateShaderResourceView(DXGI_FORMAT fmt)
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
     srvDesc.Texture2D.MipLevels = 1;
 
-    // ShaderResourceView‚Ìì¬
+    // ShaderResourceViewã®ä½œæˆ
     s_dx12->Device()->CreateShaderResourceView(
         texture_.Get(),
         &srvDesc,
@@ -178,3 +178,4 @@ bool Glib::Texture::CreateShaderResourceView(DXGI_FORMAT fmt)
 
     return true;
 }
+

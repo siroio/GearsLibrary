@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <Component.h>
 
 namespace Glib
@@ -11,7 +11,7 @@ namespace Glib
         void Start();
 
         /**
-         * @brief �ʒu�v�Z
+         * @brief 位置計算
          */
         void LateUpdate();
 
@@ -19,3 +19,4 @@ namespace Glib
         WeakPtr<Transform> transform_{ nullptr };
     };
 }
+

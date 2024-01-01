@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Internal/ISystem.h>
 #include <Singleton.h>
 #include <Internal/FuncOrderConstant.h>
@@ -10,7 +10,7 @@
 namespace Glib
 {
     /**
-     * @brief ƒQ[ƒ€ƒIƒuƒWƒFƒNƒgŠÇ—ƒNƒ‰ƒX
+     * @brief ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç®¡ç†ã‚¯ãƒ©ã‚¹
      */
     class GameObjectManager final :
         public Internal::Interface::ISystem,
@@ -33,34 +33,34 @@ namespace Glib
     public:
 
         /**
-         * @brief GameObject‚Ìì¬
+         * @brief GameObjectã®ä½œæˆ
          * @return GameObjectPtr
          */
         static GameObjectPtr Instantiate();
 
         /**
-         * @brief GameObject‚Ìì¬
+         * @brief GameObjectã®ä½œæˆ
          * @param name
          * @return GameObjectPtr
          */
         static GameObjectPtr Instantiate(std::string_view name);
 
         /**
-         * @brief GameObject‚ÌŒŸõ
+         * @brief GameObjectã®æ¤œç´¢
          * @param name
          * @return GameObjectPtr
          */
         static GameObjectPtr Find(std::string_view name);
 
         /**
-         * @brief GameObject‚ÌTag‚ÅŒŸõ
+         * @brief GameObjectã®Tagã§æ¤œç´¢
          * @param tag
          * @return std::deque<GameObjectPtr>
          */
         static std::list<GameObjectPtr> FindGameObjectsWithTag(std::string_view tag);
 
         /**
-         * @brief GameObject‚ÌTag‚ÅŒŸõ
+         * @brief GameObjectã®Tagã§æ¤œç´¢
          * @param tag
          * @return GameObjectPtr
          */
@@ -70,3 +70,4 @@ namespace Glib
         static inline std::list<std::shared_ptr<GameObject>> gameObjects_;
     };
 }
+

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Singleton.h>
 #include <FuncOrderDefinition.h>
 #include <Internal/ISystem.h>
@@ -23,56 +23,56 @@ namespace Glib
         void Update();
 
         /**
-         * @brief Œ»İ‚ğæ“¾
+         * @brief ç¾åœ¨æ™‚åˆ»ã‚’å–å¾—
          */
         static float Now();
 
         /**
-         * @brief ’¼‘O‚ÌƒtƒŒ[ƒ€‚Æ¡‚ÌƒtƒŒ[ƒ€ŠÔ‚ÅŒo‰ß‚µ‚½ŠÔ
-         * @return •b
+         * @brief ç›´å‰ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã¨ä»Šã®ãƒ•ãƒ¬ãƒ¼ãƒ é–“ã§çµŒéã—ãŸæ™‚é–“
+         * @return ç§’
          */
         static float DeltaTime();
 
         /**
-         * @brief ŒÅ’èƒtƒŒ[ƒ€ƒŒ[ƒg‚ÌXV‚ğÀs‚·‚éƒCƒ“ƒ^[ƒoƒ‹
-         * @return •b
+         * @brief å›ºå®šãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¬ãƒ¼ãƒˆã®æ›´æ–°ã‚’å®Ÿè¡Œã™ã‚‹ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒ«
+         * @return ç§’
         */
         static float FixedDeltaTime();
 
         /**
-         * @brief ƒ^ƒCƒ€ƒXƒeƒbƒv‚ğæ“¾
+         * @brief ã‚¿ã‚¤ãƒ ã‚¹ãƒ†ãƒƒãƒ—ã‚’å–å¾—
          * @param timeStep
         */
         static float FixedTimeStep();
 
         /**
-         * @brief ƒ^ƒCƒ€ƒXƒeƒbƒv‚ğİ’è
+         * @brief ã‚¿ã‚¤ãƒ ã‚¹ãƒ†ãƒƒãƒ—ã‚’è¨­å®š
          * @param timeStep
         */
         static void FixedTimeStep(float timeStep);
 
         /**
-         * @brief ƒ^ƒCƒ€ƒeƒbƒv‚ÌãŒÀ’læ“¾
+         * @brief ã‚¿ã‚¤ãƒ ãƒ†ãƒƒãƒ—ã®ä¸Šé™å€¤å–å¾—
          * @param maximumAllowedTimestep
         */
         static float MaximumAllowedTimeStep();
 
         /**
-         * @brief ƒ^ƒCƒ€ƒeƒbƒv‚ÌãŒÀ’lİ’è
+         * @brief ã‚¿ã‚¤ãƒ ãƒ†ãƒƒãƒ—ã®ä¸Šé™å€¤è¨­å®š
          * @param maximumAllowedTimeStep
         */
         static void MaximumAllowedTimeStep(float maximumAllowedTimeStep);
 
         /**
-         * @brief ƒ^ƒCƒ€ƒXƒP[ƒ‹‚Ì•ÏX
+         * @brief ã‚¿ã‚¤ãƒ ã‚¹ã‚±ãƒ¼ãƒ«ã®å¤‰æ›´
          * @param timeScale
          */
         static void TimeScale(float timeScale = 1.0f);
 
         /**
-         * @brief ’¼‘O‚ÌƒtƒŒ[ƒ€‚Æ¡‚ÌƒtƒŒ[ƒ€ŠÔ‚ÅŒo‰ß‚µ‚½ŠÔ
-         * @brief ƒ^ƒCƒ€ƒXƒP[ƒ‹‚Ì‰e‹¿‚ğó‚¯‚È‚¢
-         * @return •b
+         * @brief ç›´å‰ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã¨ä»Šã®ãƒ•ãƒ¬ãƒ¼ãƒ é–“ã§çµŒéã—ãŸæ™‚é–“
+         * @brief ã‚¿ã‚¤ãƒ ã‚¹ã‚±ãƒ¼ãƒ«ã®å½±éŸ¿ã‚’å—ã‘ãªã„
+         * @return ç§’
          */
         static float UnscaledDeltaTime();
 
@@ -86,3 +86,4 @@ namespace Glib
         TimePoint prevTime_{ Clock::now() };
     };
 }
+

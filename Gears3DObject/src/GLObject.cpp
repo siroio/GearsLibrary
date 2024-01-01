@@ -1,4 +1,4 @@
-#include <GLObject.h>
+ï»¿#include <GLObject.h>
 #include <Utility/ByteUtility.h>
 #include <Utility/StringUtility.h>
 #include <Utility/IOUtility.h>
@@ -10,17 +10,17 @@
 namespace
 {
     /**
-     * @brief Šg’£q
+     * @brief æ‹¡å¼µå­
      */
     constexpr char GL_OBJECT_EXTENSION[]{ "globj" };
 
     /**
-     * @brief ƒVƒOƒlƒ`ƒƒ
+     * @brief ã‚·ã‚°ãƒãƒãƒ£
      */
     constexpr char GL_OBJECT_SIGNATURE[]{ "GLOBJFILE" };
 
     /**
-     * @brief ƒtƒ@ƒCƒ‹ƒo[ƒWƒ‡ƒ“
+     * @brief ãƒ•ã‚¡ã‚¤ãƒ«ãƒãƒ¼ã‚¸ãƒ§ãƒ³
      */
     constexpr auto GL_OBJECT_VERSION{ 1.0f };
 }
@@ -45,7 +45,7 @@ bool Glib::GLObject::ReadFile(std::string_view path)
 {
     try
     {
-        // ƒoƒCƒiƒŠƒ‚[ƒh‚ÅŠJ‚­
+        // ãƒã‚¤ãƒŠãƒªãƒ¢ãƒ¼ãƒ‰ã§é–‹ã
         std::ifstream file{ path.data(), std::ios::binary };
 
         if (!CheckExt(path, GL_OBJECT_EXTENSION))
@@ -130,11 +130,11 @@ std::vector<Glib::GLObject::Bone>& Glib::GLObject::Bones()
 
 void Glib::GLObject::ReadHeader(std::ifstream& file)
 {
-    // ƒwƒbƒ_‚Ì“Ç‚İ‚İ
+    // ãƒ˜ãƒƒãƒ€ã®èª­ã¿è¾¼ã¿
     Header header{};
     ReadForBinary(file, &header, sizeof(Header));
 
-    // ƒVƒOƒlƒ`ƒƒ‚ª³‚µ‚¢‚©ŒŸØ
+    // ã‚·ã‚°ãƒãƒãƒ£ãŒæ­£ã—ã„ã‹æ¤œè¨¼
     if (strncmp(header.signature, GL_OBJECT_SIGNATURE, 9) != 0)
     {
         throw std::runtime_error{ "invalid file signature." };
@@ -152,7 +152,7 @@ void Glib::GLObject::ReadHeader(std::ifstream& file)
 
 void Glib::GLObject::ReadVertex(std::ifstream& file)
 {
-    // ’¸“_”“Ç‚İ‚İ
+    // é ‚ç‚¹æ•°èª­ã¿è¾¼ã¿
     int vertexCount{ 0 };
     ReadForBinary(file, &vertexCount, sizeof(int));
 
@@ -162,7 +162,7 @@ void Glib::GLObject::ReadVertex(std::ifstream& file)
     }
 
 
-    // ’¸“_“Ç‚İ‚İ
+    // é ‚ç‚¹èª­ã¿è¾¼ã¿
     vertices_.resize(vertexCount);
     ReadForBinary(file, vertices_.data(), sizeof(Vertex) * vertexCount);
 
@@ -174,7 +174,7 @@ void Glib::GLObject::ReadVertex(std::ifstream& file)
 
 void Glib::GLObject::ReadIndex(std::ifstream& file)
 {
-    // ƒCƒ“ƒfƒbƒNƒX”“Ç‚İ‚İ
+    // ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æ•°èª­ã¿è¾¼ã¿
     int indexCount{ 0 };
     ReadForBinary(file, &indexCount, sizeof(int));
 
@@ -183,7 +183,7 @@ void Glib::GLObject::ReadIndex(std::ifstream& file)
         throw std::runtime_error{ "invalid index length." };
     }
 
-    // ƒCƒ“ƒfƒbƒNƒX“Ç‚İ‚İ
+    // ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹èª­ã¿è¾¼ã¿
     indices_.resize(indexCount);
     ReadForBinary(file, indices_.data(), sizeof(unsigned int) * indexCount);
 
@@ -195,7 +195,7 @@ void Glib::GLObject::ReadIndex(std::ifstream& file)
 
 void Glib::GLObject::ReadSubset(std::ifstream& file)
 {
-    // ƒTƒuƒZƒbƒg”‚Ì“Ç‚İ‚İ
+    // ã‚µãƒ–ã‚»ãƒƒãƒˆæ•°ã®èª­ã¿è¾¼ã¿
     int subsetCount{ 0 };
     ReadForBinary(file, &subsetCount, sizeof(int));
 
@@ -204,7 +204,7 @@ void Glib::GLObject::ReadSubset(std::ifstream& file)
         throw std::runtime_error{ "invalid subset length." };
     }
 
-    // ƒTƒuƒZƒbƒg‚Ì“Ç‚İ‚İ
+    // ã‚µãƒ–ã‚»ãƒƒãƒˆã®èª­ã¿è¾¼ã¿
     subsets_.resize(subsetCount);
     ReadForBinary(file, subsets_.data(), sizeof(Subset) * subsetCount);
 
@@ -216,7 +216,7 @@ void Glib::GLObject::ReadSubset(std::ifstream& file)
 
 void Glib::GLObject::ReadMaterial(std::ifstream& file)
 {
-    // ƒ}ƒeƒŠƒAƒ‹”‚Ì“Ç‚İ‚İ
+    // ãƒãƒ†ãƒªã‚¢ãƒ«æ•°ã®èª­ã¿è¾¼ã¿
     int materialCount{ 0 };
     ReadForBinary(file, &materialCount, sizeof(int));
 
@@ -225,7 +225,7 @@ void Glib::GLObject::ReadMaterial(std::ifstream& file)
         throw std::runtime_error{ "invalid material length." };
     }
 
-    // ƒ}ƒeƒŠƒAƒ‹‚Ì“Ç‚İ‚İ
+    // ãƒãƒ†ãƒªã‚¢ãƒ«ã®èª­ã¿è¾¼ã¿
     materials_.resize(materialCount);
     for (auto& material : materials_)
     {
@@ -245,7 +245,7 @@ void Glib::GLObject::ReadMaterial(std::ifstream& file)
 
 void Glib::GLObject::ReadBone(std::ifstream& file)
 {
-    // ƒ{[ƒ“”‚Ì“Ç‚İ‚İ
+    // ãƒœãƒ¼ãƒ³æ•°ã®èª­ã¿è¾¼ã¿
     int boneCount{ 0 };
     file.read(reinterpret_cast<char*>(&boneCount), sizeof(int));
 
@@ -254,7 +254,7 @@ void Glib::GLObject::ReadBone(std::ifstream& file)
         throw std::runtime_error{ "invalid bone length." };
     }
 
-    // ƒ{[ƒ“‚Ì“Ç‚İ‚İ
+    // ãƒœãƒ¼ãƒ³ã®èª­ã¿è¾¼ã¿
     bones_.resize(boneCount);
     for (auto& bone : bones_)
     {
@@ -269,15 +269,15 @@ void Glib::GLObject::WriteHeader(std::ofstream& file)
     Header header{};
     if (signature_.empty())
     {
-        // ƒwƒbƒ_[‚ª‚È‚¢ê‡V‹K‚Éì¬
-        // -1 ‚Ínull•¶š‚ğŠÜ‚Ü‚¹‚È‚¢‚½‚ß
+        // ãƒ˜ãƒƒãƒ€ãƒ¼ãŒãªã„å ´åˆæ–°è¦ã«ä½œæˆ
+        // -1 ã¯nullæ–‡å­—ã‚’å«ã¾ã›ãªã„ãŸã‚
         std::memcpy(header.signature, GL_OBJECT_SIGNATURE, sizeof(GL_OBJECT_SIGNATURE) - 1);
         header.version = GL_OBJECT_VERSION;
         std::memcpy(header.endian, Glib::GetEndian().c_str(), sizeof(header.endian));
     }
     else
     {
-        // ƒwƒbƒ_‚Ì“Ç‚İ‚İ
+        // ãƒ˜ãƒƒãƒ€ã®èª­ã¿è¾¼ã¿
         std::memcpy(header.signature, signature_.c_str(), sizeof(GL_OBJECT_SIGNATURE) - 1);
         header.version = version_;
         std::memcpy(header.endian, &endianInfo_[0], sizeof(header.endian));
@@ -289,10 +289,10 @@ void Glib::GLObject::WriteVertex(std::ofstream& file)
 {
     int vertexCount = static_cast<int>(vertices_.size());
 
-    // ’¸“_”‚ğ‘‚«‚İ
+    // é ‚ç‚¹æ•°ã‚’æ›¸ãè¾¼ã¿
     WriteToBinary(file, &vertexCount, sizeof(int));
 
-    // ’¸“_‚ğ‘‚«‚İ
+    // é ‚ç‚¹ã‚’æ›¸ãè¾¼ã¿
     WriteToBinary(file, vertices_.data(), sizeof(Vertex) * vertexCount);
 }
 
@@ -300,10 +300,10 @@ void Glib::GLObject::WriteIndex(std::ofstream& file)
 {
     int indexCount = static_cast<int>(indices_.size());
 
-    // ƒCƒ“ƒfƒbƒNƒX”‚Ì‘‚«‚İ
+    // ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æ•°ã®æ›¸ãè¾¼ã¿
     WriteToBinary(file, &indexCount, sizeof(int));
 
-    // ƒCƒ“ƒfƒbƒNƒX‚Ì‘‚«‚İ
+    // ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®æ›¸ãè¾¼ã¿
     WriteToBinary(file, indices_.data(), sizeof(unsigned int) * indexCount);
 }
 
@@ -311,10 +311,10 @@ void Glib::GLObject::WriteSubset(std::ofstream& file)
 {
     int subsetCount = static_cast<int>(subsets_.size());
 
-    // ƒTƒuƒZƒbƒg”‚Ì‘‚«‚İ
+    // ã‚µãƒ–ã‚»ãƒƒãƒˆæ•°ã®æ›¸ãè¾¼ã¿
     WriteToBinary(file, &subsetCount, sizeof(int));
 
-    // ƒTƒuƒZƒbƒg‚Ì‘‚«‚İ
+    // ã‚µãƒ–ã‚»ãƒƒãƒˆã®æ›¸ãè¾¼ã¿
     WriteToBinary(file, subsets_.data(), sizeof(Subset) * subsetCount);
 }
 
@@ -322,10 +322,10 @@ void Glib::GLObject::WriteMaterial(std::ofstream& file)
 {
     int materialCount = static_cast<int>(subsets_.size());
 
-    // ƒ}ƒeƒŠƒAƒ‹”‚Ì‘‚«‚İ
+    // ãƒãƒ†ãƒªã‚¢ãƒ«æ•°ã®æ›¸ãè¾¼ã¿
     WriteToBinary(file, &materialCount, sizeof(int));
 
-    // ƒ}ƒeƒŠƒAƒ‹‚Ì‘‚«‚İ
+    // ãƒãƒ†ãƒªã‚¢ãƒ«ã®æ›¸ãè¾¼ã¿
     for (auto& material : materials_)
     {
         WriteToBinary(file, &material.ambient, sizeof(Material::ambient));
@@ -341,10 +341,10 @@ void Glib::GLObject::WriteBone(std::ofstream& file)
 {
     int boneCount = static_cast<int>(bones_.size());
 
-    // ƒ{[ƒ“”‚Ì‘‚«‚İ
+    // ãƒœãƒ¼ãƒ³æ•°ã®æ›¸ãè¾¼ã¿
     WriteToBinary(file, &boneCount, sizeof(int));
 
-    // ƒ{[ƒ“‚Ì‘‚«‚İ
+    // ãƒœãƒ¼ãƒ³ã®æ›¸ãè¾¼ã¿
     for (auto& bone : bones_)
     {
         WriteText(file, bone.boneName);
@@ -352,3 +352,4 @@ void Glib::GLObject::WriteBone(std::ofstream& file)
         WriteToBinary(file, &bone.parent, sizeof(Bone::parent));
     }
 }
+

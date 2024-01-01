@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 
 namespace Glib
 {
     /**
-     * @brief ’l‚ğíœŒã•Ï”‚ğnullptr‚É‚·‚é
+     * @brief å€¤ã‚’å‰Šé™¤å¾Œå¤‰æ•°ã‚’nullptrã«ã™ã‚‹
      */
     template<class T>
     inline void SafeDelete(T*& ptr)
@@ -16,7 +16,7 @@ namespace Glib
     }
 
     /**
-     * @brief ’l‚ğíœŒã•Ï”‚ğnullptr‚É‚·‚é
+     * @brief å€¤ã‚’å‰Šé™¤å¾Œå¤‰æ•°ã‚’nullptrã«ã™ã‚‹
      */
     template<class T>
     inline void SafeDeleteArray(T*& ptr)
@@ -29,7 +29,7 @@ namespace Glib
     }
 
     /**
-     * @brief ReleaseŠÖ”‚ğŒÄo‚µŒã•Ï”‚ğnullptr‚É‚·‚é
+     * @brief Releaseé–¢æ•°ã‚’å‘¼å‡ºã—å¾Œå¤‰æ•°ã‚’nullptrã«ã™ã‚‹
      */
     template<class T>
     inline void SafeRelease(T*& ptr)
@@ -42,3 +42,4 @@ namespace Glib
         }
     }
 }
+

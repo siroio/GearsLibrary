@@ -1,4 +1,4 @@
-#include <MeshManager.h>
+﻿#include <MeshManager.h>
 #include <memory>
 #include <Mesh.h>
 
@@ -38,3 +38,4 @@ void Glib::MeshManager::DrawShadow(unsigned int id) const
     if (!s_meshs.contains(id)) return;
     s_meshs.at(id)->DrawShadow();
 }
+

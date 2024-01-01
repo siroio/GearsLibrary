@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 #include <chrono>
 #include <sstream>
 
 namespace Glib
 {
     /**
-     * @brief ŠÔŒnUtility
+     * @brief æ™‚é–“ç³»Utility
      */
     class TimeUtility
     {
@@ -23,7 +23,7 @@ namespace Glib
         };
 
         /**
-         * @brief Œ»İ‚Ì‚ğ ŠÔ:•ª:•b‚Åæ“¾
+         * @brief ç¾åœ¨ã®æ™‚åˆ»ã‚’ æ™‚é–“:åˆ†:ç§’ã§å–å¾—
          * @return Time
          */
         static inline Time CurrentTime()
@@ -36,7 +36,7 @@ namespace Glib
         }
 
         /**
-         * @brief Œ»İ‚Ì‚ğ•¶š—ñ‚Åæ“¾
+         * @brief ç¾åœ¨ã®æ™‚åˆ»ã‚’æ–‡å­—åˆ—ã§å–å¾—
          * @return [hh:mm:ss]
          */
         static inline std::string CurrentTimeStr()
@@ -50,3 +50,4 @@ namespace Glib
         }
     };
 }
+

@@ -1,4 +1,4 @@
-#include <mmd/PmxObject.h>
+ï»¿#include <mmd/PmxObject.h>
 #include <filesystem>
 #include <fstream>
 #include <array>
@@ -37,16 +37,16 @@ namespace
 
 bool PmxModel::ReadPmxHeader(std::ifstream& pmxFile, PmxHeader& header)
 {
-    // ƒ}ƒWƒbƒNƒiƒ“ƒo[“Ç‚İ‚İ
+    // ãƒã‚¸ãƒƒã‚¯ãƒŠãƒ³ãƒãƒ¼èª­ã¿è¾¼ã¿
     std::array<unsigned char, 4> magicNum{};
     FileUtility::ReadForBinary(pmxFile, magicNum.data(), 4);
     if (magicNum != PMX_MAGIC_NUMBER) return false;
 
-    // ƒo[ƒWƒ‡ƒ“2.0‚Ìƒ`ƒFƒbƒN
+    // ãƒãƒ¼ã‚¸ãƒ§ãƒ³2.0ã®ãƒã‚§ãƒƒã‚¯
     FileUtility::ReadForBinary(pmxFile, &header.version, 4);
     if (header.version != PMX_VERSION) return false;
 
-    // ’Ç‰Áî•ñ‚Ì’·‚³
+    // è¿½åŠ æƒ…å ±ã®é•·ã•
     FileUtility::ReadForBinary(pmxFile, &header.length, 1);
     FileUtility::ReadForBinary(pmxFile, &header.encode, 1);
 
@@ -55,7 +55,7 @@ bool PmxModel::ReadPmxHeader(std::ifstream& pmxFile, PmxHeader& header)
         header.Info.push_back(pmxFile.get());
     }
 
-    // ƒ‚ƒfƒ‹–¼‚Æà–¾‚ÍƒXƒLƒbƒv
+    // ãƒ¢ãƒ‡ãƒ«åã¨èª¬æ˜ã¯ã‚¹ã‚­ãƒƒãƒ—
     for (int i = 0; i < 4; i++)
     {
         int len{ 0 };
@@ -68,7 +68,7 @@ bool PmxModel::ReadPmxHeader(std::ifstream& pmxFile, PmxHeader& header)
 
 bool PmxModel::ReadVertices(std::ifstream& pmxFile, const PmxHeader& header)
 {
-    // ’¸“_
+    // é ‚ç‚¹
     int vertexSize{ 0 };
     FileUtility::ReadForBinary(pmxFile, &vertexSize, 4);
 
@@ -80,7 +80,7 @@ bool PmxModel::ReadVertices(std::ifstream& pmxFile, const PmxHeader& header)
         FileUtility::ReadForBinary(pmxFile, &vertex.normal, sizeof(Vector3f));
         FileUtility::ReadForBinary(pmxFile, &vertex.uv, sizeof(Vector2f));
 
-        // ’Ç‰ÁUV
+        // è¿½åŠ UV
         auto uvCount = header.Info[0];
         if (uvCount != 0)
         {
@@ -91,7 +91,7 @@ bool PmxModel::ReadVertices(std::ifstream& pmxFile, const PmxHeader& header)
             }
         }
 
-        // ƒEƒFƒCƒg‚Ìí—Ş
+        // ã‚¦ã‚§ã‚¤ãƒˆã®ç¨®é¡
         const auto weightType = static_cast<WeightType>(pmxFile.get());
 
         switch (weightType)
@@ -140,7 +140,7 @@ bool PmxModel::ReadVertices(std::ifstream& pmxFile, const PmxHeader& header)
                 return false;
         }
 
-        // ƒGƒbƒW
+        // ã‚¨ãƒƒã‚¸
         pmxFile.seekg(4, std::ios::cur);
         if (vertex.weight.bone1 == PMX_NO_DATA) return false;
     }
@@ -149,7 +149,7 @@ bool PmxModel::ReadVertices(std::ifstream& pmxFile, const PmxHeader& header)
 
 bool PmxModel::ReadSurfaces(std::ifstream& pmxFile, const PmxHeader& header)
 {
-    // ’¸“_ƒCƒ“ƒfƒbƒNƒX
+    // é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
     int surfaceSize{ 0 };
     FileUtility::ReadForBinary(pmxFile, &surfaceSize, sizeof(int));
 
@@ -165,7 +165,7 @@ bool PmxModel::ReadSurfaces(std::ifstream& pmxFile, const PmxHeader& header)
 
 bool PmxModel::ReadTextures(std::ifstream& pmxFile, const PmxHeader& header)
 {
-    // ƒeƒNƒXƒ`ƒƒ
+    // ãƒ†ã‚¯ã‚¹ãƒãƒ£
     int textureSize{ 0 };
     FileUtility::ReadForBinary(pmxFile, &textureSize, sizeof(int));
 
@@ -182,14 +182,14 @@ bool PmxModel::ReadTextures(std::ifstream& pmxFile, const PmxHeader& header)
 
 bool PmxModel::ReadMaterials(std::ifstream& pmxFile, const PmxHeader& header)
 {
-    // ƒ}ƒeƒŠƒAƒ‹
+    // ãƒãƒ†ãƒªã‚¢ãƒ«
     int materialSize{ 0 };
     FileUtility::ReadForBinary(pmxFile, &materialSize, sizeof(4));
     materials.resize(materialSize);
 
     for (int i = 0; i < materialSize; i++)
     {
-        // ‘fŞ–¼ & ‘fŞ–¼(‰p–¼)
+        // ç´ æå & ç´ æå(è‹±å)
         for (int i = 0; i < 2; i++)
         {
             int len{ 0 };
@@ -202,17 +202,17 @@ bool PmxModel::ReadMaterials(std::ifstream& pmxFile, const PmxHeader& header)
         FileUtility::ReadForBinary(pmxFile, &material.specularFactor, sizeof(float));
         FileUtility::ReadForBinary(pmxFile, &material.ambient, sizeof(Vector3f));
 
-        // ƒtƒ‰ƒO
+        // ãƒ•ãƒ©ã‚°
         pmxFile.get();
 
-        // ƒGƒbƒWF
+        // ã‚¨ãƒƒã‚¸è‰²
         pmxFile.seekg(16, std::ios::cur);
-        // ƒGƒbƒWƒTƒCƒY
+        // ã‚¨ãƒƒã‚¸ã‚µã‚¤ã‚º
         pmxFile.seekg(4, std::ios::cur);
 
-        // ƒeƒNƒXƒ`ƒƒ
+        // ãƒ†ã‚¯ã‚¹ãƒãƒ£
         FileUtility::ReadForBinary(pmxFile, &material.textureIndex, header.Info[2]);
-        pmxFile.seekg(header.Info[2], std::ios::cur); // ƒXƒtƒBƒA‚Í”ò‚Î‚·
+        pmxFile.seekg(header.Info[2], std::ios::cur); // ã‚¹ãƒ•ã‚£ã‚¢ã¯é£›ã°ã™
         pmxFile.get();
 
         const unsigned char sharedToonFlag = pmxFile.get();
@@ -235,7 +235,7 @@ bool PmxModel::ReadMaterials(std::ifstream& pmxFile, const PmxHeader& header)
 
 bool PmxModel::ReadBones(std::ifstream& pmxFile, const PmxHeader& header)
 {
-    // ƒ{[ƒ“
+    // ãƒœãƒ¼ãƒ³
     int boneSize{ 0 };
     int ikLinkSize{ 0 };
     unsigned char angleLimit = 0;
@@ -245,7 +245,7 @@ bool PmxModel::ReadBones(std::ifstream& pmxFile, const PmxHeader& header)
     for (int i = 0; i < boneSize; i++)
     {
         auto& bone = bones.at(i);
-        // ƒ{[ƒ“–¼
+        // ãƒœãƒ¼ãƒ³å
         FileUtility::ReadText(pmxFile, bone.name, ToEncode(header.encode));
         FileUtility::ReadText(pmxFile, bone.nameBoneEng, Encode::UTF8);
 
@@ -258,7 +258,7 @@ bool PmxModel::ReadBones(std::ifstream& pmxFile, const PmxHeader& header)
         FileUtility::ReadForBinary(pmxFile, &bone.transformHierarchy, sizeof(int));
         FileUtility::ReadForBinary(pmxFile, &bone.flag, 2);
 
-        // Šeƒtƒ‰ƒO‚Ìƒ`ƒFƒbƒN
+        // å„ãƒ•ãƒ©ã‚°ã®ãƒã‚§ãƒƒã‚¯
         if (CheckHasBoneFlag(bone, PmxBoneFlag::TargetShowMode))
         {
             FileUtility::ReadForBinary(pmxFile, &bone.childrenIndex, header.Info[4]);
@@ -326,7 +326,7 @@ bool PmxModel::ReadBones(std::ifstream& pmxFile, const PmxHeader& header)
 
 bool PmxModel::LoadFile(std::string_view path)
 {
-    // Šg’£q‚ªŠÔˆá‚Á‚Ä‚¢‚½‚ç¸”s
+    // æ‹¡å¼µå­ãŒé–“é•ã£ã¦ã„ãŸã‚‰å¤±æ•—
     if (!FileUtility::GetExtension(path).ends_with("pmx")) return false;
     std::ifstream pmxFile{ path.data(), std::ios::binary };
     if (pmxFile.fail()) return false;
@@ -354,19 +354,19 @@ bool PmxModel::WriteFile(std::string_view path)
     for (const auto& pmxVertex : vertices)
     {
         gl::Vertex glVertex{};
-        // ’¸“_À•W
+        // é ‚ç‚¹åº§æ¨™
         glVertex.position[0] = pmxVertex.position.x;
         glVertex.position[1] = pmxVertex.position.y;
         glVertex.position[2] = pmxVertex.position.z;
-        // –@ü
+        // æ³•ç·š
         glVertex.normal[0] = pmxVertex.normal.x;
         glVertex.normal[1] = pmxVertex.normal.y;
         glVertex.normal[2] = pmxVertex.normal.z;
-        // UVÀ•W
+        // UVåº§æ¨™
         glVertex.uv[0] = pmxVertex.uv.x;
         glVertex.uv[1] = pmxVertex.uv.y;
 
-        // tangentŒvZ
+        // tangentè¨ˆç®—
         Vector3f tangent{};
         tangent = Vector3f::Cross(pmxVertex.normal, { 0, 1, 0 });
         if (tangent == Vector3f{ 0.0f, 0.0f, 0.0f })
@@ -378,7 +378,7 @@ bool PmxModel::WriteFile(std::string_view path)
         glVertex.tangent[2] = tangent.z;
         glVertex.tangent[3] = 1.0f;
 
-        // ƒ{[ƒ“î•ñ
+        // ãƒœãƒ¼ãƒ³æƒ…å ±
         for (size_t i = 0; i < 4; ++i)
         {
             glVertex.boneIndex[i] = pmxVertex.weight.bones[i];
@@ -442,3 +442,4 @@ bool PmxModel::WriteFile(std::string_view path)
     auto mesh = Glib::GLObject{ glVertices, glIndices, glSubsets, glMaterials, glBones };
     return mesh.WriteFile(std::string{ path } + ".globj");
 }
+

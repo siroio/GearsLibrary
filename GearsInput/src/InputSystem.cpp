@@ -1,4 +1,4 @@
-#include <InputSystem.h>
+ï»¿#include <InputSystem.h>
 #include <Internal/GamePadDevice.h>
 #include <Internal/KeyBoardDevice.h>
 #include <Logger.h>
@@ -14,7 +14,7 @@ bool Glib::InputSystem::Initialize()
 {
     if (s_dinput != nullptr) return false;
 
-    // LPDIRECTINPUT8‚ðì¬
+    // LPDIRECTINPUT8ã‚’ä½œæˆ
     auto res = FAILED(DirectInput8Create(
         GetModuleHandle(nullptr),
         DIRECTINPUT_VERSION,
@@ -53,3 +53,4 @@ bool Glib::InputSystem::GetKeyUp(KeyCode key)
 {
     return s_keyBoard->GetKeyUp(key);
 }
+

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <Internal/IAudioLoader.h>
 
 namespace Glib::Internal::Audio
@@ -9,3 +9,4 @@ namespace Glib::Internal::Audio
         static std::unique_ptr<Interface::IAudioLoader> Create(std::string_view extension);
     };
 }
+

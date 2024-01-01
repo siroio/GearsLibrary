@@ -1,4 +1,4 @@
-#include <Components/Camera.h>
+Ôªø#include <Components/Camera.h>
 #include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/d3dx12Inc.h>
 #include <Internal/DX12/GraphicsResource.h>
@@ -16,7 +16,7 @@ namespace
     auto s_cameraManager = Glib::Internal::Graphics::CameraManager::Instance();
     auto s_renderingManager = Glib::Internal::Graphics::RenderingManager::Instance();
 
-    /*Å@ÉVÉÉÉhÉEÉ}ÉbÉvÇÃëÂÇ´Ç≥Å@*/
+    /*„ÄÄ„Ç∑„É£„Éâ„Ç¶„Éû„ÉÉ„Éó„ÅÆÂ§ß„Åç„Åï„ÄÄ*/
     constexpr unsigned int SHADOW_MAP_SIZE = 2048;
 
     struct CameraConstant
@@ -29,7 +29,7 @@ namespace
 
 Glib::Camera::Camera()
 {
-    // ÉoÉbÉtÉ@Å[ÇçÏê¨
+    // „Éê„ÉÉ„Éï„Ç°„Éº„Çí‰ΩúÊàê
     constantBuffer_.Create(sizeof(CameraConstant));
 }
 
@@ -52,12 +52,12 @@ void Glib::Camera::LateUpdate()
 
     constantBuffer_.Update(sizeof(buffer), &buffer);
 
-    // ÉoÉäÉAÇêÑà⁄
+    // „Éê„É™„Ç¢„ÇíÊé®Áßª
     s_dx12->Barrier(renderTarget_.Get(),
                     D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
                     D3D12_RESOURCE_STATE_RENDER_TARGET);
 
-    // ÉåÉìÉ_Å[É^Å[ÉQÉbÉgÅAê[ìxÇÃÉNÉäÉA
+    // „É¨„É≥„ÉÄ„Éº„Çø„Éº„Ç≤„ÉÉ„Éà„ÄÅÊ∑±Â∫¶„ÅÆ„ÇØ„É™„Ç¢
     s_dx12->CommandList()->ClearRenderTargetView(rtvHandle_->CPU(), backGroundColor_.Raw(), 0, nullptr);
     s_dx12->CommandList()->ClearDepthStencilView(dsvHandle_->CPU(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
     shadowMap_.AsRenderTarget();
@@ -168,7 +168,7 @@ void Glib::Camera::InitializeRT()
     auto srvPool = s_dx12->DescriptorPool(Internal::Graphics::DirectX12::PoolType::RES);
     auto dsvPool = s_dx12->DescriptorPool(Internal::Graphics::DirectX12::PoolType::DSV);
 
-    // RenderTargetÇÃçÏê¨
+    // RenderTarget„ÅÆ‰ΩúÊàê
     resDesc.Width = static_cast<UINT>(windowSize.x);
     resDesc.Height = static_cast<UINT>(windowSize.y);
     auto heapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_HEAP_TYPE_DEFAULT };
@@ -182,10 +182,10 @@ void Glib::Camera::InitializeRT()
         IID_PPV_ARGS(renderTarget_.ReleaseAndGetAddressOf())
     );
 
-    // RenderTargetViewópÉnÉìÉhÉãÇéÊìæ
+    // RenderTargetViewÁî®„Éè„É≥„Éâ„É´„ÇíÂèñÂæó
     rtvHandle_ = rtvPool->GetHandle();
 
-    // RenderTargetViewçÏê¨
+    // RenderTargetView‰ΩúÊàê
     D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
     rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
     rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -195,10 +195,10 @@ void Glib::Camera::InitializeRT()
         rtvHandle_->CPU()
     );
 
-    // ShaderResourceViewópÇÃÉnÉìÉhÉãÇéÊìæ
+    // ShaderResourceViewÁî®„ÅÆ„Éè„É≥„Éâ„É´„ÇíÂèñÂæó
     srvHandle_ = srvPool->GetHandle();
 
-    // ShaderResourceViewÇÃçÏê¨
+    // ShaderResourceView„ÅÆ‰ΩúÊàê
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
     srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
     srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -210,7 +210,7 @@ void Glib::Camera::InitializeRT()
         srvHandle_->CPU()
     );
 
-    // ê[ìxÉoÉbÉtÉ@ÇÃçÏê¨
+    // Ê∑±Â∫¶„Éê„ÉÉ„Éï„Ç°„ÅÆ‰ΩúÊàê
     D3D12_CLEAR_VALUE depthValue{};
     depthValue.Format = DXGI_FORMAT_D32_FLOAT;
     depthValue.DepthStencil.Depth = 1.0f;
@@ -226,10 +226,10 @@ void Glib::Camera::InitializeRT()
         IID_PPV_ARGS(depthStencil_.ReleaseAndGetAddressOf())
     );
 
-    // DepthStencilViewópÇÃÉnÉìÉhÉãéÊìæ
+    // DepthStencilViewÁî®„ÅÆ„Éè„É≥„Éâ„É´ÂèñÂæó
     dsvHandle_ = dsvPool->GetHandle();
 
-    // DepthStencilViewÇçÏê¨
+    // DepthStencilView„Çí‰ΩúÊàê
     D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
     dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
     dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
@@ -257,14 +257,14 @@ void Glib::Camera::InitializeSM()
 
 void Glib::Camera::Draw()
 {
-    // ÉoÉäÉAÇêÑà⁄
+    // „Éê„É™„Ç¢„ÇíÊé®Áßª
     s_dx12->Barrier(renderTarget_.Get(),
                     D3D12_RESOURCE_STATE_RENDER_TARGET,
                     D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
-    // ÉJÉÅÉâópÉpÉCÉvÉâÉCÉìê›íË
+    // „Ç´„É°„É©Áî®„Éë„Ç§„Éó„É©„Ç§„É≥Ë®≠ÂÆö
     s_resource->SetPipelineState(Internal::Graphics::ID::CAMERA_PIPELINESTATE);
-    // í∏ì_ÉoÉbÉtÉ@ÇÃê›íË
+    // È†ÇÁÇπ„Éê„ÉÉ„Éï„Ç°„ÅÆË®≠ÂÆö
     s_resource->SetVertexBuffer(Internal::Graphics::ID::CAMERA_VERTEX);
 
     const Vector2& size = Window::WindowSize();
@@ -351,3 +351,4 @@ void Glib::Camera::ExecuteShadowBulr()
     shadowMap_.AsTexture();
     shadowMapBlur.Execute(1.0f);
 }
+

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <vector>
 #include <list>
 #include <unordered_set>
@@ -9,7 +9,7 @@
 namespace Glib
 {
     /**
-     * @brief ƒIƒuƒWƒFƒNƒgƒv[ƒ‹ƒNƒ‰ƒX
+     * @brief ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãƒ—ãƒ¼ãƒ«ã‚¯ãƒ©ã‚¹
      */
     template<class T>
     class ObjectPool
@@ -17,64 +17,64 @@ namespace Glib
     public:
         using InitializeCallBack = std::function<void(size_t, T*)>;
 
-        /* ƒRƒ“ƒXƒgƒ‰ƒNƒ^ */
+        /* ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ */
         ObjectPool() = default;
 
         /**
-         * @brief ‰Šú‰»
+         * @brief åˆæœŸåŒ–
         */
         bool Init(size_t count);
 
         /**
-         * @brief ƒIƒuƒWƒFƒNƒg‚ÌÄ‰Šú‰»
+         * @brief ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å†åˆæœŸåŒ–
          */
         bool Init(InitializeCallBack init);
 
         /**
-         * @brief ƒIƒuƒWƒFƒNƒg‚Ìæ“¾
+         * @brief ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å–å¾—
          */
         T* Get();
 
         /**
-         * @brief ƒIƒuƒWƒFƒNƒg‚Ì•Ô‹p
+         * @brief ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®è¿”å´
          */
         void Release(T*& object);
 
         /**
-         * @brief ƒv[ƒ‹‚ÌŠg’£
-         * @param expandSize Šg’£—Ê
+         * @brief ãƒ—ãƒ¼ãƒ«ã®æ‹¡å¼µ
+         * @param expandSize æ‹¡å¼µé‡
          */
         void Expand(size_t expandSize);
 
         /**
-         * @brief ƒv[ƒ‹‚Ìíœ
+         * @brief ãƒ—ãƒ¼ãƒ«ã®å‰Šé™¤
          */
         void Clear();
 
         /**
-         * @brief ƒIƒuƒWƒFƒNƒg‚Ì‘”
+         * @brief ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ç·æ•°
          */
         size_t Count() const;
 
         /**
-         * @brief —˜—p’†ƒIƒuƒWƒFƒNƒg‚Ì‘”
+         * @brief åˆ©ç”¨ä¸­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ç·æ•°
          */
         size_t UseCount() const;
 
         /**
-         * @brief —˜—p‰Â”\ƒIƒuƒWƒFƒNƒg‚Ì‘”
+         * @brief åˆ©ç”¨å¯èƒ½ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ç·æ•°
          */
         size_t ValidCount() const;
 
         /**
-         * @brief ƒR[ƒ‹ƒoƒbƒNŠÖ”‚Ìİ’è
+         * @brief ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°ã®è¨­å®š
          * @param callback
         */
         void SetInitializeCallBack(InitializeCallBack callback);
 
     private:
         /**
-         * @brief ƒIƒuƒWƒFƒNƒg‚Ì’Ç‰Á
+         * @brief ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®è¿½åŠ 
          */
         void AddObject(size_t index);
 
@@ -83,12 +83,12 @@ namespace Glib
         ObjectPool& operator = (const ObjectPool&) = delete;
 
     private:
-        /* ƒƒ“ƒo•Ï” */
+        /* ãƒ¡ãƒ³ãƒå¤‰æ•° */
 
         bool initialized_{ false };
         std::mutex mutex_;
 
-        /* ƒv[ƒ‹ƒŠƒXƒg */
+        /* ãƒ—ãƒ¼ãƒ«ãƒªã‚¹ãƒˆ */
 
         std::vector<std::unique_ptr<T>> objects_;
         std::list<uintptr_t> availableObjects_;
@@ -209,3 +209,4 @@ namespace Glib
         availableObjects_.push_back(reinterpret_cast<uintptr_t>(objects_.back().get()));
     }
 }
+

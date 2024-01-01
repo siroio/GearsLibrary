@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <string>
 #include <Vector3.h>
@@ -13,3 +13,4 @@ namespace Glib
         int boneIndex{ -1 };
     };
 }
+

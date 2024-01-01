@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <iosfwd>
 #include <string>
 #include <array>
@@ -26,24 +26,24 @@ public:
 
 public:
     /**
-     * @brief ‰ñ“]‚È‚µ‚ÌƒNƒH[ƒ^ƒjƒIƒ“‚ğ•Ô‚·
-     * @return ‰ñ“]‚È‚µ‚ÌƒNƒH[ƒ^ƒjƒIƒ“
+     * @brief å›è»¢ãªã—ã®ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã‚’è¿”ã™
+     * @return å›è»¢ãªã—ã®ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³
     */
     static Quaternion Identity();
 
     /**
-     * @brief 2‚Â‚Ì‰ñ“]ŠÔ‚ÌŠp“x‚ğ•Ô‚·
+     * @brief 2ã¤ã®å›è»¢é–“ã®è§’åº¦ã‚’è¿”ã™
      * @param q1
      * @param q2
-     * @return q1‚©‚çq2‚ÌŠp“x
+     * @return q1ã‹ã‚‰q2ã®è§’åº¦
     */
     static float Angle(const Quaternion& q1, const Quaternion& q2);
 
     /**
-     * @brief axis ‚Ìü‚è‚ğ angle “x‰ñ“]‚·‚éƒNƒH[ƒ^ƒjƒIƒ“‚ğì¬‚·‚é
-     * @param angle ‰ñ“]Šp“x
-     * @param axis ‰ñ“]²
-     * @return ‰ñ“]Œã‚ÌƒNƒH[ƒ^ƒjƒIƒ“
+     * @brief axis ã®å‘¨ã‚Šã‚’ angle åº¦å›è»¢ã™ã‚‹ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã‚’ä½œæˆã™ã‚‹
+     * @param angle å›è»¢è§’åº¦
+     * @param axis å›è»¢è»¸
+     * @return å›è»¢å¾Œã®ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³
     */
     static Quaternion AngleAxis(float angle, const Vector3& axis);
 
@@ -94,3 +94,4 @@ bool operator == (const Quaternion& q1, const Quaternion& q2);
 bool operator != (const Quaternion& q1, const Quaternion& q2);
 
 std::ostream& operator << (std::ostream& stream, const Quaternion& q);
+

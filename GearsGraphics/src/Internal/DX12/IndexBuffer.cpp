@@ -1,4 +1,4 @@
-#include <Internal/DX12/IndexBuffer.h>
+﻿#include <Internal/DX12/IndexBuffer.h>
 #include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/d3dx12Inc.h>
 
@@ -41,3 +41,4 @@ void Glib::Internal::Graphics::IndexBuffer::Update(void* indicies)
     std::memcpy(map, indicies, view_.SizeInBytes);
     buffer_->Unmap(0, nullptr);
 }
+

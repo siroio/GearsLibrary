@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <concepts>
 #include <memory>
 #include <functional>
@@ -10,19 +10,19 @@
 #include <mmd/VmdObject.h>
 
 /**
- * @brief —áŠOƒNƒ‰ƒX
+ * @brief ä¾‹å¤–ã‚¯ãƒ©ã‚¹
  */
 class UnsupportedFileTypeException : public std::runtime_error
 {
 public:
-    // Œp³ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+    // ç¶™æ‰¿ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     using std::runtime_error::runtime_error;
 };
 
 class IllegalConverterException : public std::logic_error
 {
 public:
-    // Œp³ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+    // ç¶™æ‰¿ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     using std::logic_error::logic_error;
 };
 
@@ -40,14 +40,14 @@ public:
 
     static void Initialize()
     {
-        // •ÏŠ·—p‚ÌƒNƒ‰ƒX‚ğ“o˜^
+        // å¤‰æ›ç”¨ã®ã‚¯ãƒ©ã‚¹ã‚’ç™»éŒ²
         RegisterConverter<PmxModel>("pmx");
         RegisterConverter<VmdMotion>("vmd");
     }
 
     /**
-     * @brief ƒRƒ“ƒo[ƒ^[‚Ìì¬
-     * @param extension •ÏŠ·Œ³Šg’£q
+     * @brief ã‚³ãƒ³ãƒãƒ¼ã‚¿ãƒ¼ã®ä½œæˆ
+     * @param extension å¤‰æ›å…ƒæ‹¡å¼µå­
      */
     static std::unique_ptr<IConverter> Create(std::string_view extension) noexcept(false)
     {
@@ -58,3 +58,4 @@ public:
 private:
     static inline std::unordered_map<std::string, std::function<std::unique_ptr<IConverter>()>> converters;
 };
+

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Internal/DX12/Shader/ShaderType.h>
 #include <variant>
 #include <string>
@@ -6,7 +6,7 @@
 namespace Glib::Graphics
 {
     /**
-     * @brief ƒVƒF[ƒ_î•ñƒNƒ‰ƒX
+     * @brief ã‚·ã‚§ãƒ¼ãƒ€æƒ…å ±ã‚¯ãƒ©ã‚¹
      */
     class Shader
     {
@@ -15,47 +15,47 @@ namespace Glib::Graphics
         Shader(unsigned int id, ShaderType type, std::string_view code, std::string_view entryPoint);
 
         /**
-         * @brief ƒVƒF[ƒ_[ID‚ğæ“¾
+         * @brief ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼IDã‚’å–å¾—
          */
         unsigned int ID() const;
 
         /**
-         * @brief ƒVƒF[ƒ_[ƒ^ƒCƒv‚ğæ“¾
+         * @brief ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚¿ã‚¤ãƒ—ã‚’å–å¾—
          */
         ShaderType Type() const;
 
         /**
-         * @brief ƒVƒF[ƒ_[ƒR[ƒh‚Ìƒ^ƒCƒv
+         * @brief ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚³ãƒ¼ãƒ‰ã®ã‚¿ã‚¤ãƒ—
          */
         ShaderCodeType CodeType() const;
 
         /**
-         * @brief ƒVƒF[ƒ_[–¼‚ğæ“¾
+         * @brief ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼åã‚’å–å¾—
          */
         std::string Name() const;
 
         /**
-         * @brief ƒVƒF[ƒ_[‚ÌƒpƒX‚ğæ“¾
+         * @brief ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®ãƒ‘ã‚¹ã‚’å–å¾—
          */
         std::wstring Path() const;
 
         /**
-         * @brief ƒVƒF[ƒ_[‚ÌƒR[ƒh‚ğæ“¾
+         * @brief ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®ã‚³ãƒ¼ãƒ‰ã‚’å–å¾—
          */
         std::string Code() const;
 
         /**
-         * @brief ƒVƒF[ƒ_[‚ÌƒGƒ“ƒgƒŠƒ|ƒCƒ“ƒg‚ğæ“¾
+         * @brief ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®ã‚¨ãƒ³ãƒˆãƒªãƒã‚¤ãƒ³ãƒˆã‚’å–å¾—
          */
         std::string EntryPoint() const;
 
         /**
-         * @brief ƒVƒF[ƒ_[ƒ‚ƒfƒ‹‚ğæ“¾
+         * @brief ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒ¢ãƒ‡ãƒ«ã‚’å–å¾—
          */
         std::string ShaderModel() const;
 
         /**
-         * @brief ID‚ÆType‚Å”äŠr
+         * @brief IDã¨Typeã§æ¯”è¼ƒ
          */
         bool operator == (const Shader& shader) const;
 
@@ -66,3 +66,4 @@ namespace Glib::Graphics
         std::string entryPoint_;
     };
 }
+

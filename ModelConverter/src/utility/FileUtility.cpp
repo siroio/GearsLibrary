@@ -1,4 +1,4 @@
-#include <utility/FileUtility.h>
+ï»¿#include <utility/FileUtility.h>
 #include <filesystem>
 #include <fstream>
 #include <Windows.h>
@@ -32,7 +32,7 @@ void FileUtility::ReadText(std::ifstream& file, std::string& text, Encode encode
         std::wstring textBuf(bufLength / sizeof(wchar_t), L'\0');
         ReadForBinary(file, &textBuf[0], bufLength);
 
-        // “Ç‚İ‚ñ‚¾•¶š—ñ‚ğwstring‚©‚çstring‚É•ÏŠ·
+        // èª­ã¿è¾¼ã‚“ã æ–‡å­—åˆ—ã‚’wstringã‹ã‚‰stringã«å¤‰æ›
         int bufferSize = WideCharToMultiByte(CP_ACP, 0, textBuf.c_str(), -1, nullptr, 0, nullptr, nullptr);
         if (bufferSize == 0) return;
 
@@ -51,3 +51,4 @@ void FileUtility::ReadText(std::ifstream& file, std::string& text, Encode encode
         text = std::move(textBuf);
     }
 }
+

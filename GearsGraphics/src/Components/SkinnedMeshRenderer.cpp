@@ -1,4 +1,4 @@
-#include <Components/SkinnedMeshRenderer.h>
+ï»¿#include <Components/SkinnedMeshRenderer.h>
 #include <Internal/RenderingManager.h>
 #include <Internal/DX12/GraphicsResource.h>
 #include <Internal/DX12/GraphicsResourceID.h>
@@ -45,7 +45,7 @@ void Glib::SkinnedMeshRenderer::LateUpdate()
 void Glib::SkinnedMeshRenderer::Draw(const WeakPtr<Internal::CameraBase>& camera)
 {
     if (!isEnabled_ || bones_.empty()) return;
-    // ƒpƒCƒvƒ‰ƒCƒ“‚ÆŠe’è”ƒoƒbƒtƒ@‚ðÝ’è‚µ‚Ä•`‰æ
+    // ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã¨å„å®šæ•°ãƒãƒƒãƒ•ã‚¡ã‚’è¨­å®šã—ã¦æç”»
     s_graphics->SetPipelineState(ID::SKINNED_MESH_PIPELINESTATE);
     worldConstantBuffer_.SetBuffer(ID::SKINNED_MESH_WORLD_MATRIX);
     boneConstantBuffer_.SetBuffer(ID::SKINNED_MESH_SKINNED_MATRIX);
@@ -71,7 +71,7 @@ unsigned int Glib::SkinnedMeshRenderer::MeshID() const
 
 void Glib::SkinnedMeshRenderer::MeshID(unsigned int id)
 {
-    // ƒƒbƒVƒ…‚Æƒ{[ƒ“‚ðŽæ“¾
+    // ãƒ¡ãƒƒã‚·ãƒ¥ã¨ãƒœãƒ¼ãƒ³ã‚’å–å¾—
     meshID_ = id;
     bones_ = s_meshManager.Bone(id);
     CreateBoneGameObject();
@@ -91,27 +91,27 @@ void Glib::SkinnedMeshRenderer::ComputeBone()
 
 void Glib::SkinnedMeshRenderer::CreateBoneGameObject()
 {
-    // ƒ{[ƒ“‚ª‚È‚¢ê‡‚Í¶¬‚µ‚È‚¢
+    // ãƒœãƒ¼ãƒ³ãŒãªã„å ´åˆã¯ç”Ÿæˆã—ãªã„
     if (bones_.empty()) return;
 
-    // ‚·‚Å‚É‚ ‚éê‡‚Ííœ
+    // ã™ã§ã«ã‚ã‚‹å ´åˆã¯å‰Šé™¤
     for (auto& bone : boneTransforms_)
     {
         bone->GameObject()->Destroy();
     }
     boneTransforms_.clear();
 
-    // ƒ{[ƒ“‚ð¶¬
+    // ãƒœãƒ¼ãƒ³ã‚’ç”Ÿæˆ
     boneTransforms_.resize(bones_.size());
     for (auto& bone : bones_)
     {
-        // eƒ{[ƒ“‚ÌÝ’è‚Æƒ{[ƒ“‚ÌƒIƒuƒWƒFƒNƒg¶¬
+        // è¦ªãƒœãƒ¼ãƒ³ã®è¨­å®šã¨ãƒœãƒ¼ãƒ³ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆ
         auto boneObject = GameObjectManager::Instantiate(bone.name);
         bone.parent != -1 ?
             boneObject->Transform()->Parent(boneTransforms_.at(bone.parent)) :
             boneObject->Transform()->Parent(GameObject()->Transform());
 
-        // ƒ{[ƒ“ƒgƒ‰ƒ“ƒXƒtƒH[ƒ€”z—ñ‚É’Ç‰Á
+        // ãƒœãƒ¼ãƒ³ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ é…åˆ—ã«è¿½åŠ 
         auto& boneTransform = boneTransforms_.at(bone.boneIndex);
         boneTransform = boneObject->Transform();
         boneTransform->LocalScale(Vector3::One());
@@ -132,3 +132,4 @@ std::array<Matrix4x4, 512>& Glib::SkinnedMeshRenderer::BoneMatrix()
 {
     return boneMatrix_;
 }
+

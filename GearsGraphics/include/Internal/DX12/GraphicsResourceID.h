@@ -1,28 +1,28 @@
-#pragma once
+Ôªø#pragma once
 #define UCHAR unsigned char
 #define UINT unsigned int
 
 namespace Glib::Internal::Graphics::ID
 {
-    /* í∏ì_ÉäÉ\Å[ÉXID */
+    /* È†ÇÁÇπ„É™„ÇΩ„Éº„ÇπID */
 
     constexpr UCHAR CAMERA_VERTEX = 0;
     constexpr UCHAR IMAGE_VERTEX = CAMERA_VERTEX + 1;
 
-    /* ÉpÉCÉvÉâÉCÉìID */
+    /* „Éë„Ç§„Éó„É©„Ç§„É≥ID */
 
-    constexpr UCHAR SPRITE_PIPELINESTATE = 0;                                           /* ÉJÉÅÉâ */
-    constexpr UCHAR CAMERA_PIPELINESTATE = SPRITE_PIPELINESTATE + 1;                    /* ÉXÉvÉâÉCÉg */
+    constexpr UCHAR SPRITE_PIPELINESTATE = 0;                                           /* „Ç´„É°„É© */
+    constexpr UCHAR CAMERA_PIPELINESTATE = SPRITE_PIPELINESTATE + 1;                    /* „Çπ„Éó„É©„Ç§„Éà */
     constexpr UCHAR IMAGE_PIPELINESTATE = CAMERA_PIPELINESTATE + 1;                     /* UI */
-    constexpr UCHAR LINE_PIPELINESTATE = IMAGE_PIPELINESTATE + 1;                       /* ÉâÉCÉì */
+    constexpr UCHAR LINE_PIPELINESTATE = IMAGE_PIPELINESTATE + 1;                       /* „É©„Ç§„É≥ */
 
-    constexpr UCHAR MESH_PIPELINESTATE = LINE_PIPELINESTATE + 1;                        /* ÉÅÉbÉVÉÖ */
-    constexpr UCHAR MESH_SHADOW_PIPELINESTATE = MESH_PIPELINESTATE + 1;                 /* ÉÅÉbÉVÉÖ */
+    constexpr UCHAR MESH_PIPELINESTATE = LINE_PIPELINESTATE + 1;                        /* „É°„ÉÉ„Ç∑„É• */
+    constexpr UCHAR MESH_SHADOW_PIPELINESTATE = MESH_PIPELINESTATE + 1;                 /* „É°„ÉÉ„Ç∑„É• */
 
-    constexpr UCHAR SKINNED_MESH_PIPELINESTATE = MESH_SHADOW_PIPELINESTATE + 1;         /* ÉXÉLÉjÉìÉOÉÅÉbÉVÉÖ  */
-    constexpr UCHAR SKINNED_MESH_SHADOW_PIPELINESTATE = SKINNED_MESH_PIPELINESTATE + 1; /* ÉXÉLÉjÉìÉOÉÅÉbÉVÉÖ  */
+    constexpr UCHAR SKINNED_MESH_PIPELINESTATE = MESH_SHADOW_PIPELINESTATE + 1;         /* „Çπ„Ç≠„Éã„É≥„Ç∞„É°„ÉÉ„Ç∑„É•  */
+    constexpr UCHAR SKINNED_MESH_SHADOW_PIPELINESTATE = SKINNED_MESH_PIPELINESTATE + 1; /* „Çπ„Ç≠„Éã„É≥„Ç∞„É°„ÉÉ„Ç∑„É•  */
 
-    /* ÉVÉFÅ[É_Å[ID */
+    /* „Ç∑„Çß„Éº„ÉÄ„ÉºID */
 
     constexpr UCHAR SPRITE_SHADER = 0;
     constexpr UCHAR CAMERA_SHADER = SPRITE_SHADER + 1;
@@ -37,7 +37,7 @@ namespace Glib::Internal::Graphics::ID
     constexpr UCHAR YBLUR_VERTEX_SHADER = XBLUR_VERTEX_SHADER + 1;
     constexpr UCHAR BLUR_PIXEL_SHADER = YBLUR_VERTEX_SHADER + 1;
 
-    /*  ÉVÉFÅ[É_Å[ÉpÉâÉÅÅ[É^Å[ID  */
+    /*  „Ç∑„Çß„Éº„ÉÄ„Éº„Éë„É©„É°„Éº„Çø„ÉºID  */
 
     constexpr UINT MESH_ALBEDO = 0;
     constexpr UINT MESH_NORMAL_MAP = 1;
@@ -54,7 +54,7 @@ namespace Glib::Internal::Graphics::ID
     constexpr UINT SKINNED_MESH_DIRECTIONAL_LIGHT = 6;
     constexpr UINT SKINNED_MESH_SHADOW_MAP = 7;
 
-    /* ÉeÉNÉXÉ`ÉÉID */
+    /* „ÉÜ„ÇØ„Çπ„ÉÅ„É£ID */
 
     constexpr UCHAR WHITE_TEXTURE = 0;
     constexpr UCHAR MAGENTA_TEXTURE = WHITE_TEXTURE + 1;
@@ -63,3 +63,4 @@ namespace Glib::Internal::Graphics::ID
 
 #undef UCHAR
 #undef UINT
+

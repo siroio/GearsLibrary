@@ -1,4 +1,4 @@
-#include <SystemManager.h>
+﻿#include <SystemManager.h>
 #include <algorithm>
 #include <ranges>
 
@@ -68,3 +68,4 @@ void SystemManager::Execute(SystemFunctionType type)
         std::get<0>(func)->Call();
     }
 }
+

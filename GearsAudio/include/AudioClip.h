@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <string>
 #include <vector>
 #include <xaudio2.h>
@@ -14,43 +14,43 @@ namespace Glib
             const std::vector<unsigned char>& data);
 
         /**
-         * @brief –¼‘O
+         * @brief åå‰
          */
         std::string Name() const;
 
         /**
-         * @brief ƒtƒH[ƒ}ƒbƒg
+         * @brief ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
          */
         const WAVEFORMATEX& Format() const;
 
         /**
-         * @brief ‰¹ºƒf[ƒ^
+         * @brief éŸ³å£°ãƒ‡ãƒ¼ã‚¿
          */
         const std::vector<unsigned char>& RawData() const;
 
         /**
-         * @brief ƒoƒbƒtƒ@
+         * @brief ãƒãƒƒãƒ•ã‚¡
          */
         const XAUDIO2_BUFFER& Buffer() const;
 
         /**
-         * @brief ƒ`ƒƒƒ“ƒlƒ‹”
+         * @brief ãƒãƒ£ãƒ³ãƒãƒ«æ•°
          */
         unsigned int Channels() const;
 
         /**
-         * @brief ƒ‹[ƒv‚©‚Ç‚¤‚©
+         * @brief ãƒ«ãƒ¼ãƒ—ã‹ã©ã†ã‹
          */
         bool Loop() const;
 
         /**
-         * @brief ƒ‹[ƒv‚ÌØ‚è‘Ö‚¦
+         * @brief ãƒ«ãƒ¼ãƒ—ã®åˆ‡ã‚Šæ›¿ãˆ
          * @param enable
          */
         void Loop(bool enable);
 
         /**
-         * @brief ƒf[ƒ^‚ğƒ[ƒh
+         * @brief ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ­ãƒ¼ãƒ‰
          */
         bool Load(unsigned int id, std::string_view filePath);
 
@@ -61,3 +61,4 @@ namespace Glib
         std::vector<unsigned char> audioData_;
     };
 }
+

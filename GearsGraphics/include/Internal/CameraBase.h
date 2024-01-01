@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 #include <Internal/ICamera.h>
 #include <Component.h>
 
 namespace Glib::Internal
 {
     /**
-     * @brief ƒJƒƒ‰ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìƒx[ƒXƒNƒ‰ƒX
+     * @brief ã‚«ãƒ¡ãƒ©ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®ãƒ™ãƒ¼ã‚¹ã‚¯ãƒ©ã‚¹
      */
     class CameraBase : public Component, public Interface::ICamera
     {
@@ -14,3 +14,4 @@ namespace Glib::Internal
         virtual ~CameraBase() = default;
     };
 }
+

@@ -1,8 +1,9 @@
-#pragma once
+ï»¿#pragma once
 #include <wrl/client.h>
 
 /**
- * @brief ComPtr ƒwƒbƒ_[
+ * @brief ComPtr ãƒ˜ãƒƒãƒ€ãƒ¼
  */
 template<class T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
+

@@ -1,4 +1,4 @@
-#include <Components/AudioSource.h>
+ï»¿#include <Components/AudioSource.h>
 #include <Internal/XAudioSystem.h>
 #include <Mathf.h>
 #include <GameObject.h>
@@ -11,7 +11,7 @@ namespace
 
 Glib::AudioSource::AudioSource()
 {
-    // ƒGƒ~ƒbƒ^[‚Ì‰Šú‰»
+    // ã‚¨ãƒŸãƒƒã‚¿ãƒ¼ã®åˆæœŸåŒ–
     emitter_.OrientFront = { 0.0f, 0.0f, 1.0f };
     emitter_.OrientTop = { 0.0f, 1.0f, 0.0f };
     emitter_.ChannelRadius = 1.0f;
@@ -133,10 +133,10 @@ void Glib::AudioSource::AudioID(unsigned int id)
     if (sourceVoice_ == nullptr) return;
     sourceVoice_->SubmitSourceBuffer(&audioClip_->Buffer());
 
-    // ƒOƒ‹[ƒv‚ÉŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚é
+    // ã‚°ãƒ«ãƒ¼ãƒ—ã«å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ã‚‹
     if (groupId_ >= 0) SetGroup(groupId_);
 
-    // 3DƒI[ƒfƒBƒI‚ÌÝ’è
+    // 3Dã‚ªãƒ¼ãƒ‡ã‚£ã‚ªã®è¨­å®š
     if (audioStatus_ != AudioStatus::Is3DAudio) return;
     const unsigned int channel = audioClip_->Channels();
     emitter_.ChannelCount = channel;
@@ -175,3 +175,4 @@ void Glib::AudioSource::UpdateVoice()
 
     s_xAudio2->Audio3DCalculate(&emitter_, sourceVoice_, groupId_);
 }
+

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Internal/CameraBase.h>
 #include <Internal/DX12/ConstantBuffer.h>
 #include <Components/Transform.h>
@@ -19,22 +19,22 @@ namespace Glib
 namespace Glib
 {
     /**
-     * @brief “Š‰e•û–@
+     * @brief æŠ•å½±æ–¹æ³•
     */
     enum class ProjectionType
     {
         /**
-         * @brief “§‹“Š‰e
+         * @brief é€è¦–æŠ•å½±
         */
         Perspective,
         /**
-         * @brief •½s“Š‰e
+         * @brief å¹³è¡ŒæŠ•å½±
         */
         Orthographic
     };
 
     /**
-     * @brief ƒJƒƒ‰ƒRƒ“ƒ|[ƒlƒ“ƒg
+     * @brief ã‚«ãƒ¡ãƒ©ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
      */
     class Camera : public Internal::CameraBase
     {
@@ -107,3 +107,4 @@ namespace Glib
         float orthographicSize_{ 10.0f };
     };
 }
+

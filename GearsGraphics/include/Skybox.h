@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <array>
 #include <string_view>
 #include <Texture.h>
@@ -9,15 +9,15 @@ namespace Glib
     {
     public:
         /**
-         * @brief ƒXƒJƒCƒ{ƒbƒNƒX—pƒeƒNƒXƒ`ƒƒ‚Ì“Ç‚İ‚İ
+         * @brief ã‚¹ã‚«ã‚¤ãƒœãƒƒã‚¯ã‚¹ç”¨ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®èª­ã¿è¾¼ã¿
          * @param up
          * @param down
          * @param left
          * @param right
          * @param front
          * @param back
-         * @return ¬Œ÷ : true
-         * @return ¸”s : false
+         * @return æˆåŠŸ : true
+         * @return å¤±æ•— : false
         */
         bool Load(std::string_view up,
                   std::string_view down,
@@ -27,7 +27,7 @@ namespace Glib
                   std::string_view back);
 
         /**
-         * @brief •`‰æ
+         * @brief æç”»
         */
         void Draw() const;
 
@@ -35,3 +35,4 @@ namespace Glib
         std::array<Texture, 6> textures_;
     };
 }
+

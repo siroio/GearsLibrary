@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <dxgi1_6.h>
 #include <Internal/DX12/DescriptorPool.h>
 #include <ComPtr.h>
@@ -13,67 +13,67 @@ namespace Glib::Graphics
         RenderTarget() = default;
 
         /**
-         * @brief ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚Ìì¬
-         * @param width •
-         * @param height ‚‚³
-         * @param renderFormat ƒJƒ‰[ƒtƒH[ƒ}ƒbƒg
-         * @param depthFormat [“xƒoƒbƒtƒ@[ƒtƒH[ƒ}ƒbƒg
-         * @return ¬Œ÷ true
+         * @brief ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ä½œæˆ
+         * @param width å¹…
+         * @param height é«˜ã•
+         * @param renderFormat ã‚«ãƒ©ãƒ¼ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
+         * @param depthFormat æ·±åº¦ãƒãƒƒãƒ•ã‚¡ãƒ¼ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
+         * @return æˆåŠŸ true
          */
         bool Create(uint32_t width, uint32_t height, Color clearColor, DXGI_FORMAT renderFormat, DXGI_FORMAT depthFormat = DXGI_FORMAT_UNKNOWN);
 
         /**
-         * @brief ƒXƒƒbƒvƒ`ƒF[ƒ“—pƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚Ìì¬
+         * @brief ã‚¹ãƒ¯ãƒƒãƒ—ãƒã‚§ãƒ¼ãƒ³ç”¨ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ä½œæˆ
          */
         bool Create(uint32_t index, const ComPtr<IDXGISwapChain>& swapChain);
 
         /**
-         * @brief ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚Ìƒnƒ“ƒhƒ‹
+         * @brief ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ãƒãƒ³ãƒ‰ãƒ«
          */
         WeakPtr<Glib::Internal::Graphics::DescriptorHandle> RTVHandle() const;
 
         /**
-         * @brief [“xƒoƒbƒtƒ@‚Ìƒnƒ“ƒhƒ‹
+         * @brief æ·±åº¦ãƒãƒƒãƒ•ã‚¡ã®ãƒãƒ³ãƒ‰ãƒ«
          */
         WeakPtr<Glib::Internal::Graphics::DescriptorHandle> DSVHandle() const;
 
         /**
-         * @brief ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg
+         * @brief ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆ
          */
         ComPtr<ID3D12Resource> RenderTargetResource() const;
 
         /**
-         * @brief [“xƒoƒbƒtƒ@
+         * @brief æ·±åº¦ãƒãƒƒãƒ•ã‚¡
          */
         ComPtr<ID3D12Resource> DepthStencilResource() const;
 
         /**
-         * @brief ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚ÌƒŠƒ\[ƒXİ’è
+         * @brief ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
         */
         D3D12_RESOURCE_DESC RTVResourceDesc() const;
 
         /**
-         * @brief [“xƒoƒbƒtƒ@‚ÌƒŠƒ\[ƒXİ’è
+         * @brief æ·±åº¦ãƒãƒƒãƒ•ã‚¡ã®ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
         */
         D3D12_RESOURCE_DESC DSVResourceDesc() const;
 
         /**
-         * @brief ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚ÌƒtƒH[ƒ}ƒbƒg
+         * @brief ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
          */
         DXGI_FORMAT RenderTargetFormat() const;
 
         /**
-         * @brief [“xƒoƒbƒtƒ@‚ÌƒtƒH[ƒ}ƒbƒg
+         * @brief æ·±åº¦ãƒãƒƒãƒ•ã‚¡ã®ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
          */
         DXGI_FORMAT DepthStencilFormat() const;
 
         /**
-         * @brief ƒeƒNƒXƒ`ƒƒ‚Æ‚µ‚Ä—˜—p
+         * @brief ãƒ†ã‚¯ã‚¹ãƒãƒ£ã¨ã—ã¦åˆ©ç”¨
         */
         void AsTexture();
 
         /**
-         * @brief ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚Æ‚µ‚Ä—˜—p
+         * @brief ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¨ã—ã¦åˆ©ç”¨
         */
         void AsRenderTarget();
 
@@ -96,3 +96,4 @@ namespace Glib::Graphics
         std::shared_ptr<Glib::Internal::Graphics::DescriptorHandle> dsvHandle_{ nullptr };
     };
 }
+

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <iosfwd>
 #include <string>
 #include <array>
@@ -76,3 +76,4 @@ bool operator == (const Vector4& v1, const Vector4 v2);
 bool operator != (const Vector4& v1, const Vector4 v2);
 
 std::ostream& operator<<(std::ostream& stream, const Vector4& v);
+
