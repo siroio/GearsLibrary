@@ -28,10 +28,8 @@ bool VmdMotion::LoadFile(std::string_view path)
 bool VmdMotion::WriteFile(std::string_view path)
 {
     using gl = Glib::GLAnimation;
-    gl::BoneInfo info{};
     std::vector<gl::MotionData> motionDatas;
 
-    info.boneCount = keyFrameCount_;
     for (auto& keyFrame : keyFrames_)
     {
         gl::MotionData motionData{};
@@ -41,43 +39,39 @@ bool VmdMotion::WriteFile(std::string_view path)
         {
             boneName.push_back('\0');
         }
-        motionData.info.boneName = std::move(boneName);
-        motionData.info.keyFrameCount = keyFrame.frameNo;
+        motionData.boneName = std::move(boneName);
+        motionData.frameNo = keyFrame.frameNo;
 
         // キーフレームの変換
-        gl::KeyFrame destKeyFrame{};
-        destKeyFrame.frameNo = keyFrame.frameNo;
-        std::copy(std::begin(keyFrame.translate.elem), std::end(keyFrame.translate.elem), destKeyFrame.translation);
-        std::copy(std::begin(keyFrame.rotation.elem), std::end(keyFrame.rotation.elem), destKeyFrame.rotation);
-        destKeyFrame.scale[0] = 1.0f;
-        destKeyFrame.scale[1] = 1.0f;
-        destKeyFrame.scale[2] = 1.0f;
-        motionData.frame = std::move(destKeyFrame);
+        motionData.frameNo = keyFrame.frameNo;
+        std::copy(std::begin(keyFrame.translate.elem), std::end(keyFrame.translate.elem), motionData.translation);
+        std::copy(std::begin(keyFrame.rotation.elem), std::end(keyFrame.rotation.elem), motionData.rotation);
+        motionData.scale[0] = 1.0f;
+        motionData.scale[1] = 1.0f;
+        motionData.scale[2] = 1.0f;
 
         // キーフレームの追加
         motionDatas.push_back(motionData);
     }
 
-    Glib::GLAnimation animation{ info, motionDatas };
-    animation.WriteFile(std::string{ path } + ".glanim");
-    return true;
+    Glib::GLAnimation anim{ motionDatas };
+    return anim.WriteFile(std::string{ path } + ".glanim");
 }
 
 void VmdMotion::ReadKeyFrames(std::ifstream& file)
 {
-    FileUtility::ReadForBinary(file, &keyFrameCount_, sizeof(unsigned int));
-    for (unsigned int i = 0; i < keyFrameCount_; i++)
+    int keyFrameCount;
+    FileUtility::ReadForBinary(file, &keyFrameCount, sizeof(unsigned int));
+    keyFrames_.resize(keyFrameCount);
+
+    for (auto& keyframe : keyFrames_)
     {
-        KeyFrame frame{};
-        char buffer[15]{};
-        FileUtility::ReadForBinary(file, &buffer, sizeof(buffer));
-        frame.boneName = std::string{ buffer };
-        FileUtility::ReadForBinary(file, &frame.frameNo, sizeof(KeyFrame::frameNo));
-        FileUtility::ReadForBinary(file, &frame.translate, sizeof(KeyFrame::translate));
-        FileUtility::ReadForBinary(file, &frame.rotation, sizeof(KeyFrame::rotation));
-        FileUtility::ReadForBinary(file, &frame.bezier, sizeof(KeyFrame::bezier));
-        keyFrames_.push_back(frame);
+        keyframe.boneName = std::string(15, '\0');
+        FileUtility::ReadText(file, keyframe.boneName, sizeof(char) * 15);
+        FileUtility::ReadForBinary(file, &keyframe.frameNo, sizeof(KeyFrame::frameNo));
+        FileUtility::ReadForBinary(file, keyframe.translate.elem, sizeof(float) * 3);
+        FileUtility::ReadForBinary(file, keyframe.rotation.elem, sizeof(float) * 4);
+        FileUtility::ReadForBinary(file, keyframe.bezier, sizeof(KeyFrame::bezier));
     }
     keyFrames_.shrink_to_fit();
 }
-

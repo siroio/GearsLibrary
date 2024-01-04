@@ -2,27 +2,21 @@
 #include <iostream>
 #include <filesystem>
 #include <Converter.h>
+#include <GLAnimation.h>
 
 namespace fs = std::filesystem;
 
 int main(int argc, char* argv[])
 {
-    //if (argc != 3)
-    //{
-    //    std::cerr << "Usage: " << " <input_file> <output_path>" << std::endl;
-    //    return -1;
-    //}
+    if (argc != 3)
+    {
+        std::cerr << "Usage: " << " <input_file> <output_path>" << std::endl;
+        return -1;
+    }
 
-    ////ファイルパスの取得と正規化
-    //auto inputFile = fs::path{ argv[1] }.lexically_normal();
-    //auto outputFile = fs::path{ argv[2] }.lexically_normal();
-
-    auto inputFile = fs::path{ R"(C:\Users\rukar\Desktop\MikuMikuDance_v932x64\Appearance Miku\Appearance Miku.pmx)" };
-    auto outputFile = fs::path{ R"(C:\Users\rukar\Desktop\MikuMikuDance_v932x64\Appearance Miku\Appearance Miku)" };
-
-    //auto inputFile = fs::path{ R"(C:\Users\rukar\Desktop\MikuMikuDance_v932x64\いもができたモーション\にぼミクさん版\にぼミクさん_いもができた.vmd)" };
-    //auto outputFile = fs::path{ R"(C:\Users\rukar\Desktop\MikuMikuDance_v932x64\いもができたモーション\にぼミクさん版\にぼミクさん_いもができた)" };
-
+    //ファイルパスの取得と正規化
+    auto inputFile = fs::path{ argv[1] }.lexically_normal();
+    auto outputFile = fs::path{ argv[2] }.lexically_normal();
 
     // 相対パスから絶対パスに変換
     outputFile = outputFile.is_absolute() ? outputFile : fs::absolute(outputFile);
@@ -60,4 +54,3 @@ int main(int argc, char* argv[])
         return -1;
     }
 }
-

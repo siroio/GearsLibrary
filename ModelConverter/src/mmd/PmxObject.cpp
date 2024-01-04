@@ -442,4 +442,3 @@ bool PmxModel::WriteFile(std::string_view path)
     auto mesh = Glib::GLObject{ glVertices, glIndices, glSubsets, glMaterials, glBones };
     return mesh.WriteFile(std::string{ path } + ".globj");
 }
-

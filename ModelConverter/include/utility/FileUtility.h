@@ -45,5 +45,19 @@ public:
      * @param encode 読み込みエンコード
      */
     static void ReadText(std::ifstream& file, std::string& text, Encode encode = Encode::UTF8);
-};
 
+    /**
+     * @brief テキストをバッファへ読み込み
+     * @param file ファイルを開いているストリーム
+     * @param text バッファ
+     * @param length テキスト長
+     * @param encode 読み込みエンコード
+     */
+    static void ReadText(std::ifstream& file, std::string& text, int length, Encode encode = Encode::UTF8);
+
+    /**
+     * @brief 文字列をUTF8へ変換
+     * @param text
+     */
+    static std::string ToUTF8(std::string_view text);
+};

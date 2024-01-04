@@ -11,7 +11,7 @@ struct KeyFrame
     unsigned int frameNo;
     Vector3f translate;
     Vector4f rotation;
-    char bezier[64];
+    unsigned char bezier[64];
 };
 
 class VmdMotion : public IConverter
@@ -23,8 +23,6 @@ public:
 private:
     void ReadKeyFrames(std::ifstream& file);
 
-private:
-    unsigned int keyFrameCount_;
+public:
     std::vector<KeyFrame> keyFrames_;
 };
-
