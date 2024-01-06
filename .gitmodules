@@ -13,3 +13,6 @@
 [submodule "Modules/PhysX"]
 	path = Modules/PhysX
 	url = https://github.com/NVIDIA-Omniverse/PhysX.git
+[submodule "Modules/Bullet"]
+	path = Modules/Bullet
+	url = https://github.com/bulletphysics/bullet3.git
