@@ -45,28 +45,28 @@ namespace Glib::Internal::Interface
          * @param button ボタン
          * @return 方向
          */
-        virtual Vector2 GetRightStick(unsigned int controller, GPADKey button) = 0;
+        virtual Vector2 GetRightStick(unsigned int controller, float deadZone) = 0;
 
         /**
          * @brief 左スティックの方向を取得
          * @param controller コントローラーインデックス
-         * @param button ボタン
+         * @param deadZone デッドゾーン
          * @return 方向
          */
-        virtual Vector2 GetLeftStick(unsigned int controller, GPADKey button) = 0;
+        virtual Vector2 GetLeftStick(unsigned int controller, float deadZone) = 0;
 
         /**
          * @brief 右のトリガーを取得
          * @param controller コントローラーインデックス
-         * @param button ボタン
+         * @param deadZone デッドゾーン
          */
-        virtual float GetRightTrigger(unsigned int controller, GPADKey button) = 0;
+        virtual float GetRightTrigger(unsigned int controller, float deadZone) = 0;
 
         /**
          * @brief 左のトリガーを取得
          * @param controller コントローラーインデックス
-         * @param button ボタン
+         * @param deadZone デッドゾーン
          */
-        virtual float GetLeftTrigger(unsigned int controller, GPADKey button) = 0;
+        virtual float GetLeftTrigger(unsigned int controller, float deadZone) = 0;
     };
 }
