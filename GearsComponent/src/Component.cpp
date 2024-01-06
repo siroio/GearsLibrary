@@ -40,4 +40,3 @@ void Component::SetGameObject(const GameObjectPtr& gameObject)
         gameObject_ = gameObject;
     }
 }
-

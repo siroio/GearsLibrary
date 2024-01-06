@@ -21,8 +21,6 @@ void Glib::Animator::Start()
 
 void Glib::Animator::Update()
 {
-    if (animation_.expired()) return;
-
     const auto& bones = renderer_->Bones();
     const auto& transforms = renderer_->BoneTransforms();
     auto& matrix = renderer_->BoneMatrix();
@@ -33,37 +31,47 @@ void Glib::Animator::Update()
     // スキニング計算
     for (const auto& bone : bones)
     {
-        auto keyFrame = animation_->GetKeyFrame(bone.name, currentFrame_);
-        Vector3 translation = keyFrame.position;
-        Quaternion rotation = keyFrame.rotation;
-        Vector3 scale = keyFrame.scale;
+        Vector3 translation{};
+        Quaternion rotation{};
+        Vector3 scale{};
 
-        // 前のアニメーションをブレンド
-        if (!prevAnimation_.expired())
+        if (!animation_.expired())
         {
-            auto keyFrame = prevAnimation_->GetKeyFrame(bone.name, prevFrame_);
-            Vector3 prevtranslation = keyFrame.position;
-            Quaternion prevRotation = keyFrame.rotation;
+            auto keyFrame = animation_->GetKeyFrame(bone.name, currentFrame_);
+            translation = keyFrame.position;
+            rotation = keyFrame.rotation;
+            scale = keyFrame.scale;
 
-            float ratio = elapsedTime_ / animationBlendTime_;
-            translation = Vector3::Lerp(prevtranslation, translation, ratio);
-            rotation = Quaternion::Slerp(prevRotation, rotation, ratio);
+            // 前のアニメーションをブレンド
+            if (!prevAnimation_.expired())
+            {
+                auto keyFrame = prevAnimation_->GetKeyFrame(bone.name, prevFrame_);
+                Vector3 prevtranslation = keyFrame.position;
+                Quaternion prevRotation = keyFrame.rotation;
+
+                float ratio = elapsedTime_ / animationBlendTime_;
+                translation = Vector3::Lerp(prevtranslation, translation, ratio);
+                rotation = Quaternion::Slerp(prevRotation, rotation, ratio);
+            }
+
+            matrix[bone.boneIndex]
+                = Matrix4x4::Translate(-bone.position)
+                * Matrix4x4::Rotate(rotation) * Matrix4x4::Translate(translation)
+                * Matrix4x4::Translate(bone.position);
         }
-
-        matrix[bone.boneIndex] =
-            Matrix4x4::Translate(-bone.position) *
-            Matrix4x4::Rotate(rotation) * Matrix4x4::Translate(translation) *
-            Matrix4x4::Translate(bone.position);
 
         // 相対位置計算
         const auto& transform = transforms[bone.boneIndex];
-        if (bone.parent != -1) translation -= bones[bone.parent].position;
+        if (bone.parent != -1)
+        {
+            translation -= bones[bone.parent].position;
+        }
 
         transform->LocalPosition(bone.position + translation);
         transform->LocalRotation(rotation);
     }
 
-    if (isResume_) return;
+    if (animation_.expired() || isResume_) return;
     float deltaTime = GameTimer::DeltaTime() * animationSpeed_;
     elapsedTime_ += deltaTime;
     currentFrame_ += animationFrameRate_ * deltaTime;
@@ -132,10 +140,9 @@ void Glib::Animator::OnGUI()
     {
         AnimationID(clipID);
     }
-    GLGUI::Text("あにめ");
     GLGUI::CheckBox("Loop: ", &isLoop_);
     GLGUI::CheckBox("Resume: ", &isResume_);
-    GLGUI::DragFloat("Speed: ", &animationSpeed_, 0.01, Mathf::EPSILON);
+    GLGUI::DragFloat("Speed: ", &animationSpeed_, 0.01f, Mathf::EPSILON);
     GLGUI::SliderFloat("BlendTime: ", &animationBlendTime_, 0.0f, 1.0f);
     GLGUI::Separator();
     GLGUI::InputFloat("Frame", &currentFrame_);

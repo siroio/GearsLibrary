@@ -13,7 +13,6 @@
 #include <list>
 #include <GameTimer.h>
 
-#if defined(DEBUG) || defined(_DEBUG)
 namespace
 {
     auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
@@ -36,14 +35,13 @@ namespace
     bool s_resetLayout{ false };
     std::string fontPaht{ "C:\\Windows\\Fonts\\meiryo.ttc" };
 }
-#endif
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
     HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 bool Glib::Internal::Debug::ImGuiManager::Initialize()
 {
-    s_window.RegisterProcedure(0, ImGui_ImplWin32_WndProcHandler);
+    s_window.RegisterProcedure(ImGui_ImplWin32_WndProcHandler);
     auto hwnd = Window::WindowHandle();
     auto resDesc = s_dx12->BackBufferResourceDesc();
     const Vector2& windowSize = Window::WindowSize();
@@ -194,7 +192,6 @@ void Glib::Internal::Debug::ImGuiManager::DebugDraw()
     ImGui::EndMainMenuBar();
 
     CreateDock();
-
     if (s_enableGameView) DrawGameView();
     if (s_enableConsole) DrawConsole();
 }

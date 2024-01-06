@@ -6,6 +6,7 @@
 #include <WeakPtr.h>
 #include <algorithm>
 #include <iterator>
+#include <StringUtility.h>
 
 namespace
 {
@@ -57,6 +58,10 @@ void Glib::GameObjectManager::DebugDraw()
 
         if (!s_selectObject.expired())
         {
+            ImGuiInputTextFlags flags =
+                ImGuiInputTextFlags_AutoSelectAll |
+                ImGuiInputTextFlags_EnterReturnsTrue;
+
             // アクティブフラグの表示
             bool active = s_selectObject->Active();
             if (ImGui::Checkbox("##Active", &active))
@@ -66,9 +71,11 @@ void Glib::GameObjectManager::DebugDraw()
             ImGui::SameLine();
 
             // 名前の表示
-            std::string name = s_selectObject->Name();
+            auto name = s_selectObject->Name();
             name.resize(64);
-            if (ImGui::InputText("##Name", name.data(), name.size(), ImGuiInputTextFlags_AutoSelectAll))
+            ImGui::Text(name.c_str());
+
+            if (ImGui::InputText("##Name", name.data(), name.size(), flags))
             {
                 s_selectObject->Name(name);
             }
@@ -113,7 +120,8 @@ void Glib::GameObjectManager::DrawDebugParams(GameObjectPtr gameObject)
     if (gameObject == s_selectObject)
         flag |= ImGuiTreeNodeFlags_Selected;
 
-    bool opened{ ImGui::TreeNodeEx(gameObject.get().get(), flag, "%s", gameObject->Name().c_str()) };
+    auto name = gameObject->Name();
+    bool opened{ ImGui::TreeNodeEx(gameObject.get().get(), flag, "%s", name.data()) };
 
     // 選択したオブジェクトを取得
     if (ImGui::IsItemClicked())

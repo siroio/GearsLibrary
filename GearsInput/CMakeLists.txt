@@ -11,6 +11,7 @@ set(SOURCE_FILE
 )
 
 set(HEADER_FILE
+    ./include/Internal/IGamePad.h
     ./include/Internal/InputState.h
     ./include/Internal/InputData.h
     ./include/Internal/KeyBoardKeys.h

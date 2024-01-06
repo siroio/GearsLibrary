@@ -237,6 +237,11 @@ const float* Color::Raw() const
     return rgba.data();
 }
 
+float* Color::Raw()
+{
+    return rgba.data();
+}
+
 std::string Color::ToString() const
 {
     std::ostringstream ss;
@@ -495,4 +500,3 @@ float Color::MaxColor() const
 {
     return Mathf::Max(Mathf::Max(r, g), b);
 }
-

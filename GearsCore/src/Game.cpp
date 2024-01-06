@@ -24,7 +24,7 @@
 #include <InputSystem.h>
 #include <Random.h>
 #include <SceneManager.h>
-#include <MeshManager.h>
+#include <SkyboxManager.h>
 
 namespace
 {
@@ -78,6 +78,7 @@ void Glib::Game::RegisterSystem()
     SystemManager::AddSystem<InputSystem>();
     SystemManager::AddSystem<Random>();
     SystemManager::AddSystem<SceneManager>();
+    SystemManager::AddSystem<SkyboxManager>();
 
 #if defined(DEBUG) || defined(_DEBUG)
     // デバッグ用
@@ -110,4 +111,3 @@ void Glib::Game::Finalize()
 {
     s_systemManager.Finalize();
 }
-

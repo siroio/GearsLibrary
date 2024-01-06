@@ -8,6 +8,7 @@
 #include <GameObject.h>
 #include <Window.h>
 #include <Mathf.h>
+#include <GLGUI.h>
 
 namespace
 {
@@ -352,3 +353,10 @@ void Glib::Camera::ExecuteShadowBulr()
     shadowMapBlur.Execute(1.0f);
 }
 
+static Color color;
+
+void Glib::Camera::OnGUI()
+{
+
+    GLGUI::CoorPicker4("Background", &color);
+}

@@ -107,11 +107,12 @@ HWND Glib::Window::WindowHandle()
     return s_windowHandle;
 }
 
-bool Glib::Window::RegisterProcedure(int id, const WindowProcedure& proc)
+int Glib::Window::RegisterProcedure(const WindowProcedure& proc, int id)
 {
-    if (s_windowProcedures.contains(id)) return false;
+    // IDがマイナスの場合はIDを割り振る
+    id = (id < 0) ? static_cast<int>(s_windowProcedures.size()) : id;
     s_windowProcedures.emplace(id, proc);
-    return true;
+    return id;
 }
 
 void Glib::Window::UnRegisterProcedure(int id)

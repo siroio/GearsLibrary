@@ -24,6 +24,7 @@
 #include <Components/Animator.h>
 #include <AnimationManager.h>
 #include <Internal/ImGuiManager.h>
+#include <SkyboxManager.h>
 
 using namespace Glib;
 
@@ -90,21 +91,29 @@ class TestScene : public Scene
 public:
     void Start() override
     {
-        // カメラ作成
-        auto camera = GameObjectManager::Instantiate("Camera");
-        auto initPosition = Vector3{ 0.0f, 3.0f, -20.0f };
-        camera->Transform()->Position(initPosition);
-        camera->AddComponent<Camera>()->ClearFlags(CameraClearFlags::Color);
-
         // アセット読み込み
-        if (!MeshManager::Instance().Load(0, R"(C:\Users\rukar\Desktop\MikuMikuDance_v932x64\Appearance Miku\Appearance Miku.globj)"))
-        {
-            return;
-        }
-        if (!AnimationManager::Instance().Load(0, R"(C:\Users\rukar\Desktop\MikuMikuDance_v932x64\いもができたモーション\にぼミクさん版\にぼミクさん_いもができた.glanim)"))
-        {
-            return;
-        }
+        bool isloaded = SkyboxManager::Instance()->Load(
+            0,
+            "Assets/Skybox/DayTop.png",
+            "Assets/Skybox/DayBottom.png",
+            "Assets/Skybox/DayLeft.png",
+            "Assets/Skybox/DayRight.png",
+            "Assets/Skybox/DayFront.png",
+            "Assets/Skybox/DayBack.png"
+        );
+        if (!isloaded) return;
+
+        isloaded = MeshManager::Instance().Load(0, R"(Assets/Appearance Miku\Appearance Miku.globj)");
+        if (!isloaded) return;
+        isloaded = AnimationManager::Instance().Load(0, R"(Assets/上肢テスト01-表情入り.glanim)");
+        if (!isloaded) return;
+
+        // カメラ作成
+        SkyboxManager::Instance()->SetSkybox(0);
+        auto camera = GameObjectManager::Instantiate("Camera");
+        auto initPosition = Vector3{ 0.0f, 10.0f, -20.0f };
+        camera->Transform()->Position(initPosition);
+        camera->AddComponent<Camera>()->ClearFlags(CameraClearFlags::SkyBox);
 
         // オブジェクト生成
         auto mesh = GameObjectManager::Instantiate("Mesh");

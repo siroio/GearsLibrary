@@ -283,13 +283,13 @@ void Glib::Transform::RemoveChild(const Glib::WeakPtr<Transform>& child)
 
 void Glib::Transform::OnGUI()
 {
-    GLGUI::DragFloat3("Position: ", &local_position_);
+    GLGUI::DragVector3("Position", &local_position_);
 
     auto eulr = LocalEulerAngles();
-    if (GLGUI::DragFloat3("Rotation: ", &eulr))
+    if (GLGUI::DragVector3("Rotation", &eulr))
     {
         LocalEulerAngles(eulr);
     }
 
-    GLGUI::DragFloat3("Scale: ", &local_scale_);
+    GLGUI::DragVector3("Scale", &local_scale_);
 }

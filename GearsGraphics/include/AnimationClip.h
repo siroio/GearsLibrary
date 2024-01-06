@@ -56,4 +56,3 @@ namespace Glib
         std::unordered_map<std::string, KeyFrames> keyframes_;
     };
 }
-

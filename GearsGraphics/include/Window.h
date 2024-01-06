@@ -43,9 +43,10 @@ namespace Glib
 
         /**
          * @brief ウィンドウプロシージャを登録
-         * @param proc
+         * @param proc プロシージャ
+         * @param id ID
          */
-        static bool RegisterProcedure(int id, const Glib::WindowProcedure& proc);
+        static int RegisterProcedure(const Glib::WindowProcedure& proc, int id = -1);
 
         /**
          * @brief ウィンドウプロシージャを解除
@@ -86,4 +87,3 @@ namespace Glib
         static void WindowDebugSize(const Vector2& size);
     };
 }
-

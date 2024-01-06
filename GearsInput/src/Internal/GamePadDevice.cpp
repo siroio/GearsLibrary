@@ -30,4 +30,3 @@ void Glib::Internal::Input::GamePadDevice::Update()
         }, device);
     }
 }
-

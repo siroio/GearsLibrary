@@ -11,6 +11,7 @@ set(SOURCE_FILE
     ./src/Matrix3x3.cpp
     ./src/Color.cpp
     ./src/Random.cpp
+    ./src/Easing.cpp
 )
 
 set(HEADER_FILE 
@@ -23,6 +24,7 @@ set(HEADER_FILE
     ./include/Matrix3x3.h
     ./include/Color.h
     ./include/Random.h
+    ./include/Easing.h
 )
 
 set(LIB_NAME GearsMath)

@@ -4,7 +4,15 @@
 
 bool Glib::Internal::Input::XinputGamePad::Initialize(DWORD controllerIndex)
 {
-    return false;
+    controllerIndex_ = controllerIndex;
+    if (XInputGetState(controllerIndex_, &currentPadState_.state) == ERROR_DEVICE_NOT_CONNECTED)
+    {
+        currentPadState_.isConnected = false;
+        return false;
+    }
+
+    currentPadState_.isConnected = true;
+    return true;
 }
 
 void Glib::Internal::Input::XinputGamePad::Update()
@@ -32,4 +40,3 @@ void Glib::Internal::Input::XinputGamePad::Update()
         currentPadState_.vibratingTime = 0.0f;
     }
 }
-

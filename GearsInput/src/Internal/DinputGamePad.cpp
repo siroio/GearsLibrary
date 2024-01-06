@@ -51,4 +51,3 @@ void Glib::Internal::Input::DinputGamePad::Update()
     axisX_ = static_cast<float>(joyState.lX) / 1000.0f;
     axisY_ = static_cast<float>(joyState.lY) / 1000.0f;
 }
-

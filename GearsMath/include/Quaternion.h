@@ -70,6 +70,7 @@ public:
     Vector3 EulerAngles() const;
     Quaternion Normalized() const;
     std::string ToString() const;
+    void Copy();
 
 private:
     static Vector3 InternalMakePositive(Vector3& euler);
@@ -94,4 +95,3 @@ bool operator == (const Quaternion& q1, const Quaternion& q2);
 bool operator != (const Quaternion& q1, const Quaternion& q2);
 
 std::ostream& operator << (std::ostream& stream, const Quaternion& q);
-

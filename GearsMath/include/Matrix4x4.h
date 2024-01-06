@@ -74,6 +74,7 @@ public:
     void SetIdentity();
     void SetTRS(const Vector3& translate, const Quaternion& rotation, const Vector3& scalar);
     std::string ToString() const;
+    void Copy();
 
 public:
     std::array<float, 4> operator [] (const size_t index) const;
@@ -94,4 +95,3 @@ Matrix4x4 operator * (const Matrix4x4& m1, const Matrix4x4& m2);
 Matrix4x4 operator / (const Matrix4x4& m, float scalar);
 
 std::ostream& operator << (std::ostream& stream, const Matrix4x4& m);
-

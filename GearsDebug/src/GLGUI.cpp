@@ -5,11 +5,6 @@
 #include <Vector4.h>
 #include <Color.h>
 
-#define GL_SLIDER_CLAMP ImGuiSliderFlags_AlwaysClamp
-#define GL_ENTER_RETURN ImGuiInputTextFlags_EnterReturnsTrue
-#define GL_TREE_NODE ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_OpenOnDoubleClick
-#define GL_TREE_LEAF GL_TREE_NODE | ImGuiTreeNodeFlags_Leaf
-
 void Glib::GLGUI::Space()
 {
     ImGui::Spacing();
@@ -95,16 +90,16 @@ bool Glib::GLGUI::DragFloat(std::string_view label, float* value, float speed, f
     return ImGui::DragFloat(label.data(), value, speed, min, max, "%.3f", GL_SLIDER_CLAMP);
 }
 
-bool Glib::GLGUI::DragFloat3(std::string_view label, Vector3* value, float speed, float min, float max, bool sameLine)
+bool Glib::GLGUI::DragVector3(std::string_view label, Vector3* value, float speed, float min, float max, bool sameLine)
 {
     if (sameLine) ImGui::SameLine();
     return ImGui::DragFloat3(label.data(), value->xyz.data(), speed, min, max, "%.3f", GL_SLIDER_CLAMP);
 }
 
-bool Glib::GLGUI::DragFloat4(std::string_view label, Vector4* value, float speed, float min, float max, bool sameLine)
+bool Glib::GLGUI::DragVector4(std::string_view label, Vector4* value, float speed, float min, float max, bool sameLine)
 {
     if (sameLine) ImGui::SameLine();
-    return ImGui::DragFloat(label.data(), value->xyzw.data(), speed, min, max, "%.3f", GL_SLIDER_CLAMP);
+    return ImGui::DragFloat4(label.data(), value->xyzw.data(), speed, min, max, "%.3f", GL_SLIDER_CLAMP);
 }
 
 bool Glib::GLGUI::SliderInt(std::string_view label, int* value, int min, int max, bool sameLine)
@@ -117,4 +112,16 @@ bool Glib::GLGUI::SliderFloat(std::string_view label, float* value, float min, f
 {
     if (sameLine) ImGui::SameLine();
     return ImGui::SliderFloat(label.data(), value, min, max, "%.3f", GL_SLIDER_CLAMP);
+}
+
+bool Glib::GLGUI::CoorPicker3(std::string_view label, Color* color, bool sameLine)
+{
+    if (sameLine) ImGui::SameLine();
+    return ImGui::ColorPicker3(label.data(), color->Raw(), GL_COLOR_FLAG);
+}
+
+bool Glib::GLGUI::CoorPicker4(std::string_view label, Color* color, bool sameLine)
+{
+    if (sameLine) ImGui::SameLine();
+    return ImGui::ColorPicker4(label.data(), color->Raw(), GL_COLOR_FLAG);
 }

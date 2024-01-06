@@ -72,6 +72,7 @@ public:
     void Normalize();
     Vector3 Normalized() const;
     std::string ToString() const;
+    void Copy();
 
 public:
     void operator = (const Vector3& v);
@@ -103,4 +104,3 @@ bool operator == (const Vector3& v1, const Vector3 v2);
 bool operator != (const Vector3& v1, const Vector3 v2);
 
 std::ostream& operator << (std::ostream& stream, const Vector3& v);
-

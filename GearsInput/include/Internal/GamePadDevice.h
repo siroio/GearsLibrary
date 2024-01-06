@@ -12,7 +12,7 @@ namespace Glib::Internal::Input
     public:
         using GamePad = std::variant<XinputGamePad, DinputGamePad>;
 
-        enum class PadNum : unsigned short
+        enum class PadNum : unsigned int
         {
             PAD_1 = 0,
             PAD_2 = 1,
@@ -20,7 +20,7 @@ namespace Glib::Internal::Input
             PAD_4 = 3
         };
 
-        enum class InputType : unsigned short
+        enum class InputType : unsigned int
         {
             Xinput = 0,
             Dinput = 1
@@ -39,4 +39,3 @@ namespace Glib::Internal::Input
         std::array<GamePad, 4> devices_;
     };
 }
-

@@ -10,6 +10,8 @@ public:
     static constexpr float EPSILON_SQRT = 1e-5f * 1e-5f;
     static constexpr float EPSILON_NORMAL_SQRT = 1e-15f;
     static constexpr float PI = std::numbers::pi_v<float>;
+    static constexpr float TWO_PI = std::numbers::pi_v<float> *2;
+    static constexpr float HALF_PI = std::numbers::pi_v<float> *0.5f;
     static constexpr float INV_PI = std::numbers::inv_pi_v<float>;
     static constexpr float PHI = std::numbers::phi_v<float>;
     static constexpr float DEG2RAD = PI / 180.0f;
@@ -84,4 +86,3 @@ public:
     static float Erf(float x);
     static float Erfc(float x);
 };
-

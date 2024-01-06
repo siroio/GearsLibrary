@@ -2,7 +2,7 @@
 
 namespace Glib
 {
-    enum class GPADCode : unsigned short
+    enum class GPADKey : unsigned short
     {
         UP = 0,
         DOWN = 1,
@@ -30,4 +30,3 @@ namespace Glib
         RIGHT_TRIGGER = 33
     };
 }
-

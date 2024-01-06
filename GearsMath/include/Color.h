@@ -65,6 +65,7 @@ public:
     void Set(float rgba);
     void Set0();
     const float* Raw() const;
+    float* Raw();
     std::string ToString() const;
 
 public:
@@ -88,4 +89,3 @@ Color operator * (float scaler, const Color& color);
 Color operator / (const Color& color, float scaler);
 
 std::ostream& operator << (std::ostream& stream, const Color& color);
-

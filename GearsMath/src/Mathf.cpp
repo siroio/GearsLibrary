@@ -205,7 +205,7 @@ float Mathf::Remap(float value, float fromLow, float fromHigh, float toLow, floa
 
 float Mathf::Remap01(float value, float low, float high)
 {
-    return 0.0f + (1.0f - 0.0f) * (value - low) / (high - low);
+    return (value - low) / (high - low);
 }
 
 float Mathf::Lerp(float a, float b, float t)
@@ -330,4 +330,3 @@ float Mathf::Erfc(float x)
 {
     return std::erfcf(x);
 }
-

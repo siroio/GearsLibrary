@@ -1,9 +1,8 @@
 ﻿#include <AnimationClip.h>
+#include <GLAnimation.h>
 #include <algorithm>
 #include <ranges>
 #include <Mathf.h>
-#include <GLAnimation.h>
-#include <iostream>
 
 Matrix4x4 Glib::AnimationClip::KeyFrame::Matrix() const
 {
@@ -17,18 +16,21 @@ bool Glib::AnimationClip::Load(std::string_view fileName)
     for (const auto& motion : animation.Motions())
     {
         AnimationClip::KeyFrame keyFrame{};
-        const auto& frame = motion.frame;
-        keyFrame.frameNo = static_cast<float>(frame.frameNo);
-        std::copy(std::begin(frame.translation), std::end(frame.translation), &keyFrame.position[0]);
-        std::copy(std::begin(frame.rotation), std::end(frame.rotation), &keyFrame.rotation[0]);
-        std::copy(std::begin(frame.scale), std::end(frame.scale), &keyFrame.scale[0]);
-        keyframes_[motion.info.boneName].push_back(keyFrame);
+        keyFrame.frameNo = static_cast<float>(motion.frameNo);
+        std::copy(std::begin(motion.translation), std::end(motion.translation), &keyFrame.position[0]);
+        std::copy(std::begin(motion.rotation), std::end(motion.rotation), &keyFrame.rotation[0]);
+        std::copy(std::begin(motion.scale), std::end(motion.scale), &keyFrame.scale[0]);
+        keyframes_[motion.boneName].push_back(keyFrame);
         endFrame_ = std::max(endFrame_, keyFrame.frameNo);
     }
 
     // メモリをsizeに合わせる
     for (auto& [bone, frame] : keyframes_)
     {
+        std::sort(frame.begin(), frame.end(), [](const KeyFrame& lhs, const KeyFrame& rhs)
+        {
+            return lhs.frameNo < rhs.frameNo;
+        });
         frame.shrink_to_fit();
     }
     return true;
@@ -37,7 +39,9 @@ bool Glib::AnimationClip::Load(std::string_view fileName)
 Glib::AnimationClip::KeyFrame Glib::AnimationClip::GetKeyFrame(const std::string& boneName, float frameNo) const
 {
     // キーフレームを検索
-    if (!keyframes_.contains(boneName))
+    const auto& it = keyframes_.find(boneName);
+
+    if (it == keyframes_.end())
     {
         KeyFrame keyframe{};
         keyframe.frameNo = frameNo;
@@ -47,22 +51,22 @@ Glib::AnimationClip::KeyFrame Glib::AnimationClip::GetKeyFrame(const std::string
         return keyframe;
     }
 
-    const auto& keyframes = keyframes_.at(boneName);
-    auto segment = SearchKeyFrame(keyframes, frameNo);
+    const auto& keyframes = it->second;
+    const auto [start, end] = SearchKeyFrame(keyframes, frameNo);
 
     // 一致したらそのまま返す
-    if (segment.first == segment.second) return keyframes.at(segment.first);
+    if (start == end) return keyframes.at(start);
 
-    const auto& start = keyframes.at(segment.first);
-    const auto& end = keyframes.at(segment.second);
+    const auto& startFrame = keyframes.at(start);
+    const auto& endFrame = keyframes.at(end);
 
     // フレーム補間
     KeyFrame interpolate{};
-    const float t = Mathf::Remap01(frameNo, start.frameNo, end.frameNo);
+    const float t = Mathf::Remap01(frameNo, startFrame.frameNo, endFrame.frameNo);
     interpolate.frameNo = frameNo;
-    interpolate.position = Vector3::Lerp(start.position, end.position, t);
-    interpolate.rotation = Quaternion::Slerp(start.rotation, end.rotation, t);
-    interpolate.scale = Vector3::Lerp(start.scale, end.scale, t);
+    interpolate.position = Vector3::Lerp(startFrame.position, endFrame.position, t);
+    interpolate.rotation = Quaternion::Slerp(startFrame.rotation, endFrame.rotation, t);
+    interpolate.scale = Vector3::Lerp(startFrame.scale, endFrame.scale, t);
     return interpolate;
 }
 
@@ -105,4 +109,3 @@ std::pair<int, int> Glib::AnimationClip::SearchKeyFrame(const KeyFrames& keys, f
 
     return std::pair<int, int>{ start, end };
 }
-

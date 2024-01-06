@@ -49,6 +49,7 @@ public:
     float SqrMagnitude() const;
     float Magnitude() const;
     std::string ToString() const;
+    void Copy();
 
 public:
     void operator = (const Vector4& v);
@@ -76,4 +77,3 @@ bool operator == (const Vector4& v1, const Vector4 v2);
 bool operator != (const Vector4& v1, const Vector4 v2);
 
 std::ostream& operator<<(std::ostream& stream, const Vector4& v);
-
