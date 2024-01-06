@@ -24,9 +24,11 @@ namespace
     constexpr auto GL_ANIM_VERSION{ 1.0f };
 }
 
-Glib::GLAnimation::GLAnimation(const BoneInfo& boneInfo, const std::vector<MotionData>& motion)
-    : boneInfo_{ boneInfo }, motionData_{ motion }
-{}
+Glib::GLAnimation::GLAnimation(const std::vector<MotionData>& motion)
+    : motionData_{ motion }
+{
+    boneInfo_ = static_cast<int>(motion.size());
+}
 
 bool Glib::GLAnimation::ReadFile(std::string_view path)
 {
@@ -39,7 +41,10 @@ bool Glib::GLAnimation::ReadFile(std::string_view path)
         {
             throw std::runtime_error{ "mismatch file extension." };
         }
-        if (!std::filesystem::exists(path))
+
+        // 絶対パスに変換
+        auto filePath = GetAbsPath(path);
+        if (!std::filesystem::exists(filePath))
         {
             throw std::runtime_error{ "file not found." };
         }
@@ -109,33 +114,25 @@ void Glib::GLAnimation::ReadHeader(std::ifstream& file)
 
 void Glib::GLAnimation::ReadBoneInfo(std::ifstream& file)
 {
-    ReadForBinary(file, &boneInfo_, sizeof(BoneInfo));
+    ReadForBinary(file, &boneInfo_, sizeof(int));
 }
 
 void Glib::GLAnimation::ReadMotionData(std::ifstream& file)
 {
-    if (boneInfo_.boneCount < 0)
+    if (boneInfo_ < 0)
     {
         throw std::runtime_error{ "invalid bone count." };
     }
 
-    motionData_.resize(boneInfo_.boneCount);
+    motionData_.resize(boneInfo_);
     for (auto& data : motionData_)
     {
-        ReadMotionInfo(file, data.info);
-        ReadKeyFrames(file, data.frame);
+        ReadText(file, data.boneName);
+        ReadForBinary(file, &data.frameNo, sizeof(MotionData::frameNo));
+        ReadForBinary(file, &data.translation, sizeof(MotionData::translation));
+        ReadForBinary(file, &data.rotation, sizeof(MotionData::rotation));
+        ReadForBinary(file, &data.scale, sizeof(MotionData::scale));
     }
-}
-
-void Glib::GLAnimation::ReadMotionInfo(std::ifstream& file, MotionInfo& info)
-{
-    ReadText(file, info.boneName);
-    ReadForBinary(file, &info.keyFrameCount, sizeof(info.keyFrameCount));
-}
-
-void Glib::GLAnimation::ReadKeyFrames(std::ifstream& file, KeyFrame& keyFrames)
-{
-    ReadForBinary(file, &keyFrames, sizeof(KeyFrame));
 }
 
 void Glib::GLAnimation::WriteHeader(std::ofstream& file)
@@ -161,33 +158,26 @@ void Glib::GLAnimation::WriteHeader(std::ofstream& file)
 
 void Glib::GLAnimation::WriteBoneInfo(std::ofstream& file)
 {
-    WriteToBinary(file, &boneInfo_, sizeof(BoneInfo));
+    WriteToBinary(file, &boneInfo_, sizeof(int));
 }
 
 void Glib::GLAnimation::WriteMotionData(std::ofstream& file)
 {
-    if (boneInfo_.boneCount < 0)
+    if (boneInfo_ < 0)
     {
         throw std::runtime_error{ "invalid bone count." };
     }
 
-    for (const auto& data : motionData_)
+    for (auto& data : motionData_)
     {
         // モーションの書き出し
-        WriteMotionInfo(file, data.info);
-        WriteKeyFrame(file, data.frame);
+        if (!data.boneName.ends_with('\0')) data.boneName += '\0';
+        WriteText(file, data.boneName);
+        WriteToBinary(file, &data.frameNo, sizeof(MotionData::frameNo));
+        WriteToBinary(file, &data.translation, sizeof(MotionData::translation));
+        WriteToBinary(file, &data.rotation, sizeof(MotionData::rotation));
+        WriteToBinary(file, &data.scale, sizeof(MotionData::scale));
     }
-}
-
-void Glib::GLAnimation::WriteMotionInfo(std::ofstream& file, const MotionInfo& info)
-{
-    WriteText(file, info.boneName);
-    WriteToBinary(file, &info.keyFrameCount, sizeof(info.keyFrameCount));
-}
-
-void Glib::GLAnimation::WriteKeyFrame(std::ofstream& file, const KeyFrame& keyFrames)
-{
-    WriteToBinary(file, &keyFrames, sizeof(KeyFrame));
 }
 
 const std::vector<Glib::GLAnimation::MotionData>& Glib::GLAnimation::Motions() const
@@ -195,8 +185,7 @@ const std::vector<Glib::GLAnimation::MotionData>& Glib::GLAnimation::Motions() c
     return motionData_;
 }
 
-const Glib::GLAnimation::BoneInfo& Glib::GLAnimation::FrameLength() const
+const int Glib::GLAnimation::FrameLength() const
 {
     return boneInfo_;
 }
-

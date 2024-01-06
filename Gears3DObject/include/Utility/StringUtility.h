@@ -5,15 +5,22 @@
 #include <fstream>
 #include <Utility/IOUtility.h>
 
+namespace fs = std::filesystem;
+
 namespace Glib
 {
     inline bool CheckExt(std::string_view view, std::string_view extension)
     {
-        std::filesystem::path path{ view };
+        fs::path path{ view };
         path = path.lexically_normal(); // パスの正規化
         // 不正なパスかチェック
         if (path == ".") return false;
         return path.extension().generic_string().ends_with(extension);
+    }
+
+    inline fs::path GetAbsPath(const fs::path& path)
+    {
+        return path.is_absolute() ? path : fs::absolute(path);
     }
 
     inline void ReadText(std::ifstream& file, std::string& str)
@@ -31,4 +38,3 @@ namespace Glib
         WriteToBinary(file, str.data(), sizeof(char) * size);
     }
 }
-

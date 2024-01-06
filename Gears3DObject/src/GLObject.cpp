@@ -52,7 +52,10 @@ bool Glib::GLObject::ReadFile(std::string_view path)
         {
             throw std::runtime_error{ "mismatch file extension." };
         }
-        if (!std::filesystem::exists(path))
+
+        // 絶対パスに変換
+        auto filePath = GetAbsPath(path);
+        if (!std::filesystem::exists(filePath))
         {
             throw std::runtime_error{ "file not found." };
         }
@@ -347,9 +350,9 @@ void Glib::GLObject::WriteBone(std::ofstream& file)
     // ボーンの書き込み
     for (auto& bone : bones_)
     {
+        if (!bone.boneName.ends_with('\0')) bone.boneName += '\0';
         WriteText(file, bone.boneName);
         WriteToBinary(file, &bone.translate, sizeof(Bone::translate));
         WriteToBinary(file, &bone.parent, sizeof(Bone::parent));
     }
 }
-
