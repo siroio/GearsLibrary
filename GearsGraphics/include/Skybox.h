@@ -35,4 +35,3 @@ namespace Glib
         std::array<Texture, 6> textures_;
     };
 }
-

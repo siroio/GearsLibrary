@@ -8,7 +8,7 @@ namespace Glib
 {
     class SkyboxManager :
         public Internal::Interface::ISystem,
-        public Singleton<SkyboxManager>,
+        public SingletonPtr<SkyboxManager>,
         public Internal::Function::DrawOrderSet<Internal::Order::Draw::SKYBOX>
     {
         SkyboxManager() = default;
@@ -51,4 +51,3 @@ namespace Glib
         void Draw();
     };
 }
-

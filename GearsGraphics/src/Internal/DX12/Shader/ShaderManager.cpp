@@ -37,6 +37,8 @@ bool Glib::Internal::Graphics::ShaderManager::Initialize()
     shaders.emplace_back(ID::IMAGE_SHADER, ShaderType::PIXEL, ShaderCode::IMAGE_SHADER, "PSmain");
     shaders.emplace_back(ID::LINE_SHADER, ShaderType::VERTEX, ShaderCode::LINE_SHADER, "VSmain");
     shaders.emplace_back(ID::LINE_SHADER, ShaderType::PIXEL, ShaderCode::LINE_SHADER, "PSmain");
+    shaders.emplace_back(ID::SKYBOX_SHADER, ShaderType::VERTEX, ShaderCode::SKYBOX_SHADER, "VSmain");
+    shaders.emplace_back(ID::SKYBOX_SHADER, ShaderType::PIXEL, ShaderCode::SKYBOX_SHADER, "PSmain");
     shaders.emplace_back(ID::MESH_SHADER, ShaderType::VERTEX, ShaderCode::MESH_SHADER, "VSmain");
     shaders.emplace_back(ID::MESH_SHADER, ShaderType::PIXEL, ShaderCode::MESH_SHADER, "PSmain");
     shaders.emplace_back(ID::MESH_SHADOW_SHADER, ShaderType::VERTEX, ShaderCode::MESH_SHADOW_SHADER, "VSmain");
@@ -156,4 +158,3 @@ void Glib::Internal::Graphics::ShaderManager::ShaderError(const ComPtr<ID3DBlob>
         MsgBox::ICON::ERROR_ICON                                    // icon
     );
 }
-

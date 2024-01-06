@@ -99,23 +99,27 @@ bool Glib::SkyboxManager::Initialize()
     // テクスチャ 定数バッファ
     CD3DX12_DESCRIPTOR_RANGE range[2]{};
     range[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
-    range[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
+    range[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
 
     CD3DX12_ROOT_PARAMETER rootParams[2]{};
     rootParams[0].InitAsDescriptorTable(1U, &range[0]);
     rootParams[1].InitAsDescriptorTable(1U, &range[1]);
 
     CD3DX12_STATIC_SAMPLER_DESC sampler{};
-    sampler.Init(0);
+    sampler.Init(0,
+                 D3D12_FILTER_ANISOTROPIC,
+                 D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
+                 D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
+                 D3D12_TEXTURE_ADDRESS_MODE_CLAMP);
 
     D3D12_ROOT_SIGNATURE_DESC rootSigDesc{};
     rootSigDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-    rootSigDesc.NumParameters = static_cast<UINT>(std::size(rootParams));;
+    rootSigDesc.NumParameters = static_cast<UINT>(std::size(rootParams));
     rootSigDesc.NumStaticSamplers = 1;
     rootSigDesc.pParameters = rootParams;
     rootSigDesc.pStaticSamplers = &sampler;
 
-    if (s_pipeline.CreateRootSignature(rootSigDesc)) return false;
+    if (!s_pipeline.CreateRootSignature(rootSigDesc)) return false;
 
     auto pipelineDesc = Internal::Graphics::GraphicsPipeline::CreateDefaultPipelineDesc();
     pipelineDesc.DepthStencilState.DepthEnable = false;
@@ -138,11 +142,10 @@ void Glib::SkyboxManager::Draw()
     // スカイボックスを描画
     for (const auto& camera : s_cameraManager->Cameras())
     {
-        if (!camera->Active() || camera->ClearFlags() == CameraClearFlags::Color) continue;
+        if (!camera->Active() || (camera->ClearFlags() == CameraClearFlags::Color)) continue;
 
         camera->SetRenderTarget();
         camera->SetConstantBuffer(1);
         s_skyboxs.at(s_drawSkyboxId).Draw();
     }
 }
-

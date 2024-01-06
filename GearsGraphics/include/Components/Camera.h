@@ -81,6 +81,7 @@ namespace Glib
         virtual void SetDepthStencil() override;
         virtual void SetShadowMap(unsigned int rootParamIndex) override;
         virtual void ExecuteShadowBulr() override;
+        virtual void OnGUI() override;
 
     private:
         WeakPtr<Transform> transform_{ nullptr };
@@ -107,4 +108,3 @@ namespace Glib
         float orthographicSize_{ 10.0f };
     };
 }
-

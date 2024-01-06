@@ -14,9 +14,6 @@ namespace Glib::Internal::Graphics::ShaderCode
             float4x4 LightVP;
         };
 
-        Texture2D<float4> skyboxTex : register(t0);
-        SamplerState smp : register(s0);
-
         struct VSInput
         {
             float4 position : POSITION;
@@ -30,6 +27,9 @@ namespace Glib::Internal::Graphics::ShaderCode
         };
 
         typedef VSOutput PSInput;
+
+        Texture2D<float4> skyboxTex : register(t0);
+        SamplerState smp : register(s0);
 
         VSOutput VSmain(VSInput input)
         {
@@ -48,4 +48,3 @@ namespace Glib::Internal::Graphics::ShaderCode
         })"
     };
 }
-

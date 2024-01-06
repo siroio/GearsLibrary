@@ -42,11 +42,12 @@ namespace
 bool Glib::Texture::CreateTexture(std::string_view path)
 {
     std::filesystem::path filePath = path;
+    if (!filePath.is_absolute()) filePath = std::filesystem::absolute(filePath);
     if (!filePath.has_extension()) return false;
     DirectX::TexMetadata metadata{};
     DirectX::ScratchImage scratchImg{};
     auto extension = filePath.extension().generic_string();
-    if ((extension != "tga") || (extension != "dds"))
+    if (!extension.ends_with("tga") || extension.ends_with("dds"))
         extension = "png";
     const auto& func = s_loadFunctions.at(extension);
 
@@ -178,4 +179,3 @@ bool Glib::Texture::CreateShaderResourceView(DXGI_FORMAT fmt)
 
     return true;
 }
-
