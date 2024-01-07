@@ -2,31 +2,25 @@
 
 namespace Glib
 {
-    enum class GPADKey : unsigned int
+    enum class GPADKey : unsigned short
     {
-        UP = 0,
-        DOWN = 1,
-        LEFT = 2,
-        RIGHT = 3,
-        Y = 4,
-        TRIANGLE = 4,
-        NORTH = 4,
-        B = 5,
-        CIRCLE = 5,
-        EAST = 5,
-        SOUTH = 6,
-        A = 6,
-        CROSS = 6,
-        SQUARE = 7,
-        WEST = 7,
-        X = 7,
-        LEFT_STICK = 8,
-        RIGHT_STICK = 9,
-        LEFT_SHOULDER = 10,
-        RIGHT_SHOULDER = 11,
-        START = 12,
-        SELECT = 13,
-        LEFT_TRIGGER = 32,
-        RIGHT_TRIGGER = 33
+        UP = 0x0001,
+        DOWN = 0x0002,
+        LEFT = 0x0004,
+        RIGHT = 0x0008,
+        START = 0x0010,
+        SELECT = 0x0020,
+        LEFT_TRIGGER = 0x0100,
+        RIGHT_TRIGGER = 0x0200,
+        A = 0x1000,
+        CROSS = 0x1000,
+        B = 0x2000,
+        CIRCLE = 0x2000,
+        X = 0x4000,
+        SQUARE = 0x4000,
+        Y = 0x8000,
+        TRIANGLE = 0x8000,
+        LEFT_STICK = 0x0040,
+        RIGHT_STICK = 0x0080
     };
 }

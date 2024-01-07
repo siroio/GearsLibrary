@@ -4,6 +4,7 @@
 #include <Singleton.h>
 #include <FuncOrderDefinition.h>
 #include <Internal/KeyBoardKeys.h>
+#include <Internal/GamePadKeys.h>
 
 namespace Glib
 {
@@ -48,5 +49,9 @@ namespace Glib
          * @return 離した true
         */
         static bool GetKeyUp(KeyCode key);
+
+        static bool GetButton(GPADKey button, unsigned int pad = 0U);
+        static bool GetButtonDown(GPADKey button, unsigned int pad = 0U);
+        static bool GetButtonUp(GPADKey button, unsigned int pad = 0U);
     };
 }

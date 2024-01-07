@@ -47,24 +47,22 @@ bool Glib::Internal::Input::DinputGamePad::GetButton(GPADKey button)
 
 bool Glib::Internal::Input::DinputGamePad::GetButtonDown(GPADKey button)
 {
-    auto type = static_cast<unsigned int>(button);
-    return currentButton_[type] && !prevButton_[type];
+    return false;
 }
 
 bool Glib::Internal::Input::DinputGamePad::GetButtonUp(GPADKey button)
 {
-    auto type = static_cast<unsigned int>(button);
-    return !currentButton_[type] && prevButton_[type];
+    return false;
 }
 
 Vector2 Glib::Internal::Input::DinputGamePad::GetLeftStick(float deadZone)
 {
-
+    return Vector2::Zero();
 }
 
 Vector2 Glib::Internal::Input::DinputGamePad::GetRightStick(float deadZone)
 {
-    return Vector2();
+    return Vector2::Zero();
 }
 
 float Glib::Internal::Input::DinputGamePad::GetLeftTrigger(float deadZone)

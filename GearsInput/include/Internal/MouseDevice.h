@@ -9,6 +9,7 @@ namespace Glib::Internal::Input
     class MouseDevice
     {
     public:
+        MouseDevice() = default;
         ~MouseDevice();
         MouseDevice(const MouseDevice&) = delete;
         MouseDevice& operator = (const MouseDevice&) = delete;

@@ -8,34 +8,32 @@
 
 namespace Glib::Internal::Input
 {
+    enum class PadNum : unsigned int
+    {
+        PAD_1 = 0,
+        PAD_2 = 1,
+        PAD_3 = 2,
+        PAD_4 = 3,
+        CAPACITY = 4,
+    };
+
     class GamePadDevice
     {
     public:
         using GamePad = std::variant<XinputGamePad, DinputGamePad>;
 
-        enum class PadNum : unsigned int
-        {
-            PAD_1 = 0,
-            PAD_2 = 1,
-            PAD_3 = 2,
-            PAD_4 = 3,
-            CAPACITY = 4,
-        };
-
-        enum class InputType : unsigned int
-        {
-            Xinput = 0,
-            Dinput = 1
-        };
-
     public:
         bool Initialize(ComPtr<IDirectInput8>& dinput);
         void Update();
 
-        //bool GetButton(PadNum pad, GPADCode button);
-        //bool GetButtonDown(PadNum pad, GPADCode button);
-        //bool GetButtonUp(PadNum pad, GPADCode button);
-        //bool GetAxis(PadNum pad, unsigned short axis);
+        bool GetButton(PadNum pad, GPADKey button);
+        bool GetButtonDown(PadNum pad, GPADKey button);
+        bool GetButtonUp(PadNum pad, GPADKey button);
+        Vector2 GetLeftStick(PadNum pad);
+        Vector2 GetRightStick(PadNum pad);
+        Vector2 GetLeftTrigger(PadNum pad);
+        Vector2 GetRightTrigger(PadNum pad);
+        void VibrateGamepad(PadNum padNum, float left, float right, float time);
 
     private:
         std::array<GamePad, 4> devices_;

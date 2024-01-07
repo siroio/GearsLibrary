@@ -54,7 +54,7 @@ set(LIBRARY
     GearsAudio
     GearsScene
     GearsMath
-    GearsPhysics
+    #GearsPhysics
     GearsUtility
     GearsDebug
     Gears3DObject
@@ -73,7 +73,7 @@ set(DIRECTX12_LIBS
 set(EXTERNAL_LIBS
     DirectXTex
     nlohmann_json
-    Bullet
+    #Bullet
 )
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -89,8 +89,8 @@ endforeach()
 # == プロジェクト構成 ==
 
 # Setup Bullet
-set(BULLET_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/Modules/Bullet)
-include_directories(${BULLET_INCLUDE_DIR})
+#set(BULLET_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/Modules/Bullet)
+#include_directories(${BULLET_INCLUDE_DIR})
 #target_link_libraries(3DPlatformer ${BULLET_LIBRARIES} -lGL -lGLU)
 
 # Libフォルダが存在しない場合は作成
@@ -121,13 +121,13 @@ add_subdirectory(./GearsMath)
 add_subdirectory(./GearsInput)
 add_subdirectory(./GearsAudio)
 add_subdirectory(./GearsUtility)
-add_subdirectory(./GearsPhysics)
+#add_subdirectory(./GearsPhysics)
 add_subdirectory(./GearsDebug)
 add_subdirectory(./Gears3DObject)
 
 add_subdirectory(./Modules/DirectXTex)
 add_subdirectory(./Modules/json)
-add_subdirectory(./Modules/Bullet)
+#add_subdirectory(./Modules/Bullet)
 
 # ツール類のサブディレクトリの追加
 add_subdirectory(./ModelConverter)
@@ -144,50 +144,6 @@ set_target_properties(texconv PROPERTIES FOLDER Modules/DirectXTex)
 set_target_properties(texdiag PROPERTIES FOLDER Modules/DirectXTex)
 set_target_properties(ddsview PROPERTIES FOLDER Modules/DirectXTex)
 
-set_target_properties(App_BasicExample PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(App_ExampleBrowser PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(App_HelloBulletRobotics PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(App_HelloWorld PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(App_obj2sdf PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(App_PhysicsServer_SharedMemory PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(App_PhysicsServer_SharedMemory_GUI PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(App_RobotSimulator PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(App_RobotSimulator_NoGUI PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(AppBasicExampleGui PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(App_TwoJoint PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(Bullet2FileLoader PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(Bullet3Collision PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(Bullet3Common PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(Bullet3Dynamics PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(Bullet3Geometry PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(Bullet3OpenCL_clew PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(BulletCollision PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(BulletDynamics PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(BulletExampleBrowserLib PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(BulletFileLoader PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(BulletInverseDynamics PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(BulletInverseDynamicsUtils PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(BulletRobotics PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(BulletRoboticsGUI PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(BulletSoftBody PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(BulletWorldImporter PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(BulletXmlWorldImporter PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(BussIK PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(clsocket PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(ConvexDecomposition PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(GIMPACTUtils PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(gtest PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(gwen PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(HACD PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(LinearMath PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(OpenGLWindow PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(Test_btKinematicCharacterController PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(Test_BulletDynamics PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(Test_BulletInverseDynamics PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(Test_BulletInverseDynamicsJacobian PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(Test_BulletInverseForwardDynamics PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(Test_Collision PROPERTIES FOLDER Modules/Bullet)
-set_target_properties(Test_PhysicsClientServer PROPERTIES FOLDER Modules/Bullet)
 
 
 # ドキュメントのビルドオプション

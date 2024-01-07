@@ -57,3 +57,18 @@ bool Glib::InputSystem::GetKeyUp(KeyCode key)
 {
     return s_keyBoard->GetKeyUp(key);
 }
+
+bool Glib::InputSystem::GetButton(GPADKey button, unsigned int pad)
+{
+    return s_gamePad->GetButton(static_cast<Glib::Internal::Input::PadNum>(pad), button);
+}
+
+bool Glib::InputSystem::GetButtonDown(GPADKey button, unsigned int pad)
+{
+    return s_gamePad->GetButtonDown(static_cast<Glib::Internal::Input::PadNum>(pad), button);
+}
+
+bool Glib::InputSystem::GetButtonUp(GPADKey button, unsigned int pad)
+{
+    return s_gamePad->GetButtonUp(static_cast<Glib::Internal::Input::PadNum>(pad), button);
+}

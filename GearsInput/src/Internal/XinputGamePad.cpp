@@ -2,16 +2,11 @@
 #include <Internal/XinputGamePad.h>
 #include <GameTimer.h>
 #include <Vector2.h>
+#include <Internal/ImGuiManager.h>
 
 bool Glib::Internal::Input::XinputGamePad::Initialize(DWORD controllerIndex)
 {
     controllerIndex_ = controllerIndex;
-    if (XInputGetState(controllerIndex_, &currentPadState_.state) == ERROR_DEVICE_NOT_CONNECTED)
-    {
-        currentPadState_.isConnected = false;
-        return false;
-    }
-
     currentPadState_.isConnected = true;
     return true;
 }
@@ -19,9 +14,9 @@ bool Glib::Internal::Input::XinputGamePad::Initialize(DWORD controllerIndex)
 void Glib::Internal::Input::XinputGamePad::Update()
 {
     float now = GameTimer::Now();
-    if (currentPadState_.isConnected) return;
+    if (!currentPadState_.isConnected) return;
     prevPadState_ = currentPadState_;
-    if (XInputGetState(controllerIndex_, &currentPadState_.state) == ERROR_DEVICE_NOT_CONNECTED)
+    if (XInputGetState(controllerIndex_, &currentPadState_.state) != ERROR_SUCCESS)
     {
         currentPadState_.isConnected = false;
     }
@@ -48,6 +43,7 @@ bool Glib::Internal::Input::XinputGamePad::GetButton(GPADKey button)
 {
     if (!CheckConnection()) return false;
     auto type = static_cast<unsigned int>(button);
+    Glib::Internal::Debug::ImGuiManager::Instance()->Log(std::to_string(currentPadState_.state.Gamepad.wButtons));
     return currentPadState_.state.Gamepad.wButtons & type;
 }
 

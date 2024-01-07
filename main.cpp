@@ -57,6 +57,10 @@ public:
         Vector3 velocity;
         Vector3 rotation;
         float speed = 10;
+        if (InputSystem::GetButton(GPADKey::A))
+        {
+            imgui->Log("Pressed A");
+        }
         if (InputSystem::GetKey(KeyCode::Up))
         {
             velocity.y += speed * GameTimer::DeltaTime();

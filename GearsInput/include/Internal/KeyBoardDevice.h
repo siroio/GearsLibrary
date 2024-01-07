@@ -1,8 +1,8 @@
 ﻿#pragma once
-#include <dinput.h>
+#include <Internal/DirectInput8.h>
+#include <Internal/KeyBoardKeys.h>
 #include <array>
 #include <ComPtr.h>
-#include<Internal/KeyBoardKeys.h>
 
 namespace Glib::Internal::Input
 {
