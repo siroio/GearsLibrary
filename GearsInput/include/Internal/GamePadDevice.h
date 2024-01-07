@@ -2,6 +2,7 @@
 #include <Internal/DinputGamePad.h>
 #include <Internal/XinputGamePad.h>
 #include <Internal/GamePadKeys.h>
+#include <ComPtr.h>
 #include <array>
 #include <variant>
 
@@ -17,7 +18,8 @@ namespace Glib::Internal::Input
             PAD_1 = 0,
             PAD_2 = 1,
             PAD_3 = 2,
-            PAD_4 = 3
+            PAD_4 = 3,
+            CAPACITY = 4,
         };
 
         enum class InputType : unsigned int

@@ -13,7 +13,7 @@ create_filter()
 add_library(${LIB_NAME} STATIC ${SOURCE_FILE} ${HEADER_FILE})
 target_compile_features(${LIB_NAME} PRIVATE cxx_std_20)
 target_include_directories(${LIB_NAME} PUBLIC ./include)
-target_link_libraries(${LIB_NAME} GearsCore GearsObject GearsUtility GearsDebug)
+target_link_libraries(${LIB_NAME} GearsCore GearsObject GearsUtility GearsDebug Bullet)
 set_target_properties(${LIB_NAME}
     PROPERTIES
     VERSION ${PROJECT_VERSION})

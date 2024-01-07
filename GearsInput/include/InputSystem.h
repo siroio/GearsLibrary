@@ -50,4 +50,3 @@ namespace Glib
         static bool GetKeyUp(KeyCode key);
     };
 }
-

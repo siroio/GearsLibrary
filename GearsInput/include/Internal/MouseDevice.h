@@ -1,8 +1,8 @@
 ﻿#pragma once
-#include <Windows.h>
-#include <Vector2.h>
+#include <Internal/DirectInput8.h>
 #include <Internal/MouseButton.h>
-#include <unordered_map>
+#include <ComPtr.h>
+#include <Vector2.h>
 
 namespace Glib::Internal::Input
 {
@@ -10,25 +10,25 @@ namespace Glib::Internal::Input
     {
     public:
         ~MouseDevice();
-        bool Initialize();
+        MouseDevice(const MouseDevice&) = delete;
+        MouseDevice& operator = (const MouseDevice&) = delete;
+
+        bool Initialize(ComPtr<IDirectInput8>& dinput);
         void Update();
 
-        bool ButtonDown(MouseButton button);
-        bool ButtonUP(MouseButton button);
-        bool Pressed(MouseButton button);
-
-        Vector2 Position();
-        Vector2 Delta();
+        bool ButtonDown(MouseButton button) const;
+        bool ButtonUP(MouseButton button) const;
+        bool Pressed(MouseButton button) const;
+        Vector2 Position() const;
+        Vector2 Delta() const;
+        float Wheel() const;
+        void ShowCursor() const;
+        void HideCursor() const;
+        void SetPosition(const Vector2& position) const;
 
     private:
-        void RawInputMsgHandler(UINT msg, WPARAM wparam, LPARAM lparam);
-
-    private:
-        RAWINPUTDEVICE device_;
-        Vector2 delta_;
-        Vector2 position_;
-        std::array<unsigned char, 2> prevMouseButton_;
-        std::array<unsigned char, 2> currentMouseButton_;
+        DIMOUSESTATE2 currentMouseState_{ NULL };
+        DIMOUSESTATE2 prevMouseState_{ NULL };
+        LPDIRECTINPUTDEVICE8 inputDevice_{ nullptr };
     };
 }
-

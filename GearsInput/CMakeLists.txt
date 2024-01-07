@@ -11,9 +11,9 @@ set(SOURCE_FILE
 )
 
 set(HEADER_FILE
+    ./include/Internal/DirectInput8.h
     ./include/Internal/IGamePad.h
     ./include/Internal/InputState.h
-    ./include/Internal/InputData.h
     ./include/Internal/KeyBoardKeys.h
     ./include/Internal/GamePadKeys.h
     ./include/Internal/GamePadDevice.h

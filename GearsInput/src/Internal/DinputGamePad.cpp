@@ -1,5 +1,5 @@
-﻿#pragma once
-#include <Internal/DinputGamePad.h>
+﻿#include <Internal/DinputGamePad.h>
+#include <Vector2.h>
 
 bool Glib::Internal::Input::DinputGamePad::Initialize(ComPtr<IDirectInput8>& dinput)
 {
@@ -22,32 +22,57 @@ bool Glib::Internal::Input::DinputGamePad::Initialize(ComPtr<IDirectInput8>& din
     if (FAILED(device_->GetCapabilities(&devCaps))) return false;
     if (FAILED(device_->Acquire())) return false;
 
-    button_.fill(0);
     return true;
 }
 
 void Glib::Internal::Input::DinputGamePad::Update()
 {
+    prevState_ = currentState_;
     // 状態を取得
-    DIJOYSTATE joyState{};
-    if (FAILED(device_->Poll()))
+    if (FAILED(device_->Poll())) return;
+
+    if (FAILED(device_->GetDeviceState(sizeof(currentState_), &currentState_))) return;
+    // デバイスが無効になっている場合は再取得を試みる
+    if (DIERR_INPUTLOST == device_->Acquire())
     {
-        // デバイスが無効になっている場合は再取得を試みる
-        while (DIERR_INPUTLOST == device_->Acquire())
-        {
-            device_->Acquire();
-        }
-        return;
+        device_->Acquire();
+        device_->GetDeviceState(sizeof(currentState_), &currentState_);
     }
+}
 
-    if (FAILED(device_->GetDeviceState(sizeof(DIJOYSTATE), &joyState))) return;
+bool Glib::Internal::Input::DinputGamePad::GetButton(GPADKey button)
+{
+    return currentState_.rgbButtons[static_cast<unsigned int>(button)] & 0x80;
+}
 
-    for (size_t i = 0; i < button_.size(); i++)
-    {
-        button_[i] = joyState.rgbButtons[i] & 0x80;
-    }
+bool Glib::Internal::Input::DinputGamePad::GetButtonDown(GPADKey button)
+{
+    auto type = static_cast<unsigned int>(button);
+    return currentButton_[type] && !prevButton_[type];
+}
 
-    // 軸の値を更新
-    axisX_ = static_cast<float>(joyState.lX) / 1000.0f;
-    axisY_ = static_cast<float>(joyState.lY) / 1000.0f;
+bool Glib::Internal::Input::DinputGamePad::GetButtonUp(GPADKey button)
+{
+    auto type = static_cast<unsigned int>(button);
+    return !currentButton_[type] && prevButton_[type];
+}
+
+Vector2 Glib::Internal::Input::DinputGamePad::GetLeftStick(float deadZone)
+{
+
+}
+
+Vector2 Glib::Internal::Input::DinputGamePad::GetRightStick(float deadZone)
+{
+    return Vector2();
+}
+
+float Glib::Internal::Input::DinputGamePad::GetLeftTrigger(float deadZone)
+{
+    return 0.0f;
+}
+
+float Glib::Internal::Input::DinputGamePad::GetRightTrigger(float deadZone)
+{
+    return 0.0f;
 }

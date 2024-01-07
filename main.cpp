@@ -4,33 +4,42 @@
 #include <Game.h>
 #include <GameTimer.h>
 #include <Scene.h>
-#include <SceneManager.h>
 #include <Debugger.h>
-#include <GameObject.h>
-#include <GameObjectManager.h>
-#include <Component.h>
+
+#include <Window.h>
+#include <InputSystem.h>
+#include <GLObject.h>
+
 #include <TextureManager.h>
+#include <GameObjectManager.h>
+#include <AnimationManager.h>
+#include <SkyboxManager.h>
 #include <MeshManager.h>
+#include <SceneManager.h>
+
+#include <Internal/ImGuiManager.h>
 #include <Internal/RenderingManager.h>
+
+#include <GameObject.h>
+#include <Component.h>
 #include <Components/Camera.h>
 #include <Components/Canvas.h>
 #include <Components/Image.h>
 #include <Components/SpriteRenderer.h>
 #include <Components/MeshRenderer.h>
 #include <Components/SkinnedMeshRenderer.h>
-#include <Window.h>
-#include <InputSystem.h>
-#include <GLObject.h>
 #include <Components/Animator.h>
-#include <AnimationManager.h>
-#include <Internal/ImGuiManager.h>
-#include <SkyboxManager.h>
 
 using namespace Glib;
 
 namespace
 {
     auto imgui = Internal::Debug::ImGuiManager::Instance();
+    auto renderingManager = Internal::Graphics::RenderingManager::Instance();
+
+    const Vector3 LIGHT_DIRECTION{ 59.0f, 169.5f, 0.0f };
+    const Color LIGHT_AMBIENT{ 0.7f, 0.7f, 0.7f, 1.0f };
+    const Color LIGHT_DIFFUSE{ 0.7f, 0.7f, 0.7f, 1.0f };
 }
 
 // テスト用コンポーネント
@@ -107,6 +116,11 @@ public:
         if (!isloaded) return;
         isloaded = AnimationManager::Instance().Load(0, R"(Assets/上肢テスト01-表情入り.glanim)");
         if (!isloaded) return;
+
+        // 平行光源設定
+        renderingManager->LightAmbient(LIGHT_AMBIENT);
+        renderingManager->LightDiffuse(LIGHT_DIFFUSE);
+        renderingManager->LightDirection(LIGHT_DIRECTION);
 
         // カメラ作成
         SkyboxManager::Instance()->SetSkybox(0);
