@@ -3,6 +3,7 @@
 #include <Mathf.h>
 #include <GameObject.h>
 #include <GameTimer.h>
+#include <GLGUI.h>
 
 namespace
 {
@@ -48,7 +49,7 @@ void Glib::AudioSource::LateUpdate()
 void Glib::AudioSource::Play()
 {
     if (sourceVoice_ == nullptr) return;
-    if (audioStatus_ == AudioStatus::Pause)
+    if (!audioStatus_.Has(AudioStatus::Pause))
     {
         sourceVoice_->Stop();
         sourceVoice_->FlushSourceBuffers();
@@ -129,7 +130,10 @@ void Glib::AudioSource::AudioID(unsigned int id)
 {
     if (audioId_ == id) return;
     audioId_ = id;
-    s_xAudio2->CreateSourceVoice(id, Loop(), audioClip_, &sourceVoice_);
+
+    bool loop = audioClip_.expired() ? false : Loop();
+    s_xAudio2->CreateSourceVoice(id, loop, audioClip_, &sourceVoice_);
+
     if (sourceVoice_ == nullptr) return;
     sourceVoice_->SubmitSourceBuffer(&audioClip_->Buffer());
 
@@ -137,16 +141,22 @@ void Glib::AudioSource::AudioID(unsigned int id)
     if (groupId_ >= 0) SetGroup(groupId_);
 
     // 3Dオーディオの設定
-    if (audioStatus_ != AudioStatus::Is3DAudio) return;
-    const unsigned int channel = audioClip_->Channels();
-    emitter_.ChannelCount = channel;
-    emitterAzimuths_.reset(new float[channel]);
-    emitter_.pChannelAzimuths = emitterAzimuths_.get();
-    UpdateVoice();
+    if (audioStatus_.Has(AudioStatus::Is3DAudio))
+    {
+        unsigned int channel = audioClip_->Channels();
+        emitter_.ChannelCount = channel;
+        emitterAzimuths_.reset(new float[channel]
+        {
+            0.0f
+        });
+        emitter_.pChannelAzimuths = emitterAzimuths_.get();
+        UpdateVoice();
+    }
 }
 
 void Glib::AudioSource::SetGroup(int group)
 {
+    groupId_ = group;
     if (sourceVoice_ == nullptr) return;
     s_xAudio2->SetOutputSubMixVoice(sourceVoice_, group);
 }
@@ -176,3 +186,47 @@ void Glib::AudioSource::UpdateVoice()
     s_xAudio2->Audio3DCalculate(&emitter_, sourceVoice_, groupId_);
 }
 
+void Glib::AudioSource::OnGUI()
+{
+    Component::OnGUI();
+    int id = static_cast<int>(audioId_);
+    if (GLGUI::InputInt("AudioClip", &id))
+    {
+        AudioID(id);
+    }
+
+    int group = groupId_;
+    if (GLGUI::InputInt("OuputGroup", &group))
+    {
+        SetGroup(group);
+    }
+
+    float volume = Volume();
+    if (GLGUI::DragFloat("Volume", &volume, 0.01f, 0.0f, 1.0f))
+    {
+        Volume(volume);
+    }
+
+    bool playOnStart = PlayOnStart();
+    if (GLGUI::CheckBox("PlayOnStart", &playOnStart))
+    {
+        PlayOnStart(playOnStart);
+    }
+
+    bool loop = Loop();
+    if (GLGUI::CheckBox("Loop", &loop))
+    {
+        Loop(loop);
+    }
+
+    bool is3DSound = Is3DSound();
+    if (GLGUI::CheckBox("3D Sound", &is3DSound))
+    {
+        Is3DSound(is3DSound);
+    }
+
+    if (is3DSound)
+    {
+        GLGUI::DragFloat("Doppler", &emitter_.DopplerScaler, 0.001f, 0.0f);
+    }
+}

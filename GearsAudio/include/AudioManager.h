@@ -28,7 +28,6 @@ namespace Glib
         /**
          * @brief 音声を読み込む
          */
-        void LoadVoice(unsigned int groupId, std::string_view path);
+        bool LoadVoice(unsigned int groupId, std::string_view path);
     };
 }
-

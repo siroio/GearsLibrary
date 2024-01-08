@@ -13,7 +13,7 @@ Glib::AudioClip::AudioClip(std::string_view name, const WAVEFORMATEX& format, co
 {
     // バッファの作成
     XAUDIO2_BUFFER buffer{};
-    buffer.pAudioData = audioData_.data();
+    buffer.pAudioData = reinterpret_cast<const BYTE*>(audioData_.data());
     buffer.Flags = XAUDIO2_END_OF_STREAM;
     buffer.AudioBytes = static_cast<UINT32>(audioData_.size());
     buffer.LoopCount = 0;
@@ -59,4 +59,3 @@ bool Glib::AudioClip::Load(unsigned int id, std::string_view filePath)
 {
     return s_xAudio2->LoadVoice(id, filePath);
 }
-

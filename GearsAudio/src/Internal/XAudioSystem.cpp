@@ -13,6 +13,7 @@
 #include <memory>
 #include <algorithm>
 #include <ranges>
+#include <Debugger.h>
 
 namespace
 {
@@ -146,18 +147,23 @@ void Glib::Internal::Audio::XAudioSystem::Audio3DCalculate(const X3DAUDIO_EMITTE
 void Glib::Internal::Audio::XAudioSystem::CreateSourceVoice(unsigned id, bool loop, WeakPtr<AudioClip>& clip, IXAudio2SourceVoice** voice)
 {
     // voiceを初期化
-    if (auto* pVoice = *voice; pVoice != nullptr)
+    if ((*voice) != nullptr)
     {
-        pVoice->Stop();
-        pVoice->DestroyVoice();
-        pVoice = nullptr;
+        (*voice)->Stop();
+        (*voice)->DestroyVoice();
+        (*voice) = nullptr;
     }
 
-    // TODO: ERROR Handling => invalid id
-    if (!s_audioClips.contains(id)) return;
-    clip = s_audioClips.at(id);
-    clip->Loop(loop);
-    s_xAudio2->CreateSourceVoice(voice, &clip->Format());
+    if (auto audio = s_audioClips.find(id); audio != s_audioClips.end())
+    {
+        clip = audio->second;
+        clip->Loop(loop);
+        s_xAudio2->CreateSourceVoice(voice, &clip->Format());
+    }
+    else
+    {
+        Glib::Debug::Error("Invalid ID: " + std::to_string(id));
+    }
 }
 
 void Glib::Internal::Audio::XAudioSystem::CreateSubMixVoice(unsigned groupId)
@@ -172,13 +178,13 @@ void Glib::Internal::Audio::XAudioSystem::CreateSubMixVoice(unsigned groupId)
 void Glib::Internal::Audio::XAudioSystem::SetOutputSubMixVoice(IXAudio2SourceVoice* sourceVoice, unsigned groupId)
 {
     if (sourceVoice == nullptr) return;
-    if (s_subMixVoice.contains(groupId))
+    if (!s_subMixVoice.contains(groupId))
     {
         sourceVoice->SetOutputVoices(nullptr);
         return;
     }
 
-    const auto smv = s_subMixVoice.at(groupId);
+    const auto& smv = s_subMixVoice.at(groupId);
     XAUDIO2_SEND_DESCRIPTOR sendDescriptor{ 0, smv.get() };
     const XAUDIO2_VOICE_SENDS voiceSends{ 1, &sendDescriptor };
     sourceVoice->SetOutputVoices(&voiceSends);
@@ -186,11 +192,10 @@ void Glib::Internal::Audio::XAudioSystem::SetOutputSubMixVoice(IXAudio2SourceVoi
 
 void Glib::Internal::Audio::XAudioSystem::SetListenerParameter(const Vector3& position, const Vector3& forward, const Vector3& up)
 {
-    Vector3 velocity{
-        position.x - s_X3DAudioListener.Position.x,
-        position.y - s_X3DAudioListener.Position.y,
-        position.z - s_X3DAudioListener.Position.z
-    };
+    Vector3 velocity = Vector3::Zero();
+    velocity.x = position.x - s_X3DAudioListener.Position.x;
+    velocity.y = position.y - s_X3DAudioListener.Position.y;
+    velocity.z = position.z - s_X3DAudioListener.Position.z;
 
     // velocityの計算
     const float deltaTime = GameTimer::DeltaTime();
@@ -209,4 +214,3 @@ void Glib::Internal::Audio::XAudioSystem::SetGroupVolume(unsigned int groupId, f
     if (!s_subMixVoice.contains(groupId)) return;
     s_subMixVoice.at(groupId)->SetVolume(volume);
 }
-

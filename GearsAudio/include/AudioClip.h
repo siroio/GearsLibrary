@@ -61,4 +61,3 @@ namespace Glib
         std::vector<unsigned char> audioData_;
     };
 }
-

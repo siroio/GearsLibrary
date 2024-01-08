@@ -6,8 +6,8 @@
 
 std::shared_ptr<Glib::AudioClip> Glib::Internal::Audio::WavLoader::Load(std::string_view file)
 {
-    const std::filesystem::path wavPath = std::filesystem::absolute(file);
-    if (exists(wavPath) || wavPath.extension().generic_string().ends_with("wav")) return nullptr;
+    const auto wavPath = std::filesystem::absolute(file);
+    if (!(std::filesystem::exists(wavPath) && wavPath.extension().string().ends_with("wav"))) return nullptr;
     std::ifstream wavFile{ file.data(), std::ios::in, std::ios::binary };
 
     // 開けるか確認
@@ -32,13 +32,13 @@ std::shared_ptr<Glib::AudioClip> Glib::Internal::Audio::WavLoader::Load(std::str
     }
 
     // データサイズ取得
-    const size_t dataSize = FindChunk(wavFile, "data ");
+    const size_t dataSize = FindChunk(wavFile, "data");
     if (dataSize <= 0) return nullptr;
-    const auto dataBuffer = std::vector<BYTE>(dataSize);
-    wavFile.read(reinterpret_cast<char*>(dataBuffer.front()), dataSize);
-    wavFile.close();
+
+    auto dataBuffer = std::vector<BYTE>(dataSize);
+    wavFile.read(reinterpret_cast<char*>(dataBuffer.data()), dataSize);
     auto audioClip = std::make_shared<AudioClip>(
-        wavPath.filename().generic_string(),
+        wavPath.filename().string(),
         format,
         dataBuffer
     );
@@ -47,14 +47,13 @@ std::shared_ptr<Glib::AudioClip> Glib::Internal::Audio::WavLoader::Load(std::str
 
 size_t Glib::Internal::Audio::WavLoader::FindChunk(std::ifstream& stream, std::string_view name)
 {
-    while (!stream.eof())
+    while (true)
     {
         CHUNK chunk{};
         stream.read(reinterpret_cast<char*>(&chunk), sizeof(chunk));
-        std::string chunkName{ chunk.Id.data(), 4 };
-        if (chunkName == name) return chunk.Size;
-        stream.seekg(chunk.Size, std::ios::cur);
+        std::string chunkStr{ chunk.Id, 4 };
+        if (chunkStr.starts_with(name)) return chunk.Size;
+        else stream.seekg(chunk.Size, std::ios_base::cur);
     }
     return 0;
 }
-

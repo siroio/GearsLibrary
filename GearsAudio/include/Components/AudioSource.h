@@ -12,9 +12,9 @@ namespace Glib
     {
         enum class AudioStatus
         {
-            PlayOnStart,
+            Pause,
             Is3DAudio,
-            Pause
+            PlayOnStart,
         };
     public:
         AudioSource();
@@ -97,6 +97,7 @@ namespace Glib
 
     private:
         void UpdateVoice();
+        void OnGUI() override;
 
     private:
         BitFlag<AudioStatus>  audioStatus_{};
@@ -108,4 +109,3 @@ namespace Glib
         int groupId_{ -1 };
     };
 }
-

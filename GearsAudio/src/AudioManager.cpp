@@ -16,8 +16,7 @@ void Glib::AudioManager::SetSoundGroupVolume(unsigned int groupId, float volume)
     s_xAudio->SetGroupVolume(groupId, volume);
 }
 
-void Glib::AudioManager::LoadVoice(unsigned int groupId, std::string_view path)
+bool Glib::AudioManager::LoadVoice(unsigned int groupId, std::string_view path)
 {
-    s_xAudio->LoadVoice(groupId, path);
+    return s_xAudio->LoadVoice(groupId, path);
 }
-

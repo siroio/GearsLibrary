@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include <Internal/IAudioLoader.h>
-#include <array>
 
 namespace Glib::Internal::Audio
 {
@@ -8,14 +7,14 @@ namespace Glib::Internal::Audio
     {
         struct CHUNK
         {
-            std::array<char, 4> Id;
+            char Id[4];
             unsigned int Size;
         };
 
         struct RIFF
         {
             CHUNK Chunk;
-            std::array<char, 4> Type;
+            char Type[4];
         };
 
     public:
@@ -36,4 +35,3 @@ namespace Glib::Internal::Audio
         static size_t FindChunk(std::ifstream& stream, std::string_view name);
     };
 }
-
