@@ -242,7 +242,7 @@ Vector3 Vector3::LerpUnclamped(const Vector3& a, const Vector3& b, float t)
     return Vector3{ lerp_x, lerp_y, lerp_z };
 }
 
-Vector3 Vector3::SLerp(const Vector3& a, const Vector3& b, float t)
+Vector3 Vector3::Slerp(const Vector3& a, const Vector3& b, float t)
 {
     float dot = Dot(a, b);
     dot = Mathf::Clamp(dot, -1.0f, 1.0f);
@@ -511,4 +511,3 @@ std::ostream& operator<<(std::ostream& stream, const Vector3& v)
 {
     return stream << v.ToString();
 }
-

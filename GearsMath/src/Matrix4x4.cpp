@@ -53,25 +53,21 @@ Matrix4x4 Matrix4x4::Translate(const Vector3& v)
 
 Matrix4x4 Matrix4x4::Rotate(const Quaternion& q)
 {
-    float x = q.x * 2.0f;
-    float y = q.y * 2.0f;
-    float z = q.z * 2.0f;
-
-    float xx = q.x * x;
-    float yy = q.y * y;
-    float zz = q.z * z;
-    float xy = q.x * y;
-    float xz = q.x * z;
-    float yz = q.y * z;
-    float wx = q.w * x;
-    float wy = q.w * y;
-    float wz = q.w * z;
+    float xx = q.x * q.x * 2.0f;
+    float yy = q.y * q.y * 2.0f;
+    float zz = q.z * q.z * 2.0f;
+    float xy = q.x * q.y * 2.0f;
+    float xz = q.x * q.z * 2.0f;
+    float yz = q.y * q.z * 2.0f;
+    float wx = q.w * q.x * 2.0f;
+    float wy = q.w * q.y * 2.0f;
+    float wz = q.w * q.z * 2.0f;
 
     return Matrix4x4
     {
-        1.0f - (yy + zz), xy + wz, xz - wy, 0.0f,
-        xy - wz, 1.0f - (xx + zz), yz + wx, 0.0f,
-        xz + wy, yz - wx, 1.0f - (xx + yy), 0.0f,
+        1.0f - yy - zz, xy + wz, xz - wy, 0.0f,
+        xy - wz, 1.0f - xx - zz, yz + wx, 0.0f,
+        xz + wy, yz - wx, 1.0f - xx - yy, 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f
     };
 }
@@ -673,4 +669,3 @@ std::ostream& operator<<(std::ostream& stream, const Matrix4x4& m)
 {
     return stream << m.ToString();
 }
-

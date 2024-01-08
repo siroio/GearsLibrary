@@ -16,8 +16,9 @@ Quaternion Quaternion::Identity()
 
 float Quaternion::Angle(const Quaternion& q1, const Quaternion& q2)
 {
-    float dot = Mathf::Min(Dot(q1, q2), 1.0f);
-    return Mathf::Tolerance(dot) ? 0.0f : Mathf::Acos(dot) * 2.0f * Mathf::RAD2DEG;
+    float dot = Dot(q1, q2);
+    if (dot > 1.0f - Mathf::EPSILON) return 0.0f;
+    return Mathf::Acos(Mathf::Clamp(dot, -1.0f, 1.0f)) * 2.0f;
 }
 
 Quaternion Quaternion::AngleAxis(float angle, const Vector3& axis)
@@ -46,25 +47,23 @@ Quaternion Quaternion::Normalize(const Quaternion& q)
 
 Quaternion Quaternion::Euler(float x, float y, float z)
 {
-    auto v = Vector3{ x * 0.5f, y * 0.5f, z * 0.5f };
-    float xSin = Mathf::Sin(v.x);
-    float xCos = Mathf::Cos(v.x);
-    float ySin = Mathf::Sin(v.y);
-    float yCos = Mathf::Cos(v.y);
-    float zSin = Mathf::Sin(v.z);
-    float zCos = Mathf::Cos(v.z);
-
-    float resX = xSin * yCos * zCos + xCos * ySin * zSin;
-    float resY = -xSin * yCos * zSin + xCos * ySin * zCos;
-    float resZ = -xSin * ySin * zCos + xCos * yCos * zSin;
-    float resW = xSin * ySin * zSin + xCos * yCos * zCos;
-
-    return Quaternion{ resX, resY, resZ, resW };
+    return Euler(Vector3{ x, y, z });
 }
 
 Quaternion Quaternion::Euler(const Vector3& euler)
 {
-    return Euler(euler.x, euler.y, euler.z);
+    Vector3 v = euler * Mathf::DEG2RAD;
+    float c1 = std::cos(v.x * 0.5f);
+    float c2 = std::cos(v.y * 0.5f);
+    float c3 = std::cos(v.z * 0.5f);
+    float s1 = std::sin(v.x * 0.5f);
+    float s2 = std::sin(v.y * 0.5f);
+    float s3 = std::sin(v.z * 0.5f);
+    float x = s1 * c2 * c3 + c1 * s2 * s3;
+    float y = c1 * s2 * c3 - s1 * c2 * s3;
+    float z = c1 * c2 * s3 - s1 * s2 * c3;
+    float w = c1 * c2 * c3 + s1 * s2 * s3;
+    return Quaternion{ x, y, z, w };
 }
 
 Quaternion Quaternion::Inverse(const Quaternion& q)
@@ -93,9 +92,8 @@ Quaternion Quaternion::SlerpUnclamped(const Quaternion& a, const Quaternion& b, 
     if (dot < 1.0f - Mathf::EPSILON)
     {
         float theta = Mathf::Acos(dot);
-        float sinThetaInv = Mathf::Inverse(Mathf::Sin(theta));
-        t0 = Mathf::Sin(theta * t0) * sinThetaInv;
-        t1 = Mathf::Sin(theta * t1) * sinThetaInv;
+        t0 = Mathf::Sin(theta * t0) / Mathf::Sin(theta);
+        t1 = Mathf::Sin(theta * t1) / Mathf::Sin(theta);
     }
 
     return ((a * t0) + (b * sign * t1)).Normalized();
@@ -141,7 +139,7 @@ Quaternion Quaternion::LookRotation(const Vector3& view, const Vector3& up)
     if (radicand > 0.0f)
     {
         result.w = Mathf::Sqrt(1.0f + radicand) * 0.5f;
-        float recip = 0.25f / result.w;
+        float recip = 1.0f / (4.0f * result.w);
         result.x = (upwards.z - forward.y) * recip;
         result.y = (forward.x - right.z) * recip;
         result.z = (right.y - upwards.x) * recip;
@@ -149,7 +147,7 @@ Quaternion Quaternion::LookRotation(const Vector3& view, const Vector3& up)
     else if (right.x >= upwards.y && right.x >= forward.z)
     {
         result.x = Mathf::Sqrt(1.0f + right.x - upwards.y - forward.z) * 0.5f;
-        float recip = Mathf::Inverse(4.0f * result.x);
+        float recip = 1.0f / (4.0f * result.x);
         result.w = (upwards.z - forward.y) * recip;
         result.z = (forward.x + right.z) * recip;
         result.y = (right.y + upwards.x) * recip;
@@ -157,7 +155,7 @@ Quaternion Quaternion::LookRotation(const Vector3& view, const Vector3& up)
     else if (upwards.y > forward.z)
     {
         result.y = Mathf::Sqrt(1.0f - right.x + upwards.y - forward.z) * 0.5f;
-        float recip = Mathf::Inverse(4.0f * result.y);
+        float recip = 1.0f / (4.0f * result.y);
         result.z = (upwards.z + forward.y) * recip;
         result.w = (forward.x - right.z) * recip;
         result.x = (right.y + upwards.x) * recip;
@@ -165,7 +163,7 @@ Quaternion Quaternion::LookRotation(const Vector3& view, const Vector3& up)
     else
     {
         result.z = Mathf::Sqrt(1.0f - right.x - upwards.y + forward.z) * 0.5f;
-        float recip = Mathf::Inverse(4.0f * result.z);
+        float recip = 1.0f / (4.0f * result.z);
         result.y = (upwards.z + forward.y) * recip;
         result.x = (forward.x + right.z) * recip;
         result.w = (right.y - upwards.x) * recip;
@@ -222,31 +220,33 @@ void Quaternion::SetLookRotation(const Vector3& view, const Vector3& up)
 
 Vector3 Quaternion::EulerAngles() const
 {
-    Vector3 ax = *this * Vector3{ 1.0f, 0.0f, 0.0f };
-    Vector3 ay = *this * Vector3{ 0.0f, 1.0f, 0.0f };
-    Vector3 az = *this * Vector3{ 0.0f, 0.0f, 1.0f };
-    Vector3 result = Vector3(0.0f, 0.0f, 0.0f);
+    Vector3 ax = *this * Vector3::Right();
+    Vector3 ay = *this * Vector3::Up();
+    Vector3 az = *this * Vector3::Forward();
+    Vector3 result = Vector3::Zero();
     if (az.y < 1.0f)
     {
         if (az.y > -1.0f)
         {
-            result.x = std::asin(-az.y);
-            result.y = std::atan2(az.x, az.z);
-            result.z = std::atan2(ax.y, ay.y);
+            result.x = Mathf::Asin(-az.y);
+            result.y = Mathf::Atan2(az.x, az.z);
+            result.z = Mathf::Atan2(ax.y, ay.y);
         }
         else
         {
             result.x = Mathf::PI / 2.0f;
-            result.y = -std::atan2(-ay.x, ax.x);
+            result.y = -Mathf::Atan2(-ay.x, ax.x);
             result.z = 0.0f;
         }
     }
     else
     {
         result.x = -Mathf::PI / 2.0f;
-        result.y = std::atan2(-ay.x, ax.x);
+        result.y = Mathf::Atan2(-ay.x, ax.x);
         result.z = 0.0f;
     }
+    result *= Mathf::RAD2DEG;
+
     return InternalMakePositive(result);
 }
 
@@ -277,7 +277,7 @@ std::string Quaternion::ToString() const
 
 Vector3 Quaternion::InternalMakePositive(Vector3& euler)
 {
-    constexpr float NegativeFlip = -0.0001f * Mathf::RAD2DEG;
+    constexpr float NegativeFlip = -Mathf::EPSILON * Mathf::RAD2DEG;
     constexpr float PositiveFlip = 360.0f + NegativeFlip;
 
     if (euler.x < NegativeFlip)
@@ -397,4 +397,3 @@ std::ostream& operator<<(std::ostream& stream, const Quaternion& q)
 {
     return stream << q.ToString();
 }
-
