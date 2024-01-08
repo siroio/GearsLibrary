@@ -1,6 +1,7 @@
 ﻿#include <Components/Transform.h>
 #include <Matrix4x4.h>
 #include <GLGUI.h>
+#include <Mathf.h>
 
 Glib::Transform::~Transform()
 {
@@ -236,8 +237,10 @@ Vector3 Glib::Transform::InverseTransformDirection(const Vector3& direction) con
 void Glib::Transform::Parent(Glib::WeakPtr<Transform> parent)
 {
     if (parent == weak_from_this()) return;
+
     if (!parent.expired())
     {
+        // 親がいたら親の子供リストから自分を削除
         parent->RemoveChild(weak_from_this());
         local_position_ = parent->TransformPoint(local_position_);
         local_rotation_ = parent->Rotation() * local_rotation_;
@@ -246,8 +249,9 @@ void Glib::Transform::Parent(Glib::WeakPtr<Transform> parent)
 
     parent_ = parent;
 
-    if (!parent.expired())
+    if (!parent_.expired())
     {
+        // 親の子供に自分を追加
         parent_->AddChild(weak_from_this());
         local_position_ = parent_->InverseTransformPoint(local_position_);
         local_rotation_ = Quaternion::Inverse(parent->Rotation()) * local_rotation_;
@@ -286,7 +290,7 @@ void Glib::Transform::OnGUI()
     GLGUI::DragVector3("Position", &local_position_);
 
     auto eulr = LocalEulerAngles();
-    if (GLGUI::DragVector3("Rotation", &eulr))
+    if (GLGUI::DragVector3("Rotation", &eulr, 0.1f))
     {
         LocalEulerAngles(eulr);
     }
