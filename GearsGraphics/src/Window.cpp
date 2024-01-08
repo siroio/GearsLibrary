@@ -18,7 +18,7 @@ namespace
 
 LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    for (const auto& [id, proc] : s_windowProcedures)
+    for (const auto& [_, proc] : s_windowProcedures)
     {
         std::invoke(proc, hwnd, msg, wparam, lparam);
     }
