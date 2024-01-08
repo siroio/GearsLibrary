@@ -11,7 +11,7 @@
 namespace
 {
     bool s_enableHierarchy{ true };
-    bool s_enableInspector{ true };
+    bool s_enableProperties{ true };
     GameObjectPtr s_selectObject{ nullptr };
 }
 
@@ -34,7 +34,7 @@ void Glib::GameObjectManager::DebugDraw()
     if (ImGui::BeginMenu("Window"))
     {
         GLGUI::CheckBox("Hierarchy", &s_enableHierarchy);
-        GLGUI::CheckBox("Inspector", &s_enableInspector);
+        GLGUI::CheckBox("Properties", &s_enableProperties);
         ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();
@@ -52,9 +52,9 @@ void Glib::GameObjectManager::DebugDraw()
         ImGui::End();
     }
 
-    if (s_enableInspector)
+    if (s_enableProperties)
     {
-        ImGui::Begin("Inspector", &s_enableInspector);
+        ImGui::Begin("Properties", &s_enableProperties);
 
         if (!s_selectObject.expired())
         {
@@ -72,18 +72,17 @@ void Glib::GameObjectManager::DebugDraw()
 
             // 名前の表示
             auto name = s_selectObject->Name();
-            name.resize(64);
             ImGui::Text(name.c_str());
 
             if (ImGui::InputText("##Name", name.data(), name.size(), flags))
             {
                 s_selectObject->Name(name);
             }
+            ImGui::SameLine();
 
             // レイヤーの表示
             std::string layer = "Layer: " + std::to_string(s_selectObject->Layer());
             ImGui::Text(layer.c_str());
-
             ImGui::Separator();
 
             // コンポーネントの表示
@@ -129,6 +128,7 @@ void Glib::GameObjectManager::DrawDebugParams(GameObjectPtr gameObject)
 
     if (opened)
     {
+        // 子供を再帰的に呼び出す
         for (const auto& child : gameObject->Transform()->Children())
         {
             DrawDebugParams(child->GameObject());
