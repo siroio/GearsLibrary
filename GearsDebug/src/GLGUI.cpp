@@ -23,6 +23,11 @@ void Glib::GLGUI::Text(std::string_view fmt, ...)
     va_end(args);
 }
 
+bool Glib::GLGUI::TabHeader(std::string_view label, bool open)
+{
+    return ImGui::CollapsingHeader(label.data(), open ? ImGuiTreeNodeFlags_DefaultOpen : ImGuiTreeNodeFlags_None);
+}
+
 bool Glib::GLGUI::Button(std::string_view label, bool sameLine)
 {
     if (sameLine) ImGui::SameLine();
@@ -55,8 +60,9 @@ bool Glib::GLGUI::ComboBox(std::string_view label, std::string& curerntItem, con
     return false;
 }
 
-bool Glib::GLGUI::TreeNode(std::string_view label, bool leaf)
+bool Glib::GLGUI::TreeNode(std::string_view label, bool leaf, bool openNode)
 {
+    if (openNode) ImGui::SetNextItemOpen(openNode, ImGuiCond_Once);
     return ImGui::TreeNodeEx(label.data(), leaf ? GL_TREE_LEAF : GL_TREE_NODE);
 }
 
@@ -77,6 +83,23 @@ bool Glib::GLGUI::InputFloat(std::string_view label, float* value, bool sameLine
     return ImGui::InputFloat(label.data(), value, 0.0f, 0.0f, "%.3f", GL_ENTER_RETURN);
 }
 
+bool Glib::GLGUI::InputVector2(std::string_view label, Vector2* value, bool sameLine)
+{
+    if (sameLine) ImGui::SameLine();
+    return ImGui::InputFloat2(label.data(), value->xy.data(), "%.3f", GL_ENTER_RETURN);
+}
+
+bool Glib::GLGUI::InputVector3(std::string_view label, Vector3* value, bool sameLine)
+{
+    if (sameLine) ImGui::SameLine();
+    return ImGui::InputFloat3(label.data(), value->xyz.data(), "%.3f", GL_ENTER_RETURN);
+}
+
+bool Glib::GLGUI::InputVector4(std::string_view label, Vector4* value, bool sameLine)
+{
+    if (sameLine) ImGui::SameLine();
+    return ImGui::InputFloat4(label.data(), value->xyzw.data(), "%.3f", GL_ENTER_RETURN);
+}
 
 bool Glib::GLGUI::DragInt(std::string_view label, int* value, float speed, int min, int max, bool sameLine)
 {
@@ -117,11 +140,33 @@ bool Glib::GLGUI::SliderFloat(std::string_view label, float* value, float min, f
 bool Glib::GLGUI::CoorPicker3(std::string_view label, Color* color, bool sameLine)
 {
     if (sameLine) ImGui::SameLine();
-    return ImGui::ColorPicker3(label.data(), color->Raw(), GL_COLOR_FLAG);
+    return ImGui::ColorPicker3(label.data(), color->Raw(), GL_COLOR_PICK_FLAG);
 }
 
 bool Glib::GLGUI::CoorPicker4(std::string_view label, Color* color, bool sameLine)
 {
     if (sameLine) ImGui::SameLine();
-    return ImGui::ColorPicker4(label.data(), color->Raw(), GL_COLOR_FLAG);
+    return ImGui::ColorPicker4(label.data(), color->Raw(), GL_COLOR_PICK_FLAG);
+}
+
+bool Glib::GLGUI::ColorInput3(std::string_view label, Color* color, bool preview, bool sameLine)
+{
+    if (sameLine) ImGui::SameLine();
+    return ImGui::ColorEdit3(label.data(), color->Raw(), GL_COLOR_INPUT_FLAG);
+}
+
+bool Glib::GLGUI::ColorInput4(std::string_view label, Color* color, bool preview, bool sameLine)
+{
+    if (sameLine) ImGui::SameLine();
+    return ImGui::ColorEdit4(label.data(), color->Raw(), GL_COLOR_INPUT_FLAG);
+}
+
+bool Glib::GLGUI::ColorBar3(std::string_view label, Color* color)
+{
+    return ImGui::ColorEdit3(label.data(), color->Raw(), ImGuiColorEditFlags_NoInputs);
+}
+
+bool Glib::GLGUI::ColorBar4(std::string_view label, Color* color)
+{
+    return ImGui::ColorEdit4(label.data(), color->Raw(), ImGuiColorEditFlags_NoInputs);
 }

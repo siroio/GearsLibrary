@@ -1,5 +1,6 @@
 ﻿#include <Debugger.h>
 #include <cassert>
+#include <Internal/ImGuiManager.h>
 
 #if defined(DEBUG) || defined(_DEBUG)
 
@@ -8,6 +9,8 @@ namespace
     constexpr char INFO_PREFIX[]{ "[INFO]" };
     constexpr char WARN_PREFIX[]{ "[WARN]" };
     constexpr char ERROR_PREFIX[]{ "[ERROR]" };
+
+    auto s_imgui = Glib::Internal::Debug::ImGuiManager::Instance();
 }
 
 bool Glib::Debug::Enabled()
@@ -29,10 +32,7 @@ void Glib::Debug::Assert(bool expression, std::string_view message)
 
 void Glib::Debug::Log(std::string_view message, LogLevel loglevel)
 {
-    std::cout
-        << Glib::TimeUtility::CurrentTimeStr()
-        << GetPrefix(loglevel) << " "
-        << message << "\n";
+    s_imgui->Log(message, loglevel);
 }
 
 void Glib::Debug::Error(std::string_view message)
@@ -82,4 +82,3 @@ std::string Glib::Debug::GetPrefix(LogLevel loglevel)
 {}
 
 #endif
-

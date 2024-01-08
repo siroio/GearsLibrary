@@ -1,8 +1,5 @@
 ﻿#pragma once
-#include <iostream>
-#include <format>
 #include <string_view>
-#include <TimeUtility.h>
 
 namespace Glib
 {
@@ -60,18 +57,5 @@ namespace Glib
          * @param loglevel
          */
         static std::string GetPrefix(LogLevel loglevel);
-
-#if defined(DEBUG) || defined(_DEBUG)
-        /**
-         * @brief フォーマット指定で出力
-         */
-        template<class... Args>
-        static void Format(std::string_view fmt, const Args&... args)
-        {
-            std::cout << Glib::TimeUtility::CurrentTimeStr();
-            std::cout << std::format(fmt, args) << std::endl;
-        }
-#endif
     };
 }
-

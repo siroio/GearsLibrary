@@ -184,9 +184,9 @@ void Glib::Internal::Debug::ImGuiManager::DebugDraw()
     ImGui::BeginMainMenuBar();
     if (ImGui::BeginMenu("Window"))
     {
+        if (ImGui::Button("Reset Layout")) s_resetLayout = true;
         ImGui::Checkbox("GameView", &s_enableGameView);
         ImGui::Checkbox("Console", &s_enableConsole);
-        if (ImGui::Button("Reset Layout")) s_resetLayout = true;
         ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();
@@ -260,9 +260,9 @@ void Glib::Internal::Debug::ImGuiManager::DrawConsole()
     for (const auto& [level, message] : s_consoleLog)
     {
         ImVec4 textoColor{ 1.0f, 1.0f, 1.0f, 1.0f };
-        if (s_logTextColor.contains(level))
+        if (auto colorIt = s_logTextColor.find(level); colorIt != s_logTextColor.end())
         {
-            textoColor = s_logTextColor.at(level);
+            textoColor = colorIt->second;
         }
         ImGui::TextColored(textoColor, message.c_str());
     }
@@ -346,14 +346,14 @@ void Glib::Internal::Debug::ImGuiManager::ResetLayout()
     ImGui::DockBuilderSetNodeSize(dockSpaceID, viewport->WorkSize);
     ImGuiID gameViewDockID{ 0 };
     ImGuiID consoleDockID{ 0 };
-    ImGuiID inspectorDockID{ 0 };
+    ImGuiID propertiesDockID{ 0 };
     ImGuiID hierarchyDockID{ 0 };
 
-    ImGui::DockBuilderSplitNode(dockSpaceID, ImGuiDir_Right, 0.2f, &inspectorDockID, &gameViewDockID);
+    ImGui::DockBuilderSplitNode(dockSpaceID, ImGuiDir_Right, 0.2f, &propertiesDockID, &gameViewDockID);
     ImGui::DockBuilderSplitNode(gameViewDockID, ImGuiDir_Right, 0.2f, &hierarchyDockID, &gameViewDockID);
     ImGui::DockBuilderSplitNode(gameViewDockID, ImGuiDir_Down, 0.3f, &consoleDockID, &gameViewDockID);
 
-    ImGui::DockBuilderDockWindow("Inspector", inspectorDockID);
+    ImGui::DockBuilderDockWindow("Properties", propertiesDockID);
     ImGui::DockBuilderDockWindow("Console", consoleDockID);
     ImGui::DockBuilderDockWindow("Hierarchy", hierarchyDockID);
     ImGui::DockBuilderDockWindow("GameWindow", gameViewDockID);
