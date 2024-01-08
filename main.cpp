@@ -16,12 +16,11 @@
 #include <SkyboxManager.h>
 #include <MeshManager.h>
 #include <SceneManager.h>
-
-#include <Internal/ImGuiManager.h>
-#include <Internal/RenderingManager.h>
+#include <AudioManager.h>
 
 #include <GameObject.h>
 #include <Component.h>
+#include <Components/DirectionalLight.h>
 #include <Components/Camera.h>
 #include <Components/Canvas.h>
 #include <Components/Image.h>
@@ -29,15 +28,15 @@
 #include <Components/MeshRenderer.h>
 #include <Components/SkinnedMeshRenderer.h>
 #include <Components/Animator.h>
+#include <Components/AudioListener.h>
+#include <Components/AudioSource.h>
+#include <filesystem>
 
 using namespace Glib;
 
 namespace
 {
-    auto imgui = Internal::Debug::ImGuiManager::Instance();
-    auto renderingManager = Internal::Graphics::RenderingManager::Instance();
-
-    const Vector3 LIGHT_DIRECTION{ 59.0f, 169.5f, 0.0f };
+    const Vector3 LIGHT_DIRECTION{ 30.0f, 40.0f, 0.0f };
     const Color LIGHT_AMBIENT{ 0.7f, 0.7f, 0.7f, 1.0f };
     const Color LIGHT_DIFFUSE{ 0.7f, 0.7f, 0.7f, 1.0f };
 }
@@ -48,7 +47,7 @@ class TestMover : public Component
 public:
     void Start()
     {
-        imgui->Log("Enable " + nameof(*this));
+        Debug::Log("Enable " + nameof(*this));
     }
 
     void Update()
@@ -57,10 +56,8 @@ public:
         Vector3 velocity;
         Vector3 rotation;
         float speed = 10;
-        if (InputSystem::GetButton(GPADKey::A))
-        {
-            imgui->Log("Pressed A");
-        }
+        float rotSpeed = 270;
+
         if (InputSystem::GetKey(KeyCode::Up))
         {
             velocity.y += speed * GameTimer::DeltaTime();
@@ -87,14 +84,45 @@ public:
         }
         if (InputSystem::GetKey(KeyCode::A))
         {
-            rotation.y -= speed * GameTimer::DeltaTime();
+            rotation.y -= rotSpeed * GameTimer::DeltaTime();
         }
         if (InputSystem::GetKey(KeyCode::D))
         {
-            rotation.y += speed * GameTimer::DeltaTime();
+            rotation.y += rotSpeed * GameTimer::DeltaTime();
         }
+
+        auto lstick = InputSystem::GetLeftStick();
+        auto rstick = InputSystem::GetRightStick();
+        if (lstick.SqrMagnitude() > 0.1f || rstick.SqrMagnitude() > 0.1f)
+        {
+            lstick *= speed * GameTimer::DeltaTime();
+            rstick.y *= speed * GameTimer::DeltaTime();
+            velocity = Vector3{ lstick.x, lstick.y, rstick.y };
+            rotation.y = rstick.x * rotSpeed * GameTimer::DeltaTime();
+        }
+
         transform->Position(transform->Position() + velocity);
         transform->Rotate(rotation);
+    }
+};
+
+class TestAudio : public Component
+{
+public:
+    void Start()
+    {
+        auto source = GameObject()->AddComponent<AudioSource>();
+        source->AudioID(0);
+        source->SetGroup(0);
+    }
+
+    void Update()
+    {
+        auto se = GameObject()->GetComponent<AudioSource>();
+        if (InputSystem::GetKeyDown(KeyCode::Space))
+        {
+            se->Play();
+        }
     }
 };
 
@@ -116,15 +144,51 @@ public:
         );
         if (!isloaded) return;
 
-        isloaded = MeshManager::Instance().Load(0, R"(Assets/Appearance Miku\Appearance Miku.globj)");
-        if (!isloaded) return;
-        isloaded = AnimationManager::Instance().Load(0, R"(Assets/上肢テスト01-表情入り.glanim)");
-        if (!isloaded) return;
+        int meshID{ 0 }, animID{ 0 }, audiID{ 0 };
+        for (const auto& entry : std::filesystem::recursive_directory_iterator("Assets"))
+        {
+            if (!entry.is_regular_file()) continue;
+            auto ext = entry.path().extension().string();
+            if (ext.ends_with("globj"))
+            {
+                isloaded = MeshManager::Instance().Load(meshID, entry.path().string());
+                if (!isloaded)
+                {
+                    Debug::Error(entry.path().string() + "のロードに失敗しました。");
+                    continue;
+                }
+                meshID++;
+            }
+            if (ext.ends_with("glanim"))
+            {
+                isloaded = AnimationManager::Instance().Load(animID, entry.path().string());
+                if (!isloaded)
+                {
+                    Debug::Error(entry.path().string() + "のロードに失敗しました。");
+                    continue;
+                }
+                animID++;
+            }
+            if (ext.ends_with("wav"))
+            {
+                isloaded = AudioManager::Instance()->LoadVoice(audiID, entry.path().string());
+                if (!isloaded)
+                {
+                    Debug::Error(entry.path().string() + "のロードに失敗しました。");
+                    continue;
+                }
+                AudioManager::Instance()->AddSoundGroup(0);
+                AudioManager::Instance()->SetSoundGroupVolume(0, 1.0f);
+                audiID++;
+            }
+        }
 
         // 平行光源設定
-        renderingManager->LightAmbient(LIGHT_AMBIENT);
-        renderingManager->LightDiffuse(LIGHT_DIFFUSE);
-        renderingManager->LightDirection(LIGHT_DIRECTION);
+        auto light = GameObjectManager::Instantiate("Light")
+            ->AddComponent<DirectionalLight>();
+        light->Ambient(LIGHT_AMBIENT);
+        light->Diffuse(LIGHT_DIFFUSE);
+        light->GameObject()->Transform()->EulerAngles(LIGHT_DIRECTION);
 
         // カメラ作成
         SkyboxManager::Instance()->SetSkybox(0);
@@ -132,6 +196,7 @@ public:
         auto initPosition = Vector3{ 0.0f, 10.0f, -20.0f };
         camera->Transform()->Position(initPosition);
         camera->AddComponent<Camera>()->ClearFlags(CameraClearFlags::SkyBox);
+        camera->AddComponent<AudioListener>();
 
         // オブジェクト生成
         auto mesh = GameObjectManager::Instantiate("Mesh");
@@ -140,13 +205,15 @@ public:
         mesh->AddComponent<TestMover>();
         renderer->MeshID(0);
         animator->AnimationID(0);
+        animator->Loop(true);
+        mesh->AddComponent<TestAudio>();
 
-        imgui->Log("Scene Loading...");
+        Debug::Log("Scene Loading...");
     }
 
     void End() override
     {
-        imgui->Log("Scene End...");
+        Debug::Log("Scene End...");
     }
 };
 
@@ -155,17 +222,17 @@ class MyGame : public Game
 {
     void Start() override
     {
-        imgui->Log("GAME STARTTING");
+        Debug::Log("GAME STARTTING");
         SceneManager::Register<TestScene>();
-        imgui->Log("Scene: " + SceneManager::SceneName<TestScene>() + " Registered");
-        imgui->Log("TestScene Load Start");
+        Debug::Log("Scene: " + SceneManager::SceneName<TestScene>() + " Registered");
+        Debug::Log("TestScene Load Start");
         SceneManager::LoadScene("TestScene");
-        imgui->Log("TestScene Load Complete");
+        Debug::Log("TestScene Load Complete");
     }
 
     void End() override
     {
-        std::cout << "GAME END" << std::endl;
+        Debug::Log("GAME END");
     }
 };
 
