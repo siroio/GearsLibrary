@@ -53,36 +53,41 @@ bool Glib::SkyboxManager::Initialize()
     // スカイボックス用頂点
     SkyboxVertex vertices[]
     {
-        // TOP
-        { Vector3(-1.0f, 1.0f, -1.0f), Vector2(0.0f, 0.0f) },
-        { Vector3(1.0f, 1.0f, -1.0f), Vector2(1.0f, 0.0f) },
-        { Vector3(-1.0f, 1.0f, 1.0f), Vector2(0.0f, 1.0f) },
-        { Vector3(1.0f, 1.0f, 1.0f), Vector2(1.0f, 1.0f) },
-        // BOTTOM
-        { Vector3(-1.0f, -1.0f, -1.0f), Vector2(0.0f, 0.0f) },
-        { Vector3(1.0f, -1.0f, -1.0f), Vector2(1.0f, 0.0f) },
-        { Vector3(-1.0f, -1.0f, 1.0f), Vector2(0.0f, 1.0f) },
-        { Vector3(1.0f, -1.0f, 1.0f), Vector2(1.0f, 1.0f) },
-        // LEFT
-        { Vector3(-1.0f, 1.0f, 1.0f), Vector2(0.0f, 0.0f) },
-        { Vector3(-1.0f, 1.0f, -1.0f), Vector2(1.0f, 0.0f) },
-        { Vector3(-1.0f, -1.0f, 1.0f), Vector2(0.0f, 1.0f) },
-        { Vector3(-1.0f, -1.0f, -1.0f), Vector2(1.0f, 1.0f) },
-        // RIGHT
-        { Vector3(1.0f, 1.0f, 1.0f), Vector2(0.0f, 0.0f) },
-        { Vector3(1.0f, 1.0f, -1.0f), Vector2(1.0f, 0.0f) },
-        { Vector3(1.0f, -1.0f, 1.0f), Vector2(0.0f, 1.0f) },
-        { Vector3(1.0f, -1.0f, -1.0f), Vector2(1.0f, 1.0f) },
-        // FRONT
-        { Vector3(-1.0f, 1.0f, -1.0f), Vector2(0.0f, 0.0f) },
-        { Vector3(1.0f, 1.0f, -1.0f), Vector2(1.0f, 0.0f) },
-        { Vector3(-1.0f, -1.0f, -1.0f), Vector2(0.0f, 1.0f) },
-        { Vector3(1.0f, -1.0f, -1.0f), Vector2(1.0f, 1.0f) },
-        // BACK
-        { Vector3(-1.0f, 1.0f, 1.0f), Vector2(0.0f, 0.0f) },
-        { Vector3(1.0f, 1.0f, 1.0f), Vector2(1.0f, 0.0f) },
-        { Vector3(-1.0f, -1.0f, 1.0f), Vector2(0.0f, 1.0f) },
-        { Vector3(1.0f, -1.0f, 1.0f), Vector2(1.0f, 1.0f) }
+        // Y+
+        { Vector3{ -0.5f, 0.5f,  0.5f }, Vector2{ 0.0f, 1.0f } },
+        { Vector3{ -0.5f, 0.5f, -0.5f }, Vector2{ 0.0f, 0.0f } },
+        { Vector3{  0.5f, 0.5f,  0.5f }, Vector2{ 1.0f, 1.0f } },
+        { Vector3{  0.5f, 0.5f, -0.5f }, Vector2{ 1.0f, 0.0f } },
+
+        // Y-
+        { Vector3{ -0.5f, -0.5f, -0.5f }, Vector2{ 0.0f, 1.0f } },
+        { Vector3{ -0.5f, -0.5f,  0.5f }, Vector2{ 0.0f, 0.0f } },
+        { Vector3{  0.5f, -0.5f, -0.5f }, Vector2{ 1.0f, 1.0f } },
+        { Vector3{  0.5f, -0.5f,  0.5f }, Vector2{ 1.0f, 0.0f } },
+
+        // X+
+        { Vector3{ 0.5f, -0.5f,  0.5f }, Vector2{ 0.0f, 1.0f } },
+        { Vector3{ 0.5f,  0.5f,  0.5f }, Vector2{ 0.0f, 0.0f } },
+        { Vector3{ 0.5f, -0.5f, -0.5f }, Vector2{ 1.0f, 1.0f } },
+        { Vector3{ 0.5f,  0.5f, -0.5f }, Vector2{ 1.0f, 0.0f } },
+
+        // X-
+        { Vector3{ -0.5f, -0.5f, -0.5f }, Vector2{ 0.0f, 1.0f } },
+        { Vector3{ -0.5f,  0.5f, -0.5f }, Vector2{ 0.0f, 0.0f } },
+        { Vector3{ -0.5f, -0.5f,  0.5f }, Vector2{ 1.0f, 1.0f } },
+        { Vector3{ -0.5f,  0.5f,  0.5f }, Vector2{ 1.0f, 0.0f } },
+
+        // Z+
+        { Vector3{ -0.5f, -0.5f, 0.5f }, Vector2{ 0.0f, 1.0f } },
+        { Vector3{ -0.5f,  0.5f, 0.5f }, Vector2{ 0.0f, 0.0f } },
+        { Vector3{  0.5f, -0.5f, 0.5f }, Vector2{ 1.0f, 1.0f } },
+        { Vector3{  0.5f,  0.5f, 0.5f }, Vector2{ 1.0f, 0.0f } },
+
+        // Z-
+        { Vector3{  0.5f, -0.5f, -0.5f }, Vector2{ 0.0f, 1.0f } },
+        { Vector3{  0.5f,  0.5f, -0.5f }, Vector2{ 0.0f, 0.0f } },
+        { Vector3{ -0.5f, -0.5f, -0.5f }, Vector2{ 1.0f, 1.0f } },
+        { Vector3{ -0.5f,  0.5f, -0.5f }, Vector2{ 1.0f, 0.0f } },
     };
 
     //頂点バッファ作成
