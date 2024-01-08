@@ -45,19 +45,20 @@ macro(create_filter)
 endmacro()
 
 # == グローバル設定 ==
-set(LIBRARY 
-    GearsCore
-    GearsGraphics
-    GearsObject
-    GearsComponent
-    GearsInput
-    GearsAudio
-    GearsScene
-    GearsMath
-    #GearsPhysics
-    GearsUtility
-    GearsDebug
+set(LIBRARY
     Gears3DObject
+    GearsAudio
+    GearsCore
+    GearsComponent
+    GearsDebug
+    GearsEffect
+    GearsGraphics
+    GearsInput
+    GearsMath
+    GearsObject
+    #GearsPhysics
+    GearsScene
+    GearsUtility
 )
 
 set(DIRECTX12_LIBS
@@ -73,6 +74,7 @@ set(DIRECTX12_LIBS
 set(EXTERNAL_LIBS
     DirectXTex
     nlohmann_json
+    Effekseer
     #Bullet
 )
 
@@ -112,21 +114,24 @@ add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 add_executable(${PROJECT_NAME} WIN32 main.cpp $<$<CXX_COMPILER_ID:MSVC>:utf8api.manifest>)
 
 # サブディレクトリの追加
-add_subdirectory(./GearsCore)
-add_subdirectory(./GearsGraphics)
-add_subdirectory(./GearsObject)
-add_subdirectory(./GearsComponent)
-add_subdirectory(./GearsScene)
-add_subdirectory(./GearsMath)
-add_subdirectory(./GearsInput)
-add_subdirectory(./GearsAudio)
-add_subdirectory(./GearsUtility)
-#add_subdirectory(./GearsPhysics)
-add_subdirectory(./GearsDebug)
 add_subdirectory(./Gears3DObject)
+add_subdirectory(./GearsAudio)
+add_subdirectory(./GearsComponent)
+add_subdirectory(./GearsCore)
+add_subdirectory(./GearsDebug)
+add_subdirectory(./GearsEffect)
+add_subdirectory(./GearsGraphics)
+add_subdirectory(./GearsInput)
+add_subdirectory(./GearsMath)
+add_subdirectory(./GearsObject)
+#add_subdirectory(./GearsPhysics)
+add_subdirectory(./GearsScene)
+add_subdirectory(./GearsUtility)
+
 
 add_subdirectory(./Modules/DirectXTex)
 add_subdirectory(./Modules/json)
+add_subdirectory(./Modules/Effekseer)
 #add_subdirectory(./Modules/Bullet)
 
 # ツール類のサブディレクトリの追加
@@ -144,7 +149,38 @@ set_target_properties(texconv PROPERTIES FOLDER Modules/DirectXTex)
 set_target_properties(texdiag PROPERTIES FOLDER Modules/DirectXTex)
 set_target_properties(ddsview PROPERTIES FOLDER Modules/DirectXTex)
 
-
+#Effekser
+set_target_properties(
+    Effekseer
+    EffekseerRendererDX11
+    EffekseerRendererDX12
+    EffekseerRendererDX9
+    EffekseerRendererGL
+    EffekseerSoundDSound
+    EffekseerSoundXAudio2
+    LLGI
+    PROPERTIES FOLDER Modules/Effekseer
+)    
+set_target_properties(
+    glfw
+    uninstall
+    PROPERTIES FOLDER Modules/Effekseer/GLFW3
+)
+set_target_properties(
+    Example_CustomLoader
+    Example_DirectX11
+    Example_DirectX12
+    Example_DirectX9
+    Example_Distortion
+    Example_Multithread
+    Example_NetworkClient
+    Example_NetworkServer
+    Example_OpenGL
+    Example_SortHandle
+    Example_Trigger
+    Example_Utils
+    PROPERTIES FOLDER Modules/Effekseer/Example
+)
 
 # ドキュメントのビルドオプション
 if(BUILD_DOCUMENTATION)
