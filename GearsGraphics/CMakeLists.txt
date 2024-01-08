@@ -17,6 +17,7 @@ set(SOURCE_FILE
     ./src/Internal/CameraManager.cpp
     ./src/Internal/RenderingManager.cpp
     ./src/Internal/CanvasManager.cpp
+    ./src/Components/DirectionalLight.cpp
     ./src/Components/Camera.cpp
     ./src/Components/Canvas.cpp
     ./src/Components/Image.cpp
@@ -70,6 +71,7 @@ set(HEADER_FILE
     ./include/Internal/UIRenderer.h
     ./include/Internal/Renderer.h
     ./include/Internal/SkinnedRenderer.h
+    ./include/Components/DirectionalLight.h
     ./include/Components/Camera.h
     ./include/Components/Canvas.h
     ./include/Components/Image.h
