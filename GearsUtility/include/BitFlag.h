@@ -82,7 +82,7 @@ namespace Glib
     template<class Enum> requires std::is_enum_v<Enum>
     bool BitFlag<Enum>::Has(Enum flag) const
     {
-        return (value_ & static_cast<EnumType>(flag)) == 0;
+        return (value_ & static_cast<EnumType>(flag)) != 0;
     }
 
     template<class Enum> requires std::is_enum_v<Enum>
@@ -107,14 +107,14 @@ namespace Glib
     template<class Enum> requires std::is_enum_v<Enum>
     BitFlag<Enum>& BitFlag<Enum>::operator&=(Enum&& flag)
     {
-        value_ &= static_cast<std::underlying_type_t<Enum>>(flag);
+        value_ &= static_cast<EnumType>(flag);
         return *this;
     }
 
     template<class Enum> requires std::is_enum_v<Enum>
     BitFlag<Enum>& BitFlag<Enum>::operator^=(Enum&& flag)
     {
-        value_ ^= static_cast<std::underlying_type_t<Enum>>(flag);
+        value_ ^= static_cast<EnumType>(flag);
         return *this;
     }
 
@@ -160,4 +160,3 @@ namespace Glib
         return value_ != other.value_;
     }
 }
-
