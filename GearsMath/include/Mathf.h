@@ -14,8 +14,8 @@ public:
     static constexpr float HALF_PI = std::numbers::pi_v<float> *0.5f;
     static constexpr float INV_PI = std::numbers::inv_pi_v<float>;
     static constexpr float PHI = std::numbers::phi_v<float>;
-    static constexpr float DEG2RAD = PI / 180.0f;
-    static constexpr float RAD2DEG = 180.0f / PI;
+    static constexpr float DEG2RAD = (PI * 2.0f) / 360.0f;
+    static constexpr float RAD2DEG = 360.0f / (PI * 2.0f);
     static constexpr float MAX = FLT_MAX;
     static constexpr float MIN = FLT_MIN;
     static constexpr float POSITIVE_INFINITY = std::numeric_limits<float>::infinity();
