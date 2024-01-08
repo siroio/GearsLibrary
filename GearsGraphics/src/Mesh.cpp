@@ -86,6 +86,9 @@ void Glib::Mesh::Draw()
     {
         const auto& material = materials_.at(subset.materialID);
 
+        // 定数バッファを設定
+        material.params.SetBuffer(ID::MESH_MATERIAL_BUFFER);
+
         //アルベドテクスチャを設定
         if (material.albedo.expired())
         {
@@ -106,9 +109,6 @@ void Glib::Mesh::Draw()
         {
             material.normal->SetTexture(ID::MESH_NORMAL_MAP);
         }
-
-        // 定数バッファを設定
-        material.params.SetBuffer(ID::MESH_MATERIAL_BUFFER);
 
         // 描画
         s_dx12->CommandList()->DrawIndexedInstanced(subset.indexCount, 1, subset.indexStart, 0, 0);
@@ -131,4 +131,3 @@ const std::vector<Glib::Bone>& Glib::Mesh::Bone() const
 {
     return bones_;
 }
-
