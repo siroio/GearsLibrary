@@ -6,6 +6,7 @@
 #include <GameObject.h>
 #include <MeshManager.h>
 #include <Mathf.h>
+#include <GLGUI.h>
 
 using namespace Glib::Internal::Graphics;
 
@@ -40,6 +41,16 @@ void Glib::SkinnedMeshRenderer::LateUpdate()
     worldConstantBuffer_.Update(sizeof(Matrix4x4), &worldMatrix);
     ComputeBone();
     boneConstantBuffer_.Update(static_cast<UINT>(sizeof(Matrix4x4) * boneMatrix_.size()), boneMatrix_.data());
+}
+
+void Glib::SkinnedMeshRenderer::OnGUI()
+{
+    Component::OnGUI();
+    int meshID = meshID_;
+    if (GLGUI::InputInt("MeshID", &meshID))
+    {
+        MeshID(meshID);
+    }
 }
 
 void Glib::SkinnedMeshRenderer::Draw(const WeakPtr<Internal::CameraBase>& camera)
@@ -132,4 +143,3 @@ std::array<Matrix4x4, 512>& Glib::SkinnedMeshRenderer::BoneMatrix()
 {
     return boneMatrix_;
 }
-

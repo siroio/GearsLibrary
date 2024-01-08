@@ -19,6 +19,7 @@ namespace Glib
         SkinnedMeshRenderer();
         void Start();
         void LateUpdate();
+        void OnGUI();
         void Draw(const WeakPtr<Internal::CameraBase>& camera);
         void DrawShadow(const WeakPtr<Internal::CameraBase>& camera);
 
@@ -69,4 +70,3 @@ namespace Glib
         bool isEnabled_{ false };
     };
 }
-

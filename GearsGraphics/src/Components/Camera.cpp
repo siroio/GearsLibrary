@@ -353,10 +353,8 @@ void Glib::Camera::ExecuteShadowBulr()
     shadowMapBlur.Execute(1.0f);
 }
 
-static Color color;
-
 void Glib::Camera::OnGUI()
 {
-
-    GLGUI::CoorPicker4("Background", &color);
+    Component::OnGUI();
+    GLGUI::ColorBar3("Background", &backGroundColor_);
 }

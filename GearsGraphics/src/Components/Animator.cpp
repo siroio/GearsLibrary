@@ -135,15 +135,16 @@ static float prev = 0.0f;
 
 void Glib::Animator::OnGUI()
 {
+    Component::OnGUI();
     int clipID = clipID_;
-    if (GLGUI::InputInt("ClipID: ", &clipID))
+    if (GLGUI::InputInt("ClipID", &clipID))
     {
         AnimationID(clipID);
     }
-    GLGUI::CheckBox("Loop: ", &isLoop_);
-    GLGUI::CheckBox("Resume: ", &isResume_);
-    GLGUI::DragFloat("Speed: ", &animationSpeed_, 0.01f, Mathf::EPSILON);
-    GLGUI::SliderFloat("BlendTime: ", &animationBlendTime_, 0.0f, 1.0f);
+    GLGUI::CheckBox("Loop", &isLoop_);
+    GLGUI::CheckBox("Resume", &isResume_);
+    GLGUI::DragFloat("Speed", &animationSpeed_, 0.01f, Mathf::EPSILON);
+    GLGUI::SliderFloat("BlendTime", &animationBlendTime_, 0.0f, 1.0f);
     GLGUI::Separator();
     GLGUI::InputFloat("Frame", &currentFrame_);
 }
