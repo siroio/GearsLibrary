@@ -29,10 +29,10 @@ namespace Glib::Internal::Input
         bool GetButton(PadNum pad, GPADKey button);
         bool GetButtonDown(PadNum pad, GPADKey button);
         bool GetButtonUp(PadNum pad, GPADKey button);
-        Vector2 GetLeftStick(PadNum pad);
-        Vector2 GetRightStick(PadNum pad);
-        Vector2 GetLeftTrigger(PadNum pad);
-        Vector2 GetRightTrigger(PadNum pad);
+        Vector2 GetLeftStick(PadNum pad, float deadZone);
+        Vector2 GetRightStick(PadNum pad, float deadZone);
+        float GetLeftTrigger(PadNum pad, float deadZone);
+        float GetRightTrigger(PadNum pad, float deadZone);
         void VibrateGamepad(PadNum padNum, float left, float right, float time);
 
     private:

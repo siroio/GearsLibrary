@@ -62,24 +62,44 @@ bool Glib::Internal::Input::GamePadDevice::GetButtonUp(PadNum pad, GPADKey butto
     }, device);
 }
 
-Vector2 Glib::Internal::Input::GamePadDevice::GetLeftStick(PadNum pad)
+Vector2 Glib::Internal::Input::GamePadDevice::GetLeftStick(PadNum pad, float deadZone)
 {
-    return Vector2::Zero();
+    auto idx = static_cast<unsigned int>(pad);
+    auto& device = devices_.at(idx);
+    return std::visit([&deadZone](auto& dev)
+    {
+        return dev.GetLeftStick(deadZone);
+    }, device);
 }
 
-Vector2 Glib::Internal::Input::GamePadDevice::GetRightStick(PadNum pad)
+Vector2 Glib::Internal::Input::GamePadDevice::GetRightStick(PadNum pad, float deadZone)
 {
-    return Vector2::Zero();
+    auto idx = static_cast<unsigned int>(pad);
+    auto& device = devices_.at(idx);
+    return std::visit([&deadZone](auto& dev)
+    {
+        return dev.GetRightStick(deadZone);
+    }, device);
 }
 
-Vector2 Glib::Internal::Input::GamePadDevice::GetLeftTrigger(PadNum pad)
+float Glib::Internal::Input::GamePadDevice::GetLeftTrigger(PadNum pad, float deadZone)
 {
-    return Vector2::Zero();
+    auto idx = static_cast<unsigned int>(pad);
+    auto& device = devices_.at(idx);
+    return std::visit([&deadZone](auto& dev)
+    {
+        return dev.GetLeftTrigger(deadZone);
+    }, device);
 }
 
-Vector2 Glib::Internal::Input::GamePadDevice::GetRightTrigger(PadNum pad)
+float Glib::Internal::Input::GamePadDevice::GetRightTrigger(PadNum pad, float deadZone)
 {
-    return Vector2::Zero();
+    auto idx = static_cast<unsigned int>(pad);
+    auto& device = devices_.at(idx);
+    return std::visit([&deadZone](auto& dev)
+    {
+        return dev.GetRightTrigger(deadZone);
+    }, device);
 }
 
 void Glib::Internal::Input::GamePadDevice::VibrateGamepad(PadNum pad, float left, float right, float time)

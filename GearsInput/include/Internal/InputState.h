@@ -13,4 +13,3 @@ namespace Glib::Internal::Input
         bool isVibrating{ false };
     };
 }
-

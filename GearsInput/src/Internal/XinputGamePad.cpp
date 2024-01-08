@@ -2,40 +2,43 @@
 #include <Internal/XinputGamePad.h>
 #include <GameTimer.h>
 #include <Vector2.h>
-#include <Internal/ImGuiManager.h>
+#include <Debugger.h>
 
 bool Glib::Internal::Input::XinputGamePad::Initialize(DWORD controllerIndex)
 {
     controllerIndex_ = controllerIndex;
-    currentPadState_.isConnected = true;
+    currentPadState_.isConnected = XInputGetState(controllerIndex_, &currentPadState_.state) == ERROR_SUCCESS;
     return true;
 }
 
 void Glib::Internal::Input::XinputGamePad::Update()
 {
     float now = GameTimer::Now();
-    if (!currentPadState_.isConnected) return;
-    prevPadState_ = currentPadState_;
-    if (XInputGetState(controllerIndex_, &currentPadState_.state) != ERROR_SUCCESS)
+    auto res = XInputGetState(controllerIndex_, &currentPadState_.state);
+
+    if (res != ERROR_SUCCESS)
     {
         currentPadState_.isConnected = false;
     }
     else
     {
         currentPadState_.isConnected = true;
+    }
 
-        // 振動停止
-        if (currentPadState_.isVibrating) return;
-        if (now - currentPadState_.vibratingStartTime >= currentPadState_.vibratingTime)
-        {
-            XINPUT_VIBRATION vibration{};
-            vibration.wLeftMotorSpeed = 0;
-            vibration.wRightMotorSpeed = 0;
-            XInputSetState(controllerIndex_, &vibration);
-            currentPadState_.isVibrating = false;
-            currentPadState_.vibratingStartTime = 0.0f;
-            currentPadState_.vibratingTime = 0.0f;
-        }
+    if (!currentPadState_.isConnected) return;
+    prevPadState_ = currentPadState_;
+
+    // 振動停止
+    if (currentPadState_.isVibrating) return;
+    if (now - currentPadState_.vibratingStartTime >= currentPadState_.vibratingTime)
+    {
+        XINPUT_VIBRATION vibration{};
+        vibration.wLeftMotorSpeed = 0;
+        vibration.wRightMotorSpeed = 0;
+        XInputSetState(controllerIndex_, &vibration);
+        currentPadState_.isVibrating = false;
+        currentPadState_.vibratingStartTime = 0.0f;
+        currentPadState_.vibratingTime = 0.0f;
     }
 }
 
@@ -43,7 +46,6 @@ bool Glib::Internal::Input::XinputGamePad::GetButton(GPADKey button)
 {
     if (!CheckConnection()) return false;
     auto type = static_cast<unsigned int>(button);
-    Glib::Internal::Debug::ImGuiManager::Instance()->Log(std::to_string(currentPadState_.state.Gamepad.wButtons));
     return currentPadState_.state.Gamepad.wButtons & type;
 }
 

@@ -2,6 +2,7 @@
 #include <Internal/GamePadDevice.h>
 #include <Internal/KeyBoardDevice.h>
 #include <Internal/MouseDevice.h>
+#include <Vector2.h>
 
 namespace
 {
@@ -71,4 +72,24 @@ bool Glib::InputSystem::GetButtonDown(GPADKey button, unsigned int pad)
 bool Glib::InputSystem::GetButtonUp(GPADKey button, unsigned int pad)
 {
     return s_gamePad->GetButtonUp(static_cast<Glib::Internal::Input::PadNum>(pad), button);
+}
+
+Vector2 Glib::InputSystem::GetLeftStick(unsigned int pad, float deadZone)
+{
+    return s_gamePad->GetLeftStick(static_cast<Glib::Internal::Input::PadNum>(pad), deadZone);
+}
+
+Vector2 Glib::InputSystem::GetRightStick(unsigned int pad, float deadZone)
+{
+    return s_gamePad->GetRightStick(static_cast<Glib::Internal::Input::PadNum>(pad), deadZone);
+}
+
+float Glib::InputSystem::GetLeftTrigger(unsigned int pad, float deadZone)
+{
+    return s_gamePad->GetLeftTrigger(static_cast<Glib::Internal::Input::PadNum>(pad), deadZone);
+}
+
+float Glib::InputSystem::GetRightTrigger(unsigned int pad, float deadZone)
+{
+    return s_gamePad->GetRightTrigger(static_cast<Glib::Internal::Input::PadNum>(pad), deadZone);
 }

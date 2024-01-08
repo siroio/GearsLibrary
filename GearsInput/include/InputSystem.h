@@ -6,6 +6,8 @@
 #include <Internal/KeyBoardKeys.h>
 #include <Internal/GamePadKeys.h>
 
+struct Vector2;
+
 namespace Glib
 {
     class InputSystem :
@@ -50,8 +52,53 @@ namespace Glib
         */
         static bool GetKeyUp(KeyCode key);
 
-        static bool GetButton(GPADKey button, unsigned int pad = 0U);
-        static bool GetButtonDown(GPADKey button, unsigned int pad = 0U);
-        static bool GetButtonUp(GPADKey button, unsigned int pad = 0U);
+        /**
+         * @brief ボタンを押しているか
+         * @param button ボタンの種類
+         * @param pad パッドのポート (0 ~ 3)
+        */
+        static bool GetButton(GPADKey button, unsigned int pad = 0);
+
+        /**
+         * @brief ボタンを押したか
+         * @param button ボタンの種類
+         * @param pad パッドのポート (0 ~ 3)
+        */
+        static bool GetButtonDown(GPADKey button, unsigned int pad = 0);
+
+        /**
+         * @brief ボタンを離したか
+         * @param button ボタンの種類
+         * @param pad パッドのポート (0 ~ 3)
+        */
+        static bool GetButtonUp(GPADKey button, unsigned int pad = 0);
+
+        /**
+         * @brief 左スティックの傾き具合を取得
+         * @param pad パッドのポート (0 ~ 3)
+         * @param deadZone デッドゾーン
+        */
+        static Vector2 GetLeftStick(unsigned int pad = 0, float deadZone = 0.2f);
+
+        /**
+         * @brief 右スティックの傾き具合を取得
+         * @param pad パッドのポート (0 ~ 3)
+         * @param deadZone デッドゾーン
+        */
+        static Vector2 GetRightStick(unsigned int pad = 0, float deadZone = 0.2f);
+
+        /**
+         * @brief 左トリガーの押され具合を取得する（0.0～1.0）
+         * @param pad パッドのポート (0 ~ 3)
+         * @param deadZone デッドゾーン
+        */
+        static float GetLeftTrigger(unsigned int pad = 0, float deadZone = 0.2f);
+
+        /**
+         * @brief 右トリガーの押され具合を取得する（0.0～1.0）
+         * @param pad パッドのポート (0 ~ 3)
+         * @param deadZone デッドゾーン
+        */
+        static float GetRightTrigger(unsigned int pad = 0, float deadZone = 0.2f);
     };
 }
