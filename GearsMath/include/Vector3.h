@@ -58,7 +58,7 @@ public:
     static Vector3 Normalize(const Vector3& v);
     static Vector3 Lerp(const Vector3& a, const Vector3& b, float t);
     static Vector3 LerpUnclamped(const Vector3& a, const Vector3& b, float t);
-    static Vector3 SLerp(const Vector3& a, const Vector3& b, float t);
+    static Vector3 Slerp(const Vector3& a, const Vector3& b, float t);
     static Vector3 SlerpUnclamped(const Vector3& a, const Vector3& b, float t);
     static Vector3 MoveTowards(const Vector3& current, const Vector3& target, float maxDistanceDelta);
 
