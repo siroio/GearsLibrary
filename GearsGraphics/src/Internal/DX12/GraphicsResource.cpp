@@ -244,10 +244,11 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateSpritePipelineState()
     auto pipelineDesc = GraphicsPipeline::CreateDefaultPipelineDesc();
     pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE; //　カリングなし
     pipelineDesc.BlendState.RenderTarget[0] = BlendDesc::Create(BlendState::Alpha);
-    pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_EQUAL;
     pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
     pipelineDesc.InputLayout.NumElements = static_cast<UINT>(std::size(inputLayout));
+    pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
     pipelineDesc.DepthStencilState.DepthEnable = true;
+
     // シェーダーのセット
     s_shader->SetPixelShader(ID::SPRITE_SHADER, pipelineDesc);
     s_shader->SetVertexShader(ID::SPRITE_SHADER, pipelineDesc);
@@ -287,6 +288,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateImagePipelineState()
     pipelineDesc.InputLayout.pInputElementDescs = &inputLayout;
     pipelineDesc.InputLayout.NumElements = 1;
     pipelineDesc.DepthStencilState.DepthEnable = false;
+
     // シェーダーのセット
     s_shader->SetVertexShader(ID::IMAGE_SHADER, pipelineDesc);
     s_shader->SetPixelShader(ID::IMAGE_SHADER, pipelineDesc);
@@ -526,4 +528,3 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateSkinnedMeshShadowPipeline
 
     return s_pipelines.at(ID::SKINNED_MESH_SHADOW_PIPELINESTATE).CreatePipelineState(pipelineDesc);
 }
-

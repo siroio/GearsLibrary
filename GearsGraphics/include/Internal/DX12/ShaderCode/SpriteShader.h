@@ -44,15 +44,16 @@ namespace Glib::Internal::Graphics::ShaderCode
         VSOutput VSmain(VSInput input)
         {
             float2 spriteSize = SpriteSize * SpriteScale;
-
 		 	VSOutput o;
 		 	o.position = input.position;
 		 	o.position.xy *= spriteSize;
 		 	o.position.x -= spriteSize.x * SpriteCenter.x;
 		 	o.position.y += spriteSize.y * SpriteCenter.y;
 		 	float2 rotate;
-		 	rotate.x = o.position.x * cos(SpriteAngle) - o.position.y * sin(SpriteAngle);
-		 	rotate.y = o.position.y * cos(SpriteAngle) + o.position.x * sin(SpriteAngle);
+            float c = cos(SpriteAngle);
+            float s = sin(SpriteAngle);
+		 	rotate.x = o.position.x * c - o.position.y * s;
+		 	rotate.y = o.position.y * c + o.position.x * s;
 		 	o.position.xy = rotate;
 		 	o.position.xyz += SpritePosition;
 		 	o.position = mul(Projection, mul(View, o.position));
@@ -62,10 +63,7 @@ namespace Glib::Internal::Graphics::ShaderCode
 
         float4 PSmain(PSInput input) : SV_TARGET
         {
-            float4 color = float4(tex.Sample(smp, input.uv)) * SpriteColor;
-            clip(color.a < 0.001f ? -1 : 1);
-            return color;
+            return tex.Sample(smp, input.uv) * SpriteColor;
         })"
     };
 }
-

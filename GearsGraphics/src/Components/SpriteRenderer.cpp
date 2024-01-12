@@ -101,7 +101,6 @@ void Glib::SpriteRenderer::Draw(const WeakPtr<Internal::CameraBase>& camera)
     camera->SetConstantBuffer(1);
     constantBuffer_.SetBuffer(2);
     s_textureManager.SetTexture(textureID_, 0);
-
     s_dx12->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
     s_dx12->CommandList()->DrawInstanced(4, 1, 0, 0);
 }
@@ -179,4 +178,3 @@ void Glib::SpriteRenderer::TextureID(unsigned int id, bool isResetSize)
     textureSize_ = s_textureManager.TextureSize(id);
     if (isResetSize) clippingSize_ = textureSize_;
 }
-
