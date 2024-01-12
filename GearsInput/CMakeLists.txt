@@ -7,13 +7,14 @@ set(SOURCE_FILE
     ./src/Internal/GamePadDevice.cpp
     ./src/Internal/KeyBoardDevice.cpp
     ./src/Internal/MouseDevice.cpp
+    ./src/InputState.cpp
     ./src/InputSystem.cpp
 )
 
 set(HEADER_FILE
     ./include/Internal/DirectInput8.h
     ./include/Internal/IGamePad.h
-    ./include/Internal/InputState.h
+    ./include/Internal/XInputState.h
     ./include/Internal/KeyBoardKeys.h
     ./include/Internal/GamePadKeys.h
     ./include/Internal/GamePadDevice.h
@@ -22,6 +23,7 @@ set(HEADER_FILE
     ./include/Internal/KeyBoardDevice.h
     ./include/Internal/MouseDevice.h
     ./include/Internal/MouseButton.h
+    ./include/InputState.h
     ./include/InputSystem.h
 )
 

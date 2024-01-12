@@ -1,8 +1,12 @@
 ﻿#include <InputSystem.h>
+#include <unordered_map>
+#include <deque>
 #include <Internal/GamePadDevice.h>
 #include <Internal/KeyBoardDevice.h>
 #include <Internal/MouseDevice.h>
 #include <Vector2.h>
+#include <InputState.h>
+#include <Debugger.h>
 
 namespace
 {
@@ -10,6 +14,7 @@ namespace
     std::unique_ptr<Glib::Internal::Input::GamePadDevice> s_gamePad;
     std::unique_ptr<Glib::Internal::Input::KeyBoardDevice> s_keyBoard;
     std::unique_ptr<Glib::Internal::Input::MouseDevice> s_mouse;
+    std::unordered_map<std::string, std::deque<Glib::InputState>> s_inputState;
 }
 
 bool Glib::InputSystem::Initialize()
@@ -42,6 +47,90 @@ void Glib::InputSystem::Update()
     s_gamePad->Update();
     s_keyBoard->Update();
     s_mouse->Update();
+}
+
+void Glib::InputSystem::AddInput(const std::string& name, MouseButton button)
+{
+    s_inputState[name].emplace_back(button);
+}
+
+void Glib::InputSystem::AddInput(const std::string& name, KeyCode button)
+{
+    s_inputState[name].emplace_back(button);
+}
+
+void Glib::InputSystem::AddInput(const std::string& name, GPADKey button)
+{
+    s_inputState[name].emplace_back(button);
+}
+
+bool Glib::InputSystem::GetInput(const std::string& name)
+{
+    auto state = s_inputState.find(name);
+    if (state == s_inputState.end())
+    {
+        Debug::Log("Unknown Input: " + name);
+        return false;
+    }
+    for (const auto& key : state->second)
+    {
+        switch (key.type)
+        {
+            case InputType::MOUSE:
+                return false;
+            case InputType::KEYBOARD:
+                return GetKey(key.keyboard);
+            case InputType::GAMEPAD:
+                return GetButton(key.pad);
+        }
+    }
+    return false;
+}
+
+bool Glib::InputSystem::GetInputDown(const std::string& name)
+{
+    auto state = s_inputState.find(name);
+    if (state == s_inputState.end())
+    {
+        Debug::Log("Unknown Input: " + name);
+        return false;
+    }
+    for (const auto& key : state->second)
+    {
+        switch (key.type)
+        {
+            case InputType::MOUSE:
+                return false;
+            case InputType::KEYBOARD:
+                return GetKeyDown(key.keyboard);
+            case InputType::GAMEPAD:
+                return GetButtonDown(key.pad);
+        }
+    }
+    return false;
+}
+
+bool Glib::InputSystem::GetInputUp(const std::string& name)
+{
+    auto state = s_inputState.find(name);
+    if (state == s_inputState.end())
+    {
+        Debug::Log("Unknown Input: " + name);
+        return false;
+    }
+    for (const auto& key : state->second)
+    {
+        switch (key.type)
+        {
+            case InputType::MOUSE:
+                return false;
+            case InputType::KEYBOARD:
+                return GetKeyUp(key.keyboard);
+            case InputType::GAMEPAD:
+                return GetButtonUp(key.pad);
+        }
+    }
+    return false;
 }
 
 bool Glib::InputSystem::GetKey(KeyCode key)

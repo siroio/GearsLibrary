@@ -4,7 +4,7 @@
 
 namespace Glib::Internal::Input
 {
-    struct InputState
+    struct XInputState
     {
         XINPUT_STATE state{};
         float vibratingStartTime{ 0.0f };

@@ -5,6 +5,7 @@
 #include <FuncOrderDefinition.h>
 #include <Internal/KeyBoardKeys.h>
 #include <Internal/GamePadKeys.h>
+#include <Internal/MouseButton.h>
 
 struct Vector2;
 
@@ -29,6 +30,45 @@ namespace Glib
          * @brief 入力を取得
          */
         void Update();
+
+        /**
+         * @brief 入力の追加
+         * @param name 入力名
+         * @param button 入力ボタン
+         */
+        static void AddInput(const std::string& name, MouseButton button);
+
+        /**
+         * @brief 入力の追加
+         * @param name 入力名
+         * @param button 入力ボタン
+         */
+        static void AddInput(const std::string& name, KeyCode button);
+
+        /**
+         * @brief 入力の追加
+         * @param name 入力名
+         * @param button 入力ボタン
+         */
+        static void AddInput(const std::string& name, GPADKey button);
+
+        /**
+         * @brief 入力状態の取得
+         * @param name 入力名
+         */
+        static bool GetInput(const std::string& name);
+
+        /**
+         * @brief 入力状態の取得
+         * @param name 入力名
+         */
+        static bool GetInputDown(const std::string& name);
+
+        /**
+         * @brief 入力状態の取得
+         * @param name 入力名
+         */
+        static bool GetInputUp(const std::string& name);
 
         /**
         * @brief キーを押しているか
