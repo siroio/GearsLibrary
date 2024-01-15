@@ -28,12 +28,10 @@ namespace
     unsigned int s_channelNum{ 0 };
 
     // CHANNEL SETTINGS
-    std::array<float, Glib::Internal::Audio::CHANNEL_MONAURAL* Glib::Internal::Audio::CHANNEL_OUTPUT>
-        s_monoMatrixCoefficients;
-    std::array<float, Glib::Internal::Audio::CHANNEL_STEREO* Glib::Internal::Audio::CHANNEL_OUTPUT>
-        s_steMatrixCoefficients;
+    float s_monoMatrixCoefficients[Glib::Internal::Audio::CHANNEL_MONAURAL * Glib::Internal::Audio::CHANNEL_OUTPUT]{ 0.0f };
+    float s_steMatrixCoefficients[Glib::Internal::Audio::CHANNEL_STEREO * Glib::Internal::Audio::CHANNEL_OUTPUT]{ 0.0f };
 
-    std::unordered_map<unsigned int, std::shared_ptr<IXAudio2SubmixVoice>> s_subMixVoice;
+    std::unordered_map<unsigned int, IXAudio2SubmixVoice*> s_subMixVoice;
     std::unordered_map<unsigned int, std::shared_ptr<Glib::AudioClip>> s_audioClips;
 }
 
@@ -68,9 +66,9 @@ bool Glib::Internal::Audio::XAudioSystem::Initialize()
     s_X3DAudioDspSettings.at(1).DstChannelCount = details.InputChannels;
     s_channelNum = details.InputChannels;
     s_X3DAudioDspSettings.at(0).SrcChannelCount = CHANNEL_MONAURAL;
-    s_X3DAudioDspSettings.at(0).pMatrixCoefficients = s_monoMatrixCoefficients.data();
+    s_X3DAudioDspSettings.at(0).pMatrixCoefficients = s_monoMatrixCoefficients;
     s_X3DAudioDspSettings.at(1).SrcChannelCount = CHANNEL_STEREO;
-    s_X3DAudioDspSettings.at(1).pMatrixCoefficients = s_steMatrixCoefficients.data();
+    s_X3DAudioDspSettings.at(1).pMatrixCoefficients = s_steMatrixCoefficients;
 
     return true;
 }
@@ -83,10 +81,13 @@ void Glib::Internal::Audio::XAudioSystem::Finalize()
         s_masterVoice = nullptr;
     }
 
-    for (auto&& audio : s_subMixVoice | std::ranges::views::values)
+    for (auto&& subMixVoice : s_subMixVoice | std::ranges::views::values)
     {
-        if (audio == nullptr) continue;
-        audio->DestroyVoice();
+        if (subMixVoice != nullptr)
+        {
+            subMixVoice->DestroyVoice();
+            subMixVoice = nullptr;
+        }
     }
     s_subMixVoice.clear();
 
@@ -137,7 +138,7 @@ void Glib::Internal::Audio::XAudioSystem::Audio3DCalculate(const X3DAUDIO_EMITTE
     IXAudio2Voice* destinationVoice = s_masterVoice;
     if (s_subMixVoice.contains(groupId))
     {
-        destinationVoice = s_subMixVoice.at(groupId).get();
+        destinationVoice = s_subMixVoice.at(groupId);
     }
 
     voice->SetFrequencyRatio(dspSettings->DopplerFactor);
@@ -154,25 +155,26 @@ void Glib::Internal::Audio::XAudioSystem::CreateSourceVoice(unsigned id, bool lo
         (*voice) = nullptr;
     }
 
-    if (auto audio = s_audioClips.find(id); audio != s_audioClips.end())
-    {
-        clip = audio->second;
-        clip->Loop(loop);
-        s_xAudio2->CreateSourceVoice(voice, &clip->Format());
-    }
-    else
+    if (!s_audioClips.contains(id))
     {
         Glib::Debug::Error("Invalid ID: " + std::to_string(id));
+        return;
     }
+
+    auto& audioClip = s_audioClips.at(id);
+    clip = WeakPtr<AudioClip>{ audioClip };
+    clip->Loop(loop);
+    s_xAudio2->CreateSourceVoice(voice, &audioClip->Format());
 }
 
 void Glib::Internal::Audio::XAudioSystem::CreateSubMixVoice(unsigned groupId)
 {
     IXAudio2SubmixVoice* smv{ nullptr };
     XAUDIO2_VOICE_DETAILS details{};
+
     s_masterVoice->GetVoiceDetails(&details);
     s_xAudio2->CreateSubmixVoice(&smv, details.InputChannels, details.InputSampleRate);
-    s_subMixVoice[groupId] = std::shared_ptr<IXAudio2SubmixVoice>{ smv };
+    s_subMixVoice.emplace(groupId, smv);
 }
 
 void Glib::Internal::Audio::XAudioSystem::SetOutputSubMixVoice(IXAudio2SourceVoice* sourceVoice, unsigned groupId)
@@ -184,10 +186,9 @@ void Glib::Internal::Audio::XAudioSystem::SetOutputSubMixVoice(IXAudio2SourceVoi
         return;
     }
 
-    const auto& smv = s_subMixVoice.at(groupId);
-    XAUDIO2_SEND_DESCRIPTOR sendDescriptor{ 0, smv.get() };
-    const XAUDIO2_VOICE_SENDS voiceSends{ 1, &sendDescriptor };
-    sourceVoice->SetOutputVoices(&voiceSends);
+    XAUDIO2_SEND_DESCRIPTOR SFXSend{ 0, s_subMixVoice.at(groupId) };
+    XAUDIO2_VOICE_SENDS SFXSendList{ 1, &SFXSend };
+    sourceVoice->SetOutputVoices(&SFXSendList);
 }
 
 void Glib::Internal::Audio::XAudioSystem::SetListenerParameter(const Vector3& position, const Vector3& forward, const Vector3& up)

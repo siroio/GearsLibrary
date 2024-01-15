@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <Internal/IAudioLoader.h>
+#include <xaudio2.h>
 
 namespace Glib::Internal::Audio
 {
@@ -7,14 +8,14 @@ namespace Glib::Internal::Audio
     {
         struct CHUNK
         {
-            char Id[4];
-            unsigned int Size;
+            char id[4];
+            unsigned int size;
         };
 
         struct RIFF
         {
-            CHUNK Chunk;
-            char Type[4];
+            CHUNK chunk;
+            char type[4];
         };
 
     public:

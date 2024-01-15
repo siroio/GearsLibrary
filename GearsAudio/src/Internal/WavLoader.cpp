@@ -18,7 +18,7 @@ std::shared_ptr<Glib::AudioClip> Glib::Internal::Audio::WavLoader::Load(std::str
     wavFile.read(reinterpret_cast<char*>(&riff), sizeof(riff));
 
     // fmtチャンクの取得
-    const auto size = FindChunk(wavFile, "fmt ");
+    auto size = FindChunk(wavFile, "fmt ");
     WAVEFORMATEX format{};
 
     if (size == 16 || size == 18)
@@ -27,16 +27,18 @@ std::shared_ptr<Glib::AudioClip> Glib::Internal::Audio::WavLoader::Load(std::str
     }
     else if (size == 40)
     {
-        wavFile.read(reinterpret_cast<char*>(&format), sizeof(format));
-        wavFile.seekg(static_cast<std::streamoff>(size) - sizeof(format), std::ios::cur);
+        wavFile.read(reinterpret_cast<char*>(&format), sizeof(WAVEFORMATEX));
+        wavFile.seekg(static_cast<std::streamoff>(size) - sizeof(WAVEFORMATEX), std::ios_base::cur);
     }
 
     // データサイズ取得
     const size_t dataSize = FindChunk(wavFile, "data");
     if (dataSize <= 0) return nullptr;
 
-    auto dataBuffer = std::vector<BYTE>(dataSize);
+    auto dataBuffer = std::vector<unsigned char>(dataSize);
     wavFile.read(reinterpret_cast<char*>(dataBuffer.data()), dataSize);
+    dataBuffer.shrink_to_fit();
+
     auto audioClip = std::make_shared<AudioClip>(
         wavPath.filename().string(),
         format,
@@ -45,15 +47,18 @@ std::shared_ptr<Glib::AudioClip> Glib::Internal::Audio::WavLoader::Load(std::str
     return audioClip;
 }
 
-size_t Glib::Internal::Audio::WavLoader::FindChunk(std::ifstream& stream, std::string_view name)
+size_t Glib::Internal::Audio::WavLoader::FindChunk(std::ifstream& file, std::string_view name)
 {
-    while (true)
+    while (!file.eof())
     {
         CHUNK chunk{};
-        stream.read(reinterpret_cast<char*>(&chunk), sizeof(chunk));
-        std::string chunkStr{ chunk.Id, 4 };
-        if (chunkStr.starts_with(name)) return chunk.Size;
-        else stream.seekg(chunk.Size, std::ios_base::cur);
+        file.read(reinterpret_cast<char*>(&chunk), sizeof(chunk));
+        std::string chunkName{ chunk.id, 4 };
+        if (name == chunkName)
+        {
+            return chunk.size;
+        }
+        file.seekg(chunk.size, std::ios_base::cur);
     }
     return 0;
 }

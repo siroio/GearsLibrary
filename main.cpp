@@ -144,7 +144,7 @@ public:
         );
         if (!isloaded) return;
 
-        int meshID{ 0 }, animID{ 0 }, audiID{ 0 };
+        int meshID{ 0 }, animID{ 0 }, audiID{ 0 }, texID{ 0 };
         for (const auto& entry : std::filesystem::recursive_directory_iterator("Assets"))
         {
             if (!entry.is_regular_file()) continue;
@@ -177,9 +177,23 @@ public:
                     Debug::Error(entry.path().string() + "のロードに失敗しました。");
                     continue;
                 }
-                AudioManager::Instance()->AddSoundGroup(0);
-                AudioManager::Instance()->SetSoundGroupVolume(0, 1.0f);
                 audiID++;
+            }
+        }
+        AudioManager::Instance()->AddSoundGroup(0);
+        AudioManager::Instance()->SetSoundGroupVolume(0, 1.0f);
+        for (const auto& entry : std::filesystem::recursive_directory_iterator("Assets/Sprite"))
+        {
+            if (!entry.is_regular_file()) continue;
+            auto ext = entry.path().extension().string();
+            if (ext.ends_with("png"))
+            {
+                isloaded = TextureManager::Instance().Load(texID, entry.path().string());
+                if (!isloaded)
+                {
+                    Debug::Error(entry.path().string() + "のロードに失敗しました。");
+                    continue;
+                }
             }
         }
 
@@ -207,6 +221,10 @@ public:
         animator->AnimationID(0);
         animator->Loop(true);
         mesh->AddComponent<TestAudio>();
+
+        //auto spriteObj = GameObjectManager::Instantiate("Sprite");
+        //auto sprite = spriteObj->AddComponent<SpriteRenderer>();
+        //sprite->TextureID(0);
 
         Debug::Log("Scene Loading...");
     }

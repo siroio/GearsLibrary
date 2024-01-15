@@ -35,7 +35,7 @@ Glib::AudioSource::~AudioSource()
 
 void Glib::AudioSource::Start()
 {
-    if (audioStatus_ == AudioStatus::PlayOnStart) Play();
+    if (audioStatus_.Has(AudioStatus::PlayOnStart)) Play();
 }
 
 void Glib::AudioSource::LateUpdate()
@@ -56,7 +56,7 @@ void Glib::AudioSource::Play()
         sourceVoice_->SubmitSourceBuffer(&audioClip_->Buffer());
     }
 
-    audioStatus_.Clear(AudioStatus::Pause);
+    audioStatus_.Set(AudioStatus::Pause, false);
     sourceVoice_->Start();
 }
 

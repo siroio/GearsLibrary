@@ -12,12 +12,10 @@ Glib::AudioClip::AudioClip(std::string_view name, const WAVEFORMATEX& format, co
     audioData_{ data }
 {
     // バッファの作成
-    XAUDIO2_BUFFER buffer{};
-    buffer.pAudioData = reinterpret_cast<const BYTE*>(audioData_.data());
-    buffer.Flags = XAUDIO2_END_OF_STREAM;
-    buffer.AudioBytes = static_cast<UINT32>(audioData_.size());
-    buffer.LoopCount = 0;
-    buffer_ = buffer;
+    buffer_.pAudioData = reinterpret_cast<BYTE*>(audioData_.data());
+    buffer_.Flags = XAUDIO2_END_OF_STREAM;
+    buffer_.AudioBytes = static_cast<UINT32>(audioData_.size());
+    buffer_.LoopCount = 0;
 }
 
 std::string Glib::AudioClip::Name() const

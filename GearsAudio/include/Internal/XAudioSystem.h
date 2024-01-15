@@ -67,4 +67,3 @@ namespace Glib::Internal::Audio
         void SetGroupVolume(unsigned int groupId, float volume);
     };
 }
-

@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 3.4)
 
 # == CONFIG ==
 set(SOURCE_FILE 
-	./src/Internal/EffekserManager.cpp
+	./src/Internal/EffekseerManager.cpp
 )
 
 set(HEADER_FILE
-    ./include/Internal/EffekserManager.h
+    ./include/Internal/EffekseerManager.h
 )
 
 set(LIB_NAME GearsEffect)
@@ -14,8 +14,22 @@ create_filter()
 
 add_library(${LIB_NAME} STATIC ${SOURCE_FILE} ${HEADER_FILE})
 target_compile_features(${LIB_NAME} PRIVATE cxx_std_20)
-target_include_directories(${LIB_NAME} PUBLIC ./include)
-target_link_libraries(${LIB_NAME} GearsCore GearsMath GearsUtility)
+target_include_directories(
+    ${LIB_NAME}
+    PUBLIC
+    ./include
+)
+
+target_link_libraries(
+    ${LIB_NAME}
+    GearsCore
+    GearsMath
+    GearsUtility
+    #Effekseer
+    #EffekseerRendererDX12
+)
+
 set_target_properties(${LIB_NAME}
     PROPERTIES
-    VERSION ${PROJECT_VERSION})
+    VERSION ${PROJECT_VERSION}
+)
