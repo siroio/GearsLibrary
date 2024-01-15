@@ -53,12 +53,12 @@ Quaternion Quaternion::Euler(float x, float y, float z)
 Quaternion Quaternion::Euler(const Vector3& euler)
 {
     Vector3 v = euler * Mathf::DEG2RAD;
-    float c1 = std::cos(v.x * 0.5f);
-    float c2 = std::cos(v.y * 0.5f);
-    float c3 = std::cos(v.z * 0.5f);
-    float s1 = std::sin(v.x * 0.5f);
-    float s2 = std::sin(v.y * 0.5f);
-    float s3 = std::sin(v.z * 0.5f);
+    float c1 = Mathf::Cos(v.x * 0.5f);
+    float c2 = Mathf::Cos(v.y * 0.5f);
+    float c3 = Mathf::Cos(v.z * 0.5f);
+    float s1 = Mathf::Sin(v.x * 0.5f);
+    float s2 = Mathf::Sin(v.y * 0.5f);
+    float s3 = Mathf::Sin(v.z * 0.5f);
     float x = s1 * c2 * c3 + c1 * s2 * s3;
     float y = c1 * s2 * c3 - s1 * c2 * s3;
     float z = c1 * c2 * s3 - s1 * s2 * c3;
