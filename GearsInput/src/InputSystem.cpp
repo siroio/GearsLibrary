@@ -69,7 +69,7 @@ bool Glib::InputSystem::GetInput(const std::string& name)
     auto state = s_inputState.find(name);
     if (state == s_inputState.end())
     {
-        Debug::Log("Unknown Input: " + name);
+        Debug::Warn("Unknown Input: " + name);
         return false;
     }
     for (const auto& key : state->second)
@@ -92,7 +92,7 @@ bool Glib::InputSystem::GetInputDown(const std::string& name)
     auto state = s_inputState.find(name);
     if (state == s_inputState.end())
     {
-        Debug::Log("Unknown Input: " + name);
+        Debug::Warn("Unknown Input: " + name);
         return false;
     }
     for (const auto& key : state->second)
@@ -115,7 +115,7 @@ bool Glib::InputSystem::GetInputUp(const std::string& name)
     auto state = s_inputState.find(name);
     if (state == s_inputState.end())
     {
-        Debug::Log("Unknown Input: " + name);
+        Debug::Warn("Unknown Input: " + name);
         return false;
     }
     for (const auto& key : state->second)
