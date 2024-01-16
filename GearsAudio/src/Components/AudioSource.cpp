@@ -4,6 +4,7 @@
 #include <GameObject.h>
 #include <GameTimer.h>
 #include <GLGUI.h>
+#include <Debugger.h>
 
 namespace
 {
@@ -49,7 +50,7 @@ void Glib::AudioSource::LateUpdate()
 void Glib::AudioSource::Play()
 {
     if (sourceVoice_ == nullptr) return;
-    if (!audioStatus_.Has(AudioStatus::Pause))
+    if (audioStatus_ != AudioStatus::Pause)
     {
         sourceVoice_->Stop();
         sourceVoice_->FlushSourceBuffers();
@@ -57,20 +58,27 @@ void Glib::AudioSource::Play()
     }
 
     audioStatus_.Set(AudioStatus::Pause, false);
-    sourceVoice_->Start();
+    auto hr = sourceVoice_->Start();
+
+    // state 表示
+    XAUDIO2_VOICE_STATE state;
+    sourceVoice_->GetState(&state);
+    Debug::Log("Queue: " + std::to_string(state.BuffersQueued));
+    Debug::Log("Played: " + std::to_string(state.SamplesPlayed));
+    Debug::Log(FAILED(hr) ? "failed" : "OK!");
 }
 
 void Glib::AudioSource::Pause()
 {
     if (sourceVoice_ == nullptr) return;
-    audioStatus_.Set(AudioStatus::Pause);
+    audioStatus_.Set(AudioStatus::Pause, true);
     sourceVoice_->Stop();
 }
 
 void Glib::AudioSource::Stop()
 {
     if (sourceVoice_ == nullptr) return;
-    audioStatus_.Clear(AudioStatus::Pause);
+    audioStatus_.Set(AudioStatus::Pause, false);
     sourceVoice_->Stop();
     sourceVoice_->FlushSourceBuffers();
     sourceVoice_->SubmitSourceBuffer(&audioClip_->Buffer());
@@ -138,7 +146,7 @@ void Glib::AudioSource::AudioID(unsigned int id)
     sourceVoice_->SubmitSourceBuffer(&audioClip_->Buffer());
 
     // グループに割り当てられている
-    if (groupId_ >= 0) SetGroup(groupId_);
+    if (groupId_ >= 0) s_xAudio2->SetOutputSubMixVoice(sourceVoice_, groupId_);
 
     // 3Dオーディオの設定
     if (audioStatus_.Has(AudioStatus::Is3DAudio))

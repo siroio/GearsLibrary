@@ -8,7 +8,7 @@ std::shared_ptr<Glib::AudioClip> Glib::Internal::Audio::WavLoader::Load(std::str
 {
     const auto wavPath = std::filesystem::absolute(file);
     if (!(std::filesystem::exists(wavPath) && wavPath.extension().string().ends_with("wav"))) return nullptr;
-    std::ifstream wavFile{ file.data(), std::ios::in, std::ios::binary };
+    std::ifstream wavFile{ file.data(), std::ios::binary };
 
     // 開けるか確認
     if (!wavFile.is_open()) return nullptr;
@@ -35,9 +35,9 @@ std::shared_ptr<Glib::AudioClip> Glib::Internal::Audio::WavLoader::Load(std::str
     const size_t dataSize = FindChunk(wavFile, "data");
     if (dataSize <= 0) return nullptr;
 
-    auto dataBuffer = std::vector<unsigned char>(dataSize);
+    std::vector<unsigned char> dataBuffer{};
+    dataBuffer.resize(dataSize);
     wavFile.read(reinterpret_cast<char*>(dataBuffer.data()), dataSize);
-    dataBuffer.shrink_to_fit();
 
     auto audioClip = std::make_shared<AudioClip>(
         wavPath.filename().string(),

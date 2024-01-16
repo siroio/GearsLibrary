@@ -96,11 +96,6 @@ void Glib::Internal::Audio::XAudioSystem::Finalize()
         clip.reset();
     }
     s_audioClips.clear();
-
-    if (s_masterVoice != nullptr)
-    {
-        s_masterVoice->DestroyVoice();
-    }
 }
 
 bool Glib::Internal::Audio::XAudioSystem::LoadVoice(unsigned id, std::string_view path)
@@ -110,7 +105,6 @@ bool Glib::Internal::Audio::XAudioSystem::LoadVoice(unsigned id, std::string_vie
     // 拡張子を小文字で抜き出す
     const std::filesystem::path file{ path.data() };
     std::string extension = file.filename().extension().generic_string();
-    XAUDIO2_BUFFER buffer{};
     std::transform(extension.begin(), extension.end(), extension.begin(), tolower);
 
     // ローダーの作成
@@ -164,7 +158,7 @@ void Glib::Internal::Audio::XAudioSystem::CreateSourceVoice(unsigned id, bool lo
     auto& audioClip = s_audioClips.at(id);
     clip = WeakPtr<AudioClip>{ audioClip };
     clip->Loop(loop);
-    s_xAudio2->CreateSourceVoice(voice, &audioClip->Format());
+    s_xAudio2->CreateSourceVoice(voice, &clip->Format());
 }
 
 void Glib::Internal::Audio::XAudioSystem::CreateSubMixVoice(unsigned groupId)
@@ -186,8 +180,8 @@ void Glib::Internal::Audio::XAudioSystem::SetOutputSubMixVoice(IXAudio2SourceVoi
         return;
     }
 
-    XAUDIO2_SEND_DESCRIPTOR SFXSend{ 0, s_subMixVoice.at(groupId) };
-    XAUDIO2_VOICE_SENDS SFXSendList{ 1, &SFXSend };
+    XAUDIO2_SEND_DESCRIPTOR SFXSend = { 0, s_subMixVoice.at(groupId) };
+    XAUDIO2_VOICE_SENDS SFXSendList = { 1, &SFXSend };
     sourceVoice->SetOutputVoices(&SFXSendList);
 }
 
