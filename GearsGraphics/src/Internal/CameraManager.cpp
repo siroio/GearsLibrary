@@ -10,9 +10,9 @@ namespace
 
 void Glib::Internal::Graphics::CameraManager::BeginDraw()
 {
-    cameras_.remove_if([](const auto& cam)
+    cameras_.remove_if([](const auto& camera)
     {
-        return cam.expired();
+        return camera.expired();
     });
 }
 
@@ -42,4 +42,3 @@ const std::list<Glib::WeakPtr<Glib::Internal::CameraBase>> Glib::Internal::Graph
 {
     return cameras_;
 }
-

@@ -14,7 +14,7 @@ void Glib::DirectionalLight::Start()
 
 void Glib::DirectionalLight::LateUpdate()
 {
-    RenderingManager::LightDirection(transform_->Forward());
+    RenderingManager::LightDirection(transform_->Forward().Normalized());
 }
 
 void Glib::DirectionalLight::Ambient(const Color& ambient)
@@ -35,26 +35,27 @@ void Glib::DirectionalLight::Specular(const Color& specular)
 void Glib::DirectionalLight::OnGUI()
 {
     Component::OnGUI();
-    if (GLGUI::TreeNode("Ambient"))
+    bool active = Active();
+    if (GLGUI::TreeNode("Ambient", true, true))
     {
         Color ambient = RenderingManager::LightAmbient();
-        if (GLGUI::ColorInput3("##Ambient", &ambient))
+        if (GLGUI::ColorInput3("##Ambient", &ambient) && active)
             Ambient(ambient);
         GLGUI::TreePop();
     }
 
-    if (GLGUI::TreeNode("Diffuse"))
+    if (GLGUI::TreeNode("Diffuse", true, true))
     {
         Color diffuse = RenderingManager::LightDiffuse();
-        if (GLGUI::ColorInput3("##Diffuse", &diffuse))
+        if (GLGUI::ColorInput3("##Diffuse", &diffuse) && active)
             Diffuse(diffuse);
         GLGUI::TreePop();
     }
 
-    if (GLGUI::TreeNode("Specular"))
+    if (GLGUI::TreeNode("Specular", true, true))
     {
         Color specular = RenderingManager::LightSpecular();
-        if (GLGUI::ColorInput3("##Specular", &specular))
+        if (GLGUI::ColorInput3("##Specular", &specular) && active)
             Specular(specular);
         GLGUI::TreePop();
     }

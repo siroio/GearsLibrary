@@ -46,9 +46,9 @@ void Glib::Camera::LateUpdate()
 {
     if (transform_.expired()) return;
 
-    CameraConstant buffer;
-    buffer.View = ViewMatrix();
-    buffer.Projection = ProjectionMatrix();
+    CameraConstant buffer;;
+    ViewMatrix(&buffer.View);
+    ProjectionMatrix(&buffer.Projection);
     buffer.LightVP = s_renderingManager->CalculateMatrixForShadowMap(transform_->Position() + transform_->Forward());
 
     constantBuffer_.Update(sizeof(buffer), &buffer);
@@ -145,8 +145,10 @@ void Glib::Camera::OrthographicSize(float size)
 
 Vector3 Glib::Camera::WorldToScreenPoint(const Vector3& position)
 {
-    Matrix4x4 view = ViewMatrix();
-    Matrix4x4 projection = ProjectionMatrix();
+    Matrix4x4 view;
+    ViewMatrix(&view);
+    Matrix4x4 projection;
+    ProjectionMatrix(&projection);
 
     const auto& size = Window::WindowSize();
     const auto windowX = size.x / 2;
@@ -283,16 +285,20 @@ void Glib::Camera::Draw()
     s_dx12->CommandList()->DrawInstanced(4, 1, 0, 0);
 }
 
-Matrix4x4 Glib::Camera::ViewMatrix() const
+void Glib::Camera::ViewMatrix(Matrix4x4* mat) const
 {
-    return transform_.expired() ?
-        Matrix4x4::Identity() :
-        Matrix4x4::LookAt(transform_->Position(), transform_->Position() + transform_->Forward(), transform_->Up());
+    transform_.expired() ?
+        *mat = Matrix4x4::Identity() :
+        *mat = Matrix4x4::LookAt(transform_->Position(), transform_->Position() + transform_->Forward(), transform_->Up());
 }
 
-Matrix4x4 Glib::Camera::ProjectionMatrix() const
+void Glib::Camera::ProjectionMatrix(Matrix4x4* mat) const
 {
-    if (transform_.expired()) return Matrix4x4::Identity();
+    if (transform_.expired())
+    {
+        *mat = Matrix4x4::Identity();
+        return;
+    }
 
     auto viewPort = Vector2::Scale(viewPortSize_, Window::WindowSize());
     float aspect = viewPort.x / viewPort.y;
@@ -300,11 +306,14 @@ Matrix4x4 Glib::Camera::ProjectionMatrix() const
     switch (projectionType_)
     {
         case Glib::ProjectionType::Perspective:
-            return Matrix4x4::Perspective(fieldOfView_, aspect, near_, far_);
+            *mat = Matrix4x4::Perspective(fieldOfView_, aspect, near_, far_);
+            break;
         case Glib::ProjectionType::Orthographic:
-            return Matrix4x4::Orthographic(aspect * orthographicSize_, orthographicSize_, near_, far_);
+            *mat = Matrix4x4::Orthographic(aspect * orthographicSize_, orthographicSize_, near_, far_);
+            break;
         default:
-            return Matrix4x4::Identity();
+            *mat = Matrix4x4::Identity();
+            break;
     }
 }
 
@@ -313,7 +322,7 @@ void Glib::Camera::SetRenderTarget()
     s_dx12->CommandList()->OMSetRenderTargets(
         1,
         &rtvHandle_->CPU(),
-        true,
+        false,
         &dsvHandle_->CPU()
     );
 
