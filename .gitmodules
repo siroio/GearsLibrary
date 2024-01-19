@@ -16,3 +16,6 @@
 [submodule "Modules/Bullet"]
 	path = Modules/Bullet
 	url = https://github.com/bulletphysics/bullet3.git
+[submodule "Modules/Effekseer"]
+	path = Modules/Effekseer
+	url = https://github.com/effekseer/Effekseer.git
