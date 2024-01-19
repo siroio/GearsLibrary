@@ -5,6 +5,13 @@
 #include <FuncOrderDefinition.h>
 #include <string_view>
 
+namespace Effekseer
+{
+    struct Matrix44;
+}
+
+struct Matrix4x4;
+
 namespace Glib::Internal::Effect
 {
     class EffekseerManager :
@@ -17,10 +24,19 @@ namespace Glib::Internal::Effect
 
     public:
         bool Initialize();
+        void Update();
         void Draw();
         void Finalize();
 
-        void Load(std::string_view path);
+        /**
+         * @brief エフェクトのロード
+         * @param path ファイルパス
+         */
+        bool Load(unsigned int id, std::string_view path);
+
+    private:
+        Effekseer::Matrix44 ToMatrix44(const Matrix4x4& matrix);
+
     private:
 
     };

@@ -18,6 +18,8 @@ target_include_directories(
     ${LIB_NAME}
     PUBLIC
     ./include
+    ${CMAKE_SOURCE_DIR}/Modules/Effekseer/Dev/Cpp/Effekseer
+    ${CMAKE_SOURCE_DIR}/Modules/Effekseer/Dev/Cpp/EffekseerRendererDX12
 )
 
 target_link_libraries(
@@ -25,8 +27,8 @@ target_link_libraries(
     GearsCore
     GearsMath
     GearsUtility
-    #Effekseer
-    #EffekseerRendererDX12
+    Effekseer
+    EffekseerRendererDX12
 )
 
 set_target_properties(${LIB_NAME}
