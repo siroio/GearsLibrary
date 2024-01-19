@@ -16,6 +16,7 @@
 #include <Internal/DX12/GraphicsResource.h>
 #include <Internal/DX12/Shader/ShaderManager.h>
 #include <Internal/RenderingManager.h>
+#include <Internal/EffekseerManager.h>
 #include <Internal/CanvasManager.h>
 #include <Internal/ImGuiManager.h>
 #include <AudioManager.h>
@@ -72,6 +73,7 @@ void Glib::Game::RegisterSystem()
     SystemManager::AddSystem<Internal::Graphics::RenderingManager>();
     SystemManager::AddSystem<Internal::Graphics::ShaderManager>();
     SystemManager::AddSystem<Internal::Audio::XAudioSystem>();
+    SystemManager::AddSystem<Internal::Effect::EffekseerManager>();
     SystemManager::AddSystem<AudioManager>();
     SystemManager::AddSystem<GameObjectManager>();
     SystemManager::AddSystem<GameTimer>();

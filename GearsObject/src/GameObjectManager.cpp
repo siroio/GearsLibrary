@@ -113,6 +113,7 @@ void Glib::GameObjectManager::DrawDebugParams(GameObjectPtr gameObject)
         ImGuiTreeNodeFlags_OpenOnArrow |
         ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
+    // check leaf
     if (gameObject->Transform()->Children().empty())
         flag |= ImGuiTreeNodeFlags_Leaf;
 

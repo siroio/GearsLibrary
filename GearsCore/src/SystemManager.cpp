@@ -1,6 +1,7 @@
 ﻿#include <SystemManager.h>
 #include <algorithm>
 #include <ranges>
+#include <Window.h>
 
 bool SystemManager::Initialize()
 {
@@ -68,4 +69,3 @@ void SystemManager::Execute(SystemFunctionType type)
         std::get<0>(func)->Call();
     }
 }
-

@@ -28,7 +28,7 @@ std::shared_ptr<Glib::AudioClip> Glib::Internal::Audio::WavLoader::Load(std::str
     else if (size == 40)
     {
         wavFile.read(reinterpret_cast<char*>(&format), sizeof(WAVEFORMATEX));
-        wavFile.seekg(static_cast<std::streamoff>(size) - sizeof(WAVEFORMATEX), std::ios_base::cur);
+        wavFile.seekg(static_cast<std::streamoff>(size) - sizeof(WAVEFORMATEX), std::ios::cur);
     }
 
     // データサイズ取得
@@ -58,7 +58,7 @@ size_t Glib::Internal::Audio::WavLoader::FindChunk(std::ifstream& file, std::str
         {
             return chunk.size;
         }
-        file.seekg(chunk.size, std::ios_base::cur);
+        file.seekg(chunk.size, std::ios::cur);
     }
     return 0;
 }

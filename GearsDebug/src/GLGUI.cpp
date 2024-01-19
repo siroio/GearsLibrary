@@ -62,8 +62,9 @@ bool Glib::GLGUI::ComboBox(std::string_view label, std::string& curerntItem, con
 
 bool Glib::GLGUI::TreeNode(std::string_view label, bool leaf, bool openNode)
 {
-    if (openNode) ImGui::SetNextItemOpen(openNode, ImGuiCond_Once);
-    return ImGui::TreeNodeEx(label.data(), leaf ? GL_TREE_LEAF : GL_TREE_NODE);
+    ImGuiTreeNodeFlags flag = (leaf ? GL_TREE_LEAF : GL_TREE_NODE);
+    if (openNode) flag |= ImGuiTreeNodeFlags_DefaultOpen;
+    return ImGui::TreeNodeEx(label.data(), flag);
 }
 
 void Glib::GLGUI::TreePop()

@@ -198,7 +198,7 @@ void Glib::AudioSource::OnGUI()
 {
     Component::OnGUI();
     int id = static_cast<int>(audioId_);
-    if (GLGUI::InputInt("AudioClip", &id))
+    if (GLGUI::InputInt("AudioClip ID", &id))
     {
         AudioID(id);
     }
@@ -233,7 +233,7 @@ void Glib::AudioSource::OnGUI()
         Is3DSound(is3DSound);
     }
 
-    if (is3DSound)
+    if (audioStatus_.Has(AudioStatus::Is3DAudio))
     {
         GLGUI::DragFloat("Doppler", &emitter_.DopplerScaler, 0.001f, 0.0f);
     }

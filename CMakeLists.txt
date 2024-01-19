@@ -109,13 +109,22 @@ set(JSON_BuildTests OFF CACHE INTERNAL "")
 # UTF8に変更
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 
+# ランタイムライブラリの設定
+if(MSVC)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+endif()
+
 # メインの実行可能ファイル
 add_executable(${PROJECT_NAME} WIN32 main.cpp $<$<CXX_COMPILER_ID:MSVC>:utf8api.manifest>)
+
+set(LIB_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
+set(MODULE_ROOT ${LIB_ROOT}/Modules)
 
 # サブディレクトリの追加
 add_subdirectory(./Modules/DirectXTex)
 add_subdirectory(./Modules/json)
-#add_subdirectory(./Modules/Effekseer)
+add_subdirectory(./Modules/Effekseer)
 #add_subdirectory(./Modules/Bullet)
 
 add_subdirectory(./Gears3DObject)
@@ -148,16 +157,16 @@ set_target_properties(texdiag PROPERTIES FOLDER Modules/DirectXTex)
 set_target_properties(ddsview PROPERTIES FOLDER Modules/DirectXTex)
 
 #Effekser
-#set_target_properties(
-#    Effekseer
-#    EffekseerRendererDX9
-#    EffekseerRendererDX11
-#    EffekseerRendererDX12
-#    EffekseerSoundDSound
-#    EffekseerSoundXAudio2
-#    LLGI
-#    PROPERTIES FOLDER Modules/Effekseer
-#)
+set_target_properties(
+    Effekseer
+    EffekseerRendererDX9
+    EffekseerRendererDX11
+    EffekseerRendererDX12
+    EffekseerSoundDSound
+    EffekseerSoundXAudio2
+    LLGI
+    PROPERTIES FOLDER Modules/Effekseer
+)
 
 # ドキュメントのビルドオプション
 if(BUILD_DOCUMENTATION)

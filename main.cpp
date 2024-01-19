@@ -181,7 +181,7 @@ public:
             }
         }
         AudioManager::Instance()->AddSoundGroup(0);
-        AudioManager::Instance()->SetSoundGroupVolume(0, 1.0f);
+        AudioManager::Instance()->SetSoundGroupVolume(0, 0.1f);
         for (const auto& entry : std::filesystem::recursive_directory_iterator("Assets/Sprite"))
         {
             if (!entry.is_regular_file()) continue;
