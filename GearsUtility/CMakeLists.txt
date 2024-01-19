@@ -12,6 +12,7 @@ set(HEADER_FILE
     ./include/ComPtr.h
     ./include/Singleton.h
     ./include/StringUtility.h
+    ./include/FileUtility.h
     ./include/TimeUtility.h
     ./include/CSVLoader.h
     ./include/MsgBox.h

@@ -24,6 +24,20 @@ namespace Glib
          * @param flag
          * @param enable
          */
+        void Set(Enum flag);
+
+        /**
+         * @brief フラグの削除
+         * @param flag
+         * @param enable
+         */
+        void UnSet(Enum flag);
+
+        /**
+         * @brief フラグのセット
+         * @param flag
+         * @param enable
+         */
         void Set(Enum flag, bool enable);
 
         /**
@@ -56,6 +70,18 @@ namespace Glib
     };
 
     template<class Enum> requires std::is_enum_v<Enum>
+    void BitFlag<Enum>::Set(Enum flag)
+    {
+        Set(flag, true);
+    }
+
+    template<class Enum> requires std::is_enum_v<Enum>
+    void BitFlag<Enum>::UnSet(Enum flag)
+    {
+        Set(flag, false);
+    }
+
+    template<class Enum> requires std::is_enum_v<Enum>
     void BitFlag<Enum>::Set(Enum flag, bool enable)
     {
         EnumType f = static_cast<EnumType>(flag);
@@ -69,7 +95,7 @@ namespace Glib
     }
 
     template<class Enum> requires std::is_enum_v<Enum>
-    inline BitFlag<Enum>::EnumType BitFlag<Enum>::ToValue() const
+    BitFlag<Enum>::EnumType BitFlag<Enum>::ToValue() const
     {
         return value_;
     }

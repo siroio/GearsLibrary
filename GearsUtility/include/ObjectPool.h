@@ -133,6 +133,7 @@ namespace Glib
         uintptr_t obj = availableObjects_.front();
         availableObjects_.pop_front();
         borrowedObjects_.emplace(obj);
+        OutputDebugStringA(std::to_string(borrowedObjects_.size()).c_str());
         return reinterpret_cast<T*>(obj);
     }
 
@@ -209,4 +210,3 @@ namespace Glib
         availableObjects_.push_back(reinterpret_cast<uintptr_t>(objects_.back().get()));
     }
 }
-
