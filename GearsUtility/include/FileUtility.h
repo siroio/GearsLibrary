@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <filesystem>
 
 namespace Glib
@@ -6,8 +6,8 @@ namespace Glib
     using FilePath = std::filesystem::path;
 
     /**
-     * @brief ƒtƒ@ƒCƒ‹ƒpƒX•¶š—ñ‚©‚çƒpƒX‚Ö‚Ì•ÏŠ·
-     * @param path ƒtƒ@ƒCƒ‹ƒpƒX
+     * @brief ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹æ–‡å­—åˆ—ã‹ã‚‰ãƒ‘ã‚¹ã¸ã®å¤‰æ›
+     * @param path ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
      */
     FilePath ConvertPath(std::string_view path)
     {
@@ -15,10 +15,10 @@ namespace Glib
     }
 
     /**
-     * @brief Šg’£q‚ğæ“¾
-     * @param path ƒtƒ@ƒCƒ‹ƒpƒX
-     * @param removePeriod Šg’£q‚Ìƒhƒbƒg‚ğíœ‚·‚é‚©
-     * @return Šg’£q
+     * @brief æ‹¡å¼µå­ã‚’å–å¾—
+     * @param path ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+     * @param removePeriod æ‹¡å¼µå­ã®ãƒ‰ãƒƒãƒˆã‚’å‰Šé™¤ã™ã‚‹ã‹
+     * @return æ‹¡å¼µå­
      */
     std::string GetExtension(std::string_view path, bool removePeriod = true)
     {
@@ -28,8 +28,8 @@ namespace Glib
     }
 
     /**
-     * @brief ƒtƒ@ƒCƒ‹‚ª‘¶İ‚µ‚Ä‚¢‚é‚©
-     * @param path ƒtƒ@ƒCƒ‹ƒpƒX
+     * @brief ãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã—ã¦ã„ã‚‹ã‹
+     * @param path ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
      * @return
      */
     bool ExistsFile(std::string_view path)
@@ -38,9 +38,9 @@ namespace Glib
     }
 
     /**
-     * @brief ƒtƒ@ƒCƒ‹‚ÌŠg’£q‚ğƒ`ƒFƒbƒN
-     * @param path ƒtƒ@ƒCƒ‹ƒpƒX
-     * @param extension Šg’£q
+     * @brief ãƒ•ã‚¡ã‚¤ãƒ«ã®æ‹¡å¼µå­ã‚’ãƒã‚§ãƒƒã‚¯
+     * @param path ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+     * @param extension æ‹¡å¼µå­
      */
     bool ExtensionCheck(std::string_view path, std::string_view extension)
     {
