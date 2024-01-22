@@ -56,7 +56,7 @@ set(LIBRARY
     GearsInput
     GearsMath
     GearsObject
-    #GearsPhysics
+    GearsPhysics
     GearsScene
     GearsUtility
 )
@@ -74,7 +74,6 @@ set(DIRECTX12_LIBS
 set(EXTERNAL_LIBS
     DirectXTex
     nlohmann_json
-    #Bullet
 )
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -129,7 +128,7 @@ set(MODULE_ROOT ${LIB_ROOT}/Modules)
 add_subdirectory(./Modules/DirectXTex)
 add_subdirectory(./Modules/json)
 add_subdirectory(./Modules/Effekseer)
-#add_subdirectory(./Modules/Bullet)
+add_subdirectory(./Modules/Bullet)
 
 add_subdirectory(./Gears3DObject)
 add_subdirectory(./GearsAudio)
@@ -141,7 +140,7 @@ add_subdirectory(./GearsGraphics)
 add_subdirectory(./GearsInput)
 add_subdirectory(./GearsMath)
 add_subdirectory(./GearsObject)
-#add_subdirectory(./GearsPhysics)
+add_subdirectory(./GearsPhysics)
 add_subdirectory(./GearsScene)
 add_subdirectory(./GearsUtility)
 
@@ -170,6 +169,55 @@ set_target_properties(
     EffekseerSoundXAudio2
     LLGI
     PROPERTIES FOLDER Modules/Effekseer
+)
+
+# Bullet
+set_target_properties(
+    App_BasicExample
+    App_ExampleBrowser
+    App_HelloWorld
+    App_HelloBulletRobotics
+    App_obj2sdf
+    App_PhysicsServer_SharedMemory
+    App_PhysicsServer_SharedMemory_GUI
+    App_RobotSimulator
+    App_RobotSimulator_NoGUI
+    App_TwoJoint
+    AppBasicExampleGui
+    BulletXmlWorldImporter
+    Bullet2FileLoader
+    Bullet3Collision
+    Bullet3Common
+    Bullet3Dynamics
+    Bullet3Geometry
+    Bullet3OpenCL_clew
+    BulletCollision
+    BulletDynamics
+    BulletExampleBrowserLib
+    BulletFileLoader
+    BulletInverseDynamics
+    BulletInverseDynamicsUtils
+    BulletRobotics
+    BulletRoboticsGUI
+    BulletSoftBody
+    BulletWorldImporter
+    BussIK
+    clsocket
+    ConvexDecomposition
+    GIMPACTUtils
+    gtest
+    gwen
+    HACD
+    LinearMath
+    OpenGLWindow
+    Test_btKinematicCharacterController
+    Test_BulletDynamics
+    Test_BulletInverseDynamics
+    Test_BulletInverseDynamicsJacobian
+    Test_BulletInverseForwardDynamics
+    Test_Collision
+    Test_PhysicsClientServer
+    PROPERTIES FOLDER Modules/Bullet
 )
 
 # ドキュメントのビルドオプション
