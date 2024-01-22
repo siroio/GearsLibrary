@@ -39,7 +39,7 @@ bool Glib::Internal::Effect::EffekseerManager::Initialize()
     auto graphicsDevice = EffekseerRendererDX12::CreateGraphicsDevice(
         s_dx12->Device().Get(),
         s_dx12->CommandQueue().Get(),
-        2
+        s_dx12->BackBufferNum()
     );
 
     // レンダラーの作成
@@ -54,10 +54,11 @@ bool Glib::Internal::Effect::EffekseerManager::Initialize()
     );
     if (s_efkRenderer == nullptr) return false;
 
+    // マネージャーの作成
     s_efkManager = Effekseer::Manager::Create(MAX_SQAURE);
     if (s_efkManager == nullptr) return false;
 
-    // メモリープルの作成
+    // メモリープールの作成
     s_efkMemoryPool = EffekseerRenderer::CreateSingleFrameMemoryPool(s_efkRenderer->GetGraphicsDevice());
     if (s_efkMemoryPool == nullptr) return false;
 
@@ -142,6 +143,7 @@ bool Glib::Internal::Effect::EffekseerManager::Load(unsigned int id, std::string
         Debug::Error("Path: " + ToString(path));
         return false;
     }
+
     s_effects.emplace(id, effect);
     return true;
 }

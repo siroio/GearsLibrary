@@ -195,6 +195,11 @@ D3D12_RESOURCE_DESC Glib::Internal::Graphics::DirectX12::BackBufferResourceDesc(
     return s_backBuffers[0].RTVResourceDesc();
 }
 
+int Glib::Internal::Graphics::DirectX12::BackBufferNum() const
+{
+    return FRAME_COUNT;
+}
+
 void Glib::Internal::Graphics::DirectX12::Barrier(ID3D12Resource* resource, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after)
 {
     auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(resource, before, after, 0);
@@ -342,4 +347,3 @@ void Glib::Internal::Graphics::DirectX12::WaitGPU()
         CloseHandle(event);
     }
 }
-

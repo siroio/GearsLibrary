@@ -57,7 +57,7 @@ namespace Glib
             std::lock_guard lock{ singleton_mutex };
             if (!instance)
             {
-                instance = std::shared_ptr<T>{ new T{ std::forward<Args>(args)...} };
+                instance = std::make_shared<T>(std::forward<Args>(args)...);
             }
             return WeakPtr<T>{ instance };
         }
@@ -68,11 +68,7 @@ namespace Glib
         static inline void Release()
         {
             std::lock_guard lock{ singleton_mutex };
-            if (instance)
-            {
-                instance.reset();
-            }
+            instance.reset();
         }
     };
 };
-

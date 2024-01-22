@@ -94,6 +94,10 @@ endforeach()
 #include_directories(${BULLET_INCLUDE_DIR})
 #target_link_libraries(3DPlatformer ${BULLET_LIBRARIES} -lGL -lGLU)
 
+# Setup Effekseer
+set(BUILD_EXAMPLES OFF)
+set(BUILD_GL OFF)
+
 # LibÉtÉHÉãÉ_Ç™ë∂ç›ÇµÇ»Ç¢èÍçáÇÕçÏê¨
 set(LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Lib)
 if(NOT EXISTS ${LIBRARY_OUTPUT_DIRECTORY})
@@ -156,7 +160,7 @@ set_target_properties(texconv PROPERTIES FOLDER Modules/DirectXTex)
 set_target_properties(texdiag PROPERTIES FOLDER Modules/DirectXTex)
 set_target_properties(ddsview PROPERTIES FOLDER Modules/DirectXTex)
 
-#Effekser
+# Effekser
 set_target_properties(
     Effekseer
     EffekseerRendererDX9

@@ -36,9 +36,6 @@ namespace Glib::Internal::Effect
 
     private:
         Effekseer::Matrix44 ToMatrix44(const Matrix4x4& matrix);
-
-    private:
-
     };
 
 }

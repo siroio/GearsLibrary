@@ -96,6 +96,12 @@ namespace Glib::Internal::Graphics
         D3D12_RESOURCE_DESC BackBufferResourceDesc() const;
 
         /**
+         * @brief バックバッファの数を取得
+         * @return
+        */
+        int BackBufferNum() const;
+
+        /**
          * @brief バリアの推移
         */
         void Barrier(ID3D12Resource* resource, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after);
@@ -145,4 +151,3 @@ namespace Glib::Internal::Graphics
         void WaitGPU();
     };
 }
-
