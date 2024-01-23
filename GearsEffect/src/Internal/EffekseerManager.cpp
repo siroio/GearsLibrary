@@ -10,6 +10,8 @@
 #include <Internal/CameraManager.h>
 #include <Internal/CameraBase.h>
 #include <Matrix4x4.h>
+#include <Vector3.h>
+#include <Color.h>
 #include <GameTimer.h>
 #include <StringUtility.h>
 #include <FileUtility.h>
@@ -87,7 +89,7 @@ bool Glib::Internal::Effect::EffekseerManager::Initialize()
 void Glib::Internal::Effect::EffekseerManager::Update()
 {
     // エフェクトの更新
-    s_efkManager->Update(GameTimer::DeltaTime());
+    s_efkManager->Update(GameTimer::DeltaTime() * EFFECT_FPS);
 }
 
 void Glib::Internal::Effect::EffekseerManager::Draw()
@@ -98,19 +100,19 @@ void Glib::Internal::Effect::EffekseerManager::Draw()
 
         camera->SetRenderTarget();
 
-        Matrix4x4 proj;
         Matrix4x4 view;
-        camera->ProjectionMatrix(&proj);
+        Matrix4x4 proj;
         camera->ViewMatrix(&view);
+        camera->ProjectionMatrix(&proj);
+
+        // 行列の設定
+        s_efkRenderer->SetProjectionMatrix(ToMatrix44(proj));
+        s_efkRenderer->SetCameraMatrix(ToMatrix44(view));
 
         // 描画開始処理
         s_efkMemoryPool->NewFrame();
         EffekseerRendererDX12::BeginCommandList(s_efkCommandList, s_dx12->CommandList().Get());
         s_efkRenderer->BeginRendering();
-
-        // 行列の設定
-        s_efkRenderer->SetProjectionMatrix(ToMatrix44(proj));
-        s_efkRenderer->SetCameraMatrix(ToMatrix44(view));
 
         // 描画
         s_efkManager->Draw();
@@ -148,14 +150,90 @@ bool Glib::Internal::Effect::EffekseerManager::Load(unsigned int id, std::string
     return true;
 }
 
+bool Glib::Internal::Effect::EffekseerManager::Contains(unsigned int id)
+{
+    return s_effects.contains(id);
+}
+
+bool Glib::Internal::Effect::EffekseerManager::Exists(EffectHandle handle)
+{
+    return s_efkManager->Exists(handle);
+}
+
+EffectHandle Glib::Internal::Effect::EffekseerManager::Play(unsigned int id, const Vector3& position)
+{
+    auto effect = s_effects.find(id);
+    if (effect == s_effects.end())
+    {
+        Debug::Error("Invalid EffectID : " + std::to_string(id));
+        return -1;
+    }
+
+    auto handle = s_efkManager->Play(effect->second, { position.x, position.y, position.z });
+    return handle;
+}
+
+void Glib::Internal::Effect::EffekseerManager::Pause(EffectHandle handle)
+{
+    s_efkManager->SetPaused(handle, true);
+}
+
+void Glib::Internal::Effect::EffekseerManager::UnPause(EffectHandle handle)
+{
+    s_efkManager->SetPaused(handle, false);
+}
+
+void Glib::Internal::Effect::EffekseerManager::Stop(EffectHandle handle)
+{
+    s_efkManager->StopEffect(handle);
+}
+
+void Glib::Internal::Effect::EffekseerManager::SetSpeed(EffectHandle handle, float speed)
+{
+    s_efkManager->SetSpeed(handle, speed);
+}
+
+void Glib::Internal::Effect::EffekseerManager::SetColor(EffectHandle handle, const Color& color)
+{
+    Effekseer::Color efkCol{};
+    efkCol.R = static_cast<uint8_t>(color.r * 256.0f);
+    efkCol.G = static_cast<uint8_t>(color.g * 256.0f);
+    efkCol.B = static_cast<uint8_t>(color.b * 256.0f);
+    efkCol.A = static_cast<uint8_t>(color.a * 256.0f);
+    s_efkManager->SetAllColor(handle, efkCol);
+}
+
+void Glib::Internal::Effect::EffekseerManager::SetTargetPosition(EffectHandle handle, const Vector3& position)
+{
+    s_efkManager->SetTargetLocation(handle, { position.x, position.y, position.z });
+}
+
+void Glib::Internal::Effect::EffekseerManager::SetMatrix(EffectHandle handle, const Matrix4x4& matrix)
+{
+    s_efkManager->SetMatrix(handle, ToMatrix43(matrix));
+}
+
 Effekseer::Matrix44 Glib::Internal::Effect::EffekseerManager::ToMatrix44(const Matrix4x4& matrix)
 {
-    Effekseer::Matrix44 mat;
+    Effekseer::Matrix44 mat{};
     for (int y = 0; y < 4; y++)
     {
         for (int x = 0; x < 4; x++)
         {
             mat.Values[y][x] = matrix[y][x];
+        }
+    }
+    return mat;
+}
+
+Effekseer::Matrix43 Glib::Internal::Effect::EffekseerManager::ToMatrix43(const Matrix4x4& matrix)
+{
+    Effekseer::Matrix43 mat{};
+    for (int y = 0; y < 4; y++)
+    {
+        for (int x = 0; x < 3; x++)
+        {
+            mat.Value[y][x] = matrix[y][x];
         }
     }
     return mat;

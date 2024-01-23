@@ -23,7 +23,7 @@ float Glib::GameTimer::DeltaTime()
 
 float Glib::GameTimer::FixedDeltaTime()
 {
-    return fixedTimeStep_;
+    return fixedTimeStep_ * timeScale_;
 }
 
 float Glib::GameTimer::FixedTimeStep()
@@ -56,3 +56,7 @@ float Glib::GameTimer::UnscaledDeltaTime()
     return unscaledDeltaTime_.count();
 }
 
+float Glib::GameTimer::FixedUnscaledDeltaTime()
+{
+    return fixedTimeStep_;
+}

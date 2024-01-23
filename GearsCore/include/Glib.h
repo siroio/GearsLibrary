@@ -24,6 +24,14 @@
 #pragma comment(lib, "GearsScened.lib")
 #pragma comment(lib, "GearsUtilityd.lib")
 #pragma comment(lib, "DirectXTexd.lib")
+#pragma comment(lib, "Effekseer_Debug.lib")
+#pragma comment(lib, "EffekseerRendererDX12_Debug.lib")
+#pragma comment(lib, "LLGI_Debug.lib")
+#pragma comment(lib, "Bullet3Common_Debug.lib")
+#pragma comment(lib, "BulletCollision_Debug.lib")
+#pragma comment(lib, "BulletDynamics_Debug.lib")
+#pragma comment(lib, "BulletInverseDynamics_Debug.lib")
+#pragma comment(lib, "BulletSoftBody_Debug.lib")
 #else
 /* RELEASE BUILD LIB */
 #pragma comment(lib, "Gears3DObject.lib")
@@ -38,5 +46,12 @@
 #pragma comment(lib, "GearsScene.lib")
 #pragma comment(lib, "GearsUtility.lib")
 #pragma comment(lib, "DirectXTex.lib")
+#pragma comment(lib, "Effekseer.lib")
+#pragma comment(lib, "EffekseerRendererDX12.lib")
+#pragma comment(lib, "LLGI.lib")
+#pragma comment(lib, "Bullet3Common.lib")
+#pragma comment(lib, "BulletCollision.lib")
+#pragma comment(lib, "BulletDynamics.lib")
+#pragma comment(lib, "BulletInverseDynamics.lib")
+#pragma comment(lib, "BulletSoftBody.lib")
 #endif // _DEBUG
-

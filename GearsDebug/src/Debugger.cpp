@@ -79,6 +79,8 @@ void Glib::Debug::Warn(std::string_view message)
 {}
 
 std::string Glib::Debug::GetPrefix(LogLevel loglevel)
-{}
+{
+    return "";
+}
 
 #endif

@@ -76,6 +76,13 @@ namespace Glib
          */
         static float UnscaledDeltaTime();
 
+        /**
+         * @brief 固定フレームレートの更新を実行するインターバル
+         * @brief タイムスケールの影響を受けない
+         * @return 秒
+         */
+        static float FixedUnscaledDeltaTime();
+
     private:
         static inline Duration maxDeltaTime_{ 0.1f };
         static inline Duration deltaTime_{ 0.0f };
@@ -86,4 +93,3 @@ namespace Glib
         TimePoint prevTime_{ Clock::now() };
     };
 }
-

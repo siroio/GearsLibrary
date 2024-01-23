@@ -3,10 +3,14 @@ cmake_minimum_required(VERSION 3.4)
 # == CONFIG ==
 set(SOURCE_FILE 
 	./src/Internal/EffekseerManager.cpp
+	./src/EffectManager.cpp
+	./src/Components/EffectSystem.cpp
 )
 
 set(HEADER_FILE
     ./include/Internal/EffekseerManager.h
+    ./include/EffectManager.h
+    ./include/Components/EffectSystem.h
 )
 
 set(LIB_NAME GearsEffect)

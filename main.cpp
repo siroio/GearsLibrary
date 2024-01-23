@@ -17,6 +17,7 @@
 #include <MeshManager.h>
 #include <SceneManager.h>
 #include <AudioManager.h>
+#include <EffectManager.h>
 
 #include <GameObject.h>
 #include <Component.h>
@@ -30,6 +31,7 @@
 #include <Components/Animator.h>
 #include <Components/AudioListener.h>
 #include <Components/AudioSource.h>
+#include <Components/EffectSystem.h>
 #include <filesystem>
 
 using namespace Glib;
@@ -144,7 +146,7 @@ public:
         );
         if (!isloaded) return;
 
-        int meshID{ 0 }, animID{ 0 }, audiID{ 0 }, texID{ 0 };
+        int meshID{ 0 }, animID{ 0 }, audiID{ 0 }, texID{ 0 }, effectID{ 0 };
         for (const auto& entry : std::filesystem::recursive_directory_iterator("Assets"))
         {
             if (!entry.is_regular_file()) continue;
@@ -178,6 +180,16 @@ public:
                     continue;
                 }
                 audiID++;
+            }
+            if (ext.ends_with("efk"))
+            {
+                isloaded = EffectManager::Load(effectID, entry.path().string());
+                if (!isloaded)
+                {
+                    Debug::Error(entry.path().string() + "のロードに失敗しました。");
+                    continue;
+                }
+                effectID++;
             }
         }
         AudioManager::Instance()->AddSoundGroup(0);
@@ -221,6 +233,11 @@ public:
         animator->AnimationID(0);
         animator->Loop(true);
         mesh->AddComponent<TestAudio>();
+
+        auto effect = GameObjectManager::Instantiate("Effect");
+        auto efk = mesh->AddComponent<EffectSystem>();
+        efk->EffectID(0);
+        efk->Play();
 
         //auto spriteObj = GameObjectManager::Instantiate("Sprite");
         //auto sprite = spriteObj->AddComponent<SpriteRenderer>();
