@@ -110,11 +110,24 @@ namespace Glib::Internal::Graphics::ShaderCode
             float2 shadowUV = (posFromLightVP.xy + float2(1.0f, -1.0f)) * float2(0.5f, -0.5f);
 
             float bias = clamp(ShadowBias * tan(acos(dot(N, L))), 0, 0.01);
-            float visibility = 1.0f;
+            float shadowMapValue = shadowTexture.Sample(shadowSampler, shadowUV).r;
 
-            float4 ambient  = LightAmbient * MatAmbient * visibility;
-            float4 diffuse  = LightDiffuse * MatDiffuse * max(dot(N, L), 0.0f) * visibility;
-            float4 speculer = LightSpeculer * MatSpeculer * pow(max(dot(N, H), 0.0f), MatShininess) * visibility;
+            float depth = posFromLightVP.z;
+            float depthSquare = shadowMapValue * shadowMapValue;
+            float variance = clamp(shadowMapValue - depthSquare, 0.00001f, 1.0f);
+            float md = depth - shadowMapValue;
+
+            float litFactor = variance / (variance + md * md);
+            litFactor = pow(litFactor, 6.0f);
+            float shadowWeight = lerp(0.5f, 1.0f, litFactor);
+
+            float shadowAcceptance = saturate(md / bias);
+            float visibility = smoothstep(1.0f,  0.00001f, shadowAcceptance);
+            float shadowValue = shadowWeight * visibility;
+
+            float4 ambient  = LightAmbient * MatAmbient;
+            float4 diffuse  = LightDiffuse * MatDiffuse * max(dot(N, L), 0.0f) * shadowValue;
+            float4 speculer = LightSpeculer * MatSpeculer * pow(max(dot(N, H), 0.0f), MatShininess) * shadowValue;
             float4 baseColor = albedoTexture.Sample(albedoSampler, input.uv);
             float4 color = (ambient + diffuse) * baseColor + speculer;
             return float4(color.rgb, baseColor.a);
@@ -194,11 +207,6 @@ namespace Glib::Internal::Graphics::ShaderCode
             return o;
         }
 
-        float random(float3 seed, int i)
-        {
-	        return frac(sin(dot(float4(seed, i), float4(12.9898, 78.233, 45.164, 94.673))) * 43758.5453);
-        }
-
         float4 PSmain(PSInput input) : SV_TARGET
         {
             float4 lightVP = input.position;
@@ -207,4 +215,3 @@ namespace Glib::Internal::Graphics::ShaderCode
         })"
     };
 }
-
