@@ -39,6 +39,16 @@ void Glib::Internal::Physics::BulletPhysicsManager::Update()
     s_dynamicsWorld->stepSimulation(GameTimer::DeltaTime(), SIMULATE_SUB_STEP, GameTimer::FixedDeltaTime());
 }
 
+bool Glib::Internal::Physics::BulletPhysicsManager::Raycast(const Vector3& origin, const Vector3& direction, float maxDistance, RaycastHit* hit)
+{
+    return false;
+}
+
+bool Glib::Internal::Physics::BulletPhysicsManager::RaycastAll(const Vector3& origin, const Vector3& direction, float maxDistance, std::vector<RaycastHit>* hit)
+{
+    return false;
+}
+
 btVector3 Glib::Internal::Physics::BulletPhysicsManager::TobtVector3(const Vector3& v)
 {
     return btVector3{ v.x, v.y, v.z };
