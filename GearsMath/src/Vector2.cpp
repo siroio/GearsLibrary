@@ -9,7 +9,7 @@ Vector2::Vector2() : xy{ 0.0f }
 Vector2::Vector2(float x, float y) : x{ x }, y{ y }
 {}
 
-Vector2::Vector2(float xy) : xy{ xy }
+Vector2::Vector2(float xy) : x{ xy }, y{ xy }
 {}
 
 Vector2::Vector2(const Vector3& v) : x{ v.x }, y{ v.y }
@@ -386,4 +386,3 @@ std::ostream& operator<<(std::ostream& stream, const Vector2& v)
 {
     return stream << v.ToString();
 }
-

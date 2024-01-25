@@ -53,15 +53,18 @@ Matrix4x4 Matrix4x4::Translate(const Vector3& v)
 
 Matrix4x4 Matrix4x4::Rotate(const Quaternion& q)
 {
-    float xx = q.x * q.x * 2.0f;
-    float yy = q.y * q.y * 2.0f;
-    float zz = q.z * q.z * 2.0f;
-    float xy = q.x * q.y * 2.0f;
-    float xz = q.x * q.z * 2.0f;
-    float yz = q.y * q.z * 2.0f;
-    float wx = q.w * q.x * 2.0f;
-    float wy = q.w * q.y * 2.0f;
-    float wz = q.w * q.z * 2.0f;
+    float x = q.x * 2.0F;
+    float y = q.y * 2.0F;
+    float z = q.z * 2.0F;
+    float xx = q.x * x;
+    float yy = q.y * y;
+    float zz = q.z * z;
+    float xy = q.x * y;
+    float xz = q.x * z;
+    float yz = q.y * z;
+    float wx = q.w * x;
+    float wy = q.w * y;
+    float wz = q.w * z;
 
     return Matrix4x4
     {
@@ -171,7 +174,7 @@ Matrix4x4 Matrix4x4::TRS(const Vector3& pos, const Quaternion& q, const Vector3&
 
 Matrix4x4 Matrix4x4::Perspective(float fieldOfView, float aspectRatio, float nearDistance, float farDistance)
 {
-    float yScale = 1.0f / Mathf::Tan(fieldOfView * 0.5f * Mathf::DEG2RAD);
+    float yScale = 1.0f / Mathf::Tan(fieldOfView * Mathf::DEG2RAD * 0.5f);
     float xScale = yScale / aspectRatio;
 
     return Matrix4x4
@@ -188,7 +191,7 @@ Matrix4x4 Matrix4x4::Orthographic(float width, float height, float nearZ, float 
     float m11 = 2.0f / width;
     float m22 = 2.0f / height;
     float m33 = 1.0f / (farZ - nearZ);
-    float m43 = -nearZ / (farZ - nearZ);
+    float m43 = nearZ / (nearZ - farZ);
 
     return Matrix4x4
     {

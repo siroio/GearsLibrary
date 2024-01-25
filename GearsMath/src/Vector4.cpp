@@ -9,7 +9,7 @@ Vector4::Vector4() : xyzw{ 0.0f }
 Vector4::Vector4(float x, float y, float z, float w) : x{ x }, y{ y }, z{ z }, w{ w }
 {}
 
-Vector4::Vector4(float xyzw) : xyzw{ xyzw }
+Vector4::Vector4(float xyzw) : x{ xyzw }, y{ xyzw }, z{ xyzw }, w{ xyzw }
 {}
 
 Vector4 Vector4::Zero()
@@ -269,4 +269,3 @@ std::ostream& operator<<(std::ostream& stream, const Vector4& v)
 {
     return stream << v.ToString();
 }
-

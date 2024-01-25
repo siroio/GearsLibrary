@@ -11,7 +11,7 @@ Vector3::Vector3() : xyz{ 0.0f }
 Vector3::Vector3(float x, float y, float z) : x{ x }, y{ y }, z{ z }
 {}
 
-Vector3::Vector3(float xyz) : xyz{ xyz }
+Vector3::Vector3(float xyz) : x{ xyz }, y{ xyz }, z{ xyz }
 {}
 
 Vector3::Vector3(const Vector2& v) : x{ v.x }, y{ v.y }, z{ 0.0f }

@@ -78,7 +78,7 @@ int Mathf::Max(int a, int b)
 
 float Mathf::Pow(const float a, const float b)
 {
-    return expf(logf(a) * b);
+    return std::powf(a, b);
 }
 
 float Mathf::Sqrt(const float a)
