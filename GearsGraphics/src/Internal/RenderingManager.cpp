@@ -25,7 +25,7 @@ namespace
     float s_shadowNear{ 0.1f };
     float s_shadowFar{ 100.0f };
     float s_shadowDistance{ 100.0f };
-    Vector2 s_shadowRange{ 25.0f, 25.0f };
+    Vector2 s_shadowRange{ 25.0f };
 
     // 平行光源用定数バッファ構造体
     struct DirectionalLightConstant
@@ -163,4 +163,3 @@ void Glib::Internal::Graphics::RenderingManager::SetDirectionalLightConstant(uns
 {
     s_constantBuffer.SetBuffer(rootParamIndex);
 }
-

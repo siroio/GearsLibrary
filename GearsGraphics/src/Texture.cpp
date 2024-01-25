@@ -3,6 +3,7 @@
 #include <DirectXTex.h>
 #include <functional>
 #include <filesystem>
+#include <StringUtility.h>
 
 namespace
 {
@@ -41,7 +42,7 @@ namespace
 
 bool Glib::Texture::CreateTexture(std::string_view path)
 {
-    std::filesystem::path filePath = path;
+    std::filesystem::path filePath = Glib::CharConv(path);
     if (!filePath.is_absolute()) filePath = std::filesystem::absolute(filePath);
     if (!filePath.has_extension()) return false;
     DirectX::TexMetadata metadata{};

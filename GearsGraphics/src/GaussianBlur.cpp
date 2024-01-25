@@ -166,7 +166,7 @@ bool Glib::Graphics::GaussianBlur::CreatePipelines(DXGI_FORMAT format)
 bool Glib::Graphics::GaussianBlur::CreateBlurResource(UINT64 width, UINT height, DXGI_FORMAT format)
 {
     auto heapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_HEAP_TYPE_DEFAULT };
-    auto resDesc = CD3DX12_RESOURCE_DESC::Tex2D(format, static_cast<UINT64>(width * 0.5f), height, 1, 1);
+    auto resDesc = CD3DX12_RESOURCE_DESC::Tex2D(format, static_cast<UINT64>(width), height, 1, 1);
     resDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 
     float clearColor[4]{ 1.0f, 1.0f, 1.0f, 1.0f };
@@ -182,7 +182,7 @@ bool Glib::Graphics::GaussianBlur::CreateBlurResource(UINT64 width, UINT height,
         IID_PPV_ARGS(xBlurResource_.ReleaseAndGetAddressOf())
         ))) return false;
 
-    resDesc.Height = static_cast<UINT>(resDesc.Height * 0.5f);
+    resDesc.Height = static_cast<UINT>(resDesc.Height);
 
     // 縦ブラー用
     if (FAILED(s_dx12->Device()->CreateCommittedResource(
@@ -232,4 +232,3 @@ void Glib::Graphics::GaussianBlur::CreateViews(const ComPtr<ID3D12Resource>& tex
     s_dx12->Device()->CreateShaderResourceView(xBlurResource_.Get(), &srvDesc, srvHandle_[1]->CPU());
     s_dx12->Device()->CreateShaderResourceView(yBlurResource_.Get(), &srvDesc, srvHandle_[2]->CPU());
 }
-
