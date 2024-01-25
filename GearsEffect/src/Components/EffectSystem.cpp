@@ -17,6 +17,8 @@ void Glib::EffectSystem::Start()
 
 void Glib::EffectSystem::LateUpdate()
 {
+    if (!IsPlaying()) return;
+
     if (!s_efkManager->Exists(effectHandle_))
     {
         effectHandle_ = -1;
@@ -39,6 +41,8 @@ void Glib::EffectSystem::LateUpdate()
 
 void Glib::EffectSystem::Play()
 {
+    if (!IsPlaying()) return;
+
     if (effectState_ == EffectState::Pause)
     {
         s_efkManager->UnPause(effectHandle_);
