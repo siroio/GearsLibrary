@@ -5,13 +5,14 @@
 #include <Internal/DX12/DirectX12.h>
 #include <ComPtr.h>
 #include <Color.h>
-#include <Window.h>
 #include <Vector2.h>
+#include <Window.h>
+#include <RenderTarget.h>
 #include <TimeUtility.h>
+#include <GameTimer.h>
 #include <filesystem>
 #include <unordered_map>
 #include <list>
-#include <GameTimer.h>
 
 namespace
 {
@@ -23,9 +24,10 @@ namespace
 
 namespace
 {
-    ComPtr<ID3D12DescriptorHeap> s_ImGuiHaeps;
-    ComPtr<ID3D12DescriptorHeap> s_renderTargetHeap;
-    ComPtr<ID3D12Resource> s_renderTarget;
+    Glib::Graphics::RenderTarget s_renderTarget;
+    std::shared_ptr<Glib::Internal::Graphics::DescriptorHandle> s_renderTargetSRV;
+    std::shared_ptr<Glib::Internal::Graphics::DescriptorHandle> s_imguiResource;
+
     Color s_clearColor{ Color::Black() };
     D3D12_RECT s_scissorRect{};
     D3D12_VIEWPORT s_viewport{};
@@ -43,61 +45,31 @@ bool Glib::Internal::Debug::ImGuiManager::Initialize()
 {
     s_window.RegisterProcedure(ImGui_ImplWin32_WndProcHandler);
     auto hwnd = Window::WindowHandle();
-    auto resDesc = s_dx12->BackBufferResourceDesc();
     const Vector2& windowSize = Window::WindowSize();
+    auto resPool = s_dx12->DescriptorPool(Internal::Graphics::DirectX12::PoolType::RES);
 
     // Setup Heaps
-    D3D12_DESCRIPTOR_HEAP_DESC heapDesc{};
-    heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-    heapDesc.NodeMask = 0;
-    heapDesc.NumDescriptors = NUM_FRAMES_IN_FLIGHT - 1;
-    heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-
-    auto hr = s_dx12->Device()->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(s_ImGuiHaeps.ReleaseAndGetAddressOf()));
-    if (FAILED(hr)) return false;
+    s_imguiResource = resPool->GetHandle();
 
     // Setup Rendertarget
-    heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    heapDesc.NumDescriptors = 1;
-    heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-    hr = s_dx12->Device()->CreateDescriptorHeap(
-        &heapDesc,
-        IID_PPV_ARGS(s_renderTargetHeap.ReleaseAndGetAddressOf())
+    s_renderTarget.Create(
+        static_cast<UINT64>(windowSize.x),
+        static_cast<UINT64>(windowSize.y),
+        s_clearColor,
+        DXGI_FORMAT_R8G8B8A8_UNORM
     );
-    if (FAILED(hr)) return false;
 
-    resDesc.Width = static_cast<UINT64>(windowSize.x);
-    resDesc.Height = static_cast<UINT64>(windowSize.y);
-    auto heapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_HEAP_TYPE_DEFAULT };
-    auto clearValue = CD3DX12_CLEAR_VALUE{ DXGI_FORMAT_R8G8B8A8_UNORM, s_clearColor.Raw() };
-    hr = s_dx12->Device()->CreateCommittedResource(
-        &heapProp,
-        D3D12_HEAP_FLAG_NONE,
-        &resDesc,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-        &clearValue,
-        IID_PPV_ARGS(s_renderTarget.ReleaseAndGetAddressOf()));
-    if (FAILED(hr)) return false;
-
-    D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-    rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-    s_dx12->Device()->CreateRenderTargetView(
-        s_renderTarget.Get(),
-        &rtvDesc,
-        s_renderTargetHeap->GetCPUDescriptorHandleForHeapStart()
-    );
+    // RenderTarget用SRV
+    s_renderTargetSRV = resPool->GetHandle();
 
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
     srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
     srvDesc.Texture2D.MipLevels = 1;
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-    auto handle = s_ImGuiHaeps->GetCPUDescriptorHandleForHeapStart();
-    handle.ptr += s_dx12->Device()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     s_dx12->Device()->CreateShaderResourceView(
-        s_renderTarget.Get(),
-        &srvDesc, handle
+        s_renderTarget.RenderTargetResource().Get(),
+        &srvDesc, s_renderTargetSRV->CPU()
     );
 
     // IMGUIの初期化
@@ -129,9 +101,9 @@ bool Glib::Internal::Debug::ImGuiManager::Initialize()
         s_dx12->Device().Get(),
         NUM_FRAMES_IN_FLIGHT,
         DXGI_FORMAT_R8G8B8A8_UNORM,
-        s_ImGuiHaeps.Get(),
-        s_ImGuiHaeps->GetCPUDescriptorHandleForHeapStart(),
-        s_ImGuiHaeps->GetGPUDescriptorHandleForHeapStart()
+        resPool->GetHeap().Get(),
+        s_imguiResource->CPU(),
+        s_imguiResource->GPU()
         )) return false;
 
     s_scissorRect.top = 0;
@@ -166,14 +138,10 @@ void Glib::Internal::Debug::ImGuiManager::BeginDraw()
     ImGui_ImplDX12_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
-    s_dx12->Barrier(
-        s_renderTarget.Get(),
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-        D3D12_RESOURCE_STATE_RENDER_TARGET
-    );
-    auto handle = s_renderTargetHeap->GetCPUDescriptorHandleForHeapStart();
+    s_renderTarget.AsRenderTarget();
+
     s_dx12->CommandList()->ClearRenderTargetView(
-        handle,
+        s_renderTarget.RTVHandle()->CPU(),
         s_clearColor.Raw(),
         0, nullptr
     );
@@ -198,15 +166,9 @@ void Glib::Internal::Debug::ImGuiManager::DebugDraw()
 
 void Glib::Internal::Debug::ImGuiManager::EndDraw()
 {
-    s_dx12->Barrier(
-        s_renderTarget.Get(),
-        D3D12_RESOURCE_STATE_RENDER_TARGET,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-    );
-
+    s_renderTarget.AsTexture();
     s_dx12->SetDefaultRenderTarget();
     ImGui::Render();
-    s_dx12->CommandList()->SetDescriptorHeaps(1, s_ImGuiHaeps.GetAddressOf());
     ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), s_dx12->CommandList().Get());
 
     ImGui::UpdatePlatformWindows();
@@ -236,8 +198,7 @@ void Glib::Internal::Debug::ImGuiManager::Log(std::string_view message, LogLevel
 
 void Glib::Internal::Debug::ImGuiManager::SetRenderTarget() const
 {
-    auto handle = s_renderTargetHeap->GetCPUDescriptorHandleForHeapStart();
-    s_dx12->CommandList()->OMSetRenderTargets(1, &handle, false, nullptr);
+    s_dx12->CommandList()->OMSetRenderTargets(1, &s_renderTarget.RTVHandle()->CPU(), false, nullptr);
     s_dx12->CommandList()->RSSetScissorRects(1, &s_scissorRect);
     s_dx12->CommandList()->RSSetViewports(1, &s_viewport);
 }
@@ -329,10 +290,7 @@ void Glib::Internal::Debug::ImGuiManager::DrawGameView()
 
     ImGui::SetCursorPos(ImVec2{ pos.x, pos.y });
 
-    auto handle = s_ImGuiHaeps->GetGPUDescriptorHandleForHeapStart();
-    handle.ptr += s_dx12->Device()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
-    ImGui::Image((ImTextureID)handle.ptr, ImVec2{ size.x, size.y });
+    ImGui::Image((ImTextureID)s_renderTargetSRV->GPU().ptr, ImVec2{ size.x, size.y });
     ImGui::End();
 }
 
