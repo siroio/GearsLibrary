@@ -63,9 +63,7 @@ bool Glib::Graphics::RenderTarget::CreateRenderTargetBuffer(DXGI_FORMAT format)
     auto heapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_HEAP_TYPE_DEFAULT };
     auto resDesc = CD3DX12_RESOURCE_DESC::Tex2D(format, width_, height_, 1, 1);
     resDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
-
-    const float color[]{ 1.0f, 1.0f, 1.0f, 1.0f };
-    auto clearValue = CD3DX12_CLEAR_VALUE{ format, color };
+    auto clearValue = CD3DX12_CLEAR_VALUE{ format, clearColor_.Raw() };
 
     return SUCCEEDED(s_dx12->Device()->CreateCommittedResource(
         &heapProp,
@@ -184,4 +182,3 @@ void Glib::Graphics::RenderTarget::AsRenderTarget()
         D3D12_RESOURCE_STATE_RENDER_TARGET
     );
 }
-
