@@ -87,12 +87,8 @@ namespace Glib
         WeakPtr<Transform> transform_{ nullptr };
         Internal::Graphics::ConstantBuffer constantBuffer_{};
 
-        ComPtr<ID3D12Resource> renderTarget_{ nullptr };
-        std::shared_ptr<Internal::Graphics::DescriptorHandle> rtvHandle_{ nullptr };
+        Graphics::RenderTarget renderTarget_;
         std::shared_ptr<Internal::Graphics::DescriptorHandle> srvHandle_{ nullptr };
-
-        ComPtr<ID3D12Resource> depthStencil_{ nullptr };
-        std::shared_ptr<Internal::Graphics::DescriptorHandle> dsvHandle_{ nullptr };
 
         Graphics::RenderTarget shadowMap_{};
         Graphics::GaussianBlur shadowMapBlur{};

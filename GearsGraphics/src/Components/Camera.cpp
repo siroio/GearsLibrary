@@ -51,16 +51,13 @@ void Glib::Camera::LateUpdate()
     ProjectionMatrix(&buffer.Projection);
     buffer.LightVP = s_renderingManager->CalculateMatrixForShadowMap(transform_->Position() + transform_->Forward());
 
+    // バッファの更新
     constantBuffer_.Update(sizeof(buffer), &buffer);
 
-    // バリアを推移
-    s_dx12->Barrier(renderTarget_.Get(),
-                    D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-                    D3D12_RESOURCE_STATE_RENDER_TARGET);
-
     // レンダーターゲット、深度のクリア
-    s_dx12->CommandList()->ClearRenderTargetView(rtvHandle_->CPU(), backGroundColor_.Raw(), 0, nullptr);
-    s_dx12->CommandList()->ClearDepthStencilView(dsvHandle_->CPU(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+    renderTarget_.AsRenderTarget();
+    s_dx12->CommandList()->ClearRenderTargetView(renderTarget_.RTVHandle()->CPU(), backGroundColor_.Raw(), 0, nullptr);
+    s_dx12->CommandList()->ClearDepthStencilView(renderTarget_.DSVHandle()->CPU(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
     shadowMap_.AsRenderTarget();
     s_dx12->CommandList()->ClearRenderTargetView(shadowMap_.RTVHandle()->CPU(), Color::White().Raw(), 0, nullptr);
     s_dx12->CommandList()->ClearDepthStencilView(shadowMap_.DSVHandle()->CPU(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
@@ -73,7 +70,6 @@ const Color& Glib::Camera::BackGroundColor()
 
 void Glib::Camera::BackGroundColor(const Color& color)
 {
-    if (renderTarget_ != nullptr) return;
     backGroundColor_ = color;
 }
 
@@ -167,35 +163,25 @@ void Glib::Camera::InitializeRT()
 {
     const Vector2& windowSize = Window::WindowSize();
     auto resDesc = s_dx12->BackBufferResourceDesc();
-    auto rtvPool = s_dx12->DescriptorPool(Internal::Graphics::DirectX12::PoolType::RTV);
     auto srvPool = s_dx12->DescriptorPool(Internal::Graphics::DirectX12::PoolType::RES);
-    auto dsvPool = s_dx12->DescriptorPool(Internal::Graphics::DirectX12::PoolType::DSV);
 
     // RenderTargetの作成
-    resDesc.Width = static_cast<UINT>(windowSize.x);
-    resDesc.Height = static_cast<UINT>(windowSize.y);
-    auto heapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_HEAP_TYPE_DEFAULT };
-    auto clearValue = CD3DX12_CLEAR_VALUE{ DXGI_FORMAT_R8G8B8A8_UNORM, backGroundColor_.Raw() };
-    auto res = s_dx12->Device()->CreateCommittedResource(
-        &heapProp,
-        D3D12_HEAP_FLAG_NONE,
-        &resDesc,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-        &clearValue,
-        IID_PPV_ARGS(renderTarget_.ReleaseAndGetAddressOf())
+    renderTarget_.Create(
+        static_cast<UINT>(windowSize.x),
+        static_cast<UINT>(windowSize.y),
+        backGroundColor_,
+        resDesc.Format,
+        DXGI_FORMAT_D32_FLOAT
     );
-
-    // RenderTargetView用ハンドルを取得
-    rtvHandle_ = rtvPool->GetHandle();
 
     // RenderTargetView作成
     D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
     rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-    rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    rtvDesc.Format = resDesc.Format;
     s_dx12->Device()->CreateRenderTargetView(
-        renderTarget_.Get(),
+        renderTarget_.RenderTargetResource().Get(),
         &rtvDesc,
-        rtvHandle_->CPU()
+        renderTarget_.RTVHandle()->CPU()
     );
 
     // ShaderResourceView用のハンドルを取得
@@ -204,43 +190,13 @@ void Glib::Camera::InitializeRT()
     // ShaderResourceViewの作成
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
     srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-    srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    srvDesc.Format = resDesc.Format;
     srvDesc.Texture2D.MipLevels = 1;
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
     s_dx12->Device()->CreateShaderResourceView(
-        renderTarget_.Get(),
+        renderTarget_.RenderTargetResource().Get(),
         &srvDesc,
         srvHandle_->CPU()
-    );
-
-    // 深度バッファの作成
-    D3D12_CLEAR_VALUE depthValue{};
-    depthValue.Format = DXGI_FORMAT_D32_FLOAT;
-    depthValue.DepthStencil.Depth = 1.0f;
-
-    auto depthDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R32_TYPELESS, resDesc.Width, resDesc.Height);
-    depthDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
-    res = s_dx12->Device()->CreateCommittedResource(
-        &heapProp,
-        D3D12_HEAP_FLAG_NONE,
-        &depthDesc,
-        D3D12_RESOURCE_STATE_DEPTH_WRITE,
-        &depthValue,
-        IID_PPV_ARGS(depthStencil_.ReleaseAndGetAddressOf())
-    );
-
-    // DepthStencilView用のハンドル取得
-    dsvHandle_ = dsvPool->GetHandle();
-
-    // DepthStencilViewを作成
-    D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
-    dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
-    dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-    dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
-    s_dx12->Device()->CreateDepthStencilView(
-        depthStencil_.Get(),
-        &dsvDesc,
-        dsvHandle_->CPU()
     );
 }
 
@@ -260,10 +216,8 @@ void Glib::Camera::InitializeSM()
 
 void Glib::Camera::Draw()
 {
-    // バリアを推移
-    s_dx12->Barrier(renderTarget_.Get(),
-                    D3D12_RESOURCE_STATE_RENDER_TARGET,
-                    D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    // RenderTargetをテクスチャとして利用できるように
+    renderTarget_.AsTexture();
 
     // カメラ用パイプライン設定
     s_resource->SetPipelineState(Internal::Graphics::ID::CAMERA_PIPELINESTATE);
@@ -321,9 +275,9 @@ void Glib::Camera::SetRenderTarget()
 {
     s_dx12->CommandList()->OMSetRenderTargets(
         1,
-        &rtvHandle_->CPU(),
+        &renderTarget_.RTVHandle()->CPU(),
         false,
-        &dsvHandle_->CPU()
+        &renderTarget_.DSVHandle()->CPU()
     );
 
     const Vector2& windowSize = Window::WindowSize();
