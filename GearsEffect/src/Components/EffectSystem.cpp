@@ -41,8 +41,6 @@ void Glib::EffectSystem::LateUpdate()
 
 void Glib::EffectSystem::Play()
 {
-    if (!IsPlaying()) return;
-
     if (effectState_ == EffectState::Pause)
     {
         s_efkManager->UnPause(effectHandle_);

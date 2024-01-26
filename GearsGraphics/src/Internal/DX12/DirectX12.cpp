@@ -126,12 +126,8 @@ void Glib::Internal::Graphics::DirectX12::BeginDraw()
     s_cmdList->List()->OMSetRenderTargets(1, &rtvH, true, nullptr);
     s_cmdList->List()->ClearRenderTargetView(rtvH, s_backGroundColor.Raw(), 0, nullptr);
 
-    std::array<ID3D12DescriptorHeap* const, 2> heaps{
-        s_descriptors[static_cast<UINT>(PoolType::RES)]->GetHeap().Get(),
-        s_descriptors[static_cast<UINT>(PoolType::SMP)]->GetHeap().Get()
-    };
-
-    s_cmdList->List()->SetDescriptorHeaps(static_cast<UINT>(heaps.size()), heaps.data());
+    // ヒープを設定
+    SetHeaps();
 }
 
 void Glib::Internal::Graphics::DirectX12::EndDraw()
@@ -168,6 +164,16 @@ void Glib::Internal::Graphics::DirectX12::SetDefaultRenderTarget()
     s_cmdList->List()->OMSetRenderTargets(1, &rtvH, true, nullptr);
     s_cmdList->List()->RSSetViewports(1, &s_viewPort);
     s_cmdList->List()->RSSetScissorRects(1, &s_scissorRect);
+}
+
+void Glib::Internal::Graphics::DirectX12::SetHeaps()
+{
+    std::array<ID3D12DescriptorHeap* const, 2> heaps{
+        s_descriptors[static_cast<UINT>(PoolType::RES)]->GetHeap().Get(),
+        s_descriptors[static_cast<UINT>(PoolType::SMP)]->GetHeap().Get()
+    };
+
+    s_cmdList->List()->SetDescriptorHeaps(static_cast<UINT>(heaps.size()), heaps.data());
 }
 
 ComPtr<ID3D12Device> Glib::Internal::Graphics::DirectX12::Device() const

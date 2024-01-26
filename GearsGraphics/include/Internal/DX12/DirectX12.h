@@ -71,6 +71,11 @@ namespace Glib::Internal::Graphics
         void SetDefaultRenderTarget();
 
         /**
+         * @brief ヒープを設定
+         */
+        void SetHeaps();
+
+        /**
          * @brief デバイスを取得
          */
         ComPtr<ID3D12Device> Device() const;

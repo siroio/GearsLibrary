@@ -63,4 +63,3 @@ namespace Glib::Internal::Graphics::ID
 
 #undef UCHAR
 #undef UINT
-

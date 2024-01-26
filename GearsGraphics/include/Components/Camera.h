@@ -74,8 +74,8 @@ namespace Glib
 
     private:
         virtual void Draw() override;
-        virtual void ViewMatrix(Matrix4x4* mat) const override;
-        virtual void ProjectionMatrix(Matrix4x4* mat) const override;
+        virtual void ViewMatrix(Matrix4x4& mat) const override;
+        virtual void ProjectionMatrix(Matrix4x4& mat) const override;
         virtual void SetRenderTarget() override;
         virtual void SetConstantBuffer(unsigned int rootParamIndex) override;
         virtual void SetDepthStencil() override;

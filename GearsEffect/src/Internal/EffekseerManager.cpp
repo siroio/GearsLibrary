@@ -100,10 +100,11 @@ void Glib::Internal::Effect::EffekseerManager::Draw()
 
         camera->SetRenderTarget();
 
+        // 変換行列の取得
         Matrix4x4 view;
         Matrix4x4 proj;
-        camera->ViewMatrix(&view);
-        camera->ProjectionMatrix(&proj);
+        camera->ViewMatrix(view);
+        camera->ProjectionMatrix(proj);
 
         // 行列の設定
         s_efkRenderer->SetProjectionMatrix(ToMatrix44(proj));
@@ -120,6 +121,8 @@ void Glib::Internal::Effect::EffekseerManager::Draw()
         // 描画終了処理
         s_efkRenderer->EndRendering();
         EffekseerRendererDX12::EndCommandList(s_efkCommandList);
+
+        s_dx12->ExecuteCommandList();
     }
 }
 

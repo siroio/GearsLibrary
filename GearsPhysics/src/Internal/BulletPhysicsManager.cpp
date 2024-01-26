@@ -6,7 +6,7 @@
 
 namespace
 {
-    Vector3 DEFAULT_GRAVITY{ 0, 9.81f, 0 };
+    Vector3 DEFAULT_GRAVITY{ 0, -9.81f, 0 };
     unsigned int SIMULATE_SUB_STEP{ 10 };
     std::unique_ptr<btBroadphaseInterface> s_broadphase{ nullptr };
     std::unique_ptr<btDefaultCollisionConfiguration> s_configuration{ nullptr };
@@ -28,9 +28,10 @@ bool Glib::Internal::Physics::BulletPhysicsManager::Initialize()
         s_configuration.get()
     );
 
-
     // 重力の設定
     s_dynamicsWorld->setGravity(TobtVector3(DEFAULT_GRAVITY));
+
+
     return true;
 }
 

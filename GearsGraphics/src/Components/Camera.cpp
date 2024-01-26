@@ -26,6 +26,9 @@ namespace
         Matrix4x4 Projection;
         Matrix4x4 LightVP;
     };
+
+    std::vector<std::string> clearColors{ "SolidColor", "Skybox" };
+    std::vector<std::string> projectionTypes{ "Perspective", "Orthographic" };
 }
 
 Glib::Camera::Camera()
@@ -47,8 +50,8 @@ void Glib::Camera::LateUpdate()
     if (transform_.expired()) return;
 
     CameraConstant buffer;;
-    ViewMatrix(&buffer.View);
-    ProjectionMatrix(&buffer.Projection);
+    ViewMatrix(buffer.View);
+    ProjectionMatrix(buffer.Projection);
     buffer.LightVP = s_renderingManager->CalculateMatrixForShadowMap(transform_->Position() + transform_->Forward());
 
     // バッファの更新
@@ -142,9 +145,9 @@ void Glib::Camera::OrthographicSize(float size)
 Vector3 Glib::Camera::WorldToScreenPoint(const Vector3& position)
 {
     Matrix4x4 view;
-    ViewMatrix(&view);
+    ViewMatrix(view);
     Matrix4x4 projection;
-    ProjectionMatrix(&projection);
+    ProjectionMatrix(projection);
 
     const auto& size = Window::WindowSize();
     const auto windowX = size.x / 2;
@@ -233,24 +236,25 @@ void Glib::Camera::Draw()
     viewPort.MinDepth = 0.0f;
     viewPort.MaxDepth = 1.0f;
 
+    s_dx12->SetHeaps();
     s_dx12->CommandList()->RSSetViewports(1, &viewPort);
     s_dx12->CommandList()->SetGraphicsRootDescriptorTable(0, srvHandle_->GPU());
     s_dx12->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
     s_dx12->CommandList()->DrawInstanced(4, 1, 0, 0);
 }
 
-void Glib::Camera::ViewMatrix(Matrix4x4* mat) const
+void Glib::Camera::ViewMatrix(Matrix4x4& mat) const
 {
     transform_.expired() ?
-        *mat = Matrix4x4::Identity() :
-        *mat = Matrix4x4::LookAt(transform_->Position(), transform_->Position() + transform_->Forward(), transform_->Up());
+        mat = Matrix4x4::Identity() :
+        mat = Matrix4x4::LookAt(transform_->Position(), transform_->Position() + transform_->Forward(), transform_->Up());
 }
 
-void Glib::Camera::ProjectionMatrix(Matrix4x4* mat) const
+void Glib::Camera::ProjectionMatrix(Matrix4x4& mat) const
 {
     if (transform_.expired())
     {
-        *mat = Matrix4x4::Identity();
+        mat = Matrix4x4::Identity();
         return;
     }
 
@@ -260,13 +264,13 @@ void Glib::Camera::ProjectionMatrix(Matrix4x4* mat) const
     switch (projectionType_)
     {
         case Glib::ProjectionType::Perspective:
-            *mat = Matrix4x4::Perspective(fieldOfView_, aspect, near_, far_);
+            mat = Matrix4x4::Perspective(fieldOfView_, aspect, near_, far_);
             break;
         case Glib::ProjectionType::Orthographic:
-            *mat = Matrix4x4::Orthographic(aspect * orthographicSize_, orthographicSize_, near_, far_);
+            mat = Matrix4x4::Orthographic(aspect * orthographicSize_, orthographicSize_, near_, far_);
             break;
         default:
-            *mat = Matrix4x4::Identity();
+            mat = Matrix4x4::Identity();
             break;
     }
 }
@@ -318,6 +322,34 @@ void Glib::Camera::ExecuteShadowBulr()
 
 void Glib::Camera::OnGUI()
 {
-    Component::OnGUI();
     GLGUI::ColorBar3("Background", &backGroundColor_);
+
+    std::string currentFlag = clearColors.at(static_cast<int>(clearFlags_));
+    if (GLGUI::ComboBox("ClearFlag", currentFlag, clearColors))
+    {
+        auto it = std::find(clearColors.begin(), clearColors.end(), currentFlag);
+        clearFlags_ = static_cast<CameraClearFlags>(std::distance(clearColors.begin(), it));
+    }
+
+    GLGUI::DragFloat("NearClip", &near_, 0.01f);
+    GLGUI::DragFloat("FarClip", &far_, 0.01f, near_);
+
+    std::string currentProj = projectionTypes.at(static_cast<int>(projectionType_));
+    if (GLGUI::ComboBox("Projection", currentProj, projectionTypes))
+    {
+        auto it = std::find(projectionTypes.begin(), projectionTypes.end(), currentProj);
+        projectionType_ = static_cast<ProjectionType>(std::distance(projectionTypes.begin(), it));
+    }
+    switch (projectionType_)
+    {
+        case ProjectionType::Perspective:
+            GLGUI::DragFloat("Fov", &fieldOfView_, 1.0f, 0.0f, 179.999f);
+            break;
+        case ProjectionType::Orthographic:
+            GLGUI::DragFloat("Size", &orthographicSize_);
+            break;
+    }
+
+    GLGUI::DragVector2("Viewport Position", &viewPortPosition_, 0.01f, 0.0f, 1.0f);
+    GLGUI::DragVector2("Viewport Size", &viewPortSize_, 0.01f, 0.0f, 1.0f);
 }

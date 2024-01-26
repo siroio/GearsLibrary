@@ -42,6 +42,7 @@ bool Glib::GLGUI::CheckBox(std::string_view label, bool* checked, bool sameLine)
 
 bool Glib::GLGUI::ComboBox(std::string_view label, std::string& curerntItem, const std::vector<std::string>& items)
 {
+    bool clicked{ false };
     if (ImGui::BeginCombo(label.data(), curerntItem.c_str()))
     {
         for (const auto& item : items)
@@ -50,14 +51,14 @@ bool Glib::GLGUI::ComboBox(std::string_view label, std::string& curerntItem, con
             if (ImGui::Selectable(item.c_str(), is_selected))
             {
                 curerntItem = item;
-                return true;
+                clicked = true;
             }
 
             if (is_selected) ImGui::SetItemDefaultFocus();
         }
         ImGui::EndCombo();
     }
-    return false;
+    return clicked;
 }
 
 bool Glib::GLGUI::TreeNode(std::string_view label, bool leaf, bool openNode)
@@ -112,6 +113,12 @@ bool Glib::GLGUI::DragFloat(std::string_view label, float* value, float speed, f
 {
     if (sameLine) ImGui::SameLine();
     return ImGui::DragFloat(label.data(), value, speed, min, max, "%.3f", GL_SLIDER_CLAMP);
+}
+
+bool Glib::GLGUI::DragVector2(std::string_view label, Vector2* value, float speed, float min, float max, bool sameLine)
+{
+    if (sameLine) ImGui::SameLine();
+    return ImGui::DragFloat2(label.data(), value->xy.data(), speed, min, max, "%.3f", GL_SLIDER_CLAMP);
 }
 
 bool Glib::GLGUI::DragVector3(std::string_view label, Vector3* value, float speed, float min, float max, bool sameLine)

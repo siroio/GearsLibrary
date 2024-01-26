@@ -110,6 +110,7 @@ namespace Glib
 
         static bool DragInt(std::string_view label, int* value, float speed = 1.0f, int min = INT_MIN, int max = INT_MAX, bool sameLine = false);
         static bool DragFloat(std::string_view label, float* value, float speed = 1.0f, float min = -FLT_MAX, float max = FLT_MAX, bool sameLine = false);
+        static bool DragVector2(std::string_view label, Vector2* value, float speed = 1.0f, float min = -FLT_MAX, float max = FLT_MAX, bool sameLine = false);
         static bool DragVector3(std::string_view label, Vector3* value, float speed = 1.0f, float min = -FLT_MAX, float max = FLT_MAX, bool sameLine = false);
         static bool DragVector4(std::string_view label, Vector4* value, float speed = 1.0f, float min = -FLT_MAX, float max = FLT_MAX, bool sameLine = false);
 

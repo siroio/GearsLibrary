@@ -31,12 +31,12 @@ namespace Glib::Internal::Interface
         /**
          * @brief ビュー行列を取得
          */
-        virtual void ViewMatrix(Matrix4x4* mat) const = 0;
+        virtual void ViewMatrix(Matrix4x4& mat) const = 0;
 
         /**
          * @brief プロジェクション行列を取得
          */
-        virtual void ProjectionMatrix(Matrix4x4* mat) const = 0;
+        virtual void ProjectionMatrix(Matrix4x4& mat) const = 0;
 
         /**
          * @brief レンダーターゲットを設定
