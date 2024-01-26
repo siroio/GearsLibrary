@@ -87,9 +87,11 @@ namespace Glib
         WeakPtr<Transform> transform_{ nullptr };
         Internal::Graphics::ConstantBuffer constantBuffer_{};
 
+        // camera用RenderTarget
         Graphics::RenderTarget renderTarget_;
         std::shared_ptr<Internal::Graphics::DescriptorHandle> srvHandle_{ nullptr };
 
+        // ShadowMap用RenderTarget
         Graphics::RenderTarget shadowMap_{};
         Graphics::GaussianBlur shadowMapBlur{};
 

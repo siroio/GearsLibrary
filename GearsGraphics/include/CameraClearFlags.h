@@ -7,8 +7,7 @@ namespace Glib
      */
     enum class CameraClearFlags
     {
-        Color,
+        SolidColor,
         SkyBox
     };
 };
-

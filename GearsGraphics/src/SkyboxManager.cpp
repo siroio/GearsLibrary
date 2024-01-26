@@ -147,7 +147,7 @@ void Glib::SkyboxManager::Draw()
     // スカイボックスを描画
     for (const auto& camera : s_cameraManager->Cameras())
     {
-        if (!camera->Active() || (camera->ClearFlags() == CameraClearFlags::Color)) continue;
+        if (!camera->Active() || (camera->ClearFlags() == CameraClearFlags::SolidColor)) continue;
 
         camera->SetRenderTarget();
         camera->SetConstantBuffer(1);
