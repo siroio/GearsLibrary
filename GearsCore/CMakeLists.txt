@@ -38,6 +38,7 @@ target_link_libraries(
     GearsEffect
     GearsScene
     GearsUtility
+    GearsPhysics
 )
 set_target_properties(${LIB_NAME}
     PROPERTIES

@@ -10,6 +10,7 @@
 
 /* SYSTEM HEADERS */
 #include <Internal/XAudioSystem.h>
+#include <Internal/BulletPhysicsManager.h>
 #include <Internal/CameraManager.h>
 #include <Internal/ComponentManager.h>
 #include <Internal/DX12/DirectX12.h>
@@ -74,6 +75,7 @@ void Glib::Game::RegisterSystem()
     SystemManager::AddSystem<Internal::Graphics::ShaderManager>();
     SystemManager::AddSystem<Internal::Audio::XAudioSystem>();
     SystemManager::AddSystem<Internal::Effect::EffekseerManager>();
+    SystemManager::AddSystem<Internal::Physics::BulletPhysicsManager>();
     SystemManager::AddSystem<AudioManager>();
     SystemManager::AddSystem<GameObjectManager>();
     SystemManager::AddSystem<GameTimer>();
