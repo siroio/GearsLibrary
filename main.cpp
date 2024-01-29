@@ -221,7 +221,7 @@ public:
         auto camera = GameObjectManager::Instantiate("Camera");
         auto initPosition = Vector3{ 0.0f, 10.0f, -20.0f };
         camera->Transform()->Position(initPosition);
-        camera->AddComponent<Camera>()->ClearFlags(CameraClearFlags::SolidColor);
+        camera->AddComponent<Camera>()->ClearFlags(CameraClearFlags::SkyBox);
         camera->AddComponent<AudioListener>();
 
         // オブジェクト生成

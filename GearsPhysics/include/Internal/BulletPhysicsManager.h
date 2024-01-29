@@ -13,12 +13,13 @@ namespace Glib
 namespace Glib::Internal::Physics
 {
     class BulletPhysicsManager :
-        public SingletonPtr<BulletPhysicsManager>,
-        public Interface::ISystem
+        public Interface::ISystem,
+        public SingletonPtr<BulletPhysicsManager>
     {
         BulletPhysicsManager() = default;
         friend WeakPtr<BulletPhysicsManager> SingletonPtr<BulletPhysicsManager>::Instance();
 
+    public:
         bool Initialize();
         void Update();
 

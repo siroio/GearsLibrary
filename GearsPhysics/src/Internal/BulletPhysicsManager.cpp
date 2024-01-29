@@ -18,19 +18,27 @@ namespace
 bool Glib::Internal::Physics::BulletPhysicsManager::Initialize()
 {
     s_broadphase = std::make_unique<btDbvtBroadphase>();
+    if (s_broadphase == nullptr) return false;
+
     s_configuration = std::make_unique<btDefaultCollisionConfiguration>();
+    if (s_configuration == nullptr) return false;
+
     s_dispatcher = std::make_unique<btCollisionDispatcher>(s_configuration.get());
+    if (s_dispatcher == nullptr) return false;
+
     s_solver = std::make_unique<btSequentialImpulseConstraintSolver>();
+    if (s_solver == nullptr) return false;
+
     s_dynamicsWorld = std::make_unique<btDiscreteDynamicsWorld>(
         s_dispatcher.get(),
         s_broadphase.get(),
         s_solver.get(),
         s_configuration.get()
     );
+    if (s_dynamicsWorld == nullptr) return false;
 
     // 重力の設定
     s_dynamicsWorld->setGravity(TobtVector3(DEFAULT_GRAVITY));
-
 
     return true;
 }

@@ -89,9 +89,7 @@ endforeach()
 # == プロジェクト構成 ==
 
 # Setup Bullet
-#set(BULLET_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/Modules/Bullet)
-#include_directories(${BULLET_INCLUDE_DIR})
-#target_link_libraries(3DPlatformer ${BULLET_LIBRARIES} -lGL -lGLU)
+cmake_policy(SET CMP0115 NEW)
 
 # Setup Effekseer
 set(BUILD_EXAMPLES OFF)
