@@ -256,7 +256,7 @@ bool Glib::Internal::Graphics::DirectX12::InitDevice()
     for (const auto& level : levels)
     {
         auto result = SUCCEEDED(D3D12CreateDevice(adapter.Get(), level, IID_PPV_ARGS(s_device.ReleaseAndGetAddressOf())));
-        if (result == S_OK) break;
+        if (result) break;
     }
     return s_device != nullptr;
 }
@@ -300,7 +300,7 @@ bool Glib::Internal::Graphics::DirectX12::CreateSwapChain()
         &swapChainDesc,
         nullptr,
         nullptr,
-        (IDXGISwapChain1**)s_swapChain.ReleaseAndGetAddressOf()
+        reinterpret_cast<IDXGISwapChain1**>(s_swapChain.ReleaseAndGetAddressOf())
     ));
 }
 

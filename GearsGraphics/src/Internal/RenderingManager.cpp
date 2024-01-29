@@ -66,7 +66,7 @@ void Glib::Internal::Graphics::RenderingManager::Draw()
         });
     }
 
-    // 有効なカメラの数だけ描画
+    // 有効なカメラだけ描画
     for (const auto& camera : s_cameraManager->Cameras())
     {
         if (!camera->Active()) continue;
