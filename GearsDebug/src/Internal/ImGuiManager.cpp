@@ -19,7 +19,7 @@ namespace
     auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
     auto& s_window = Glib::Window::Instance();
     constexpr int NUM_FRAMES_IN_FLIGHT = 3;
-    std::unordered_map <Glib::LogLevel, ImVec4> s_logTextColor;
+    std::unordered_map<Glib::LogLevel, ImVec4> s_logTextColor;
 }
 
 namespace
