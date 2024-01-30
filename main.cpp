@@ -32,6 +32,7 @@
 #include <Components/AudioListener.h>
 #include <Components/AudioSource.h>
 #include <Components/EffectSystem.h>
+#include <Components/Rigidbody.h>
 #include <filesystem>
 
 using namespace Glib;
@@ -52,7 +53,7 @@ public:
         Debug::Log("Enable " + nameof(*this));
     }
 
-    void Update()
+    void Update() const
     {
         auto& transform = GameObject()->Transform();
         Vector3 velocity;
@@ -226,6 +227,7 @@ public:
 
         // オブジェクト生成
         auto mesh = GameObjectManager::Instantiate("Mesh");
+        auto rb = mesh->AddComponent<Rigidbody>();
         auto renderer = mesh->AddComponent<SkinnedMeshRenderer>();
         auto animator = mesh->AddComponent<Animator>();
         mesh->AddComponent<TestMover>();
@@ -234,10 +236,10 @@ public:
         animator->Loop(true);
         mesh->AddComponent<TestAudio>();
 
-        auto effect = GameObjectManager::Instantiate("Effect");
-        auto efk = effect->AddComponent<EffectSystem>();
-        efk->EffectID(0);
-        efk->Play();
+        //auto effect = GameObjectManager::Instantiate("Effect");
+        //auto efk = effect->AddComponent<EffectSystem>();
+        //efk->EffectID(0);
+        //efk->Play();
 
         //auto spriteObj = GameObjectManager::Instantiate("Sprite");
         //auto sprite = spriteObj->AddComponent<SpriteRenderer>();

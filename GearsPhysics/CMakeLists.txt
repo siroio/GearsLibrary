@@ -3,10 +3,15 @@ cmake_minimum_required(VERSION 3.4)
 # == CONFIG ==
 set(SOURCE_FILE
     ./src/Internal/BulletPhysicsManager.cpp
+    ./src/Components/Rigidbody.cpp
+    ./src/Physics.cpp
 )
 
 set(HEADER_FILE
     ./include/Internal/BulletPhysicsManager.h
+    ./include/Internal/IRigidbody.h
+    ./include/Components/Rigidbody.h
+    ./include/Physics.h
 )
 
 set(LIB_NAME GearsPhysics)

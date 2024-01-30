@@ -17,6 +17,7 @@ namespace
 
 bool Glib::Internal::Physics::BulletPhysicsManager::Initialize()
 {
+    // bulletの各オブジェクトの初期化
     s_broadphase = std::make_unique<btDbvtBroadphase>();
     if (s_broadphase == nullptr) return false;
 
@@ -39,7 +40,6 @@ bool Glib::Internal::Physics::BulletPhysicsManager::Initialize()
 
     // 重力の設定
     s_dynamicsWorld->setGravity(TobtVector3(DEFAULT_GRAVITY));
-
     return true;
 }
 
@@ -50,12 +50,23 @@ void Glib::Internal::Physics::BulletPhysicsManager::Update()
 
 bool Glib::Internal::Physics::BulletPhysicsManager::Raycast(const Vector3& origin, const Vector3& direction, float maxDistance, RaycastHit* hit)
 {
-    return false;
+    auto from = TobtVector3(origin);
+    auto to = TobtVector3(origin + direction * maxDistance);
+    btCollisionWorld::ClosestRayResultCallback result{ TobtVector3(origin), TobtVector3(direction * maxDistance) };
+    s_dynamicsWorld->rayTest(TobtVector3(origin), TobtVector3(direction * maxDistance), result);
+    return result.hasHit();
 }
 
 bool Glib::Internal::Physics::BulletPhysicsManager::RaycastAll(const Vector3& origin, const Vector3& direction, float maxDistance, std::vector<RaycastHit>* hit)
 {
     return false;
+}
+
+bool Glib::Internal::Physics::BulletPhysicsManager::AddRigidbody(btRigidBody* rigidbody)
+{
+    if (rigidbody == nullptr) return false;
+    s_dynamicsWorld->addRigidBody(rigidbody);
+    return true;
 }
 
 btVector3 Glib::Internal::Physics::BulletPhysicsManager::TobtVector3(const Vector3& v)

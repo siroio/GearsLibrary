@@ -88,7 +88,8 @@ endforeach()
 
 # == プロジェクト構成 ==
 
-# Setup Bullet
+# Supress Bullet Warning
+cmake_policy(SET CMP0048 NEW)
 cmake_policy(SET CMP0115 NEW)
 
 # Setup Effekseer

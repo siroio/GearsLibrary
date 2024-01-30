@@ -4,6 +4,7 @@
 
 struct Vector3;
 class btVector3;
+class btRigidBody;
 
 namespace Glib
 {
@@ -25,6 +26,8 @@ namespace Glib::Internal::Physics
 
         bool Raycast(const Vector3& origin, const Vector3& direction, float maxDistance, RaycastHit* hit);
         bool RaycastAll(const Vector3& origin, const Vector3& direction, float maxDistance, std::vector<RaycastHit>* hit);
+
+        bool AddRigidbody(btRigidBody* rigidbody);
 
     private:
         btVector3 TobtVector3(const Vector3& v);
