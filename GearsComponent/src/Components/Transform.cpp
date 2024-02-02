@@ -287,6 +287,8 @@ void Glib::Transform::RemoveChild(const Glib::WeakPtr<Transform>& child)
 
 void Glib::Transform::OnGUI()
 {
+    Component::OnGUI();
+
     GLGUI::DragVector3("Position", &local_position_);
 
     auto eulr = LocalEulerAngles();

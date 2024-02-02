@@ -1,8 +1,14 @@
 ﻿#include <Internal/BulletPhysicsManager.h>
+#include <Internal/ComponentManager.h>
+#include <Internal/IRigidbody.h>
 #include <btBulletDynamicsCommon.h>
 #include <Vector3.h>
 #include <GameTimer.h>
+#include <GameObject.h>
+#include <Debugger.h>
+#include <unordered_map>
 #include <memory>
+#include <deque>
 
 namespace
 {
@@ -13,6 +19,16 @@ namespace
     std::unique_ptr<btCollisionDispatcher> s_dispatcher{ nullptr };
     std::unique_ptr<btSequentialImpulseConstraintSolver> s_solver{ nullptr };
     std::unique_ptr<btDiscreteDynamicsWorld> s_dynamicsWorld{ nullptr };
+
+    std::unordered_map<uintptr_t, Glib::WeakPtr<Glib::Internal::Interface::IRigidbody>> s_rigidbodys;
+    std::deque<std::pair<GameObjectPtr, GameObjectPtr>> s_collisionEnterCallbacks;
+    std::deque<std::pair<GameObjectPtr, GameObjectPtr>> s_collisionStayCallbacks;
+    std::deque<std::pair<GameObjectPtr, GameObjectPtr>> s_collisionExitCallbacks;
+}
+
+namespace
+{
+    auto s_componentManager = Glib::Internal::ComponentManager::Instance();
 }
 
 bool Glib::Internal::Physics::BulletPhysicsManager::Initialize()
@@ -45,7 +61,52 @@ bool Glib::Internal::Physics::BulletPhysicsManager::Initialize()
 
 void Glib::Internal::Physics::BulletPhysicsManager::Update()
 {
+    for (const auto& [ID, rigidbody] : s_rigidbodys)
+    {
+        rigidbody->SyncToBullet();
+    }
+
     s_dynamicsWorld->stepSimulation(GameTimer::DeltaTime(), SIMULATE_SUB_STEP, GameTimer::FixedDeltaTime());
+
+    int numManifolds = s_dispatcher->getNumManifolds();
+    for (int i = 0; i < numManifolds; i++)
+    {
+        btPersistentManifold* contactManifold = s_dispatcher->getManifoldByIndexInternal(i);
+        const btCollisionObject* objA = contactManifold->getBody0();
+        const btCollisionObject* objB = contactManifold->getBody1();
+        int numContacts = contactManifold->getNumContacts();
+        for (int j = 0; j < numContacts; j++)
+        {
+            auto& point = contactManifold->getContactPoint(j);
+            if (point.getDistance() < 0.0f)
+            {
+                const auto& pointA = point.getPositionWorldOnA();
+                const auto& pointB = point.getPositionWorldOnB();
+                const auto& normal = point.m_normalWorldOnB;
+
+            }
+        }
+    }
+
+    for (const auto& [ID, rigidbody] : s_rigidbodys)
+    {
+        rigidbody->SyncFromBullet();
+    }
+
+    // 衝突判定のコールバックを呼び出す
+    ExecuteTriggerCallbacks();
+    ExecuteCollisionCallbacks();
+}
+
+
+void Glib::Internal::Physics::BulletPhysicsManager::ExecuteTriggerCallbacks()
+{
+
+}
+
+void Glib::Internal::Physics::BulletPhysicsManager::ExecuteCollisionCallbacks()
+{
+
 }
 
 bool Glib::Internal::Physics::BulletPhysicsManager::Raycast(const Vector3& origin, const Vector3& direction, float maxDistance, RaycastHit* hit)
@@ -62,10 +123,11 @@ bool Glib::Internal::Physics::BulletPhysicsManager::RaycastAll(const Vector3& or
     return false;
 }
 
-bool Glib::Internal::Physics::BulletPhysicsManager::AddRigidbody(btRigidBody* rigidbody)
+bool Glib::Internal::Physics::BulletPhysicsManager::AddRigidbody(const WeakPtr<Glib::Internal::Interface::IRigidbody>& rigidbody)
 {
-    if (rigidbody == nullptr) return false;
-    s_dynamicsWorld->addRigidBody(rigidbody);
+    if (rigidbody.expired()) return false;
+    s_dynamicsWorld->addRigidBody(rigidbody->GetbtRigidbody());
+    s_rigidbodys.emplace(rigidbody.getId(), rigidbody);
     return true;
 }
 

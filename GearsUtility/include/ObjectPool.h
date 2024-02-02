@@ -153,6 +153,7 @@ namespace Glib
     template<class T>
     inline void ObjectPool<T>::Expand(size_t expandSize)
     {
+        std::lock_guard lock{ mutex_ };
         const auto size = objects_.size();
         for (size_t i = 0; i < expandSize; i++)
         {

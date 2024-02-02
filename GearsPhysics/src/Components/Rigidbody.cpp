@@ -33,19 +33,22 @@ void Glib::Rigidbody::Start()
     motionState_ = std::make_unique<btDefaultMotionState>(btTra);
     btRigidBody::btRigidBodyConstructionInfo rbInfo(mass_, motionState_.get(), shape_.get(), localInertia);
     rigidbody_ = std::make_unique<btRigidBody>(rbInfo);
-    rigidbody_->set
-        if (rigidbody_->getMotionState() == nullptr)
-        {
-            Debug::Log("MotionState is nullptr");
-        }
 
-    s_bullet->AddRigidbody(rigidbody_.get());
-    rigidbody_->setActivationState(ACTIVE_TAG);
-}
+    if (rigidbody_->getMotionState() == nullptr)
+    {
+        Debug::Log("MotionState is nullptr");
+        return;
+    }
 
-void Glib::Rigidbody::Update()
-{
-    SyncTransform();
+    // 自身のポインタをセット
+    rigidbody_->setUserPointer(GameObject().get().get());
+
+    bool result = s_bullet->AddRigidbody(WeakPtr<Rigidbody>{ shared_from_this() });
+    if (!result)
+    {
+        Debug::Log("Rigidbody could not be added.");
+        Destroy();
+    }
 }
 
 float Glib::Rigidbody::Mass() const
@@ -55,7 +58,11 @@ float Glib::Rigidbody::Mass() const
 
 void Glib::Rigidbody::Mass(float mass)
 {
-    mass_ = Mathf::Max(mass, 1.0e-7f);
+    mass_ = Mathf::Max(mass, 0.0f);
+    if (rigidbody_ == nullptr) return;
+    btVector3 localInertia(0.0f, 0.0f, 0.0f);
+    if (mass_ != 0.0f) shape_->calculateLocalInertia(mass_, localInertia);
+    rigidbody_->setMassProps(mass_, localInertia);
 }
 
 bool Glib::Rigidbody::UseGravity() const
@@ -65,12 +72,17 @@ bool Glib::Rigidbody::UseGravity() const
 
 void Glib::Rigidbody::UseGravity(bool useGravity)
 {
-
+    useGravity_ = useGravity;
 }
 
 void Glib::Rigidbody::OnGUI()
 {
-
+    Component::OnGUI();
+    auto gravity = FromVec3(rigidbody_->getGravity());
+    if (GLGUI::DragVector3("Gravity", &gravity, 0.1f))
+    {
+        rigidbody_->setGravity(ToVec3(gravity));
+    }
 }
 
 btVector3 Glib::Rigidbody::ToVec3(const Vector3& v)
@@ -93,12 +105,16 @@ Quaternion Glib::Rigidbody::FromQuat(const btQuaternion& v)
     return Quaternion{ -v.x(), v.y(), v.z(), v.w() };
 }
 
-const GameObjectPtr& Glib::Rigidbody::GetGameObject()
+void Glib::Rigidbody::SyncToBullet()
 {
-    return GameObject();
+    const auto& transform = GameObject()->Transform();
+    btTransform worldTrans;
+    worldTrans.setOrigin(ToVec3(transform->Position()));
+    worldTrans.setRotation(ToQuat(transform->Rotation()));
+    motionState_->setWorldTransform(worldTrans);
 }
 
-void Glib::Rigidbody::SyncTransform()
+void Glib::Rigidbody::SyncFromBullet()
 {
     const auto& transform = GameObject()->Transform();
     btTransform worldTrans;
@@ -107,4 +123,14 @@ void Glib::Rigidbody::SyncTransform()
     const auto& rotation = worldTrans.getRotation();
     transform->Position(FromVec3(origin));
     transform->Rotation(FromQuat(rotation));
+}
+
+const GameObjectPtr& Glib::Rigidbody::GetGameObject()
+{
+    return GameObject();
+}
+
+btRigidBody* Glib::Rigidbody::GetbtRigidbody()
+{
+    return rigidbody_.get();
 }

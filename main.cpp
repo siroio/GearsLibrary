@@ -51,6 +51,7 @@ public:
     void Start()
     {
         Debug::Log("Enable " + nameof(*this));
+        GameObject()->Transform()->Position(Vector3{ 0.0f, 40.0f, 0.0f });
     }
 
     void Update() const
@@ -236,6 +237,9 @@ public:
         animator->Loop(true);
         mesh->AddComponent<TestAudio>();
 
+        auto Ground = GameObjectManager::Instantiate("Ground");
+        auto rbg = Ground->AddComponent<Rigidbody>();
+        rbg->Mass(0.0f);
         //auto effect = GameObjectManager::Instantiate("Effect");
         //auto efk = effect->AddComponent<EffectSystem>();
         //efk->EffectID(0);

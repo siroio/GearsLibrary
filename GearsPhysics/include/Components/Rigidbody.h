@@ -32,7 +32,6 @@ namespace Glib
     {
     public:
         void Start();
-        void Update();
 
         float Mass() const;
         void Mass(float mass);
@@ -42,8 +41,11 @@ namespace Glib
 
         void OnGUI() override;
 
+    private:
         const GameObjectPtr& GetGameObject() override;
-        void SyncTransform() override;
+        btRigidBody* GetbtRigidbody() override;
+        void SyncToBullet() override;
+        void SyncFromBullet() override;
 
     private:
         static btVector3 ToVec3(const Vector3& v);
