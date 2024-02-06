@@ -11,13 +11,14 @@ namespace Glib
     {
         enum class EffectState
         {
-            Pause,
-            Looping,
-            OnStop,
-            PlayOnStart
+            Pause = 1 << 0,
+            Looping = 1 << 1,
+            DestoryOnFinish = 1 << 2,
+            PlayOnStart = 1 << 3
         };
 
     public:
+        ~EffectSystem();
         void Start();
         void LateUpdate();
 
@@ -26,14 +27,34 @@ namespace Glib
         void Stop();
 
         bool IsPlaying() const;
+
+        bool Loop() const;
+        void Loop(bool enable);
+
+        bool DestoryOnFinish() const;
+        void DestoryOnFinish(bool enable);
+
+        bool PlayOnStart() const;
+        void PlayOnStart(bool enable);
+
         unsigned int EffectID() const;
         void EffectID(unsigned int id);
+
+        float Speed() const;
+        void Speed(float speed);
+
+        Vector3 TargetPosition() const;
+        void TargetPosition(const Vector3& targetPosition);
+
+        Color EffectColor() const;
+        void EffectColor(const Color& color);
 
     private:
         unsigned int effectID_{ UINT_MAX };
         int effectHandle_{ -1 };
         float effectSpeed_{ 1.0f };
         Vector3 effectTarget_{ 0.0f, 0.0, 0.0f };
+        Color effectColor_{ 1.0f, 1.0f, 1.0f, 1.0f };
         BitFlag<EffectState> effectState_{};
         WeakPtr<Transform> transform_{ nullptr };
     };

@@ -169,7 +169,7 @@ EffectHandle Glib::Internal::Effect::EffekseerManager::Play(unsigned int id, con
     if (effect == s_effects.end())
     {
         Debug::Error("Invalid EffectID : " + std::to_string(id));
-        return -1;
+        return EFFEKSEER_INVALID_HANDLE;
     }
 
     auto handle = s_efkManager->Play(effect->second, { position.x, position.y, position.z });
@@ -198,12 +198,12 @@ void Glib::Internal::Effect::EffekseerManager::SetSpeed(EffectHandle handle, flo
 
 void Glib::Internal::Effect::EffekseerManager::SetColor(EffectHandle handle, const Color& color)
 {
-    Effekseer::Color efkCol{};
-    efkCol.R = static_cast<uint8_t>(color.r * 256.0f);
-    efkCol.G = static_cast<uint8_t>(color.g * 256.0f);
-    efkCol.B = static_cast<uint8_t>(color.b * 256.0f);
-    efkCol.A = static_cast<uint8_t>(color.a * 256.0f);
-    s_efkManager->SetAllColor(handle, efkCol);
+    Effekseer::Color destColor{};
+    destColor.R = static_cast<uint8_t>(color.r * 255.0f);
+    destColor.G = static_cast<uint8_t>(color.g * 255.0f);
+    destColor.B = static_cast<uint8_t>(color.b * 255.0f);
+    destColor.A = static_cast<uint8_t>(color.a * 255.0f);
+    s_efkManager->SetAllColor(handle, destColor);
 }
 
 void Glib::Internal::Effect::EffekseerManager::SetTargetPosition(EffectHandle handle, const Vector3& position)

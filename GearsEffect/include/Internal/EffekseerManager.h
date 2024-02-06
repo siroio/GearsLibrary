@@ -17,6 +17,7 @@ struct Vector3;
 struct Color;
 
 using EffectHandle = Effekseer::Handle;
+constexpr EffectHandle EFFEKSEER_INVALID_HANDLE = -1;
 
 namespace Glib::Internal::Effect
 {
