@@ -12,9 +12,9 @@ namespace Glib
     {
         enum class AudioStatus
         {
-            Pause,
-            Is3DAudio,
-            PlayOnStart,
+            Pause = 1 << 0,
+            Is3DAudio = 1 << 1,
+            PlayOnStart = 1 << 2,
         };
     public:
         AudioSource();
