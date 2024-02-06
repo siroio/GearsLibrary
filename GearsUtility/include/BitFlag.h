@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include <concepts>
-#include <bitset>
+
 namespace Glib
 {
     /**
@@ -106,7 +106,6 @@ namespace Glib
         Set(flag, true);
         return *this;
     }
-
 
     template <class Enum> requires std::is_enum_v<Enum>
     BitFlag<Enum>& BitFlag<Enum>::operator&=(Enum&& flag)
