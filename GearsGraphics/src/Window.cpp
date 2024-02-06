@@ -26,8 +26,8 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
     switch (msg)
     {
         case WM_DESTROY:
-            PostQuitMessage(0);
             CoUninitialize();
+            PostQuitMessage(0);
             break;
         default:
             return DefWindowProc(hwnd, msg, wparam, lparam);
