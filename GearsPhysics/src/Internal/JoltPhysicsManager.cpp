@@ -304,7 +304,6 @@ bool Glib::Internal::Physics::JoltPhysicsManager::ShouldCollide(JPH::ObjectLayer
 
 bool Glib::Internal::Physics::JoltPhysicsManager::ShouldCollide(JPH::ObjectLayer inLayer1, JPH::BroadPhaseLayer inLayer2) const
 {
-    Debug::Log("ShouldCollide");
     switch (inLayer1)
     {
         case Layers::NON_MOVING:
@@ -320,41 +319,54 @@ bool Glib::Internal::Physics::JoltPhysicsManager::ShouldCollide(JPH::ObjectLayer
 
 JPH::ValidateResult Glib::Internal::Physics::JoltPhysicsManager::OnContactValidate(const JPH::Body& inBody1, const JPH::Body& inBody2, JPH::RVec3Arg inBaseOffset, const JPH::CollideShapeResult& inCollisionResult)
 {
-    Debug::Log("OnContactValidate");
     return JPH::ValidateResult::AcceptAllContactsForThisBodyPair;
 }
 
 void Glib::Internal::Physics::JoltPhysicsManager::OnContactAdded(const JPH::Body& inBody1, const JPH::Body& inBody2, const JPH::ContactManifold& inManifold, JPH::ContactSettings& ioSettings)
 {
-    Debug::Log("OnContactAdded");
-
     const auto& object1 = s_rigidbodys.find(static_cast<uintptr_t>(inBody1.GetUserData()));
     const auto& object2 = s_rigidbodys.find(static_cast<uintptr_t>(inBody2.GetUserData()));
     if (object1 == s_rigidbodys.end() || object2 == s_rigidbodys.end()) return;
     const auto& rb1 = object1->second;
     const auto& rb2 = object2->second;
-    s_collisionEnterCallbacks.push_back({ rb1->GetGameObject(), rb2->GetGameObject() });
-    s_collisionEnterCallbacks.push_back({ rb2->GetGameObject(), rb1->GetGameObject() });
+    switch (inBody1.GetMotionType())
+    {
+        case JPH::EMotionType::Dynamic:
+            s_collisionEnterCallbacks.push_back({ rb1->GetGameObject(), rb2->GetGameObject() });
+            s_collisionEnterCallbacks.push_back({ rb2->GetGameObject(), rb1->GetGameObject() });
+            break;
+        case JPH::EMotionType::Kinematic:
+            s_triggerEnterCallbacks.push_back({ rb1->GetGameObject(), rb2->GetGameObject() });
+            s_triggerEnterCallbacks.push_back({ rb2->GetGameObject(), rb1->GetGameObject() });
+            break;
+        default: break;
+    }
 }
 
 void Glib::Internal::Physics::JoltPhysicsManager::OnContactPersisted(const JPH::Body& inBody1, const JPH::Body& inBody2, const JPH::ContactManifold& inManifold, JPH::ContactSettings& ioSettings)
 {
-    Debug::Log("OnContactPersisted");
-
     const auto& object1 = s_rigidbodys.find(static_cast<uintptr_t>(inBody1.GetUserData()));
     const auto& object2 = s_rigidbodys.find(static_cast<uintptr_t>(inBody2.GetUserData()));
     if (object1 == s_rigidbodys.end() || object2 == s_rigidbodys.end()) return;
-
     const auto& rb1 = object1->second;
     const auto& rb2 = object2->second;
-    s_collisionStayCallbacks.push_back({ rb1->GetGameObject(), rb2->GetGameObject() });
-    s_collisionStayCallbacks.push_back({ rb2->GetGameObject(), rb1->GetGameObject() });
+    switch (inBody1.GetMotionType())
+    {
+        case JPH::EMotionType::Dynamic:
+            s_collisionStayCallbacks.push_back({ rb1->GetGameObject(), rb2->GetGameObject() });
+            s_collisionStayCallbacks.push_back({ rb2->GetGameObject(), rb1->GetGameObject() });
+            break;
+        case JPH::EMotionType::Kinematic:
+            s_triggerStayCallbacks.push_back({ rb1->GetGameObject(), rb2->GetGameObject() });
+            s_triggerStayCallbacks.push_back({ rb2->GetGameObject(), rb1->GetGameObject() });
+            break;
+        default: break;
+    }
 }
 
 void Glib::Internal::Physics::JoltPhysicsManager::OnContactRemoved(const JPH::SubShapeIDPair& inSubShapePair)
 {
     Debug::Log("OnContactRemoved");
-
 }
 
 void Glib::Internal::Physics::JoltPhysicsManager::OnBodyActivated(const JPH::BodyID& inBodyID, JPH::uint64 inBodyUserData)
