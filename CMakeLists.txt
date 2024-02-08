@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.4)
+
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(BUILD_DOCUMENTATION "Build Doxygen documentation" ON)
 
@@ -74,6 +77,12 @@ set(DIRECTX12_LIBS
 set(EXTERNAL_LIBS
     DirectXTex
     nlohmann_json
+    Effekseer
+    EffekseerRendererCommon
+    EffekseerRendererDX12
+    EffekseerRendererLLGI
+    LLGI
+    Jolt
 )
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -88,13 +97,35 @@ endforeach()
 
 # == プロジェクト構成 ==
 
-# Supress Bullet Warning
-cmake_policy(SET CMP0048 NEW)
-cmake_policy(SET CMP0115 NEW)
-
 # Setup Effekseer
+set(USE_MSVC_RUNTIME_LIBRARY_DLL ON)
 set(BUILD_EXAMPLES OFF)
 set(BUILD_GL OFF)
+set(BUILD_DX9 OFF)
+set(BUILD_DX11 OFF)
+set(USE_DSOUND OFF)
+set(USE_XAUDIO2 OFF)
+
+# Setup Jolt
+set(USE_SSE4_1 ON)
+set(USE_SSE4_2 ON)
+set(USE_AVX ON)
+set(USE_AVX2 ON)
+set(USE_AVX512 OFF)
+set(USE_LZCNT ON)
+set(USE_TZCNT ON)
+set(USE_F16C ON)
+set(USE_FMADD ON)
+set(DOUBLE_PRECISION OFF)
+set(INTERPROCEDURAL_OPTIMIZATION ON)
+set(CROSS_PLATFORM_DETERMINISTIC OFF)
+set(GENERATE_DEBUG_SYMBOLS ON)
+set(FLOATING_POINT_EXCEPTIONS_ENABLED OFF)
+if(MSVC)
+	if (GENERATE_DEBUG_SYMBOLS)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
+	endif()
+endif()
 
 # Libフォルダが存在しない場合は作成
 set(LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Lib)
@@ -108,14 +139,13 @@ set(JSON_BuildTests OFF CACHE INTERNAL "")
 # 文字コードをUNICODEに設定
 # add_definitions(-UNICODE -D_UNICODE)
 
-# UTF8に変更
-add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
-
-# ランタイムライブラリの設定
+# MSVCの設定
 if(MSVC)
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+    # UTF8に変更
+    add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 endif()
+
+set(CMAKE_EXE_LINKER_FLAGS_DISTRIBUTION "${CMAKE_EXE_LINKER_FLAGS_RELEASE}")
 
 # メインの実行可能ファイル
 add_executable(${PROJECT_NAME} WIN32 main.cpp $<$<CXX_COMPILER_ID:MSVC>:utf8api.manifest>)
@@ -127,7 +157,7 @@ set(MODULE_ROOT ${LIB_ROOT}/Modules)
 add_subdirectory(./Modules/DirectXTex)
 add_subdirectory(./Modules/json)
 add_subdirectory(./Modules/Effekseer)
-add_subdirectory(./Modules/Bullet)
+add_subdirectory(./Modules/JoltPhysics/Build)
 
 add_subdirectory(./Gears3DObject)
 add_subdirectory(./GearsAudio)
@@ -152,72 +182,35 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBRARY} ${DIRECTX12_LIBS} ${EXT
 
 # プロジェクトのフィルタ設定
 # DirectXTex
-set_target_properties(DirectXTex PROPERTIES FOLDER Modules/DirectXTex)
-set_target_properties(texassemble PROPERTIES FOLDER Modules/DirectXTex)
-set_target_properties(texconv PROPERTIES FOLDER Modules/DirectXTex)
-set_target_properties(texdiag PROPERTIES FOLDER Modules/DirectXTex)
-set_target_properties(ddsview PROPERTIES FOLDER Modules/DirectXTex)
+set_target_properties(
+    DirectXTex
+    PROPERTIES FOLDER Modules/DirectXTex
+)
 
 # Effekser
 set_target_properties(
     Effekseer
-    EffekseerRendererDX9
-    EffekseerRendererDX11
     EffekseerRendererDX12
-    EffekseerSoundDSound
-    EffekseerSoundXAudio2
+    EffekseerRendererCommon
+    EffekseerRendererLLGI
     LLGI
     PROPERTIES FOLDER Modules/Effekseer
 )
 
-# Bullet
+# JoltPhysics
 set_target_properties(
-    App_BasicExample
-    App_ExampleBrowser
-    App_HelloWorld
-    App_HelloBulletRobotics
-    App_obj2sdf
-    App_PhysicsServer_SharedMemory
-    App_PhysicsServer_SharedMemory_GUI
-    App_RobotSimulator
-    App_RobotSimulator_NoGUI
-    App_TwoJoint
-    AppBasicExampleGui
-    BulletXmlWorldImporter
-    Bullet2FileLoader
-    Bullet3Collision
-    Bullet3Common
-    Bullet3Dynamics
-    Bullet3Geometry
-    Bullet3OpenCL_clew
-    BulletCollision
-    BulletDynamics
-    BulletExampleBrowserLib
-    BulletFileLoader
-    BulletInverseDynamics
-    BulletInverseDynamicsUtils
-    BulletRobotics
-    BulletRoboticsGUI
-    BulletSoftBody
-    BulletWorldImporter
-    BussIK
-    clsocket
-    ConvexDecomposition
-    GIMPACTUtils
-    gtest
-    gwen
-    HACD
-    LinearMath
-    OpenGLWindow
-    Test_btKinematicCharacterController
-    Test_BulletDynamics
-    Test_BulletInverseDynamics
-    Test_BulletInverseDynamicsJacobian
-    Test_BulletInverseForwardDynamics
-    Test_Collision
-    Test_PhysicsClientServer
-    PROPERTIES FOLDER Modules/Bullet
+    Jolt
+    PROPERTIES FOLDER Modules/JoltPhysics
 )
+
+# ランタイムライブラリの設定
+if(MSVC)
+    if (USE_STATIC_MSVC_RUNTIME_LIBRARY)
+		set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+	else()
+		set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+	endif()
+endif()
 
 # ドキュメントのビルドオプション
 if(BUILD_DOCUMENTATION)
@@ -235,7 +228,7 @@ endif()
 foreach(lib ${LIBRARY} ${EXTERNAL_LIBS})
     if(TARGET ${lib})
         set_target_properties(${lib} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${LIBRARY_OUTPUT_DIRECTORY})
-        set_target_properties(${lib} PROPERTIES DEBUG_POSTFIX d)
+        set_target_properties(${lib} PROPERTIES DEBUG_POSTFIX "_Debug")
     endif()
 endforeach()
 

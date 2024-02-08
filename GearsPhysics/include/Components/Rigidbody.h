@@ -2,12 +2,6 @@
 #include <Component.h>
 #include <BitFlag.h>
 #include <Internal/IRigidbody.h>
-#include <btBulletDynamicsCommon.h>
-#include <LinearMath/btDefaultMotionState.h>
-class btVector3;
-class btQuaternion;
-struct Vector3;
-struct Quaternion;
 
 namespace Glib
 {
@@ -43,20 +37,10 @@ namespace Glib
 
     private:
         const GameObjectPtr& GetGameObject() override;
-        btRigidBody* GetbtRigidbody() override;
         void SyncToBullet() override;
         void SyncFromBullet() override;
 
     private:
-        static btVector3 ToVec3(const Vector3& v);
-        static btQuaternion ToQuat(const Quaternion& v);
-        static Vector3 FromVec3(const btVector3& v);
-        static Quaternion FromQuat(const btQuaternion& v);
-
-    private:
-        std::unique_ptr<btRigidBody> rigidbody_;
-        std::unique_ptr<btDefaultMotionState> motionState_;
-        std::unique_ptr<btCollisionShape> shape_;
         bool useGravity_{ true };
         float mass_{ 1.0f };
         BitFlag<RigidbodyConstraints> constrants_;

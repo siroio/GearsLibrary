@@ -2,13 +2,13 @@ cmake_minimum_required(VERSION 3.4)
 
 # == CONFIG ==
 set(SOURCE_FILE
-    ./src/Internal/BulletPhysicsManager.cpp
+    ./src/Internal/JoltPhysicsManager.cpp
     ./src/Components/Rigidbody.cpp
     ./src/Physics.cpp
 )
 
 set(HEADER_FILE
-    ./include/Internal/BulletPhysicsManager.h
+    ./include/Internal/JoltPhysicsManager.h
     ./include/Internal/IRigidbody.h
     ./include/Components/Rigidbody.h
     ./include/Physics.h
@@ -23,21 +23,18 @@ target_include_directories(
     ${LIB_NAME}
     PUBLIC
     ./include
-    ${CMAKE_SOURCE_DIR}/Modules/Bullet/src
+    ./Modules/JoltPhysics/Jolt/..
 )
+
 target_link_libraries(
     ${LIB_NAME}
     GearsCore
     GearsObject
     GearsUtility
     GearsDebug
-    LinearMath
-    Bullet3Common
-    BulletCollision
-    BulletDynamics
-    BulletSoftBody
-    BulletInverseDynamics
+    Jolt
 )
+
 set_target_properties(${LIB_NAME}
     PROPERTIES
     VERSION ${PROJECT_VERSION})

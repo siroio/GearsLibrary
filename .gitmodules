@@ -13,12 +13,12 @@
 [submodule "Modules/PhysX"]
 	path = Modules/PhysX
 	url = https://github.com/NVIDIA-Omniverse/PhysX.git
-[submodule "Modules/Bullet"]
-	path = Modules/Bullet
-	url = https://github.com/bulletphysics/bullet3.git
-[submodule "Modules/Effekseer"]
-	path = Modules/Effekseer
-	url = https://github.com/effekseer/Effekseer.git
 [submodule "Modules/MikkTSpace"]
 	path = Modules/MikkTSpace
 	url = https://github.com/mmikk/MikkTSpace.git
+[submodule "Modules/JoltPhysics"]
+	path = Modules/JoltPhysics
+	url = https://github.com/jrouwe/JoltPhysics.git
+[submodule "Modules/Effekseer"]
+	path = Modules/Effekseer
+	url = https://github.com/siroio/Effekseer.git
