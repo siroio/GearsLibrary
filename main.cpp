@@ -51,7 +51,7 @@ public:
     void Start()
     {
         Debug::Log("Enable " + nameof(*this));
-        GameObject()->Transform()->Position(Vector3{ 0.0f, 40.0f, 0.0f });
+        GameObject()->Transform()->Position(Vector3{ 0.0f, 3.0f, 0.0f });
     }
 
     void Update() const

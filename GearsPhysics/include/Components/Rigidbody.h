@@ -2,6 +2,8 @@
 #include <Component.h>
 #include <BitFlag.h>
 #include <Internal/IRigidbody.h>
+#include <Jolt/Jolt.h>
+#include <Jolt/Physics/Body/Body.h>
 
 namespace Glib
 {
@@ -26,6 +28,7 @@ namespace Glib
     {
     public:
         void Start();
+        void OnDestroy();
 
         float Mass() const;
         void Mass(float mass);
@@ -37,12 +40,14 @@ namespace Glib
 
     private:
         const GameObjectPtr& GetGameObject() override;
-        void SyncToBullet() override;
-        void SyncFromBullet() override;
+        const JPH::BodyID& GetBodyID() override;
+        void SyncToPhysics() override;
+        void SyncFromPhysics() override;
 
     private:
         bool useGravity_{ true };
         float mass_{ 1.0f };
+        JPH::Body* body_;
         BitFlag<RigidbodyConstraints> constrants_;
     };
 }
