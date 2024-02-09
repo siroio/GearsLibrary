@@ -3,12 +3,14 @@ cmake_minimum_required(VERSION 3.4)
 # == CONFIG ==
 set(SOURCE_FILE
     ./src/Internal/JoltPhysicsManager.cpp
+    ./src/Internal/PhysicsDebugRenderer.cpp
     ./src/Components/Rigidbody.cpp
     ./src/Physics.cpp
 )
 
 set(HEADER_FILE
     ./include/Internal/JoltPhysicsManager.h
+    ./include/Internal/PhysicsDebugRenderer.h
     ./include/Internal/IRigidbody.h
     ./include/Components/Rigidbody.h
     ./include/Physics.h

@@ -224,29 +224,30 @@ Vector3 Quaternion::EulerAngles() const
     Vector3 ay = *this * Vector3::Up();
     Vector3 az = *this * Vector3::Forward();
     Vector3 result = Vector3::Zero();
-    if (az.y < 1.0f)
+
+    if (az.y < 1.0f && az.y > -1.0f)
     {
-        if (az.y > -1.0f)
-        {
-            result.x = Mathf::Asin(-az.y);
-            result.y = Mathf::Atan2(az.x, az.z);
-            result.z = Mathf::Atan2(ax.y, ay.y);
-        }
-        else
-        {
-            result.x = Mathf::PI / 2.0f;
-            result.y = -Mathf::Atan2(-ay.x, ax.x);
-            result.z = 0.0f;
-        }
+        result.x = Mathf::Asin(-az.y);
+        result.y = Mathf::Atan2(az.x, az.z);
+        result.z = Mathf::Atan2(ax.y, ay.y);
     }
     else
     {
-        result.x = -Mathf::PI / 2.0f;
-        result.y = Mathf::Atan2(-ay.x, ax.x);
-        result.z = 0.0f;
+        if (az.y <= -1.0f)
+        {
+            result.x = Mathf::HALF_PI;
+            result.y = -Mathf::Atan2(-ay.x, ax.x);
+            result.z = 0.0f;
+        }
+        else
+        {
+            result.x = -Mathf::HALF_PI;
+            result.y = Mathf::Atan2(-ay.x, ax.x);
+            result.z = 0.0f;
+        }
     }
-    result *= Mathf::RAD2DEG;
 
+    result *= Mathf::RAD2DEG;
     return InternalMakePositive(result);
 }
 
@@ -296,6 +297,29 @@ Vector3 Quaternion::InternalMakePositive(Vector3& euler)
         euler.z -= 360.0f;
 
     return euler;
+}
+
+Vector3 Quaternion::ToEulerAnglesZimbalLock(float x, const Quaternion& q)
+{
+    return ToEulerAnglesZimbalLock(x, 0.0f, q);
+}
+
+Vector3 Quaternion::ToEulerAnglesZimbalLock(float x, float z, const Quaternion& q)
+{
+    float y;
+    if (x > 0)
+    {
+        float yMinusZ = Mathf::Atan2(2 * q.x * q.y - 2 * q.z * q.w, 2 * Mathf::Pow(q.w, 2) + 2 * Mathf::Pow(q.x, 2) - 1);
+        y = yMinusZ + z;
+    }
+    else
+    {
+        float yPlusZ = Mathf::Atan2(-(2 * q.x * q.y - 2 * q.z * q.w), 2 * Mathf::Pow(q.w, 2) + 2 * Mathf::Pow(q.x, 2) - 1);
+        y = yPlusZ - z;
+    }
+
+    Vector3 angles = Vector3(x, y, z) * Mathf::RAD2DEG;
+    return InternalMakePositive(angles);
 }
 
 void Quaternion::operator=(const Quaternion& v)

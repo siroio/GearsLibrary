@@ -24,6 +24,7 @@ void Glib::Rigidbody::Start()
     JPH::BoxShapeSettings shape{ { 100.0f, 1.0f, 100.0f } };
     JPH::ShapeSettings::ShapeResult shapeRes = shape.Create();
     JPH::ShapeRefC testShape = shapeRes.Get();
+
     if (GameObject()->Name() == "Ground")
     {
         JPH::BodyCreationSettings settings{ testShape, { 0.0, -3.0, 0.0 }, JPH::Quat::sIdentity(), JPH::EMotionType::Static, Layers::NON_MOVING };

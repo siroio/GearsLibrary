@@ -1,8 +1,10 @@
 ﻿#include <Internal/JoltPhysicsManager.h>
+#include <Internal/PhysicsDebugRenderer.h>
 #include <Internal/ComponentManager.h>
 #include <Internal/IRigidbody.h>
 #include <InlineUtility.h>
 #include <Vector3.h>
+#include <Color.h>
 #include <Quaternion.h>
 #include <Matrix4x4.h>
 #include <GameTimer.h>
@@ -14,6 +16,7 @@
 #include <thread>
 
 /* JoltPhysics */
+#include <Jolt/Core/Color.h>
 #include <Jolt/RegisterTypes.h>
 #include <Jolt/Core/Factory.h>
 #include <Jolt/Core/TempAllocator.h>
@@ -58,6 +61,7 @@ namespace
 namespace
 {
     auto s_componentManager = Glib::Internal::ComponentManager::Instance();
+    auto s_debugRenderer = Glib::Internal::Physics::PhysicsDebugRenderer::Instance();
 }
 
 bool Glib::Internal::Physics::JoltPhysicsManager::Initialize()
@@ -94,7 +98,6 @@ bool Glib::Internal::Physics::JoltPhysicsManager::Initialize()
     s_physicsSystem->SetBodyActivationListener(this);
     s_physicsSystem->SetContactListener(this);
     s_physicsSystem->OptimizeBroadPhase();
-
     s_physicsSystem->SetGravity(ToRVec3(DEFAULT_GRAVITY));
 
     return true;
@@ -249,9 +252,30 @@ Matrix4x4 Glib::Internal::Physics::JoltPhysicsManager::ToMatrix4x4(const JPH::RM
     };
 }
 
+Vector3 Glib::Internal::Physics::JoltPhysicsManager::ToVector3(JPH::RVec3Arg v)
+{
+    return Vector3{ v.GetX(), v.GetY(), v.GetZ() };
+}
+
 JPH::RVec3 Glib::Internal::Physics::JoltPhysicsManager::ToRVec3(const Vector3& v)
 {
     return JPH::RVec3{ v.x, v.y, v.z };
+}
+
+Color Glib::Internal::Physics::JoltPhysicsManager::ToColor(const JPH::Color& color)
+{
+    constexpr float scale = 1.0f / 255.0f;
+    return Color{ color.r * scale, color.g * scale, color.b * scale, color.a * scale };
+}
+
+JPH::Color Glib::Internal::Physics::JoltPhysicsManager::ToColor(const Color& color)
+{
+    return JPH::Color{
+        static_cast<JPH::uint8>(color.r * 255),
+        static_cast<JPH::uint8>(color.g * 255),
+        static_cast<JPH::uint8>(color.b * 255),
+        static_cast<JPH::uint8>(color.a * 255)
+    };
 }
 
 JPH::Quat Glib::Internal::Physics::JoltPhysicsManager::ToQuat(const Quaternion& qua)

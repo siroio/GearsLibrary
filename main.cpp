@@ -18,6 +18,7 @@
 #include <SceneManager.h>
 #include <AudioManager.h>
 #include <EffectManager.h>
+#include <GLGUI.h>
 
 #include <GameObject.h>
 #include <Component.h>
@@ -107,6 +108,16 @@ public:
 
         transform->Position(transform->Position() + velocity);
         transform->Rotate(rotation);
+    }
+
+    float timescale = 1.0f;
+    void OnGUI()
+    {
+        Glib::GLGUI::Text("%f.3", GameTimer::DeltaTime());
+        if (Glib::GLGUI::DragFloat("TimeScale", &timescale, 0.05f, 0.0001f))
+        {
+            GameTimer::TimeScale(timescale);
+        }
     }
 };
 
@@ -239,7 +250,7 @@ public:
 
         auto Ground = GameObjectManager::Instantiate("Ground");
         auto rbg = Ground->AddComponent<Rigidbody>();
-        rbg->Mass(0.0f);
+        //rbg->Mass(0.0f);
         //auto effect = GameObjectManager::Instantiate("Effect");
         //auto efk = effect->AddComponent<EffectSystem>();
         //efk->EffectID(0);

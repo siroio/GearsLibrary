@@ -11,6 +11,7 @@
 struct Matrix4x4;
 struct Vector3;
 struct Quaternion;
+struct Color;
 
 namespace Glib
 {
@@ -21,6 +22,7 @@ namespace JPH
 {
     class Body;
     class BodyCreationSettings;
+    class Color;
 }
 
 namespace Glib::Internal::Interface
@@ -75,7 +77,10 @@ namespace Glib::Internal::Physics
 
     public:
         static Matrix4x4 ToMatrix4x4(const JPH::RMat44& mat);
+        static Vector3 ToVector3(JPH::RVec3Arg v);
         static JPH::RVec3 ToRVec3(const Vector3& v);
+        static Color ToColor(const JPH::Color& color);
+        static JPH::Color ToColor(const Color& color);
         static JPH::Quat ToQuat(const Quaternion& qua);
 
     private:

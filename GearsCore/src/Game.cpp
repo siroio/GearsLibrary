@@ -20,6 +20,7 @@
 #include <Internal/EffekseerManager.h>
 #include <Internal/CanvasManager.h>
 #include <Internal/ImGuiManager.h>
+#include <Internal/PhysicsDebugRenderer.h>
 #include <AudioManager.h>
 #include <GameObjectManager.h>
 #include <GameTimer.h>
@@ -87,6 +88,7 @@ void Glib::Game::RegisterSystem()
 #if defined(DEBUG) || defined(_DEBUG)
     // デバッグ用
     SystemManager::AddSystem<Internal::Debug::ImGuiManager>();
+    SystemManager::AddSystem<Internal::Physics::PhysicsDebugRenderer>();
 #endif // !
 
 }

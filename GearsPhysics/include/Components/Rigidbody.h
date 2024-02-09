@@ -29,7 +29,6 @@ namespace Glib
     public:
         void Start();
         void OnDestroy();
-
         float Mass() const;
         void Mass(float mass);
 
