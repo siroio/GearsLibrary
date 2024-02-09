@@ -33,7 +33,7 @@ float Glib::GameTimer::FixedTimeStep()
 
 void Glib::GameTimer::FixedTimeStep(float timeStep)
 {
-    fixedTimeStep_ = std::min(timeStep, 0.0f);
+    fixedTimeStep_ = std::max(timeStep, 0.0f);
 }
 
 float Glib::GameTimer::MaximumAllowedTimeStep()
@@ -43,7 +43,7 @@ float Glib::GameTimer::MaximumAllowedTimeStep()
 
 void Glib::GameTimer::TimeScale(float timeScale)
 {
-    timeScale_ = std::min(timeScale, 0.0f);
+    timeScale_ = std::max(timeScale, 0.0f);
 }
 
 void Glib::GameTimer::MaximumAllowedTimeStep(float maximumAllowedTimeStep)
