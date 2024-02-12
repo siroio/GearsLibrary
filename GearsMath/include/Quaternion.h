@@ -74,8 +74,6 @@ public:
 
 private:
     static Vector3 InternalMakePositive(Vector3& euler);
-    static Vector3 ToEulerAnglesZimbalLock(float x, const Quaternion& q);
-    static Vector3 ToEulerAnglesZimbalLock(float x, float z, const Quaternion& q);
 public:
     void operator = (const Quaternion& v);
     float operator [] (const size_t index) const;

@@ -40,12 +40,12 @@ function(create_groups FILES_VAR)
     endforeach()
 endfunction()
 
-macro(create_filter)
+function(create_filter)
     file(GLOB_RECURSE HEADER_FILES "include/*.h" "include/*.hpp")
     file(GLOB_RECURSE SOURCE_FILES "src/*.cpp")
     create_groups(HEADER_FILES)
     create_groups(SOURCE_FILES)
-endmacro()
+endfunction()
 
 # == グローバル設定 ==
 set(LIBRARY
@@ -82,7 +82,6 @@ set(EXTERNAL_LIBS
     EffekseerRendererDX12
     EffekseerRendererLLGI
     LLGI
-    Jolt
 )
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -106,27 +105,8 @@ set(BUILD_DX11 OFF)
 set(USE_DSOUND OFF)
 set(USE_XAUDIO2 OFF)
 
-# Setup Jolt
-set(USE_SSE4_1 ON)
-set(USE_SSE4_2 ON)
-set(USE_AVX ON)
-set(USE_AVX2 ON)
-set(USE_AVX512 OFF)
-set(USE_LZCNT ON)
-set(USE_TZCNT ON)
-set(USE_F16C ON)
-set(USE_FMADD ON)
-set(DOUBLE_PRECISION OFF)
-set(INTERPROCEDURAL_OPTIMIZATION ON)
-set(CROSS_PLATFORM_DETERMINISTIC OFF)
-set(GENERATE_DEBUG_SYMBOLS ON)
-set(FLOATING_POINT_EXCEPTIONS_ENABLED OFF)
-
-if(MSVC)
-	if (GENERATE_DEBUG_SYMBOLS)
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
-	endif()
-endif()
+# Setup PhysX
+set(PHYSX_ROOT_DIR ${CMAKE_SOURCE_DIR}/Modules/PhysX/physx)
 
 # Libフォルダが存在しない場合は作成
 set(LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Lib)
@@ -144,22 +124,17 @@ set(JSON_BuildTests OFF CACHE INTERNAL "")
 if(MSVC)
     # UTF8に変更
     add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
 endif()
-
-set(CMAKE_EXE_LINKER_FLAGS_DISTRIBUTION "${CMAKE_EXE_LINKER_FLAGS_RELEASE}")
 
 # メインの実行可能ファイル
 add_executable(${PROJECT_NAME} WIN32 main.cpp $<$<CXX_COMPILER_ID:MSVC>:utf8api.manifest>)
-
-set(LIB_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
-set(MODULE_ROOT ${LIB_ROOT}/Modules)
 
 # サブディレクトリの追加
 add_subdirectory(./Modules/DirectXTex)
 add_subdirectory(./Modules/json)
 add_subdirectory(./Modules/Effekseer)
-add_subdirectory(./Modules/JoltPhysics/Build)
-add_subdirectory(./Modules/PhysX/physx/compiler/public)
 
 add_subdirectory(./Gears3DObject)
 add_subdirectory(./GearsAudio)
@@ -198,21 +173,6 @@ set_target_properties(
     LLGI
     PROPERTIES FOLDER Modules/Effekseer
 )
-
-# JoltPhysics
-set_target_properties(
-    Jolt
-    PROPERTIES FOLDER Modules/JoltPhysics
-)
-
-# ランタイムライブラリの設定
-if(MSVC)
-    if (USE_STATIC_MSVC_RUNTIME_LIBRARY)
-		set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-	else()
-		set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
-	endif()
-endif()
 
 # ドキュメントのビルドオプション
 if(BUILD_DOCUMENTATION)

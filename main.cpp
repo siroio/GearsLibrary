@@ -34,6 +34,7 @@
 #include <Components/AudioSource.h>
 #include <Components/EffectSystem.h>
 #include <Components/Rigidbody.h>
+#include <Components/BoxCollider.h>
 #include <filesystem>
 
 using namespace Glib;
@@ -118,6 +119,11 @@ public:
         {
             GameTimer::TimeScale(timescale);
         }
+    }
+
+    void OnCollisionEnter(const GameObjectPtr& gameObject)
+    {
+        Debug::Log(gameObject->Name());
     }
 };
 
@@ -247,9 +253,15 @@ public:
         animator->AnimationID(0);
         animator->Loop(true);
         mesh->AddComponent<TestAudio>();
+        mesh->AddComponent<BoxCollider>();
 
         auto Ground = GameObjectManager::Instantiate("Ground");
         auto rbg = Ground->AddComponent<Rigidbody>();
+        auto quad = Ground->AddComponent<MeshRenderer>();
+        Ground->AddComponent<BoxCollider>();
+        quad->MeshID(1);
+        Ground->Transform()->Scale(Vector3{ 100, 1, 100 });
+        rbg->IsKinematic(true);
         //rbg->Mass(0.0f);
         //auto effect = GameObjectManager::Instantiate("Effect");
         //auto efk = effect->AddComponent<EffectSystem>();

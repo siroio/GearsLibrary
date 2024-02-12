@@ -1,16 +1,15 @@
-﻿#if defined(DEBUG) || defined(_DEBUG)
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
+﻿#if _MSC_VER >= 1937 || __cplusplus > 201703L
+#define _SILENCE_CXX20_CISO646_REMOVED_WARNING
 #endif
 
 #include <Game.h>
 #include <SystemManager.h>
 #include <Internal/ISystem.h>
+#include <Internal/MemoryCheck.h>
 
 /* SYSTEM HEADERS */
 #include <Internal/XAudioSystem.h>
-#include <Internal/JoltPhysicsManager.h>
+#include <Internal/PhysXManager.h>
 #include <Internal/CameraManager.h>
 #include <Internal/ComponentManager.h>
 #include <Internal/DX12/DirectX12.h>
@@ -36,10 +35,7 @@ namespace
 
 int Glib::Game::Run()
 {
-#if defined(DEBUG) || defined(_DEBUG)
-    // メモリリーク検出開始
-    _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG | _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-#endif
+    Internal::MemoryCheck::Start();
 
     RegisterSystem();
 
@@ -71,12 +67,12 @@ void Glib::Game::RegisterSystem()
     SystemManager::AddSystem<Internal::Graphics::CanvasManager>();
     SystemManager::AddSystem<Internal::ComponentManager>();
     SystemManager::AddSystem<Internal::Graphics::DirectX12>();
+    SystemManager::AddSystem<Internal::Physics::PhysXManager>();
     SystemManager::AddSystem<Internal::Graphics::GraphicsResource>();
     SystemManager::AddSystem<Internal::Graphics::RenderingManager>();
     SystemManager::AddSystem<Internal::Graphics::ShaderManager>();
     SystemManager::AddSystem<Internal::Audio::XAudioSystem>();
     SystemManager::AddSystem<Internal::Effect::EffekseerManager>();
-    SystemManager::AddSystem<Internal::Physics::JoltPhysicsManager>();
     SystemManager::AddSystem<AudioManager>();
     SystemManager::AddSystem<GameObjectManager>();
     SystemManager::AddSystem<GameTimer>();

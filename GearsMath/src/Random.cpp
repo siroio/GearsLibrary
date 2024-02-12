@@ -26,30 +26,30 @@ bool Glib::Random::Initialize()
 
 void Glib::Random::Seed(uint64_t seed)
 {
-    Instance()->generator->Seed(seed);
+    generator->Seed(seed);
 }
 
 uint32_t Glib::Random::Next()
 {
-    uint32_t num = Instance()->generator->Gen();
+    uint32_t num = generator->Gen();
     return num;
 }
 
 float Glib::Random::Nextf()
 {
-    uint32_t num = Instance()->generator->Gen();
+    uint32_t num = generator->Gen();
     return static_cast<float>(num * Pcg32Fast::DIVIDE);
 }
 
 int Glib::Random::Range(int min, int max)
 {
-    uint32_t num = Instance()->generator->Gen();
+    uint32_t num = generator->Gen();
     return (num % (max - min)) + min;
 }
 
 float Glib::Random::Range(float min, float max)
 {
-    uint32_t num = Instance()->generator->Gen();
+    uint32_t num = generator->Gen();
     return static_cast<float>((min + (max - min) * (num * Pcg32Fast::DIVIDE)));
 }
 
@@ -62,4 +62,3 @@ uint64_t Glib::Pcg32Fast::Seed() const
 {
     return seed.load();
 }
-

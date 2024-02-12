@@ -252,7 +252,7 @@ void Glib::GLObject::ReadBone(std::ifstream& file)
     int boneCount{ 0 };
     file.read(reinterpret_cast<char*>(&boneCount), sizeof(int));
 
-    if (boneCount <= 0)
+    if (boneCount < 0)
     {
         throw std::runtime_error{ "invalid bone length." };
     }

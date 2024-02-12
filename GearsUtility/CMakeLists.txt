@@ -18,6 +18,7 @@ set(HEADER_FILE
     ./include/MsgBox.h
     ./include/Json.h
     ./include/Jsonfwd.h
+    ./include/Layer2D.h
     ./include/BitFlag.h
     ./include/ObjectPool.h
 )

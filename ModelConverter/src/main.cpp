@@ -3,8 +3,10 @@
 #include <filesystem>
 #include <Converter.h>
 #include <GLAnimation.h>
+#include <GLObject.h>
 
 namespace fs = std::filesystem;
+using namespace Glib;
 
 int main(int argc, char* argv[])
 {

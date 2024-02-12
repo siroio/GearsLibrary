@@ -59,13 +59,6 @@ void Glib::AudioSource::Play()
 
     audioStatus_.Set(AudioStatus::Pause, false);
     auto hr = sourceVoice_->Start();
-
-    // state 表示
-    XAUDIO2_VOICE_STATE state;
-    sourceVoice_->GetState(&state);
-    Debug::Log("Queue: " + std::to_string(state.BuffersQueued));
-    Debug::Log("Played: " + std::to_string(state.SamplesPlayed));
-    Debug::Log(FAILED(hr) ? "failed" : "OK!");
 }
 
 void Glib::AudioSource::Pause()

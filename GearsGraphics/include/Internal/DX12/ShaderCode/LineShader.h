@@ -42,4 +42,3 @@ namespace Glib::Internal::Graphics::ShaderCode
         })"
     };
 }
-

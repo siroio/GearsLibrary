@@ -2,8 +2,7 @@
 #include <Component.h>
 #include <BitFlag.h>
 #include <Internal/IRigidbody.h>
-#include <Jolt/Jolt.h>
-#include <Jolt/Physics/Body/Body.h>
+#include <Vector3.h>
 
 namespace Glib
 {
@@ -29,8 +28,24 @@ namespace Glib
     public:
         void Start();
         void OnDestroy();
+
+        bool IsKinematic();
+        void IsKinematic(bool enable);
+
         float Mass() const;
         void Mass(float mass);
+
+        const Vector3& LinearVelocity() const;
+        void LinearVelocity(const Vector3& linearVelocity);
+
+        const Vector3& AngularVelocity() const;
+        void AngularVelocity(const Vector3& angularVelocity);
+
+        float LinearDamping() const;
+        void LinearDamping(float linearDamping);
+
+        float AngularDamping() const;
+        void AngularDamping(float angularDamping);
 
         bool UseGravity() const;
         void UseGravity(bool useGravity);
@@ -39,14 +54,19 @@ namespace Glib
 
     private:
         const GameObjectPtr& GetGameObject() override;
-        const JPH::BodyID& GetBodyID() override;
+        physx::PxRigidDynamic& GetRigidDynamic() override;
         void SyncToPhysics() override;
         void SyncFromPhysics() override;
 
     private:
+        physx::PxRigidDynamic* rigidDynamic_{ nullptr };
         bool useGravity_{ true };
+        bool isKinematic_{ false };
         float mass_{ 1.0f };
-        JPH::Body* body_;
+        float linearDamping_{ 0.0f };
+        float angularDamping_{ 0.05f };
+        Vector3 linearVelocity_{ 0.0f, 0.0f, 0.0f };
+        Vector3 angularVelocity_{ 0.0f, 0.0f, 0.0f };
         BitFlag<RigidbodyConstraints> constrants_;
     };
 }

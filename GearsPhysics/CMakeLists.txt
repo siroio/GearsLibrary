@@ -2,18 +2,27 @@ cmake_minimum_required(VERSION 3.4)
 
 # == CONFIG ==
 set(SOURCE_FILE
-    ./src/Internal/JoltPhysicsManager.cpp
+    ./src/Internal/PhysXManager.cpp
     ./src/Internal/PhysicsDebugRenderer.cpp
+    ./src/Internal/Geometry.cpp
     ./src/Components/Rigidbody.cpp
+    ./src/Components/Collider.cpp
+    ./src/Components/BoxCollider.cpp
     ./src/Physics.cpp
 )
 
 set(HEADER_FILE
-    ./include/Internal/JoltPhysicsManager.h
+    ./include/Internal/PhysXManager.h
+    ./include/Internal/PhysicsDebugRenderer.h
     ./include/Internal/PhysicsDebugRenderer.h
     ./include/Internal/IRigidbody.h
+    ./include/Internal/ICollider.h
+    ./include/Internal/Geometry.h
     ./include/Components/Rigidbody.h
+    ./include/Components/Collider.h
+    ./include/Components/BoxCollider.h
     ./include/Physics.h
+    ./include/RaycastHit.h
 )
 
 set(LIB_NAME GearsPhysics)
@@ -25,7 +34,13 @@ target_include_directories(
     ${LIB_NAME}
     PUBLIC
     ./include
-    ./Modules/JoltPhysics/Jolt/..
+    ${PHYSX_ROOT_DIR}/include
+)
+
+target_link_directories(
+    ${LIB_NAME}
+    PUBLIC
+    ${PHYSX_ROOT_DIR}/bin/win.x86_64.vc143.mt/debug
 )
 
 target_link_libraries(
@@ -34,9 +49,9 @@ target_link_libraries(
     GearsObject
     GearsUtility
     GearsDebug
-    Jolt
 )
 
 set_target_properties(${LIB_NAME}
     PROPERTIES
-    VERSION ${PROJECT_VERSION})
+    VERSION ${PROJECT_VERSION}
+)

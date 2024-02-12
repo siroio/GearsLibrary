@@ -310,15 +310,11 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateLinePipelineState()
     CD3DX12_ROOT_PARAMETER rootParam{};
     rootParam.InitAsDescriptorTable(1, &range);
 
-    CD3DX12_STATIC_SAMPLER_DESC sampler{};
-    sampler.Init(0);
-
     // ルートシグネチャ作成
     D3D12_ROOT_SIGNATURE_DESC rootSigDesc{};
     rootSigDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
     rootSigDesc.NumParameters = 1;
     rootSigDesc.pParameters = &rootParam;
-    rootSigDesc.pStaticSamplers = &sampler;
 
     if (!s_pipelines[ID::LINE_PIPELINESTATE].CreateRootSignature(rootSigDesc)) return false;
 
