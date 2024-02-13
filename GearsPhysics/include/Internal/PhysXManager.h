@@ -46,8 +46,8 @@ namespace Glib::Internal::Physics
         void ExecuteTriggerCallbacks();
         void ExecuteCollisionCallbacks();
 
-        bool Raycast(const Vector3& origin, const Vector3& direction, RaycastHit* hit, float maxDistance = FLT_MAX);
-        bool RaycastAll(const Vector3& origin, const Vector3& direction, std::vector<RaycastHit>* hit, float maxDistance = FLT_MAX);
+        bool Raycast(const Vector3& origin, const Vector3& direction, RaycastHit& hit, float maxDistance = FLT_MAX);
+        bool RaycastAll(const Vector3& origin, const Vector3& direction, std::vector<RaycastHit>& hits, float maxDistance = FLT_MAX);
 
         physx::PxRigidDynamic* CreateRigidBody(const Vector3& position, const Quaternion& rotation, const WeakPtr<Interface::IRigidbody>& rigidbody);
         void RemoveRigidbody(const WeakPtr<Interface::IRigidbody>& rigidbody);

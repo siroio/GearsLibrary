@@ -48,6 +48,11 @@ namespace Glib
         bool Has(Enum flag) const;
 
         /**
+         * @brief フラグのコピー
+         */
+        void Copy(EnumType value);
+
+        /**
          * @brief 値の取得
          */
         EnumType ToValue() const;
@@ -92,6 +97,12 @@ namespace Glib
     bool BitFlag<Enum>::Has(Enum flag) const
     {
         return (value_ & static_cast<EnumType>(flag)) != 0;
+    }
+
+    template<class Enum> requires std::is_enum_v<Enum>
+    inline void BitFlag<Enum>::Copy(EnumType value)
+    {
+        value_ = value;
     }
 
     template<class Enum> requires std::is_enum_v<Enum>

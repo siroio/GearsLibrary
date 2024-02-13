@@ -12,3 +12,11 @@ physx::PxBoxGeometry Glib::Internal::Geometory::CreateBox(const GameObjectPtr& g
     geometry.halfExtents.z = size.z * Mathf::Max(scale.z, Mathf::EPSILON);
     return geometry;
 }
+
+physx::PxCapsuleGeometry Glib::Internal::Geometory::CreateCapsule(const GameObjectPtr& gameObject, float halfHeight, float radius)
+{
+    physx::PxCapsuleGeometry geometry{};
+    geometry.halfHeight = halfHeight;
+    geometry.radius = radius;
+    return geometry;
+}

@@ -47,7 +47,41 @@ void Glib::Rigidbody::OnDestroy()
     s_physX->RemoveRigidbody(WeakPtr<Rigidbody>{ shared_from_this() });
 }
 
-bool Glib::Rigidbody::IsKinematic()
+void Glib::Rigidbody::AddForce(const Vector3& force, ForceMode mode)
+{
+    if (rigidDynamic_ == nullptr) return;
+
+    rigidDynamic_->addForce(
+        Internal::Physics::PhysXManager::ToPxVec3(force),
+        static_cast<physx::PxForceMode::Enum>(mode)
+    );
+}
+
+void Glib::Rigidbody::AddTorque(const Vector3& torque, ForceMode mode)
+{
+    if (rigidDynamic_ == nullptr) return;
+    rigidDynamic_->addTorque(
+        Internal::Physics::PhysXManager::ToPxVec3(torque),
+        static_cast<physx::PxForceMode::Enum>(mode)
+    );
+}
+
+const Glib::BitFlag<Glib::RigidbodyConstraints>& Glib::Rigidbody::Constraints() const
+{
+    return constrants_;
+}
+
+void Glib::Rigidbody::Constraints(const RigidbodyConstraints& constraints)
+{
+    constrants_.Copy(static_cast<BitFlag<RigidbodyConstraints>::EnumType>(constraints));
+
+    if (rigidDynamic_ != nullptr)
+    {
+        rigidDynamic_->setRigidDynamicLockFlags(static_cast<physx::PxRigidDynamicLockFlags>(constrants_.ToValue()));
+    }
+}
+
+bool Glib::Rigidbody::IsKinematic() const
 {
     return isKinematic_;
 }

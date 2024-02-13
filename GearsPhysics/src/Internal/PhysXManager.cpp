@@ -10,6 +10,7 @@
 #include <Matrix4x4.h>
 #include <GameTimer.h>
 #include <GameObject.h>
+#include <RaycastHit.h>
 #include <Debugger.h>
 #include <unordered_map>
 #include <memory>
@@ -40,7 +41,6 @@ namespace
     physx::PxPhysics* s_physics{ nullptr };
     physx::PxDefaultCpuDispatcher* s_dispatcher{ nullptr };
     physx::PxScene* s_scene{ nullptr };
-    physx::PxPvd* s_pvd{ nullptr };
 }
 
 namespace
@@ -94,19 +94,9 @@ bool Glib::Internal::Physics::PhysXManager::Initialize()
     s_foundation = PxCreateFoundation(PX_PHYSICS_VERSION, s_defaultAllocator, s_defaultErrorCallback);
     if (s_foundation == nullptr) return false;
 
-    s_pvd = physx::PxCreatePvd(*s_foundation);
-    bool isConnect{};
-    if (s_pvd != nullptr)
-    {
-        physx::PxPvdTransport* transport = physx::PxDefaultPvdSocketTransportCreate("localhost", 5425, 10);
-        isConnect = s_pvd->connect(*transport, physx::PxPvdInstrumentationFlag::eALL);
-    }
-
     const auto scale = physx::PxTolerancesScale{};
     s_physics = PxCreatePhysics(PX_PHYSICS_VERSION, *s_foundation, scale, true);
     if (s_physics == nullptr) return false;
-
-    if (!PxInitExtensions(*s_physics, s_pvd)) return false;
 
     s_dispatcher = physx::PxDefaultCpuDispatcherCreate(std::thread::hardware_concurrency() - 1);
     if (s_dispatcher == nullptr) return false;
@@ -115,16 +105,9 @@ bool Glib::Internal::Physics::PhysXManager::Initialize()
     sceneDesc.gravity = ToPxVec3(DEFAULT_GRAVITY);
     sceneDesc.filterShader = SimulationFilterShader;
     sceneDesc.cpuDispatcher = s_dispatcher;
+    sceneDesc.simulationEventCallback = static_cast<physx::PxSimulationEventCallback*>(this);
     s_scene = s_physics->createScene(sceneDesc);
     if (s_scene == nullptr) return false;
-
-    physx::PxPvdSceneClient* client{ s_scene->getScenePvdClient() };
-    if (client)
-    {
-        client->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
-        client->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
-        client->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
-    }
 
 #if defined(DEBUG) || defined(_DEBUG)
     s_scene->setVisualizationParameter(physx::PxVisualizationParameter::eSCALE, 1.0f);
@@ -139,13 +122,6 @@ void Glib::Internal::Physics::PhysXManager::Finalize()
     s_scene->release();
     s_dispatcher->release();
     s_physics->release();
-    if (s_pvd)
-    {
-        s_pvd->disconnect();
-        physx::PxPvdTransport* transport = s_pvd->getTransport();
-        s_pvd->release();
-        transport->release();
-    }
     s_foundation->release();
 }
 
@@ -265,14 +241,45 @@ void Glib::Internal::Physics::PhysXManager::ExecuteCollisionCallbacks()
     s_collisionExitCallbacks.clear();
 }
 
-bool Glib::Internal::Physics::PhysXManager::Raycast(const Vector3& origin, const Vector3& direction, RaycastHit* hit, float maxDistance)
+bool Glib::Internal::Physics::PhysXManager::Raycast(const Vector3& origin, const Vector3& direction, RaycastHit& hit, float maxDistance)
 {
-    return false;
+    physx::PxRaycastBuffer buffer{};
+    const auto& isHit = s_scene->raycast(ToPxVec3(origin), ToPxVec3(direction), maxDistance, buffer);
+
+    if (!isHit) return false;
+    const auto& rigidbody = s_rigidbodys.find(reinterpret_cast<uintptr_t>(buffer.block.actor));
+
+    if (rigidbody == s_rigidbodys.end()) return false;
+    hit.gameObject = rigidbody->second->GetGameObject();
+    hit.distance = buffer.block.distance;
+    hit.normal = ToVector3(buffer.block.normal);
+    hit.point = ToVector3(buffer.block.position);
+    return isHit;
 }
 
-bool Glib::Internal::Physics::PhysXManager::RaycastAll(const Vector3& origin, const Vector3& direction, std::vector<RaycastHit>* hit, float maxDistance)
+bool Glib::Internal::Physics::PhysXManager::RaycastAll(const Vector3& origin, const Vector3& direction, std::vector<RaycastHit>& hits, float maxDistance)
 {
-    return false;
+    std::vector<physx::PxRaycastHit> raycastHits(s_physics->getNbShapes());
+    physx::PxRaycastBuffer buffer{};
+    buffer.touches = &raycastHits.front();
+
+    const auto& isHit = s_scene->raycast(ToPxVec3(origin), ToPxVec3(direction), maxDistance, buffer);
+    if (!isHit) return false;
+
+    hits.resize(buffer.nbTouches);
+
+    for (size_t i = 0; i < buffer.nbTouches; i++)
+    {
+        const physx::PxRaycastHit& hitInfo = buffer.getTouch(i);
+        const auto& rigidbody = s_rigidbodys.find(reinterpret_cast<uintptr_t>(hitInfo.actor));
+
+        hits.at(i).gameObject = rigidbody->second->GetGameObject();
+        hits.at(i).distance = hitInfo.distance;
+        hits.at(i).normal = ToVector3(hitInfo.normal);
+        hits.at(i).point = ToVector3(hitInfo.position);
+    }
+
+    return isHit;
 }
 
 physx::PxRigidDynamic* Glib::Internal::Physics::PhysXManager::CreateRigidBody(const Vector3& position, const Quaternion& rotation, const WeakPtr<Interface::IRigidbody>& rigidbody)

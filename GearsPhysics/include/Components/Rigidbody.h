@@ -21,6 +21,14 @@ namespace Glib
         FreezeAll = FreezePosition | FreezeRotation,
     };
 
+    enum class ForceMode
+    {
+        Force = 0,
+        Acceleration = 3,
+        Impulse = 1,
+        VelocityChange = 2
+    };
+
     class Rigidbody :
         public Component,
         public Internal::Interface::IRigidbody
@@ -29,7 +37,13 @@ namespace Glib
         void Start();
         void OnDestroy();
 
-        bool IsKinematic();
+        void AddForce(const Vector3& force, ForceMode mode = ForceMode::Force);
+        void AddTorque(const Vector3& torque, ForceMode mode = ForceMode::Force);
+
+        const BitFlag<RigidbodyConstraints>& Constraints() const;
+        void Constraints(const RigidbodyConstraints& constraints);
+
+        bool IsKinematic() const;
         void IsKinematic(bool enable);
 
         float Mass() const;

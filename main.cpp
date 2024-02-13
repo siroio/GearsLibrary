@@ -53,7 +53,7 @@ public:
     void Start()
     {
         Debug::Log("Enable " + nameof(*this));
-        GameObject()->Transform()->Position(Vector3{ 0.0f, 3.0f, 0.0f });
+        GameObject()->Transform()->Position(Vector3{ 0.0f, 5.0f, 0.0f });
     }
 
     void Update() const
@@ -257,9 +257,8 @@ public:
 
         auto Ground = GameObjectManager::Instantiate("Ground");
         auto rbg = Ground->AddComponent<Rigidbody>();
-        auto quad = Ground->AddComponent<MeshRenderer>();
         Ground->AddComponent<BoxCollider>();
-        quad->MeshID(1);
+
         Ground->Transform()->Scale(Vector3{ 100, 1, 100 });
         rbg->IsKinematic(true);
         //rbg->Mass(0.0f);
