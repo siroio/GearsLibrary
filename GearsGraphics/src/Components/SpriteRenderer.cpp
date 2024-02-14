@@ -8,6 +8,7 @@
 #include <GameObject.h>
 #include <Mathf.h>
 #include <Vector3.h>
+#include <GLGUI.h>
 
 using namespace  Glib::Internal::Graphics;
 
@@ -177,4 +178,20 @@ void Glib::SpriteRenderer::TextureID(unsigned int id, bool isResetSize)
     textureID_ = id;
     textureSize_ = s_textureManager.TextureSize(id);
     if (isResetSize) clippingSize_ = textureSize_;
+}
+
+void Glib::SpriteRenderer::OnGUI()
+{
+    int id = static_cast<int>(textureID_);
+    if (GLGUI::InputInt("Texture ID", &id))
+    {
+        TextureID(static_cast<unsigned int>(id));
+    }
+    GLGUI::DragVector2("Center", &center_, 0.01f, 0.0f, 1.0f);
+    GLGUI::ColorInput4("Color", &color_);
+    GLGUI::DragVector2("Clip Position", &clippingPosition_);
+    GLGUI::DragVector2("Clip Size", &clippingSize_);
+    GLGUI::Text("Flip");
+    GLGUI::CheckBox("X", &flipX_, true);
+    GLGUI::CheckBox("Y", &flipY_, true);
 }

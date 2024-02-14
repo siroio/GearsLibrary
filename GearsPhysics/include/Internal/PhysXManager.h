@@ -54,6 +54,8 @@ namespace Glib::Internal::Physics
         physx::PxMaterial* CreateMaterial(float dynamicFriction, float staticFriction, float bounce);
         void AddCollider(const WeakPtr<Interface::ICollider>& collider);
 
+        physx::PxPhysics& Physcs();
+
     private:
         void onContact(const physx::PxContactPairHeader& pairHeader, const physx::PxContactPair* pairs, physx::PxU32 nbPairs) override;
         void onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 count) override;

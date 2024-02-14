@@ -179,17 +179,17 @@ void Glib::Collider::OnGUI()
 
     if (GLGUI::TreeNode("Physic Material"))
     {
-        if (GLGUI::DragFloat("Dynamic Friction", &dynamicFriction_, 0.1f))
+        if (GLGUI::DragFloat("Dynamic Friction", &dynamicFriction_, 0.01f))
         {
             DynamicFriction(dynamicFriction_);
         }
 
-        if (GLGUI::DragFloat("Static Friction", &staticFriction_, 0.1f))
+        if (GLGUI::DragFloat("Static Friction", &staticFriction_, 0.01f))
         {
             StaticFriction(staticFriction_);
         }
 
-        if (GLGUI::DragFloat("Bounciness", &bounciness_, 0.1f))
+        if (GLGUI::DragFloat("Bounciness", &bounciness_, 0.01f))
         {
             Bounciness(bounciness_);
         }
@@ -211,7 +211,7 @@ void Glib::Collider::OnGUI()
     }
 
     Vector3 center = Center();
-    if (GLGUI::DragVector3("Center", &center, 0.1f))
+    if (GLGUI::DragVector3("Center", &center, 0.01f))
     {
         Center(center);
     }

@@ -35,8 +35,9 @@ namespace
 
 int Glib::Game::Run()
 {
+#if defined(DEBUG) || defined(_DEBUG)
     Internal::MemoryCheck::Start();
-
+#endif
     RegisterSystem();
 
     if (!Initialize()) return -1;
@@ -85,7 +86,7 @@ void Glib::Game::RegisterSystem()
     // デバッグ用
     SystemManager::AddSystem<Internal::Debug::ImGuiManager>();
     SystemManager::AddSystem<Internal::Physics::PhysicsDebugRenderer>();
-#endif // !
+#endif
 
 }
 

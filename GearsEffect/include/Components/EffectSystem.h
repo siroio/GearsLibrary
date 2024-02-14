@@ -50,6 +50,13 @@ namespace Glib
         void EffectColor(const Color& color);
 
     private:
+        void UpdateSpeed();
+        void UpdateTarget();
+        void UpdateColor();
+
+        void OnGUI() override;
+
+    private:
         unsigned int effectID_{ UINT_MAX };
         int effectHandle_{ -1 };
         float effectSpeed_{ 1.0f };

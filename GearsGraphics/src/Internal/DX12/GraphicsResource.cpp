@@ -247,7 +247,6 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateSpritePipelineState()
     pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
     pipelineDesc.InputLayout.NumElements = static_cast<UINT>(std::size(inputLayout));
     pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-    pipelineDesc.DepthStencilState.DepthEnable = true;
 
     // シェーダーのセット
     s_shader->SetPixelShader(ID::SPRITE_SHADER, pipelineDesc);

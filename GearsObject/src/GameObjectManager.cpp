@@ -42,20 +42,20 @@ void Glib::GameObjectManager::DebugDraw()
     if (s_enableHierarchy)
     {
         ImGui::Begin("Hierarchy", &s_enableHierarchy);
+        ImGui::Separator();
         for (const auto& go : gameObjects_)
         {
             // パラメーター表示
             if (!go->IsRoot()) continue;
             DrawDebugParams(go);
         }
-
         ImGui::End();
     }
 
     if (s_enableProperties)
     {
         ImGui::Begin("Properties", &s_enableProperties);
-
+        ImGui::Separator();
         if (!s_selectObject.expired())
         {
             ImGuiInputTextFlags flags =

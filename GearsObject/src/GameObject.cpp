@@ -36,6 +36,7 @@ void GameObject::DrawGUI()
     {
         std::string name = Glib::nameof(*component.get());
         ImGui::PushID(component.get());
+        ImGui::Separator();
         if (ImGui::CollapsingHeader(name.data()))
         {
             component->OnGUI();

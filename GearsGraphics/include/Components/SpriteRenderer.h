@@ -38,7 +38,7 @@ namespace Glib
         void Center(const Vector2& center);
 
         /**
-         * @brief 色を取得 
+         * @brief 色を取得
          */
         const Color& Color() const;
 
@@ -48,7 +48,7 @@ namespace Glib
         void Color(const ::Color& color);
 
         /**
-         * @brief 左右反転しているか 
+         * @brief 左右反転しているか
          */
         bool FlipX() const;
 
@@ -68,7 +68,7 @@ namespace Glib
         void FlipY(bool flip);
 
         /**
-         * @brief クリッピング位置を取得 
+         * @brief クリッピング位置を取得
          * @brief (ピクセル単位)
          */
         const Vector2& ClippingPosition() const;
@@ -102,6 +102,9 @@ namespace Glib
         void TextureID(unsigned int id, bool isResetSize = true);
 
     private:
+        void OnGUI() override;
+
+    private:
         bool enabled_{ false };
         Internal::Graphics::ConstantBuffer constantBuffer_{};
         Internal::Graphics::VertexBuffer vertexBuffer_{};
@@ -116,4 +119,3 @@ namespace Glib
         WeakPtr<Transform> transform_;
     };
 }
-

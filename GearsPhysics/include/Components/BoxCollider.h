@@ -17,6 +17,6 @@ namespace Glib
         void OnGUI() override;
 
     private:
-        Vector3 halfSize_{ 1.0f, 1.0f, 1.0f };
+        Vector3 size_{ 1.0f, 1.0f, 1.0f };
     };
 }

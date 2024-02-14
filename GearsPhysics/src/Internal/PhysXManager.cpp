@@ -268,7 +268,7 @@ bool Glib::Internal::Physics::PhysXManager::RaycastAll(const Vector3& origin, co
 
     hits.resize(buffer.nbTouches);
 
-    for (size_t i = 0; i < buffer.nbTouches; i++)
+    for (physx::PxU32 i = 0; i < buffer.nbTouches; i++)
     {
         const physx::PxRaycastHit& hitInfo = buffer.getTouch(i);
         const auto& rigidbody = s_rigidbodys.find(reinterpret_cast<uintptr_t>(hitInfo.actor));
@@ -306,6 +306,11 @@ physx::PxMaterial* Glib::Internal::Physics::PhysXManager::CreateMaterial(float d
 void Glib::Internal::Physics::PhysXManager::AddCollider(const WeakPtr<Glib::Internal::Interface::ICollider>& collider)
 {
     s_colliders.push_back(collider);
+}
+
+physx::PxPhysics& Glib::Internal::Physics::PhysXManager::Physcs()
+{
+    return *s_physics;
 }
 
 physx::PxVec3 Glib::Internal::Physics::PhysXManager::ToPxVec3(const Vector3& v)

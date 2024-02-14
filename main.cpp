@@ -35,7 +35,9 @@
 #include <Components/EffectSystem.h>
 #include <Components/Rigidbody.h>
 #include <Components/BoxCollider.h>
+#include <Components/CapsuleCollider.h>
 #include <filesystem>
+#include <unordered_map>
 
 using namespace Glib;
 
@@ -53,78 +55,57 @@ public:
     void Start()
     {
         Debug::Log("Enable " + nameof(*this));
-        GameObject()->Transform()->Position(Vector3{ 0.0f, 5.0f, 0.0f });
+        rigidbody_ = GameObject()->GetComponent<Rigidbody>();
     }
 
-    void Update() const
+    void FixedUpdate()
     {
         auto& transform = GameObject()->Transform();
-        Vector3 velocity;
+        Vector3 moveDir;
         Vector3 rotation;
-        float speed = 10;
-        float rotSpeed = 270;
+        float speed = 2.0f;
+        float rotSpeed = 270 * GameTimer::FixedDeltaTime();
 
-        if (InputSystem::GetKey(KeyCode::Up))
-        {
-            velocity.y += speed * GameTimer::DeltaTime();
-        }
-        if (InputSystem::GetKey(KeyCode::Down))
-        {
-            velocity.y -= speed * GameTimer::DeltaTime();
-        }
-        if (InputSystem::GetKey(KeyCode::Left))
-        {
-            velocity.x -= speed * GameTimer::DeltaTime();
-        }
-        if (InputSystem::GetKey(KeyCode::Right))
-        {
-            velocity.x += speed * GameTimer::DeltaTime();
-        }
         if (InputSystem::GetKey(KeyCode::W))
         {
-            velocity.z -= speed * GameTimer::DeltaTime();
+            moveDir.z = -1;
         }
         if (InputSystem::GetKey(KeyCode::S))
         {
-            velocity.z += speed * GameTimer::DeltaTime();
+            moveDir.z = 1;
         }
         if (InputSystem::GetKey(KeyCode::A))
         {
-            rotation.y -= rotSpeed * GameTimer::DeltaTime();
+            moveDir.x = -1;
         }
         if (InputSystem::GetKey(KeyCode::D))
         {
-            rotation.y += rotSpeed * GameTimer::DeltaTime();
+            moveDir.x = 1;
         }
 
         auto lstick = InputSystem::GetLeftStick();
         auto rstick = InputSystem::GetRightStick();
-        if (lstick.SqrMagnitude() > 0.1f || rstick.SqrMagnitude() > 0.1f)
+        if (lstick.SqrMagnitude() + rstick.SqrMagnitude() > 0.1f)
         {
-            lstick *= speed * GameTimer::DeltaTime();
-            rstick.y *= speed * GameTimer::DeltaTime();
-            velocity = Vector3{ lstick.x, lstick.y, rstick.y };
-            rotation.y = rstick.x * rotSpeed * GameTimer::DeltaTime();
+            lstick *= speed;
+            rstick.y *= speed;
+            moveDir = Vector3{ lstick.x, 0.0f, lstick.y };
+            rotation.y = rstick.x * rotSpeed;
         }
+        moveDir = speed * (transform->Right().Normalized() * moveDir.x + transform->Forward().Normalized() * moveDir.z);
 
-        transform->Position(transform->Position() + velocity);
+        rigidbody_->AddForce(moveForceMultiplier * (moveDir - rigidbody_->LinearVelocity()));
         transform->Rotate(rotation);
-    }
-
-    float timescale = 1.0f;
-    void OnGUI()
-    {
-        Glib::GLGUI::Text("%f.3", GameTimer::DeltaTime());
-        if (Glib::GLGUI::DragFloat("TimeScale", &timescale, 0.05f, 0.0001f))
-        {
-            GameTimer::TimeScale(timescale);
-        }
     }
 
     void OnCollisionEnter(const GameObjectPtr& gameObject)
     {
         Debug::Log(gameObject->Name());
     }
+
+private:
+    WeakPtr<Rigidbody> rigidbody_;
+    float moveForceMultiplier{ 20.0f };
 };
 
 class TestAudio : public Component
@@ -145,6 +126,113 @@ public:
             se->Play();
         }
     }
+};
+
+class Tester : public Component
+{
+public:
+    enum class TestType
+    {
+        SkinnedMesh,
+        Effect,
+        Sprite,
+        Audio
+    };
+
+public:
+    void Start()
+    {
+        SetupMesh();
+        SetupEfk();
+        SetupSprite();
+        SetupAudio();
+    }
+
+    void Update()
+    {
+        for (auto& [type, gameObject] : testObjects_)
+        {
+            if (gameObject.expired())
+            {
+                testObjects_.erase(type);
+                continue;
+            }
+            gameObject->Active(type == currenType_);
+        }
+    }
+
+private:
+    void SetupMesh()
+    {
+        auto mesh = GameObjectManager::Instantiate("Mesh");
+        mesh->Transform()->Parent(GameObject()->Transform());
+        mesh->Transform()->LocalPosition(Vector3{ 0.0f, 2.0f, 1.0f });
+        mesh->Transform()->LocalScale(Vector3{ 0.1f, 0.1f, 0.1f });
+        mesh->AddComponent<TestMover>();
+        mesh->AddComponent<Rigidbody>()->Constraints(RigidbodyConstraints::FreezeRotation);
+        auto renderer = mesh->AddComponent<SkinnedMeshRenderer>();
+        auto animator = mesh->AddComponent<Animator>();
+        auto cap = mesh->AddComponent<CapsuleCollider>();
+        renderer->MeshID(0);
+        animator->AnimationID(0);
+        animator->Loop(true);
+        cap->IsVisible(true);
+        cap->Height(0.75f);
+        cap->Radius(2.4f);
+        cap->Center(Vector3{ 0.0f, 0.99f, 0.0f });
+        mesh->Active(false);
+
+        testObjects_.emplace(TestType::SkinnedMesh, mesh);
+    }
+
+    void SetupEfk()
+    {
+        auto effect = GameObjectManager::Instantiate("Effect");
+        effect->Transform()->Parent(GameObject()->Transform());
+        auto efk = effect->AddComponent<EffectSystem>();
+        efk->EffectID(0);
+        efk->PlayOnStart(false);
+        effect->Active(false);
+        testObjects_.emplace(TestType::Effect, effect);
+    }
+
+    void SetupSprite()
+    {
+        auto spriteObj = GameObjectManager::Instantiate("Sprite");
+        spriteObj->Transform()->Parent(GameObject()->Transform());
+        spriteObj->Transform()->LocalPosition(Vector3::Up());
+        spriteObj->Transform()->LocalScale(Vector3{ 0.1f, 0.1f, 0.0f });
+        auto sprite = spriteObj->AddComponent<SpriteRenderer>();
+        sprite->TextureID(0);
+        spriteObj->Active(false);
+        testObjects_.emplace(TestType::Sprite, spriteObj);
+    }
+
+    void SetupAudio()
+    {
+        auto audio = GameObjectManager::Instantiate("SE");
+        audio->Transform()->Parent(GameObject()->Transform());
+        auto se = audio->AddComponent<TestAudio>();
+        audio->Active(false);
+        testObjects_.emplace(TestType::Audio, audio);
+    }
+
+    void OnGUI() override
+    {
+        Component::OnGUI();
+        if (GLGUI::ComboBox("Test Type", current_, combo_))
+        {
+            const auto& it = std::find(combo_.begin(), combo_.end(), current_);
+            const auto idx = std::distance(combo_.begin(), it);
+            currenType_ = static_cast<TestType>(idx);
+        }
+    }
+
+private:
+    std::vector<std::string> combo_{ "SkinnedMesh", "Effect", "Sprite", "Audio" };
+    std::string current_{ "SkinnedMesh" };
+    TestType currenType_{ TestType::SkinnedMesh };
+    std::unordered_map<TestType, GameObjectPtr> testObjects_;
 };
 
 // テスト用シーンクラス
@@ -225,6 +313,7 @@ public:
                     Debug::Error(entry.path().string() + "のロードに失敗しました。");
                     continue;
                 }
+                texID++;
             }
         }
 
@@ -238,38 +327,23 @@ public:
         // カメラ作成
         SkyboxManager::Instance()->SetSkybox(0);
         auto camera = GameObjectManager::Instantiate("Camera");
-        auto initPosition = Vector3{ 0.0f, 10.0f, -20.0f };
+        auto initPosition = Vector3{ 0.0f, 1.0f, -1.0f };
         camera->Transform()->Position(initPosition);
         camera->AddComponent<Camera>()->ClearFlags(CameraClearFlags::SkyBox);
         camera->AddComponent<AudioListener>();
 
-        // オブジェクト生成
-        auto mesh = GameObjectManager::Instantiate("Mesh");
-        auto rb = mesh->AddComponent<Rigidbody>();
-        auto renderer = mesh->AddComponent<SkinnedMeshRenderer>();
-        auto animator = mesh->AddComponent<Animator>();
-        mesh->AddComponent<TestMover>();
-        renderer->MeshID(0);
-        animator->AnimationID(0);
-        animator->Loop(true);
-        mesh->AddComponent<TestAudio>();
-        mesh->AddComponent<BoxCollider>();
-
+        // 床
         auto Ground = GameObjectManager::Instantiate("Ground");
+        Ground->AddComponent<MeshRenderer>()->MeshID(1);
         auto rbg = Ground->AddComponent<Rigidbody>();
-        Ground->AddComponent<BoxCollider>();
-
+        auto box = Ground->AddComponent<BoxCollider>();
         Ground->Transform()->Scale(Vector3{ 100, 1, 100 });
         rbg->IsKinematic(true);
-        //rbg->Mass(0.0f);
-        //auto effect = GameObjectManager::Instantiate("Effect");
-        //auto efk = effect->AddComponent<EffectSystem>();
-        //efk->EffectID(0);
-        //efk->Play();
+        box->IsVisible(true);
+        box->Size(Vector3{ 1.0f, 0.001f, 1.0f });
 
-        //auto spriteObj = GameObjectManager::Instantiate("Sprite");
-        //auto sprite = spriteObj->AddComponent<SpriteRenderer>();
-        //sprite->TextureID(0);
+        auto tester = GameObjectManager::Instantiate("Tester");
+        tester->AddComponent<Tester>();
 
         Debug::Log("Scene Loading...");
     }

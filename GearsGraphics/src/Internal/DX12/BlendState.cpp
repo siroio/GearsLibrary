@@ -23,7 +23,7 @@ D3D12_RENDER_TARGET_BLEND_DESC Glib::Internal::Graphics::BlendDesc::Create(Blend
             blendDesc.LogicOpEnable = false;
             blendDesc.BlendOp = D3D12_BLEND_OP_ADD;
             blendDesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
-            blendDesc.DestBlend = D3D12_BLEND_ONE;
+            blendDesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
             blendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
             blendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
             blendDesc.DestBlendAlpha = D3D12_BLEND_INV_SRC_ALPHA;
@@ -53,4 +53,3 @@ D3D12_RENDER_TARGET_BLEND_DESC Glib::Internal::Graphics::BlendDesc::Create(Blend
             return blendDesc;
     }
 }
-

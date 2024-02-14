@@ -23,7 +23,7 @@ namespace
 
     float s_shadowBias{ 0.001f };
     float s_shadowNear{ 0.1f };
-    float s_shadowFar{ 100.0f };
+    float s_shadowFar{ 500.0f };
     float s_shadowDistance{ 100.0f };
     Vector2 s_shadowRange{ 25.0f };
 

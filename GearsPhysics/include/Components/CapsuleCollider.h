@@ -5,7 +5,21 @@ namespace Glib
 {
     class CapsuleCollider : public Collider
     {
-        // Collider を介して継承されました
+    public:
+        void Start();
+
+        float Height() const;
+        void Height(float height);
+
+        float Radius() const;
+        void Radius(float radius);
+
+    private:
         void SyncGeometry() override;
+        void OnGUI() override;
+
+    private:
+        float height_{ 1.0f };
+        float radius_{ 1.0f };
     };
 }

@@ -4,7 +4,6 @@ namespace Glib::Internal
     class MemoryCheck
     {
     public:
-#if defined(DEBUG) || defined(_DEBUG)
         /**
          * @brief メモリリークのチェックを開始
         */
@@ -12,9 +11,5 @@ namespace Glib::Internal
 
     private:
         static inline bool isStart{ false };
-
-#else
-        void Start();
-#endif
     };
-    }
+}
