@@ -110,24 +110,19 @@ namespace Glib::Internal::Graphics::ShaderCode
             float2 shadowUV = (posFromLightVP.xy + float2(1.0f, -1.0f)) * float2(0.5f, -0.5f);
 
             float bias = clamp(ShadowBias * tan(acos(dot(N, L))), 0, 0.01);
-            float shadowMapValue = shadowTexture.Sample(shadowSampler, shadowUV).r;
+            float shadowMapValue = shadowTexture.Sample(shadowSampler, shadowUV).xy;
 
             float depth = posFromLightVP.z;
-            float depthSquare = shadowMapValue * shadowMapValue;
-            float variance = clamp(shadowMapValue - depthSquare, 0.00001f, 1.0f);
-            float md = depth - shadowMapValue;
+            float visibility = 1.0f;
 
-            float litFactor = variance / (variance + md * md);
-            litFactor = pow(litFactor, 6.0f);
-            float shadowWeight = lerp(0.5f, 1.0f, litFactor);
+            if(shadowMapValue < depth - bias)
+            {
+                visibility = 0.5f;
+            }
 
-            float shadowAcceptance = saturate(md / bias);
-            float visibility = smoothstep(1.0f,  0.00001f, shadowAcceptance);
-            float shadowValue = shadowWeight * visibility;
-
-            float4 ambient  = LightAmbient * MatAmbient;
-            float4 diffuse  = LightDiffuse * MatDiffuse * max(dot(N, L), 0.0f) * shadowValue;
-            float4 speculer = LightSpeculer * MatSpeculer * pow(max(dot(N, H), 0.0f), MatShininess) * shadowValue;
+            float4 ambient  = LightAmbient * MatAmbient * visibility;
+            float4 diffuse  = LightDiffuse * MatDiffuse * max(dot(N, L), 0.0f) * visibility;
+            float4 speculer = LightSpeculer * MatSpeculer * pow(max(dot(N, H), 0.0f), MatShininess) * visibility;
             float4 baseColor = albedoTexture.Sample(albedoSampler, input.uv);
             float4 color = (ambient + diffuse) * baseColor + speculer;
             return float4(color.rgb, baseColor.a);

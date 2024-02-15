@@ -56,6 +56,7 @@ public:
     {
         Debug::Log("Enable " + nameof(*this));
         rigidbody_ = GameObject()->GetComponent<Rigidbody>();
+        camera_ = GameObjectManager::Find("Camera")->GetComponent<Transform>();
     }
 
     void FixedUpdate()
@@ -68,19 +69,28 @@ public:
 
         if (InputSystem::GetKey(KeyCode::W))
         {
-            moveDir.z = -1;
+            moveDir.z++;
         }
         if (InputSystem::GetKey(KeyCode::S))
         {
-            moveDir.z = 1;
+            moveDir.z--;
         }
         if (InputSystem::GetKey(KeyCode::A))
         {
-            moveDir.x = -1;
+            moveDir.x--;
         }
         if (InputSystem::GetKey(KeyCode::D))
         {
-            moveDir.x = 1;
+            moveDir.x++;
+        }
+
+        if (InputSystem::GetKey(KeyCode::Left))
+        {
+            rotation.y += rotSpeed;
+        }
+        if (InputSystem::GetKey(KeyCode::Right))
+        {
+            rotation.y -= rotSpeed;
         }
 
         auto lstick = InputSystem::GetLeftStick();
@@ -92,7 +102,8 @@ public:
             moveDir = Vector3{ lstick.x, 0.0f, lstick.y };
             rotation.y = rstick.x * rotSpeed;
         }
-        moveDir = speed * (transform->Right().Normalized() * moveDir.x + transform->Forward().Normalized() * moveDir.z);
+        Vector3 cameraForward = Vector3::Scale(camera_->Forward(), Vector3{ 1.0f, 0.0f, 1.0f }).Normalized();
+        moveDir = speed * (camera_->Right() * moveDir.x + cameraForward * moveDir.z);
 
         rigidbody_->AddForce(moveForceMultiplier * (moveDir - rigidbody_->LinearVelocity()));
         transform->Rotate(rotation);
@@ -105,6 +116,7 @@ public:
 
 private:
     WeakPtr<Rigidbody> rigidbody_;
+    WeakPtr<Transform> camera_;
     float moveForceMultiplier{ 20.0f };
 };
 

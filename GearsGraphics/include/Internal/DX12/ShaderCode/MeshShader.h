@@ -102,17 +102,12 @@ namespace Glib::Internal::Graphics::ShaderCode
             float shadowMapValue = shadowTexture.Sample(shadowSampler, shadowUV).r;
 
             float depth = posFromLightVP.z;
-            float depthSquare = shadowMapValue * shadowMapValue;
-            float variance = clamp(shadowMapValue - depthSquare, 0.00001f, 1.0f);
-            float md = depth - shadowMapValue;
+            float visibility = 1.0f;
 
-            float litFactor = variance / (variance + md * md);
-            litFactor = pow(litFactor, 6.0f);
-            float shadowWeight = lerp(0.5f, 1.0f, litFactor);
-
-            float shadowAcceptance = saturate(md / bias);
-            float visibility = smoothstep(1.0f,  0.00001f, shadowAcceptance);
-            float shadowValue = shadowWeight * visibility;
+            if(shadowMapValue < depth - bias)
+            {
+                visibility = 0.5f;
+            }
 
             float4 ambient  = LightAmbient * MatAmbient * visibility;
             float4 diffuse  = LightDiffuse * MatDiffuse * max(dot(N, L), 0.0f) * visibility;
