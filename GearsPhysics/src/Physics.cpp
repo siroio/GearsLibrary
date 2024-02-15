@@ -10,3 +10,8 @@ bool Glib::Physics::Raycast(const Vector3& origin, const Vector3& direction, Ray
 {
     return s_physX->Raycast(origin, direction, hit, maxDistance);
 }
+
+bool Glib::Physics::RaycastAll(const Vector3& origin, const Vector3& direction, std::vector<RaycastHit>& hit, float maxDistance)
+{
+    return s_physX->RaycastAll(origin, direction, hit, maxDistance);
+}
