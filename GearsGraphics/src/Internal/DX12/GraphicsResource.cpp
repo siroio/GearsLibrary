@@ -421,6 +421,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateMeshShadowPipelineState()
     pipelineDesc.InputLayout.NumElements = static_cast<UINT32>(std::size(inputLayout));
     pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
     pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R32G32_FLOAT;
+    pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_FRONT;
 
     // シェーダーのセット
     s_shader->SetVertexShader(ID::MESH_SHADOW_SHADER, pipelineDesc);
@@ -516,6 +517,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateSkinnedMeshShadowPipeline
     pipelineDesc.InputLayout.NumElements = static_cast<UINT32>(std::size(inputLayout));
     pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
     pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R32G32_FLOAT;
+    pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_FRONT;
 
     // シェーダーのセット
     s_shader->SetVertexShader(ID::SKINNED_MESH_SHADOW_SHADER, pipelineDesc);
