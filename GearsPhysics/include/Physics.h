@@ -2,7 +2,7 @@
 #include <float.h>
 #include <vector>
 
-class Vector3;
+struct Vector3;
 
 namespace Glib
 {

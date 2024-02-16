@@ -42,7 +42,7 @@ endfunction()
 
 function(create_filter)
     file(GLOB_RECURSE HEADER_FILES "include/*.h" "include/*.hpp")
-    file(GLOB_RECURSE SOURCE_FILES "src/*.cpp")
+    file(GLOB_RECURSE SOURCE_FILES "src/*.c" "src/*.cpp")
     create_groups(HEADER_FILES)
     create_groups(SOURCE_FILES)
 endfunction()

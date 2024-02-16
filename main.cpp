@@ -36,8 +36,10 @@
 #include <Components/Rigidbody.h>
 #include <Components/BoxCollider.h>
 #include <Components/CapsuleCollider.h>
+#include <Components/MeshCollider.h>
 #include <filesystem>
 #include <unordered_map>
+
 
 using namespace Glib;
 
@@ -347,12 +349,9 @@ public:
         // 床
         auto Ground = GameObjectManager::Instantiate("Ground");
         Ground->AddComponent<MeshRenderer>()->MeshID(1);
-        auto rbg = Ground->AddComponent<Rigidbody>();
-        auto box = Ground->AddComponent<BoxCollider>();
+        auto rbg = Ground->AddComponent<MeshCollider>();
         Ground->Transform()->Scale(Vector3{ 100, 1, 100 });
-        rbg->IsKinematic(true);
-        box->IsVisible(true);
-        box->Size(Vector3{ 1.0f, 0.001f, 1.0f });
+
 
         auto tester = GameObjectManager::Instantiate("Tester");
         tester->AddComponent<Tester>();

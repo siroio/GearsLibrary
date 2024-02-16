@@ -33,6 +33,8 @@ namespace Glib
          */
         const std::vector<Bone>& Bone(unsigned int id);
 
+        const Mesh& Mesh(unsigned int id);
+
         /**
          * @brief 描画
          */
@@ -45,4 +47,3 @@ namespace Glib
 
     };
 }
-

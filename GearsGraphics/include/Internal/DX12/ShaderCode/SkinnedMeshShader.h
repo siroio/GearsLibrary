@@ -100,7 +100,9 @@ namespace Glib::Internal::Graphics::ShaderCode
         {
             float3 normal = normalTexture.Sample(albedoSampler, input.uv) * 2.0f - 1.0f;
             
-            float3 N = normalize(input.normal);
+            float3 N = normalize(input.tangent * normal.x +
+                                input.binormal * normal.y +
+                                input.normal * normal.z);
 
             float3 L = normalize(-LightDirection);
             float3 V = normalize(-input.view);
@@ -110,17 +112,17 @@ namespace Glib::Internal::Graphics::ShaderCode
             float2 shadowUV = (posFromLightVP.xy + float2(1.0f, -1.0f)) * float2(0.5f, -0.5f);
 
             float bias = clamp(ShadowBias * tan(acos(dot(N, L))), 0, 0.01);
-            float shadowMapValue = shadowTexture.Sample(shadowSampler, shadowUV).xy;
+            float2 shadowMapValue = shadowTexture.Sample(shadowSampler, shadowUV).xy;
 
-            float depth = posFromLightVP.z;
+            float lightZ = posFromLightVP.z;
             float visibility = 1.0f;
 
-            if(shadowMapValue < depth - bias)
+            if(shadowMapValue.x - bias < lightZ && lightZ <= 1.0f)
             {
                 visibility = 0.5f;
             }
 
-            float4 ambient  = LightAmbient * MatAmbient * visibility;
+            float4 ambient  = LightAmbient * MatAmbient;
             float4 diffuse  = LightDiffuse * MatDiffuse * max(dot(N, L), 0.0f) * visibility;
             float4 speculer = LightSpeculer * MatSpeculer * pow(max(dot(N, H), 0.0f), MatShininess) * visibility;
             float4 baseColor = albedoTexture.Sample(albedoSampler, input.uv);
@@ -204,9 +206,9 @@ namespace Glib::Internal::Graphics::ShaderCode
 
         float4 PSmain(PSInput input) : SV_TARGET
         {
-            float4 lightVP = input.position;
-            lightVP.xyz /= lightVP.w;
-            return float4(lightVP.z, lightVP.z * lightVP.z, 0.0f, 1.0f);
+            float4 depth = input.position;
+            depth.xyz /= depth.w;
+            return float4(depth.z, depth.z * depth.z, 0.0f, 1.0f);
         })"
     };
 }

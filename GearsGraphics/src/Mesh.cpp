@@ -3,7 +3,6 @@
 #include <Internal/DX12/GraphicsResource.h>
 #include <Internal/DX12/GraphicsResourceID.h>
 #include <TextureManager.h>
-#include <GLObject.h>
 #include <Color.h>
 #include <iterator>
 #include <filesystem>
@@ -73,6 +72,12 @@ bool Glib::Mesh::Load(std::string_view path)
         bones_.emplace_back(newBone);
     }
 
+    vertices_.shrink_to_fit();
+    indices_.shrink_to_fit();
+    subsets_.shrink_to_fit();
+    materials_.shrink_to_fit();
+    bones_.shrink_to_fit();
+
     return true;
 }
 
@@ -125,6 +130,16 @@ void Glib::Mesh::DrawShadow()
     {
         s_dx12->CommandList()->DrawIndexedInstanced(subset.indexCount, 1, subset.indexStart, 0, 0);
     }
+}
+
+const std::vector<Glib::GLObject::Vertex> Glib::Mesh::Vertices() const
+{
+    return vertices_;
+}
+
+const std::vector<unsigned int> Glib::Mesh::Indices() const
+{
+    return indices_;
 }
 
 const std::vector<Glib::Bone>& Glib::Mesh::Bone() const
