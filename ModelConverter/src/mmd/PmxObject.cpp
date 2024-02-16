@@ -4,6 +4,7 @@
 #include <array>
 #include <GLObject.h>
 #include <utility/FileUtility.h>
+#include <mikktspace.h>
 
 namespace fs = std::filesystem;
 

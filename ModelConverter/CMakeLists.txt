@@ -5,7 +5,7 @@ set(SOURCE_FILE
     ./src/mmd/PmxObject.cpp
     ./src/mmd/VmdObject.cpp
     ./src/utility/FileUtility.cpp
-    ./../Modules/MikkTSpace/mikktspace.c
+    ./src/external/mikktspace.c
 )
 
 set(HEADER_FILE
@@ -15,7 +15,7 @@ set(HEADER_FILE
     ./include/mmd/PmxObject.h
     ./include/mmd/VmdObject.h
     ./include/utility/FileUtility.h
-    ./../Modules/MikkTSpace/mikktspace.h
+    ./include/external/mikktspace.h
 
 )
 

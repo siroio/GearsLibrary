@@ -13,9 +13,6 @@
 [submodule "Modules/PhysX"]
 	path = Modules/PhysX
 	url = https://github.com/NVIDIA-Omniverse/PhysX.git
-[submodule "Modules/MikkTSpace"]
-	path = Modules/MikkTSpace
-	url = https://github.com/mmikk/MikkTSpace.git
 [submodule "Modules/JoltPhysics"]
 	path = Modules/JoltPhysics
 	url = https://github.com/jrouwe/JoltPhysics.git
