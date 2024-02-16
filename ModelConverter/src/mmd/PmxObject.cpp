@@ -4,7 +4,8 @@
 #include <array>
 #include <GLObject.h>
 #include <utility/FileUtility.h>
-#include <mikktspace.h>
+#include <external/mikktspace.h>
+#include <iostream>
 
 namespace fs = std::filesystem;
 
@@ -325,6 +326,31 @@ bool PmxModel::ReadBones(std::ifstream& pmxFile, const PmxHeader& header)
     return true;
 }
 
+const std::vector<PmxVertex>& PmxModel::Vertices()
+{
+    return vertices;
+}
+
+const std::vector<PmxSurface>& PmxModel::Surfaces()
+{
+    return surfaces;
+}
+
+const std::vector<std::string>& PmxModel::TexturePath()
+{
+    return texturePath;
+}
+
+const std::vector<PmxMaterial>& PmxModel::Materials()
+{
+    return materials;
+}
+
+const std::vector<PmxBone>& PmxModel::Bones()
+{
+    return bones;
+}
+
 bool PmxModel::LoadFile(std::string_view path)
 {
     // 拡張子が間違っていたら失敗
@@ -350,7 +376,7 @@ bool PmxModel::WriteFile(std::string_view path)
     std::vector<gl::Subset> glSubsets;
     std::vector<gl::Material> glMaterials;
     std::vector<gl::Bone> glBones;
-
+    ComputeTangents();
 
     for (const auto& pmxVertex : vertices)
     {
@@ -368,15 +394,9 @@ bool PmxModel::WriteFile(std::string_view path)
         glVertex.uv[1] = pmxVertex.uv.y;
 
         // tangent計算
-        Vector3f tangent{};
-        tangent = Vector3f::Cross(pmxVertex.normal, { 0, 1, 0 });
-        if (tangent == Vector3f{ 0.0f, 0.0f, 0.0f })
-        {
-            tangent = { 1.0f, 0.0f, 0.0f };
-        }
-        glVertex.tangent[0] = tangent.x;
-        glVertex.tangent[1] = tangent.y;
-        glVertex.tangent[2] = tangent.z;
+        glVertex.tangent[0] = pmxVertex.tangent.x;
+        glVertex.tangent[1] = pmxVertex.tangent.y;
+        glVertex.tangent[2] = pmxVertex.tangent.z;
         glVertex.tangent[3] = 1.0f;
 
         // ボーン情報
@@ -442,4 +462,55 @@ bool PmxModel::WriteFile(std::string_view path)
     }
     auto mesh = Glib::GLObject{ glVertices, glIndices, glSubsets, glMaterials, glBones };
     return mesh.WriteFile(std::string{ path } + ".globj");
+}
+
+void PmxModel::ComputeTangents()
+{
+    constexpr int TRIANGLE_VERTEX_COUNT{ 3 };
+    SMikkTSpaceInterface mikkInterface{};
+    mikkInterface.m_getNumFaces = [](const SMikkTSpaceContext* pContext)
+    {
+        auto model = static_cast<PmxModel*>(pContext->m_pUserData);
+        return static_cast<int>(model->Surfaces().size() / TRIANGLE_VERTEX_COUNT);
+    };
+    mikkInterface.m_getNumVerticesOfFace = [](const SMikkTSpaceContext* pContext, int iFace)
+    {
+        return TRIANGLE_VERTEX_COUNT;
+    };
+    mikkInterface.m_getPosition = [](const SMikkTSpaceContext* pContext, float fvPosOut[], const int iFace, const int iVert)
+    {
+        const auto& model = static_cast<PmxModel*>(pContext->m_pUserData);
+        const auto vertexIndex = model->Surfaces()[(static_cast<size_t>(iFace) * TRIANGLE_VERTEX_COUNT) + iVert].vertexIndex;
+        memcpy(fvPosOut, model->Vertices()[vertexIndex].position.elem, sizeof(float) * 3);
+    };
+    mikkInterface.m_getNormal = [](const SMikkTSpaceContext* pContext, float fvPosOut[], const int iFace, const int iVert)
+    {
+        const auto& model = static_cast<PmxModel*>(pContext->m_pUserData);
+        const auto vertexIndex = model->Surfaces()[(static_cast<size_t>(iFace) * TRIANGLE_VERTEX_COUNT) + iVert].vertexIndex;
+        memcpy(fvPosOut, model->Vertices()[vertexIndex].normal.elem, sizeof(float) * 3);
+    };
+    mikkInterface.m_getTexCoord = [](const SMikkTSpaceContext* pContext, float fvPosOut[], const int iFace, const int iVert)
+    {
+        const auto& model = static_cast<PmxModel*>(pContext->m_pUserData);
+        const auto vertexIndex = model->Surfaces()[(static_cast<size_t>(iFace) * TRIANGLE_VERTEX_COUNT) + iVert].vertexIndex;
+        memcpy(fvPosOut, model->Vertices()[vertexIndex].uv.elem, sizeof(float) * 2);
+    };
+    mikkInterface.m_setTSpaceBasic = [](const SMikkTSpaceContext* pContext, const float fvTangent[], const float fSign, const int iFace, const int iVert)
+    {
+        const auto& model = static_cast<PmxModel*>(pContext->m_pUserData);
+        const auto vertexIndex = model->Surfaces()[(static_cast<size_t>(iFace) * TRIANGLE_VERTEX_COUNT) + iVert].vertexIndex;
+        auto& vertices = const_cast<std::vector<PmxVertex>&>(model->Vertices());
+        vertices[vertexIndex].tangent.x = fvTangent[0];
+        vertices[vertexIndex].tangent.y = fvTangent[1];
+        vertices[vertexIndex].tangent.z = fvTangent[2];
+        vertices[vertexIndex].tangent.w = fSign;
+    };
+
+    SMikkTSpaceContext mikkContext{};
+    mikkContext.m_pUserData = this;
+    mikkContext.m_pInterface = &mikkInterface;
+    if (genTangSpaceDefault(&mikkContext) == 0)
+    {
+        throw std::exception("Failed to generate tangents");
+    }
 }

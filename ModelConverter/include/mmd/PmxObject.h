@@ -91,6 +91,8 @@ struct PmxVertex
     Vector3f position;
     // 法線
     Vector3f normal;
+    // 接空間
+    Vector4f tangent;
     // uv座標
     Vector2f uv;
     // 追加uv座標
@@ -172,7 +174,8 @@ struct PmxMaterial
 };
 
 
-class PmxModel : public IConverter
+class PmxModel :
+    public IConverter
 {
 private:
     bool ReadPmxHeader(std::ifstream& pmxFile, PmxHeader& header);
@@ -183,8 +186,17 @@ private:
     bool ReadBones(std::ifstream& pmxFile, const PmxHeader& header);
 
 public:
+    const std::vector<PmxVertex>& Vertices();
+    const std::vector<PmxSurface>& Surfaces();
+    const std::vector<std::string>& TexturePath();
+    const std::vector<PmxMaterial>& Materials();
+    const std::vector<PmxBone>& Bones();
+public:
     virtual bool LoadFile(std::string_view path) override;
     virtual bool WriteFile(std::string_view path) override;
+
+private:
+    void ComputeTangents();
 
 private:
     std::vector<PmxVertex> vertices;
@@ -193,4 +205,3 @@ private:
     std::vector<PmxMaterial> materials;
     std::vector<PmxBone> bones;
 };
-
