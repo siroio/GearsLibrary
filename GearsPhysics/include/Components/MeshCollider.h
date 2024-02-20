@@ -12,11 +12,18 @@ namespace Glib
     public:
         void Start();
 
+        unsigned int MeshID() const;
+        void MeshID(unsigned int id);
+
     private:
         void SyncGeometry() override;
 
+        void CreateMesh();
+
     private:
         PxMeshPtr meshPtr_;
-        bool isConvex{ false };
+        unsigned int meshID_{ UINT_MAX };
+        bool enableMesh_{ false };
+        bool isConvex_{ false };
     };
 }

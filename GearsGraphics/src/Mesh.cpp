@@ -31,10 +31,12 @@ bool Glib::Mesh::Load(std::string_view path)
     GLObject object{};
     if (!object.ReadFile(path)) return false;
     std::filesystem::path folderPath = path;
-    vertexBuffer_.Create(sizeof(Vertex), static_cast<unsigned int>(object.Vertices().size()));
-    vertexBuffer_.Update(object.Vertices().data());
-    indexBuffer_.Create(sizeof(unsigned int), static_cast<unsigned int>(object.Indices().size()));
-    indexBuffer_.Update(object.Indices().data());
+    vertices_ = std::move(object.Vertices());
+    vertexBuffer_.Create(sizeof(Vertex), static_cast<unsigned int>(vertices_.size()));
+    vertexBuffer_.Update(vertices_.data());
+    indices_ = std::move(object.Indices());
+    indexBuffer_.Create(sizeof(unsigned int), static_cast<unsigned int>(indices_.size()));
+    indexBuffer_.Update(indices_.data());
 
     for (const auto& subset : object.Subsets())
     {

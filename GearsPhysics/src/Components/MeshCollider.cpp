@@ -4,6 +4,7 @@
 #include <Components/SkinnedMeshRenderer.h>
 #include <Internal/Renderer.h>
 #include <Internal/Geometry.h>
+#include <PxPhysicsAPI.h>
 #include <GameObject.h>
 #include <MeshManager.h>
 #include <Debugger.h>
@@ -15,35 +16,74 @@ namespace
 
 void Glib::MeshCollider::Start()
 {
+    if (!enableMesh_)
+    {
+        Debug::Error("Incorrect mesh selected.");
+        return;
+    }
+
     const auto& rigibody = GameObject()->GetComponent<Glib::Rigidbody>();
     if (!rigibody.expired())
     {
-        Debug::Log("Do not attach Rigidbody.", LogLevel::Error);
+        Debug::Error("Do not attach Rigidbody.");
+        return;
     }
 
-    //if (renderer.expired())
-    //{
-    //    Debug::Log("Please attach MeshRenderer or SkinnedMeshRenderer.", LogLevel::Error);
-    //}
+    const auto& renderer = GameObject()->GetComponent<SkinnedMeshRenderer>();
+    if (!renderer.expired())
+    {
+        Debug::Warn("Skinning is not supported.");
+    }
 
-    //if (!s_meshManager.Contains(renderer->MeshID()))
-    //{
-    //    Debug::Log("Invalid MeshID.", LogLevel::Error);
-    //}
+    CreateMesh();
+    if (std::holds_alternative<physx::PxConvexMesh*>(meshPtr_))
+    {
+        auto* const ptr = std::get<physx::PxConvexMesh*>(meshPtr_);
+        CreateShape(Internal::Geometory::CreateConvexMesh(GameObject(), ptr));
+    }
+    else if (std::holds_alternative<physx::PxTriangleMesh*>(meshPtr_))
+    {
+        auto* const ptr = std::get<physx::PxTriangleMesh*>(meshPtr_);
+        CreateShape(Internal::Geometory::CreateTriangleMesh(GameObject(), ptr));
+    }
+}
 
-    //const auto& mesh = s_meshManager.Mesh(renderer->MeshID());
+unsigned int Glib::MeshCollider::MeshID() const
+{
+    return meshID_;
+}
 
-    //if (isConvex)
-    //{
-    //    meshPtr_ = Internal::Geometory::CreateConvexMesh(GameObject(), mesh);
-    //}
-    //else
-    //{
-    //    meshPtr_ = Internal::Geometory::CreateTriangleMesh(GameObject(), mesh);
-    //}
+void Glib::MeshCollider::MeshID(unsigned int id)
+{
+    enableMesh_ = s_meshManager.Contains(id);
+    if (!enableMesh_) return;
+    meshID_ = id;
 }
 
 void Glib::MeshCollider::SyncGeometry()
 {
+    if (std::holds_alternative<physx::PxConvexMesh*>(meshPtr_))
+    {
+        auto* const ptr = std::get<physx::PxConvexMesh*>(meshPtr_);
+        Shape()->setGeometry(Internal::Geometory::CreateConvexMesh(GameObject(), ptr));
+    }
+    else if (std::holds_alternative<physx::PxTriangleMesh*>(meshPtr_))
+    {
+        auto* const ptr = std::get<physx::PxTriangleMesh*>(meshPtr_);
+        Shape()->setGeometry(Internal::Geometory::CreateTriangleMesh(GameObject(), ptr));
+    }
+}
 
+void Glib::MeshCollider::CreateMesh()
+{
+    if (!enableMesh_) return;
+
+    if (isConvex_)
+    {
+        meshPtr_ = Internal::Geometory::CreateConvexMesh(s_meshManager.Mesh(meshID_));
+    }
+    else
+    {
+        meshPtr_ = Internal::Geometory::CreateTriangleMesh(s_meshManager.Mesh(meshID_));
+    }
 }

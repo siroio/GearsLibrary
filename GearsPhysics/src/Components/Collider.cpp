@@ -141,7 +141,7 @@ bool Glib::Collider::Initialize()
     rigidbody_ = GameObject()->GetComponent<Glib::Rigidbody>();
     if (!rigidbody_.expired()) return true;
 
-    Debug::Log(GameObject()->Name() + " has not Rigidbody attached", LogLevel::Error);
+    Debug::Error(GameObject()->Name() + " has not Rigidbody attached");
     Destroy();
     return false;
 }

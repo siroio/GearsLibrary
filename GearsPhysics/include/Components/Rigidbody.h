@@ -74,6 +74,7 @@ namespace Glib
 
     private:
         physx::PxRigidDynamic* rigidDynamic_{ nullptr };
+        physx::PxActor* rigidStatic_{ nullptr };
         bool useGravity_{ true };
         bool isKinematic_{ false };
         float mass_{ 1.0f };

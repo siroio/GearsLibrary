@@ -72,6 +72,7 @@ namespace Glib
         WeakPtr<Internal::Interface::IRigidbody> rigidbody_{ nullptr };
         physx::PxMaterial* material_{ nullptr };
         physx::PxShape* shape_{ nullptr };
+        // physx::PxRigidStatic* rigidStatic_;
         Combine frictionCombine_{ Combine::AVERAGE };
         Combine bounceCombine_{ Combine::AVERAGE };
         Vector3 center_{ 0.0f, 0.0f, 0.0f };
@@ -80,6 +81,5 @@ namespace Glib
         float bounciness_{ 0.0f };
         bool isTrigger_{ false };
         bool isVisible_{ false };
-
     };
 }

@@ -29,7 +29,7 @@ const std::vector<Glib::Bone>& Glib::MeshManager::Bone(unsigned int id)
 
 const Glib::Mesh& Glib::MeshManager::Mesh(unsigned int id)
 {
-    return *s_meshs.at(id);
+    return *s_meshs.at(id).get();
 }
 
 void Glib::MeshManager::Draw(unsigned int id) const

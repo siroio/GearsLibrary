@@ -8,6 +8,8 @@ namespace physx
     class PxCapsuleGeometry;
     class PxTriangleMesh;
     class PxConvexMesh;
+    class PxTriangleMeshGeometry;
+    class PxConvexMeshGeometry;
 }
 
 namespace Glib
@@ -26,7 +28,9 @@ namespace Glib::Internal
     public:
         static physx::PxBoxGeometry CreateBox(const GameObjectPtr& gameObject, const Vector3& size);
         static physx::PxCapsuleGeometry CreateCapsule(const GameObjectPtr& gameObject, float height, float radius);
-        static physx::PxTriangleMesh* CreateTriangleMesh(const GameObjectPtr& gameObject, const Mesh& mesh);
-        static physx::PxConvexMesh* CreateConvexMesh(const GameObjectPtr& gameObject, const Mesh& mesh);
+        static physx::PxTriangleMesh* CreateTriangleMesh(const Mesh& mesh);
+        static physx::PxConvexMesh* CreateConvexMesh(const Mesh& mesh);
+        static physx::PxTriangleMeshGeometry CreateTriangleMesh(const GameObjectPtr& gameObject, physx::PxTriangleMesh* const mesh);
+        static physx::PxConvexMeshGeometry CreateConvexMesh(const GameObjectPtr& gameObject, physx::PxConvexMesh* const mesh);
     };
 }

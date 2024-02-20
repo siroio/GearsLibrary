@@ -349,7 +349,8 @@ public:
         // 床
         auto Ground = GameObjectManager::Instantiate("Ground");
         Ground->AddComponent<MeshRenderer>()->MeshID(1);
-        auto rbg = Ground->AddComponent<MeshCollider>();
+        auto mc = Ground->AddComponent<MeshCollider>();
+        mc->MeshID(1);
         Ground->Transform()->Scale(Vector3{ 100, 1, 100 });
 
 
