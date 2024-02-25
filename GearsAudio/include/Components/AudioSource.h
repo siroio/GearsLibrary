@@ -18,9 +18,8 @@ namespace Glib
         };
     public:
         AudioSource();
-        ~AudioSource() override;
+        ~AudioSource();
 
-    public:
         void Start();
         void LateUpdate();
 
@@ -79,6 +78,17 @@ namespace Glib
          * @param volume
          */
         void Volume(float volume);
+
+        /**
+         * @brief ピッチ
+         */
+        float Pitch() const;
+
+        /**
+         * @brief ピッチの設定
+         * @param pitch
+         */
+        void Pitch(float pitch);
 
         /**
          * @brief IDの取得

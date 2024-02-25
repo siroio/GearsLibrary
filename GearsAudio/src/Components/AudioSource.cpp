@@ -95,6 +95,13 @@ bool Glib::AudioSource::Is3DSound() const
 void Glib::AudioSource::Is3DSound(bool enable)
 {
     audioStatus_.Set(AudioStatus::Is3DAudio, enable);
+    if (!enable) return;
+
+    unsigned int channel = audioClip_->Channels();
+    if (emitter_.ChannelCount == channel) return;
+    emitter_.ChannelCount = channel;
+    emitterAzimuths_ = std::make_unique<float[]>(channel);
+    emitter_.pChannelAzimuths = emitterAzimuths_.get();
 }
 
 bool Glib::AudioSource::Loop() const
@@ -122,6 +129,21 @@ void Glib::AudioSource::Volume(float volume)
     sourceVoice_->SetVolume(Mathf::Clamp01(volume));
 }
 
+float Glib::AudioSource::Pitch() const
+{
+    if (sourceVoice_ == nullptr) return 0.0f;
+    float pitch;
+    sourceVoice_->GetFrequencyRatio(&pitch);
+    return pitch;
+}
+
+void Glib::AudioSource::Pitch(float pitch)
+{
+    if (sourceVoice_ == nullptr) return;
+    pitch = Mathf::Clamp(pitch, XAUDIO2_MIN_FREQ_RATIO, XAUDIO2_MAX_FREQ_RATIO);
+    sourceVoice_->SetFrequencyRatio(pitch);
+}
+
 unsigned int Glib::AudioSource::AudioID() const
 {
     return audioId_;
@@ -142,17 +164,7 @@ void Glib::AudioSource::AudioID(unsigned int id)
     if (groupId_ >= 0) s_xAudio2->SetOutputSubMixVoice(sourceVoice_, groupId_);
 
     // 3Dオーディオの設定
-    if (audioStatus_.Has(AudioStatus::Is3DAudio))
-    {
-        unsigned int channel = audioClip_->Channels();
-        emitter_.ChannelCount = channel;
-        emitterAzimuths_.reset(new float[channel]
-        {
-            0.0f
-        });
-        emitter_.pChannelAzimuths = emitterAzimuths_.get();
-        UpdateVoice();
-    }
+    Is3DSound(audioStatus_.Has(AudioStatus::Is3DAudio));
 }
 
 void Glib::AudioSource::SetGroup(int group)
@@ -166,9 +178,9 @@ void Glib::AudioSource::UpdateVoice()
 {
     if (sourceVoice_ == nullptr) return;
     const auto& transform = GameObject()->Transform();
-    const Vector3 position = transform->Position();
-    const Vector3 forward = transform->Forward();
-    const Vector3 up = transform->Up();
+    const Vector3& position = transform->Position();
+    const Vector3& forward = transform->Forward();
+    const Vector3& up = transform->Up();
 
     Vector3 velocity{
         position.x - emitter_.Position.x,
@@ -206,6 +218,12 @@ void Glib::AudioSource::OnGUI()
     if (GLGUI::DragFloat("Volume", &volume, 0.01f, 0.0f, 1.0f))
     {
         Volume(volume);
+    }
+
+    float pitch = Pitch();
+    if (GLGUI::DragFloat("Pitch", &pitch, 0.001f, XAUDIO2_MIN_FREQ_RATIO, XAUDIO2_MAX_FREQ_RATIO))
+    {
+        Pitch(pitch);
     }
 
     bool playOnStart = PlayOnStart();
