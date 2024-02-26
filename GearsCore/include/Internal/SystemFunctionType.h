@@ -3,6 +3,7 @@
 enum class SystemFunctionType
 {
     Initialize,
+    FixedUpdate,
     Update,
     BeginDraw,
     Draw,
@@ -10,4 +11,3 @@ enum class SystemFunctionType
     EndDraw,
     Finalize,
 };
-

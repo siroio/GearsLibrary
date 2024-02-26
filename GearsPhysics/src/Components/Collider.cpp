@@ -28,6 +28,12 @@ Glib::Collider::~Collider()
         shape_->release();
         shape_ = nullptr;
     }
+
+    //if (rigidStatic_ != nullptr)
+    //{
+    //    rigidStatic_->release();
+    //    rigidStatic_ = nullptr;
+    //}
 }
 
 bool Glib::Collider::IsTrigger() const

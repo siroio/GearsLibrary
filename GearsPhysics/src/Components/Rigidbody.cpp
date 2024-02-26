@@ -103,9 +103,10 @@ void Glib::Rigidbody::Mass(float mass)
     if (rigidDynamic_ != nullptr) rigidDynamic_->setMass(mass);
 }
 
-const Vector3& Glib::Rigidbody::LinearVelocity() const
+Vector3 Glib::Rigidbody::LinearVelocity() const
 {
-    return linearVelocity_;
+    if (rigidDynamic_ == nullptr) return Vector3::Zero();
+    return Internal::Physics::PhysXManager::ToVector3(rigidDynamic_->getLinearVelocity());
 }
 
 void Glib::Rigidbody::LinearVelocity(const Vector3& linearVelocity)
@@ -118,24 +119,26 @@ void Glib::Rigidbody::LinearVelocity(const Vector3& linearVelocity)
     }
 }
 
-const Vector3& Glib::Rigidbody::AngularVelocity() const
+Vector3 Glib::Rigidbody::AngularVelocity() const
 {
-    return angularVelocity_;
+    if (rigidDynamic_ == nullptr) return Vector3::Zero();
+    return Internal::Physics::PhysXManager::ToVector3(rigidDynamic_->getAngularVelocity());
 }
 
 void Glib::Rigidbody::AngularVelocity(const Vector3& angularVelocity)
 {
-    linearVelocity_ = angularVelocity;
+    angularVelocity_ = angularVelocity;
     if (rigidDynamic_ != nullptr)
     {
         const auto& angularV = Internal::Physics::PhysXManager::ToPxVec3(angularVelocity);
-        rigidDynamic_->setLinearVelocity(angularV);
+        rigidDynamic_->setAngularVelocity(angularV);
     }
 }
 
 float Glib::Rigidbody::LinearDamping() const
 {
-    return linearDamping_;
+    if (rigidDynamic_ == nullptr) return 0.0f;
+    return rigidDynamic_->getLinearDamping();
 }
 
 void Glib::Rigidbody::LinearDamping(float linearDamping)
@@ -149,7 +152,8 @@ void Glib::Rigidbody::LinearDamping(float linearDamping)
 
 float Glib::Rigidbody::AngularDamping() const
 {
-    return angularDamping_;
+    if (rigidDynamic_ == nullptr) return 0.0f;
+    return rigidDynamic_->getAngularDamping();
 }
 
 void Glib::Rigidbody::AngularDamping(float angularDamping)

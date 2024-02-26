@@ -31,6 +31,11 @@ bool SystemManager::Initialize()
     return true;
 }
 
+void SystemManager::FixedUpdate()
+{
+    Execute(SystemFunctionType::FixedUpdate);
+}
+
 void SystemManager::Update()
 {
     Execute(SystemFunctionType::Update);

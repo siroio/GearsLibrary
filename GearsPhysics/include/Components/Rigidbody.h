@@ -49,10 +49,10 @@ namespace Glib
         float Mass() const;
         void Mass(float mass);
 
-        const Vector3& LinearVelocity() const;
+        Vector3 LinearVelocity() const;
         void LinearVelocity(const Vector3& linearVelocity);
 
-        const Vector3& AngularVelocity() const;
+        Vector3 AngularVelocity() const;
         void AngularVelocity(const Vector3& angularVelocity);
 
         float LinearDamping() const;
@@ -74,7 +74,6 @@ namespace Glib
 
     private:
         physx::PxRigidDynamic* rigidDynamic_{ nullptr };
-        physx::PxActor* rigidStatic_{ nullptr };
         bool useGravity_{ true };
         bool isKinematic_{ false };
         float mass_{ 1.0f };

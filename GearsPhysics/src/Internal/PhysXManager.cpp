@@ -16,12 +16,13 @@
 #include <memory>
 #include <list>
 #include <Layer2D.h>
+#include <ranges>
 
 namespace
 {
     using GameObjectPair = std::pair<GameObjectPtr, GameObjectPtr>;
 
-    Vector3 DEFAULT_GRAVITY{ 0, -9.81f, 0 };
+    const Vector3 DEFAULT_GRAVITY{ 0, -9.81f, 0 };
 
     Glib::Layer2D s_layer;
     std::unordered_map<uintptr_t, Glib::WeakPtr<Glib::Internal::Interface::IRigidbody>> s_rigidbodys;
@@ -125,9 +126,12 @@ void Glib::Internal::Physics::PhysXManager::Finalize()
     s_foundation->release();
 }
 
-void Glib::Internal::Physics::PhysXManager::Update()
+void Glib::Internal::Physics::PhysXManager::FixedUpdate()
 {
-    for (const auto& [_, rigidbody] : s_rigidbodys)
+    // rigidbodyのmapからvalueだけ参照
+    const auto& rigidbodys = s_rigidbodys | std::ranges::views::values;
+
+    for (const auto& rigidbody : rigidbodys)
     {
         rigidbody->SyncToPhysics();
     }
@@ -139,12 +143,12 @@ void Glib::Internal::Physics::PhysXManager::Update()
         collider->SyncGeometry();
     }
 
-    const float delta{ GameTimer::DeltaTime() };
+    const float delta{ GameTimer::FixedDeltaTime() };
     if (delta <= 0.0f) return;
     s_scene->simulate(delta);
     s_scene->fetchResults(true);
 
-    for (const auto& [_, rigidbody] : s_rigidbodys)
+    for (const auto& rigidbody : rigidbodys)
     {
         rigidbody->SyncFromPhysics();
     }

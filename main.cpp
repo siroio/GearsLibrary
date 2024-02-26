@@ -106,7 +106,6 @@ public:
         }
         Vector3 cameraForward = Vector3::Scale(camera_->Forward(), Vector3{ 1.0f, 0.0f, 1.0f }).Normalized();
         moveDir = speed * (camera_->Right() * moveDir.x + cameraForward * moveDir.z);
-
         rigidbody_->AddForce(moveForceMultiplier * (moveDir - rigidbody_->LinearVelocity()));
         transform->Rotate(rotation);
     }
@@ -119,7 +118,7 @@ public:
 private:
     WeakPtr<Rigidbody> rigidbody_;
     WeakPtr<Transform> camera_;
-    float moveForceMultiplier{ 20.0f };
+    float moveForceMultiplier{ 8.0f };
 };
 
 class TestAudio : public Component
@@ -313,8 +312,7 @@ public:
                 effectID++;
             }
         }
-        AudioManager::Instance()->AddSoundGroup(0);
-        AudioManager::Instance()->SetSoundGroupVolume(0, 0.1f);
+
         for (const auto& entry : std::filesystem::recursive_directory_iterator("Assets/Sprite"))
         {
             if (!entry.is_regular_file()) continue;
@@ -338,6 +336,10 @@ public:
         light->Diffuse(LIGHT_DIFFUSE);
         light->GameObject()->Transform()->EulerAngles(LIGHT_DIRECTION);
 
+        // 音設定
+        AudioManager::Instance()->AddSoundGroup(0);
+        AudioManager::Instance()->SetSoundGroupVolume(0, 0.1f);
+
         // カメラ作成
         SkyboxManager::Instance()->SetSkybox(0);
         auto camera = GameObjectManager::Instantiate("Camera");
@@ -349,9 +351,9 @@ public:
         // 床
         auto Ground = GameObjectManager::Instantiate("Ground");
         Ground->AddComponent<MeshRenderer>()->MeshID(1);
-        auto mc = Ground->AddComponent<MeshCollider>();
-        mc->MeshID(1);
-        Ground->Transform()->Scale(Vector3{ 100, 1, 100 });
+        //auto mc = Ground->AddComponent<MeshCollider>();
+        //mc->MeshID(1);
+        //Ground->Transform()->Scale(Vector3{ 100, 1, 100 });
 
 
         auto tester = GameObjectManager::Instantiate("Tester");

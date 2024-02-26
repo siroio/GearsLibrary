@@ -8,6 +8,7 @@ namespace physx
     class PxMaterial;
     class PxShape;
     class PxGeometry;
+    class PxRigidStatic;
 }
 
 namespace Glib::Internal::Interface
@@ -72,7 +73,7 @@ namespace Glib
         WeakPtr<Internal::Interface::IRigidbody> rigidbody_{ nullptr };
         physx::PxMaterial* material_{ nullptr };
         physx::PxShape* shape_{ nullptr };
-        // physx::PxRigidStatic* rigidStatic_;
+        physx::PxRigidStatic* rigidStatic_;
         Combine frictionCombine_{ Combine::AVERAGE };
         Combine bounceCombine_{ Combine::AVERAGE };
         Vector3 center_{ 0.0f, 0.0f, 0.0f };

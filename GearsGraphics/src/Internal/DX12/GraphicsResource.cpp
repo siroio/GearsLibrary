@@ -63,8 +63,9 @@ void Glib::Internal::Graphics::GraphicsResource::SetTexture(unsigned int id, uns
 
 bool Glib::Internal::Graphics::GraphicsResource::CreateTexture(unsigned int id, unsigned char r, unsigned char g, unsigned char b, unsigned char a)
 {
-    const UINT64 width = 4;
-    const UINT64 height = 4;
+    static constexpr UINT64 width = 4;
+    static constexpr UINT64 height = 4;
+    static constexpr UINT64 datasize = width * height * sizeof(unsigned char);
     auto texHeapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0 };
     auto resDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R8G8B8A8_UNORM, width, height, 1, 1);
     // リソースの作成
@@ -78,25 +79,24 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateTexture(unsigned int id, 
     );
     if (FAILED(result)) return false;
 
-    // 幅 * 高さ * RGBA 分確保
-    unsigned char texData[width * height * 4]{};
-    for (int i = 0; i < std::size(texData); i++)
+    std::array<unsigned char, datasize> texData{};
+    for (int i = 0; i < texData.size(); i++)
     {
-        auto idx = i % 4;
-        if (idx == 0) texData[i] = r;
-        else if (idx == 1) texData[i] = g;
-        else if (idx == 2) texData[i] = b;
-        else if (idx == 3) texData[i] = a;
-        else texData[i] = 0xff;
+        int idx = (static_cast<uint64_t>(i) * 4ull) >> 32ull;
+        if (idx == 0) texData.at(i) = r;
+        else if (idx == 1) texData.at(i) = g;
+        else if (idx == 2) texData.at(i) = b;
+        else if (idx == 3) texData.at(i) = a;
+        else texData.at(i) = 0xff;
     }
 
     // データ転送
     result = s_textureResources.at(id)->WriteToSubresource(
         0,
         nullptr,
-        texData,
+        texData.data(),
         width * 4,
-        static_cast<UINT>(std::size(texData))
+        static_cast<UINT>(texData.size())
     );
 
     if (FAILED(result)) return false;

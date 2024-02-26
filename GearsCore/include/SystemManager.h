@@ -41,6 +41,7 @@ class SystemManager : public Glib::Singleton<SystemManager>
 
 public:
     bool Initialize();
+    void FixedUpdate();
     void Update();
     void BeginDraw();
     void Draw();
@@ -59,6 +60,11 @@ private:
     template<class T> requires Glib::Internal::HasInitializeFunc<T, bool>
     void AddInitialize(const Glib::WeakPtr<T>& instance);
     void AddInitialize(...)
+    {}
+
+    template<class T> requires Glib::Internal::HasFixedUpdateFunc<T, void>
+    void AddFixedUpdate(const Glib::WeakPtr<T>& instance);
+    void AddFixedUpdate(...)
     {}
 
     template<class T> requires Glib::Internal::HasUpdateFunc<T, void>
@@ -100,6 +106,7 @@ inline void SystemManager::AddSystem()
 {
     Glib::WeakPtr<T> instance = T::Instance();
     Instance().AddInitialize(instance);
+    Instance().AddFixedUpdate(instance);
     Instance().AddUpdate(instance);
     Instance().AddBeginDraw(instance);
     Instance().AddDraw(instance);
@@ -112,6 +119,12 @@ template<class T> requires Glib::Internal::HasInitializeFunc<T, bool>
 inline void SystemManager::AddInitialize(const Glib::WeakPtr<T>& instance)
 {
     systemFunctions_[SystemFunctionType::Initialize].push_back(std::make_shared<Glib::Internal::Function::HasInitializeObject<T, bool>>(instance));
+}
+
+template<class T> requires Glib::Internal::HasFixedUpdateFunc<T, void>
+inline void SystemManager::AddFixedUpdate(const Glib::WeakPtr<T>& instance)
+{
+    systemFunctions_[SystemFunctionType::FixedUpdate].push_back(std::make_shared<Glib::Internal::Function::HasFixedUpdateObject<T, void>>(instance));
 }
 
 template<class T> requires Glib::Internal::HasUpdateFunc<T, void>
@@ -149,4 +162,3 @@ inline void SystemManager::AddFinalize(const Glib::WeakPtr<T>& instance)
 {
     systemFunctions_[SystemFunctionType::Finalize].push_back(std::make_shared<Glib::Internal::Function::HasFinalizeObject<T, void>>(instance));
 }
-
