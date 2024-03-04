@@ -26,10 +26,12 @@ namespace Glib
         void MeshID(unsigned int id);
 
     private:
+        void OnGUI() override;
+
+    private:
         WeakPtr<Transform> transform_;
         Internal::Graphics::ConstantBuffer constantBuffer_;
         unsigned int meshID_{ UINT_MAX };
         bool isEnabled_{ false };
     };
 }
-

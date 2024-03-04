@@ -19,7 +19,6 @@ namespace Glib
         SkinnedMeshRenderer();
         void Start();
         void LateUpdate();
-        void OnGUI();
         void Draw(const WeakPtr<Internal::CameraBase>& camera);
         void DrawShadow(const WeakPtr<Internal::CameraBase>& camera);
 
@@ -58,6 +57,9 @@ namespace Glib
          * @brief ボーンの行列を取得
          */
         virtual std::array<Matrix4x4, 512>& BoneMatrix() override;
+
+    private:
+        void OnGUI() override;
 
     private:
         WeakPtr<Transform> transform_;
