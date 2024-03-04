@@ -49,7 +49,7 @@ void Glib::Camera::LateUpdate()
 {
     if (transform_.expired()) return;
 
-    CameraConstant buffer;;
+    CameraConstant buffer;
     ViewMatrix(buffer.View);
     ProjectionMatrix(buffer.Projection);
     buffer.LightVP = s_renderingManager->CalculateMatrixForShadowMap(transform_->Position() + transform_->Forward());
@@ -177,16 +177,6 @@ void Glib::Camera::InitializeRT()
         DXGI_FORMAT_D32_FLOAT
     );
 
-    // RenderTargetView作成
-    D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-    rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-    rtvDesc.Format = resDesc.Format;
-    s_dx12->Device()->CreateRenderTargetView(
-        renderTarget_.RenderTargetResource().Get(),
-        &rtvDesc,
-        renderTarget_.RTVHandle()->CPU()
-    );
-
     // ShaderResourceView用のハンドルを取得
     srvHandle_ = srvPool->GetHandle();
 
@@ -258,7 +248,7 @@ void Glib::Camera::ProjectionMatrix(Matrix4x4& mat) const
         return;
     }
 
-    auto viewPort = Vector2::Scale(viewPortSize_, Window::WindowSize());
+    Vector2 viewPort = Vector2::Scale(viewPortSize_, Window::WindowSize());
     float aspect = viewPort.x / viewPort.y;
 
     switch (projectionType_)
