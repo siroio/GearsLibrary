@@ -289,13 +289,13 @@ void Glib::Transform::OnGUI()
 {
     Component::OnGUI();
 
-    GLGUI::DragVector3("Position", &local_position_, 0.1f);
+    GLGUI::DragVector3("Position", &local_position_, 0.01f);
 
     auto eulr = LocalEulerAngles();
-    if (GLGUI::DragVector3("Rotation", &eulr, 0.1f))
+    if (GLGUI::DragVector3("Rotation", &eulr, 0.01f))
     {
         LocalEulerAngles(eulr);
     }
 
-    GLGUI::DragVector3("Scale", &local_scale_, 0.1f);
+    GLGUI::DragVector3("Scale", &local_scale_, 0.01f);
 }
