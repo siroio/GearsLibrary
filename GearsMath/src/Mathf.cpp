@@ -31,6 +31,22 @@ float Mathf::Asin(float f)
     return asinf(f);
 }
 
+float Mathf::FastAsin(float f)
+{
+    constexpr float FASTASIN_HALF_PI{ 1.5707963050f };
+    const bool nonnegative = (f >= 0.0f);
+    const float x = Mathf::Abs(f);
+    float omx = 1.0f - x;
+    if (omx < 0.0f) omx = 0.0f;
+
+    const float root = Mathf::Sqrt(omx);
+    // 7-degree minimax approximation
+    float result = ((((((-0.0012624911f * x + 0.0066700901f) * x - 0.0170881256f) * x + 0.0308918810f) * x - 0.0501743046f) * x + 0.0889789874f) * x - 0.2145988016f) * x + FASTASIN_HALF_PI;
+    result *= root;  // acos(|x|)
+    // acos(x) = pi - acos(-x) when x < 0, asin(x) = pi/2 - acos(x)
+    return nonnegative ? FASTASIN_HALF_PI - result : result - FASTASIN_HALF_PI;
+}
+
 float Mathf::Acos(float f)
 {
     return acosf(f);

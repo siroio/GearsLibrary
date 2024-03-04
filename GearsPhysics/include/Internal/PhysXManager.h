@@ -49,10 +49,12 @@ namespace Glib::Internal::Physics
         bool Raycast(const Vector3& origin, const Vector3& direction, RaycastHit& hit, float maxDistance = FLT_MAX);
         bool RaycastAll(const Vector3& origin, const Vector3& direction, std::vector<RaycastHit>& hits, float maxDistance = FLT_MAX);
 
-        physx::PxRigidDynamic* CreateRigidBody(const Vector3& position, const Quaternion& rotation, const WeakPtr<Interface::IRigidbody>& rigidbody);
+        physx::PxRigidActor* CreateRigidBody(const Vector3& position, const Quaternion& rotation, bool isStatic, const WeakPtr<Interface::IRigidbody>& rigidbody);
         void RemoveRigidbody(const WeakPtr<Interface::IRigidbody>& rigidbody);
         physx::PxMaterial* CreateMaterial(float dynamicFriction, float staticFriction, float bounce);
         void AddCollider(const WeakPtr<Interface::ICollider>& collider);
+
+        void SetCollisionFlags(unsigned int layer1, unsigned int layer2, bool enable);
 
         physx::PxPhysics& Physcs();
 

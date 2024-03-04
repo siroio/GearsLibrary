@@ -56,8 +56,6 @@ namespace Glib
         void SetFrictionCombine(Combine combine);
         void SetBounceCombine(Combine combine);
 
-        WeakPtr<Internal::Interface::IRigidbody>& Rigidbody();
-
     protected:
         bool Initialize();
         void CreateShape(const physx::PxGeometry& geometry);
@@ -69,11 +67,11 @@ namespace Glib
         void SetVisible();
         void SyncActive() override;
 
-    private:
+    protected:
         WeakPtr<Internal::Interface::IRigidbody> rigidbody_{ nullptr };
+        physx::PxRigidStatic* rigidStatic_{ nullptr };
         physx::PxMaterial* material_{ nullptr };
         physx::PxShape* shape_{ nullptr };
-        physx::PxRigidStatic* rigidStatic_;
         Combine frictionCombine_{ Combine::AVERAGE };
         Combine bounceCombine_{ Combine::AVERAGE };
         Vector3 center_{ 0.0f, 0.0f, 0.0f };

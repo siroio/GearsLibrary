@@ -17,8 +17,9 @@ void Glib::Rigidbody::Start()
     rigidDynamic_ = s_physX->CreateRigidBody(
         transform->Position(),
         transform->Rotation(),
+        false,
         WeakPtr<Rigidbody>{ shared_from_this() }
-    );
+    )->is<physx::PxRigidDynamic>();
 
     rigidDynamic_->setMass(mass_); // 質量
     rigidDynamic_->setLinearDamping(linearDamping_); // 空気抵抗

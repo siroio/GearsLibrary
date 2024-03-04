@@ -13,6 +13,7 @@
 #include <RaycastHit.h>
 #include <Debugger.h>
 #include <unordered_map>
+#include <unordered_set>
 #include <memory>
 #include <list>
 #include <Layer2D.h>
@@ -144,6 +145,7 @@ void Glib::Internal::Physics::PhysXManager::FixedUpdate()
     }
 
     const float delta{ GameTimer::FixedDeltaTime() };
+
     if (delta <= 0.0f) return;
     s_scene->simulate(delta);
     s_scene->fetchResults(true);
@@ -286,13 +288,22 @@ bool Glib::Internal::Physics::PhysXManager::RaycastAll(const Vector3& origin, co
     return isHit;
 }
 
-physx::PxRigidDynamic* Glib::Internal::Physics::PhysXManager::CreateRigidBody(const Vector3& position, const Quaternion& rotation, const WeakPtr<Interface::IRigidbody>& rigidbody)
+physx::PxRigidActor* Glib::Internal::Physics::PhysXManager::CreateRigidBody(const Vector3& position, const Quaternion& rotation, bool isStatic, const WeakPtr<Interface::IRigidbody>& rigidbody)
 {
-    physx::PxTransform transform{ ToPxVec3(position), ToPxQuat(rotation) };
-    physx::PxRigidDynamic* rb = s_physics->createRigidDynamic(transform);
-    s_rigidbodys.emplace(reinterpret_cast<uintptr_t>(rb), rigidbody);
-    s_scene->addActor(*rb);
-    return rb;
+    physx::PxTransform pose{ ToPxVec3(position), ToPxQuat(rotation) };
+    physx::PxRigidActor* actor;
+    if (isStatic)
+    {
+        actor = s_physics->createRigidStatic(pose);
+    }
+    else
+    {
+        actor = s_physics->createRigidDynamic(pose);
+        s_rigidbodys.emplace(reinterpret_cast<uintptr_t>(actor), rigidbody);
+    }
+
+    s_scene->addActor(*actor);
+    return actor;
 }
 
 void Glib::Internal::Physics::PhysXManager::RemoveRigidbody(const WeakPtr<Interface::IRigidbody>& rigidbody)
@@ -310,6 +321,11 @@ physx::PxMaterial* Glib::Internal::Physics::PhysXManager::CreateMaterial(float d
 void Glib::Internal::Physics::PhysXManager::AddCollider(const WeakPtr<Glib::Internal::Interface::ICollider>& collider)
 {
     s_colliders.push_back(collider);
+}
+
+void Glib::Internal::Physics::PhysXManager::SetCollisionFlags(unsigned int layer1, unsigned int layer2, bool enable)
+{
+    s_layer.Set(layer1, layer2, enable);
 }
 
 physx::PxPhysics& Glib::Internal::Physics::PhysXManager::Physcs()

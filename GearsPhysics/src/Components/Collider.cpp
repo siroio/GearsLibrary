@@ -11,7 +11,6 @@
 namespace
 {
     auto s_physX = Glib::Internal::Physics::PhysXManager::Instance();
-
     std::vector<std::string> combine{ "Average", "Min", "Multiply", "Max" };
 }
 
@@ -29,11 +28,11 @@ Glib::Collider::~Collider()
         shape_ = nullptr;
     }
 
-    //if (rigidStatic_ != nullptr)
-    //{
-    //    rigidStatic_->release();
-    //    rigidStatic_ = nullptr;
-    //}
+    if (rigidStatic_ != nullptr)
+    {
+        rigidStatic_->release();
+        rigidStatic_ = nullptr;
+    }
 }
 
 bool Glib::Collider::IsTrigger() const
@@ -55,10 +54,7 @@ bool Glib::Collider::IsVisible() const
 void Glib::Collider::IsVisible(bool enable)
 {
     isVisible_ = enable;
-    if (shape_ != nullptr)
-    {
-        SetVisible();
-    }
+    if (shape_ != nullptr) SetVisible();
 }
 
 const Vector3& Glib::Collider::Center() const
@@ -137,25 +133,19 @@ void Glib::Collider::SetBounceCombine(Combine combine)
     }
 }
 
-Glib::WeakPtr<Glib::Internal::Interface::IRigidbody>& Glib::Collider::Rigidbody()
-{
-    return rigidbody_;
-}
-
 bool Glib::Collider::Initialize()
 {
     rigidbody_ = GameObject()->GetComponent<Glib::Rigidbody>();
-    if (!rigidbody_.expired()) return true;
-
-    Debug::Error(GameObject()->Name() + " has not Rigidbody attached");
-    Destroy();
-    return false;
+    return !rigidbody_.expired();
 }
 
 void Glib::Collider::CreateShape(const physx::PxGeometry& geometry)
 {
     material_ = s_physX->CreateMaterial(dynamicFriction_, staticFriction_, bounciness_);
-    shape_ = physx::PxRigidActorExt::createExclusiveShape(rigidbody_->GetRigidDynamic(), geometry, *material_);
+    physx::PxRigidActor* actor = rigidbody_.expired() ?
+        static_cast<physx::PxRigidActor*>(rigidStatic_) :
+        &rigidbody_->GetRigidDynamic();
+    shape_ = physx::PxRigidActorExt::createExclusiveShape(*actor, geometry, *material_);
     shape_->setFlag(physx::PxShapeFlag::eVISUALIZATION, isVisible_);
 
     physx::PxFilterData filter{};
@@ -243,4 +233,5 @@ void Glib::Collider::SetVisible()
 void Glib::Collider::SyncActive()
 {
     shape_->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, Active());
+    shape_->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, Active());
 }

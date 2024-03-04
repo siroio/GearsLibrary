@@ -1,8 +1,7 @@
 ﻿#include <Components/MeshCollider.h>
 #include <Components/Rigidbody.h>
-#include <Components/MeshRenderer.h>
 #include <Components/SkinnedMeshRenderer.h>
-#include <Internal/Renderer.h>
+#include <Internal/PhysXManager.h>
 #include <Internal/Geometry.h>
 #include <PxPhysicsAPI.h>
 #include <GameObject.h>
@@ -12,6 +11,7 @@
 namespace
 {
     auto& s_meshManager = Glib::MeshManager::Instance();
+    auto s_physX = Glib::Internal::Physics::PhysXManager::Instance();
 }
 
 void Glib::MeshCollider::Start()
@@ -35,13 +35,21 @@ void Glib::MeshCollider::Start()
         Debug::Warn("Skinning is not supported.");
     }
 
+    const auto& transform = GameObject()->Transform();
+    rigidStatic_ = s_physX->CreateRigidBody(
+        transform->Position(),
+        transform->Rotation(),
+        true,
+        nullptr
+    )->is<physx::PxRigidStatic>();
+
     CreateMesh();
-    if (std::holds_alternative<physx::PxConvexMesh*>(meshPtr_))
+    if (isConvex_)
     {
         auto* const ptr = std::get<physx::PxConvexMesh*>(meshPtr_);
         CreateShape(Internal::Geometory::CreateConvexMesh(GameObject(), ptr));
     }
-    else if (std::holds_alternative<physx::PxTriangleMesh*>(meshPtr_))
+    else
     {
         auto* const ptr = std::get<physx::PxTriangleMesh*>(meshPtr_);
         CreateShape(Internal::Geometory::CreateTriangleMesh(GameObject(), ptr));
@@ -62,12 +70,12 @@ void Glib::MeshCollider::MeshID(unsigned int id)
 
 void Glib::MeshCollider::SyncGeometry()
 {
-    if (std::holds_alternative<physx::PxConvexMesh*>(meshPtr_))
+    if (isConvex_)
     {
         auto* const ptr = std::get<physx::PxConvexMesh*>(meshPtr_);
         Shape()->setGeometry(Internal::Geometory::CreateConvexMesh(GameObject(), ptr));
     }
-    else if (std::holds_alternative<physx::PxTriangleMesh*>(meshPtr_))
+    else
     {
         auto* const ptr = std::get<physx::PxTriangleMesh*>(meshPtr_);
         Shape()->setGeometry(Internal::Geometory::CreateTriangleMesh(GameObject(), ptr));

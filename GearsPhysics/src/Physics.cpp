@@ -15,3 +15,8 @@ bool Glib::Physics::RaycastAll(const Vector3& origin, const Vector3& direction, 
 {
     return s_physX->RaycastAll(origin, direction, hit, maxDistance);
 }
+
+void Glib::Physics::SetCollisionFlag(unsigned int layer1, unsigned int layer2, bool enable)
+{
+    s_physX->SetCollisionFlags(layer1, layer2, enable);
+}

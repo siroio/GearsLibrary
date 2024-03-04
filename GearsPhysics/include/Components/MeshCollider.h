@@ -17,7 +17,6 @@ namespace Glib
 
     private:
         void SyncGeometry() override;
-
         void CreateMesh();
 
     private:

@@ -73,7 +73,9 @@ public:
     void Copy();
 
 private:
-    static Vector3 InternalMakePositive(Vector3& euler);
+    static float NormalizeAxis(float angle);
+    static void MakePositive(Vector3& angles);
+
 public:
     void operator = (const Quaternion& v);
     float operator [] (const size_t index) const;

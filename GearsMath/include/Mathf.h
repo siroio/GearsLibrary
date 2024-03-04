@@ -36,6 +36,7 @@ public:
     static float Tan(float f);
 
     static float Asin(float f);
+    static float FastAsin(float f);
     static float Acos(float f);
     static float Atan(float f);
     static float Atan2(float y, float x);

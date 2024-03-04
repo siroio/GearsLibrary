@@ -216,7 +216,9 @@ void Quaternion::SetIdentity()
 }
 
 void Quaternion::SetLookRotation(const Vector3& view, const Vector3& up)
-{}
+{
+    LookRotation(view, up);
+}
 
 Vector3 Quaternion::EulerAngles() const
 {
@@ -227,7 +229,7 @@ Vector3 Quaternion::EulerAngles() const
 
     if (az.y < 1.0f && az.y > -1.0f)
     {
-        result.x = Mathf::Asin(-az.y);
+        result.x = Mathf::FastAsin(-az.y);
         result.y = Mathf::Atan2(az.x, az.z);
         result.z = Mathf::Atan2(ax.y, ay.y);
     }
@@ -248,7 +250,8 @@ Vector3 Quaternion::EulerAngles() const
     }
 
     result *= Mathf::RAD2DEG;
-    return InternalMakePositive(result);
+    MakePositive(result);
+    return result;
 }
 
 void Quaternion::EulerAngles(const Vector3& angles)
@@ -276,27 +279,34 @@ std::string Quaternion::ToString() const
     return ss.str();
 }
 
-Vector3 Quaternion::InternalMakePositive(Vector3& euler)
+float Quaternion::NormalizeAxis(float angle)
+{
+    angle = Mathf::Mod(angle, 360.0f);
+    if (angle < 0.0f) angle += 360.0f;
+    if (angle > 180.0f) angle -= 360.0f;
+
+    return angle;
+}
+
+void Quaternion::MakePositive(Vector3& angles)
 {
     constexpr float NegativeFlip = -Mathf::EPSILON * Mathf::RAD2DEG;
     constexpr float PositiveFlip = 360.0f + NegativeFlip;
 
-    if (euler.x < NegativeFlip)
-        euler.x += 360.0f;
-    else if (euler.x > PositiveFlip)
-        euler.x -= 360.0f;
+    if (angles.x < NegativeFlip)
+        angles.x += 360.0f;
+    else if (angles.x > PositiveFlip)
+        angles.x -= 360.0f;
 
-    if (euler.y < NegativeFlip)
-        euler.y += 360.0f;
-    else if (euler.y > PositiveFlip)
-        euler.y -= 360.0f;
+    if (angles.y < NegativeFlip)
+        angles.y += 360.0f;
+    else if (angles.y > PositiveFlip)
+        angles.y -= 360.0f;
 
-    if (euler.z < NegativeFlip)
-        euler.z += 360.0f;
-    else if (euler.z > PositiveFlip)
-        euler.z -= 360.0f;
-
-    return euler;
+    if (angles.z < NegativeFlip)
+        angles.z += 360.0f;
+    else if (angles.z > PositiveFlip)
+        angles.z -= 360.0f;
 }
 
 void Quaternion::operator=(const Quaternion& v)
