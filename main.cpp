@@ -343,7 +343,7 @@ public:
         // カメラ作成
         SkyboxManager::Instance()->SetSkybox(0);
         auto camera = GameObjectManager::Instantiate("Camera");
-        auto initPosition = Vector3{ 0.0f, 1.0f, -1.0f };
+        auto initPosition = Vector3{ 0.0f, 1.5f, -1.0f };
         camera->Transform()->Position(initPosition);
         camera->AddComponent<Camera>()->ClearFlags(CameraClearFlags::SkyBox);
         camera->AddComponent<AudioListener>();
@@ -351,9 +351,12 @@ public:
         // 床
         auto Ground = GameObjectManager::Instantiate("Ground");
         Ground->AddComponent<MeshRenderer>()->MeshID(1);
-        //auto mc = Ground->AddComponent<MeshCollider>();
-        //mc->MeshID(1);
-        //Ground->Transform()->Scale(Vector3{ 100, 1, 100 });
+        //auto rb = Ground->AddComponent<Rigidbody>();
+        auto mc = Ground->AddComponent<MeshCollider>();
+        //rb->IsKinematic(true);
+        mc->IsVisible(true);
+        mc->MeshID(1);
+        Ground->Transform()->Scale(Vector3{ 100, 1, 100 });
 
 
         auto tester = GameObjectManager::Instantiate("Tester");
