@@ -35,7 +35,7 @@ namespace
     bool s_enableGameView{ true };
     bool s_enableConsole{ true };
     bool s_resetLayout{ false };
-    std::string fontPath{ R"(C:/Windows/Fonts/meiryo.ttc)" };
+    std::string s_fontPath{ R"(C:/Windows/Fonts/meiryo.ttc)" };
 }
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
@@ -84,10 +84,10 @@ bool Glib::Internal::Debug::ImGuiManager::Initialize()
     ImFontConfig fontConfig;
     fontConfig.MergeMode = false;
 
-    if (std::filesystem::exists(fontPath))
+    if (std::filesystem::exists(s_fontPath))
     {
         io.Fonts->AddFontFromFileTTF(
-            fontPath.data(),
+            s_fontPath.data(),
             18,
             &fontConfig,
             ImGuiGlyphRangesJapanese
