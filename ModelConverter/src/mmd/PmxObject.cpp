@@ -393,11 +393,11 @@ bool PmxModel::WriteFile(std::string_view path)
         glVertex.uv[0] = pmxVertex.uv.x;
         glVertex.uv[1] = pmxVertex.uv.y;
 
-        // tangent計算
+        // tangent
         glVertex.tangent[0] = pmxVertex.tangent.x;
         glVertex.tangent[1] = pmxVertex.tangent.y;
         glVertex.tangent[2] = pmxVertex.tangent.z;
-        glVertex.tangent[3] = 1.0f;
+        glVertex.tangent[3] = pmxVertex.tangent.w;
 
         // ボーン情報
         for (size_t i = 0; i < 4; ++i)
