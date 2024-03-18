@@ -31,7 +31,7 @@ namespace
     /* アライメント計算 */
     size_t AlignmentedSize(size_t size, size_t alignment)
     {
-        return size + alignment - size % alignment;
+        return (size + alignment - 1) & ~(alignment - 1);
     }
 }
 
