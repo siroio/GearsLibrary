@@ -11,6 +11,7 @@ namespace Glib
 
     public:
         void Start();
+        void OnDestroy();
 
         unsigned int MeshID() const;
         void MeshID(unsigned int id);

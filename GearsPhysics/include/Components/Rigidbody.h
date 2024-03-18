@@ -29,6 +29,14 @@ namespace Glib
         VelocityChange = 2
     };
 
+    enum class CDMODE
+    {
+        Discrete,
+        Continuous,
+        ContinuousDynamic,
+        ContinuousSpeculative,
+    };
+
     class Rigidbody :
         public Component,
         public Internal::Interface::IRigidbody
@@ -64,6 +72,9 @@ namespace Glib
         bool UseGravity() const;
         void UseGravity(bool useGravity);
 
+        CDMODE DetectionMode();
+        void DetectionMode(CDMODE mode);
+
         void OnGUI() override;
 
     private:
@@ -81,6 +92,8 @@ namespace Glib
         float angularDamping_{ 0.05f };
         Vector3 linearVelocity_{ 0.0f, 0.0f, 0.0f };
         Vector3 angularVelocity_{ 0.0f, 0.0f, 0.0f };
+        std::string currentMode_{ "Discrete" };
+        CDMODE detectionMode_{ CDMODE::Discrete };
         BitFlag<RigidbodyConstraints> constrants_;
     };
 }

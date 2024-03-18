@@ -9,17 +9,18 @@
 namespace
 {
     auto s_physX = Glib::Internal::Physics::PhysXManager::Instance();
+    std::vector<std::string> s_combo{ "Discrete", "Continuous", "Continuous Dynamic", "Continuous Speculative" };
 }
 
 void Glib::Rigidbody::Start()
 {
     const auto& transform = GameObject()->Transform();
-    rigidDynamic_ = s_physX->CreateRigidBody(
+    rigidDynamic_ = static_cast<physx::PxRigidDynamic*>(s_physX->CreateRigidBody(
         transform->Position(),
         transform->Rotation(),
         false,
         WeakPtr<Rigidbody>{ shared_from_this() }
-    )->is<physx::PxRigidDynamic>();
+    ));
 
     rigidDynamic_->setMass(mass_); // 質量
     rigidDynamic_->setLinearDamping(linearDamping_); // 空気抵抗
@@ -206,11 +207,19 @@ void Glib::Rigidbody::OnGUI()
         rigidDynamic_->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, isKinematic_);
     }
 
+    if (GLGUI::ComboBox("Detection Mode", currentMode_, s_combo))
+    {
+        const auto& it = std::ranges::find(s_combo, currentMode_);
+        const auto& idx = std::distance(s_combo.begin(), it);
+        detectionMode_ = static_cast<CDMODE>(idx);
+        DetectionMode(detectionMode_);
+    }
+
     if (GLGUI::TreeNode("Freeze Position"))
     {
-        bool freezePosX = constrants_ == RigidbodyConstraints::FreezePositionX;
-        bool freezePosY = constrants_ == RigidbodyConstraints::FreezePositionY;
-        bool freezePosZ = constrants_ == RigidbodyConstraints::FreezePositionZ;
+        bool freezePosX = constrants_.Has(RigidbodyConstraints::FreezePositionX);
+        bool freezePosY = constrants_.Has(RigidbodyConstraints::FreezePositionY);
+        bool freezePosZ = constrants_.Has(RigidbodyConstraints::FreezePositionZ);
 
         if (GLGUI::CheckBox("X", &freezePosX))
         {
@@ -233,9 +242,9 @@ void Glib::Rigidbody::OnGUI()
 
     if (GLGUI::TreeNode("Freeze Rotation"))
     {
-        bool freezeRotX = constrants_ == RigidbodyConstraints::FreezeRotationX;
-        bool freezeRotY = constrants_ == RigidbodyConstraints::FreezeRotationY;
-        bool freezeRotZ = constrants_ == RigidbodyConstraints::FreezeRotationZ;
+        bool freezeRotX = constrants_.Has(RigidbodyConstraints::FreezeRotationX);
+        bool freezeRotY = constrants_.Has(RigidbodyConstraints::FreezeRotationY);
+        bool freezeRotZ = constrants_.Has(RigidbodyConstraints::FreezeRotationZ);
 
         if (GLGUI::CheckBox("X", &freezeRotX))
         {
@@ -252,7 +261,44 @@ void Glib::Rigidbody::OnGUI()
             constrants_.Set(RigidbodyConstraints::FreezeRotationZ, freezeRotZ);
             rigidDynamic_->setRigidDynamicLockFlags(static_cast<physx::PxRigidDynamicLockFlags>(constrants_.ToValue()));
         }
+
         GLGUI::TreePop();
+    }
+}
+
+Glib::CDMODE Glib::Rigidbody::DetectionMode()
+{
+    return detectionMode_;
+}
+
+void Glib::Rigidbody::DetectionMode(CDMODE mode)
+{
+    switch (mode)
+    {
+        case CDMODE::Discrete:
+            detectionMode_ = CDMODE::Discrete;
+            rigidDynamic_->setRigidBodyFlag(physx::PxRigidBodyFlag::eENABLE_CCD, false);
+            rigidDynamic_->setRigidBodyFlag(physx::PxRigidBodyFlag::eENABLE_CCD_FRICTION, false);
+            rigidDynamic_->setRigidBodyFlag(physx::PxRigidBodyFlag::eENABLE_SPECULATIVE_CCD, false);
+            return;
+        case CDMODE::Continuous:
+            detectionMode_ = CDMODE::Continuous;
+            rigidDynamic_->setRigidBodyFlag(physx::PxRigidBodyFlag::eENABLE_CCD, true);
+            rigidDynamic_->setRigidBodyFlag(physx::PxRigidBodyFlag::eENABLE_CCD_FRICTION, false);
+            rigidDynamic_->setRigidBodyFlag(physx::PxRigidBodyFlag::eENABLE_SPECULATIVE_CCD, false);
+            return;
+        case CDMODE::ContinuousDynamic:
+            detectionMode_ = CDMODE::ContinuousDynamic;
+            rigidDynamic_->setRigidBodyFlag(physx::PxRigidBodyFlag::eENABLE_CCD, true);
+            rigidDynamic_->setRigidBodyFlag(physx::PxRigidBodyFlag::eENABLE_CCD_FRICTION, true);
+            rigidDynamic_->setRigidBodyFlag(physx::PxRigidBodyFlag::eENABLE_SPECULATIVE_CCD, false);
+            return;
+        case CDMODE::ContinuousSpeculative:
+            detectionMode_ = CDMODE::ContinuousSpeculative;
+            rigidDynamic_->setRigidBodyFlag(physx::PxRigidBodyFlag::eENABLE_CCD, true);
+            rigidDynamic_->setRigidBodyFlag(physx::PxRigidBodyFlag::eENABLE_CCD_FRICTION, false);
+            rigidDynamic_->setRigidBodyFlag(physx::PxRigidBodyFlag::eENABLE_SPECULATIVE_CCD, true);
+            return;
     }
 }
 

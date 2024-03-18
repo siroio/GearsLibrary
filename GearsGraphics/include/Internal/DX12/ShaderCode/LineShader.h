@@ -30,8 +30,7 @@ namespace Glib::Internal::Graphics::ShaderCode
         VSOutput VSmain(VSInput input)                                  
         {
             VSOutput o;
-            o.position = input.position;
-            o.position = mul(Projection, mul(View, o.position));
+            o.position = mul(Projection, mul(View, input.position));
             o.color = input.color;
             return o;
         }

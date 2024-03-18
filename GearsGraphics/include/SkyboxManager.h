@@ -26,19 +26,19 @@ namespace Glib
          * @return 成功 : true
          * @return 失敗 : false
         */
-        bool Load(unsigned int id,
-                  std::string_view up,
-                  std::string_view down,
-                  std::string_view left,
-                  std::string_view right,
-                  std::string_view front,
-                  std::string_view back);
+        static bool Load(unsigned int id,
+                         std::string_view up,
+                         std::string_view down,
+                         std::string_view left,
+                         std::string_view right,
+                         std::string_view front,
+                         std::string_view back);
 
         /**
          * @brief 描画スカイボックスを指定
          * @param id
         */
-        void SetSkybox(unsigned int id);
+        static void SetSkybox(unsigned int id);
 
         /**
          * @brief 初期化

@@ -61,7 +61,7 @@ namespace Glib::Internal
         {
             ComponentEventFunctionList list{};
             list.AddFunction(component);
-            if (!list.Empty()) eventFunction_[ptr] = list;
+            if (!list.Empty()) eventFunction_[ptr] = std::move(list);
         }
 
         return component;
@@ -76,9 +76,8 @@ namespace Glib::Internal
     template<class... Args>
     inline void ComponentManager::ExecuteEventFunction(const GameObjectPtr& gameObject, ComponentFunctionType type, const Args&... args)
     {
-        const std::uintptr_t ptr = gameObject.getId();
-        if (eventFunction_.find(ptr) == eventFunction_.end()) return;
-        eventFunction_[ptr].Execute(type, args...);
+        const auto& function = eventFunction_.find(gameObject.getId());
+        if (function == eventFunction_.end()) return;
+        function->second.Execute(type, args...);
     }
 }
-

@@ -22,7 +22,7 @@ namespace Glib
          * @return 成功 true
          * @return 失敗 false
          */
-        bool Load(unsigned int id, std::string_view filePath);
+        static bool Load(unsigned int id, std::string_view filePath);
 
         /**
          * @brief メッシュ用テクスチャの読み込み
@@ -30,7 +30,7 @@ namespace Glib
          * @return 成功 true
          * @return 失敗 false
          */
-        WeakPtr<Texture> Load(std::string_view filePath);
+        static WeakPtr<Texture> Load(std::string_view filePath);
 
         /**
          * @brief テクスチャIDが有効か確認
@@ -38,7 +38,7 @@ namespace Glib
          * @return 有効 true
          * @return 無効 false
          */
-        bool Contains(unsigned int id);
+        static bool Contains(unsigned int id);
 
         /**
          * @brief テクスチャのサイズを取得
@@ -52,7 +52,6 @@ namespace Glib
          * @param id テクスチャID
          * @param rootParamIndex ルートパラメータ
          */
-        void SetTexture(unsigned int id, unsigned int rootParamIndex);
+        static void SetTexture(unsigned int id, unsigned int rootParamIndex);
     };
 }
-

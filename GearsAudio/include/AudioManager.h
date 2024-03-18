@@ -16,18 +16,18 @@ namespace Glib
          * @brief グループの追加
          * @param groupId グループID
          */
-        void AddSoundGroup(unsigned int groupId);
+        static void AddSoundGroup(unsigned int groupId);
 
         /**
          * @brief グループの音量をセット
          * @param groupId グループID
          * @param volume 音量
          */
-        void SetSoundGroupVolume(unsigned int groupId, float volume);
+        static void SetSoundGroupVolume(unsigned int groupId, float volume);
 
         /**
          * @brief 音声を読み込む
          */
-        bool LoadVoice(unsigned int groupId, std::string_view path);
+        static bool LoadVoice(unsigned int groupId, std::string_view path);
     };
 }

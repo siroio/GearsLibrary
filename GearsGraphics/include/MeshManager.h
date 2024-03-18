@@ -19,21 +19,25 @@ namespace Glib
          * @param path
          * @return
          */
-        bool Load(unsigned int id, std::string_view path);
+        static bool Load(unsigned int id, std::string_view path);
 
         /**
          * @brief メッシュがロードされているか調べる
          * @param id
          */
-        bool Contains(unsigned int id) const;
+        static bool Contains(unsigned int id);
 
         /**
          * @brief メッシュのボーンを取得
          * @param id
          */
-        const std::vector<Bone>& Bone(unsigned int id);
+        static const std::vector<Bone>& Bone(unsigned int id);
 
-        const Mesh& Mesh(unsigned int id);
+        /**
+         * @brief メッシュを取得
+         * @param id
+        */
+        static const Mesh& Mesh(unsigned int id);
 
         /**
          * @brief 描画

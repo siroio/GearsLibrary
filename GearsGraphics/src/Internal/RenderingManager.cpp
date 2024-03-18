@@ -9,6 +9,9 @@
 #include <Vector3.h>
 #include <Vector2.h>
 #include <ranges>
+#include <imgui.h>
+#include <GLGUI.h>
+
 namespace
 {
     auto s_cameraManager = Glib::Internal::Graphics::CameraManager::Instance();
@@ -16,15 +19,15 @@ namespace
 
     Glib::Internal::Graphics::ConstantBuffer s_constantBuffer{};
 
-    Color s_ambient{ 0.2f, 0.2f, 0.2f };
+    Color s_ambient{ 1.0f, 1.0f, 1.0f };
     Color s_diffuse{ 1.0f, 1.0f, 1.0f };
     Color s_specular{ 1.0f, 1.0f, 1.0f };
-    Vector3 s_direction{ 1.0f, -1.0f, 1.0f };
+    Vector3 s_lightDirection{ 1.0f, -1.0f, 1.0f };
 
     float s_shadowBias{ 0.001f };
+    float s_normalBias{ 1.0f };
     float s_shadowNear{ 0.1f };
-    float s_shadowFar{ 500.0f };
-    float s_shadowDistance{ 100.0f };
+    float s_shadowFar{ 100.0f };
     Vector2 s_shadowRange{ 25.0f };
 
     // 平行光源用定数バッファ構造体
@@ -35,6 +38,8 @@ namespace
         Color specular;
         Vector3 direction;
         float shadowBias{ 0.005f };
+        float normalBias{ 0.4f };
+        Vector3 padding;
     };
 }
 
@@ -50,8 +55,9 @@ void Glib::Internal::Graphics::RenderingManager::Update()
     buffer.ambient = s_ambient;
     buffer.diffuse = s_diffuse;
     buffer.specular = s_specular;
-    buffer.direction = s_direction;
+    buffer.direction = s_lightDirection;
     buffer.shadowBias = s_shadowBias;
+    buffer.normalBias = s_normalBias;
     s_constantBuffer.Update(sizeof(DirectionalLightConstant), &buffer);
 }
 
@@ -81,7 +87,7 @@ void Glib::Internal::Graphics::RenderingManager::Draw()
             }
         }
 
-        //シャドウマップにブラーをかける
+        // シャドウマップにブラーをかける
         camera->ExecuteShadowBulr();
 
         // オブジェクトの描画
@@ -94,6 +100,37 @@ void Glib::Internal::Graphics::RenderingManager::Draw()
             }
         }
     }
+}
+
+void Glib::Internal::Graphics::RenderingManager::DebugDraw()
+{
+    ImGui::Begin("ShadowMap");
+
+    float bias = s_shadowBias;
+    if (GLGUI::DragFloat("ShadowBias", &bias))
+    {
+        s_shadowBias = bias;
+    }
+
+    float nearZ = s_shadowNear;
+    if (GLGUI::DragFloat("Near", &nearZ))
+    {
+        s_shadowNear = nearZ;
+    }
+
+    float farZ = s_shadowFar;
+    if (GLGUI::DragFloat("Far", &farZ))
+    {
+        s_shadowFar = farZ;
+    }
+
+    Vector2 range = s_shadowRange;
+    if (GLGUI::DragVector2("Range", &range))
+    {
+        s_shadowRange = range;
+    }
+
+    ImGui::End();
 }
 
 const Color& Glib::Internal::Graphics::RenderingManager::LightAmbient()
@@ -128,18 +165,18 @@ void Glib::Internal::Graphics::RenderingManager::LightSpecular(const Color& spec
 
 const Vector3& Glib::Internal::Graphics::RenderingManager::LightDirection()
 {
-    return s_direction;
+    return s_lightDirection;
 }
 
 void Glib::Internal::Graphics::RenderingManager::LightDirection(const Vector3& direction)
 {
-    s_direction = direction;
+    s_lightDirection = direction;
 }
 
-Matrix4x4 Glib::Internal::Graphics::RenderingManager::CalculateMatrixForShadowMap(const Vector3& gazePoint) const
+Matrix4x4 Glib::Internal::Graphics::RenderingManager::CalculateMatrixForShadowMap(const Vector3& cameraGaze) const
 {
-    Vector3 lightPosition = gazePoint - (s_direction.Normalized() * (s_shadowFar - s_shadowNear) / 2.0f);
-    return Matrix4x4::LookAt(lightPosition, gazePoint, Vector3::Up()) *
+    Vector3 lightPosition = cameraGaze - (s_lightDirection.Normalized() * (s_shadowFar - s_shadowNear) * 0.5f);
+    return Matrix4x4::LookAt(lightPosition, cameraGaze, Vector3::Up()) *
         Matrix4x4::Orthographic(s_shadowRange.x, s_shadowRange.y, s_shadowNear, s_shadowFar);
 }
 

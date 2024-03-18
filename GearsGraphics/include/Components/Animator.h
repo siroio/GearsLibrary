@@ -2,6 +2,7 @@
 #include <Component.h>
 #include <WeakPtr.h>
 #include <AnimationClip.h>
+#include <BitFlag.h>
 #include <Internal/SkinnedRenderer.h>
 
 namespace Glib
@@ -34,7 +35,7 @@ namespace Glib
         bool isLoop_{ false };
         bool isResume_{ false };
         float animationSpeed_{ 1.0f };
-        float animationFrameRate_{ 30.0f };
+        float animationFrameRate_{ 60.0f };
         float currentFrame_{ 0.0f };
         float prevFrame_{ 0.0f };
         float animationBlendTime_{ 0.1f };

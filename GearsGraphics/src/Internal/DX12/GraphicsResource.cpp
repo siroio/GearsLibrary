@@ -465,6 +465,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateSkinnedMeshPipelineState(
                     D3D12_TEXTURE_ADDRESS_MODE_BORDER,
                     D3D12_TEXTURE_ADDRESS_MODE_BORDER);
 
+    // ルートシグネチャ作成
     D3D12_ROOT_SIGNATURE_DESC rootSigDesc{};
     rootSigDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
     rootSigDesc.NumParameters = static_cast<UINT32>(std::size(rootParams));
@@ -478,6 +479,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateSkinnedMeshPipelineState(
     pipelineDesc.InputLayout.NumElements = static_cast<UINT32>(std::size(inputLayout));
     pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
 
+    // シェーダーのセット
     s_shader->SetVertexShader(ID::SKINNED_MESH_SHADER, pipelineDesc);
     s_shader->SetPixelShader(ID::SKINNED_MESH_SHADER, pipelineDesc);
 

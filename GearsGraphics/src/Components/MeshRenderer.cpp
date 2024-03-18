@@ -5,6 +5,7 @@
 #include <MeshManager.h>
 #include <GameObject.h>
 #include <Matrix4x4.h>
+#include <GLGUI.h>
 
 using namespace Glib::Internal::Graphics;
 
@@ -87,3 +88,12 @@ void Glib::MeshRenderer::MeshID(unsigned int id)
     isEnabled_ = s_meshManager.Contains(id);
 }
 
+void Glib::MeshRenderer::OnGUI()
+{
+    Component::OnGUI();
+    int meshID = MeshID();
+    if (GLGUI::InputInt("MeshID", &meshID))
+    {
+        MeshID(meshID);
+    }
+}

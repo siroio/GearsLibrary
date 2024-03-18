@@ -14,16 +14,6 @@ namespace
     auto s_dx12 = DirectX12::Instance();
     auto s_resource = GraphicsResource::Instance();
     auto& s_textureManager = Glib::TextureManager::Instance();
-
-    struct Vertex
-    {
-        float position[3];
-        float normal[3];
-        float uv[2];
-        int boneIndex[4];
-        float boneWeight[4];
-        float tangent[4];
-    };
 }
 
 bool Glib::Mesh::Load(std::string_view path)
@@ -134,7 +124,7 @@ void Glib::Mesh::DrawShadow()
     }
 }
 
-const std::vector<Glib::GLObject::Vertex> Glib::Mesh::Vertices() const
+const std::vector<Glib::Mesh::Vertex> Glib::Mesh::Vertices() const
 {
     return vertices_;
 }

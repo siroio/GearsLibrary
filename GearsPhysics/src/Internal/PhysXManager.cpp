@@ -105,6 +105,7 @@ bool Glib::Internal::Physics::PhysXManager::Initialize()
 
     physx::PxSceneDesc sceneDesc{ s_physics->getTolerancesScale() };
     sceneDesc.gravity = ToPxVec3(DEFAULT_GRAVITY);
+    sceneDesc.flags |= physx::PxSceneFlag::eENABLE_CCD;
     sceneDesc.filterShader = SimulationFilterShader;
     sceneDesc.cpuDispatcher = s_dispatcher;
     sceneDesc.simulationEventCallback = static_cast<physx::PxSimulationEventCallback*>(this);
@@ -158,8 +159,12 @@ void Glib::Internal::Physics::PhysXManager::FixedUpdate()
     // 衝突判定のコールバックを呼び出す
     ExecuteTriggerCallbacks();
     ExecuteCollisionCallbacks();
+}
 
 #if defined(DEBUG) || defined(_DEBUG)
+void Glib::Internal::Physics::PhysXManager::Update()
+{
+
     const auto& renderBuffer = s_scene->getRenderBuffer();
     const auto* line = renderBuffer.getLines();
     for (physx::PxU32 i = 0; i < renderBuffer.getNbLines(); i++)
@@ -167,9 +172,8 @@ void Glib::Internal::Physics::PhysXManager::FixedUpdate()
         s_debugRenderer->AddVertex(ToVector3(line[i].pos0), Color::Green());
         s_debugRenderer->AddVertex(ToVector3(line[i].pos1), Color::Green());
     }
-#endif
 }
-
+#endif
 
 void Glib::Internal::Physics::PhysXManager::ExecuteTriggerCallbacks()
 {

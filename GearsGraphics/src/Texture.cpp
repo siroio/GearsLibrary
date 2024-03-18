@@ -48,7 +48,7 @@ bool Glib::Texture::CreateTexture(std::string_view path)
     DirectX::TexMetadata metadata{};
     DirectX::ScratchImage scratchImg{};
     auto extension = filePath.extension().generic_string();
-    if (!extension.ends_with("tga") || extension.ends_with("dds"))
+    if (!extension.ends_with("tga") || !extension.ends_with("dds"))
         extension = "png";
     const auto& func = s_loadFunctions.at(extension);
 

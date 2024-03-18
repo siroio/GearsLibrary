@@ -98,11 +98,9 @@ bool Glib::Game::Initialize()
 
 void Glib::Game::Update()
 {
-    s_accumulatedTime = std::fminf(
-        s_accumulatedTime + GameTimer::DeltaTime(),
-        GameTimer::MaximumAllowedTimeStep()
-    );
+    s_accumulatedTime = std::fminf(s_accumulatedTime + GameTimer::DeltaTime(), GameTimer::MaximumAllowedTimeStep());
 
+    // fixedUpdateを溜まった時間分進める
     while (s_accumulatedTime > GameTimer::FixedTimeStep())
     {
         s_systemManager.FixedUpdate();

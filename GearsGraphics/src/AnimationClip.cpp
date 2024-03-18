@@ -13,21 +13,22 @@ bool Glib::AnimationClip::Load(std::string_view fileName)
 {
     GLAnimation animation{};
     if (!animation.ReadFile(fileName)) return false;
+
     for (const auto& motion : animation.Motions())
     {
         AnimationClip::KeyFrame keyFrame{};
         keyFrame.frameNo = static_cast<float>(motion.frameNo);
-        std::copy(std::begin(motion.translation), std::end(motion.translation), &keyFrame.position[0]);
-        std::copy(std::begin(motion.rotation), std::end(motion.rotation), &keyFrame.rotation[0]);
-        std::copy(std::begin(motion.scale), std::end(motion.scale), &keyFrame.scale[0]);
-        keyframes_[motion.boneName].push_back(keyFrame);
+        std::ranges::copy(motion.translation, keyFrame.position.xyz.begin());
+        std::ranges::copy(motion.rotation, keyFrame.rotation.q.begin());
+        std::ranges::copy(motion.scale, keyFrame.scale.xyz.begin());
         endFrame_ = std::max(endFrame_, keyFrame.frameNo);
+        keyframes_[motion.boneName].push_back(std::move(keyFrame));
     }
 
     // メモリをsizeに合わせる
     for (auto& [bone, frame] : keyframes_)
     {
-        std::sort(frame.begin(), frame.end(), [](const KeyFrame& lhs, const KeyFrame& rhs)
+        std::ranges::sort(frame, [](const KeyFrame& lhs, const KeyFrame& rhs)
         {
             return lhs.frameNo < rhs.frameNo;
         });
@@ -75,27 +76,28 @@ float Glib::AnimationClip::EndFrame() const
     return endFrame_;
 }
 
-std::pair<int, int> Glib::AnimationClip::SearchKeyFrame(const KeyFrames& keys, float frameNo) const
+std::tuple<int, int> Glib::AnimationClip::SearchKeyFrame(const KeyFrames& keys, float frameNo) const
 {
     int start = 0;
     int end = static_cast<int>(keys.size() - 1);
 
     if (frameNo <= keys.at(start).frameNo)
     {
-        return std::pair<int, int>{ 0, 0 };
+        return { 0, 0 };
     }
 
     if (frameNo >= keys.at(end).frameNo)
     {
-        return std::pair<int, int>{ end, end };
+        return { end, end };
     }
 
     while ((start + 1) < end)
     {
-        int mid = (start + end) / 2;
+        int mid = start + (end - start) / 2;
+
         if (keys.at(mid).frameNo == frameNo)
         {
-            return std::pair<int, int>{ mid, mid };
+            return { mid, mid };
         }
         else if (keys.at(mid).frameNo < frameNo)
         {
@@ -107,5 +109,5 @@ std::pair<int, int> Glib::AnimationClip::SearchKeyFrame(const KeyFrames& keys, f
         }
     }
 
-    return std::pair<int, int>{ start, end };
+    return { start, end };
 }

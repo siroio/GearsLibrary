@@ -12,13 +12,14 @@ namespace Glib
      * @brief オブジェクトプールクラス
      */
     template<class T>
-    class ObjectPool
+    class ObjectPool final
     {
     public:
         using InitializeCallBack = std::function<void(size_t, T*)>;
 
         /* コンストラクタ */
         ObjectPool() = default;
+        ~ObjectPool() = default;
 
         /**
          * @brief 初期化

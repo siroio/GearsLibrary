@@ -49,7 +49,7 @@ namespace Glib
         /**
          * @brief キーフレームを検索
          */
-        std::pair<int, int> SearchKeyFrame(const KeyFrames& keys, float frameNo) const;
+        std::tuple<int, int> SearchKeyFrame(const KeyFrames& keys, float frameNo) const;
 
     private:
         float endFrame_;

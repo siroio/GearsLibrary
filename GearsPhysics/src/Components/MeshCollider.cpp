@@ -36,12 +36,11 @@ void Glib::MeshCollider::Start()
     }
 
     const auto& transform = GameObject()->Transform();
-    rigidStatic_ = s_physX->CreateRigidBody(
+    rigidStatic_ = static_cast<physx::PxRigidStatic*>(s_physX->CreateRigidBody(
         transform->Position(),
         transform->Rotation(),
         true,
-        nullptr
-    )->is<physx::PxRigidStatic>();
+        nullptr));
 
     CreateMesh();
     if (isConvex_)
@@ -54,6 +53,14 @@ void Glib::MeshCollider::Start()
         auto* const ptr = std::get<physx::PxTriangleMesh*>(meshPtr_);
         CreateShape(Internal::Geometory::CreateTriangleMesh(GameObject(), ptr));
     }
+}
+
+void Glib::MeshCollider::OnDestroy()
+{
+    std::visit([](auto&& ptr)
+    {
+        delete& ptr;
+    }, meshPtr_);
 }
 
 unsigned int Glib::MeshCollider::MeshID() const

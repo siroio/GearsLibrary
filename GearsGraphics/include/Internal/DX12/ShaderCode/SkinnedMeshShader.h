@@ -37,6 +37,8 @@ namespace Glib::Internal::Graphics::ShaderCode
             float4 LightSpeculer;
             float3 LightDirection;
             float  ShadowBias;
+            float  NormalBias;
+            float3 Padding;
         };
 
         Texture2D<float4> albedoTexture : register(t0);
@@ -87,22 +89,17 @@ namespace Glib::Internal::Graphics::ShaderCode
             o.normal = normalize(mul(World, localNormal).xyz);
             o.uv = input.uv;
             o.tangent = normalize(mul(World, float4(input.tangent.xyz, 0.0f)));
-            o.binormal = cross(o.tangent.xyz, o.normal) * input.tangent.w;
+            o.binormal = normalize(cross(o.tangent, o.normal)) * input.tangent.w;
             return o;
-        }
-
-        float random(float3 seed, int i)
-        {
-	        return frac(sin(dot(float4(seed, i), float4(12.9898, 78.233, 45.164, 94.673))) * 43758.5453);
         }
 
         float4 PSmain(PSInput input) : SV_TARGET
         {
             float3 normal = normalTexture.Sample(albedoSampler, input.uv) * 2.0f - 1.0f;
             
-            float3 N = normalize(input.tangent * normal.x +
-                                input.binormal * normal.y +
-                                input.normal * normal.z);
+            float3 N = normalize(input.tangent * normal.x
+				                 + input.binormal * normal.y
+				                 + input.normal * normal.z);
 
             float3 L = normalize(-LightDirection);
             float3 V = normalize(-input.view);
@@ -115,12 +112,7 @@ namespace Glib::Internal::Graphics::ShaderCode
             float2 shadowMapValue = shadowTexture.Sample(shadowSampler, shadowUV).xy;
 
             float lightZ = posFromLightVP.z;
-            float visibility = 1.0f;
-
-            if(shadowMapValue.x - bias < lightZ && lightZ <= 1.0f)
-            {
-                visibility = 0.5f;
-            }
+            float visibility = shadowMapValue.x - bias < lightZ ? 0.5f : 1.0f;
 
             float4 ambient  = LightAmbient * MatAmbient;
             float4 diffuse  = LightDiffuse * MatDiffuse * max(dot(N, L), 0.0f) * visibility;
@@ -165,6 +157,8 @@ namespace Glib::Internal::Graphics::ShaderCode
             float4 LightSpeculer;
             float3 LightDirection;
             float  ShadowBias;
+            float  NormalBias;
+            float3 Padding;
         };
 
         Texture2D<float4> albedoTexture : register(t0);

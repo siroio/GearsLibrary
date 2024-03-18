@@ -67,4 +67,3 @@ void Glib::Internal::Graphics::GraphicsPipeline::SetPipeline()
     s_dx12->CommandList()->SetGraphicsRootSignature(rootSignature_.Get());
     s_dx12->CommandList()->SetPipelineState(pipelineState_.Get());
 }
-

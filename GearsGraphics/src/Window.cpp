@@ -12,7 +12,7 @@ namespace
     std::unordered_map<int, Glib::WindowProcedure> s_windowProcedures;
     std::string s_windowName{ "GameWindow" };
     Vector2 s_windowSize{ 1240.0f, 720.0f };
-    Vector2 s_windowDebugSize{ 1920.0f, 1000.0f };
+    Vector2 s_windowDebugSize{ 1240.0f, 720.0f };
     bool s_isFullScreen{ false };
 }
 

@@ -53,12 +53,11 @@ physx::PxTriangleMesh* Glib::Internal::Geometory::CreateTriangleMesh(const Mesh&
     physx::PxTriangleMeshDesc pxMeshDesc{};
     pxMeshDesc.setToDefault();
     pxMeshDesc.points.count = static_cast<physx::PxU32>(vertices.size());
-    pxMeshDesc.points.stride = sizeof(Vector3);
+    pxMeshDesc.points.stride = sizeof(std::remove_reference<decltype(vertices)>::type::value_type);
     pxMeshDesc.points.data = vertices.data();
-    pxMeshDesc.triangles.count = static_cast<physx::PxU32>(indices.size());
-    pxMeshDesc.triangles.stride = 3 * sizeof(unsigned int);
+    pxMeshDesc.triangles.count = static_cast<physx::PxU32>(indices.size() / 3);
+    pxMeshDesc.triangles.stride = 3 * sizeof(std::remove_reference<decltype(indices)>::type::value_type);
     pxMeshDesc.triangles.data = indices.data();
-    pxMeshDesc.flags = physx::PxMeshFlag::e16_BIT_INDICES;
 
     physx::PxDefaultMemoryOutputStream writeBuffer;
     if (!PxCookTriangleMesh(cookingParams, pxMeshDesc, writeBuffer))
@@ -78,11 +77,18 @@ physx::PxConvexMesh* Glib::Internal::Geometory::CreateConvexMesh(const Mesh& mes
     cookingParams.convexMeshCookingType = physx::PxConvexMeshCookingType::Enum::eQUICKHULL;
     cookingParams.gaussMapLimit = 256;
 
-    const auto& vertices = mesh.Vertices();
+    std::vector<Vector3> vertices;
+    const auto& srcVert = mesh.Vertices();
+    vertices.reserve(srcVert.size());
+    std::transform(srcVert.begin(), srcVert.end(), std::back_inserter(vertices), [&](const auto& vert)
+    {
+        return Vector3{ vert.position[0], vert.position[1], vert.position[2] };
+    });
+
     physx::PxConvexMeshDesc pxMeshDesc{};
     pxMeshDesc.setToDefault();
     pxMeshDesc.points.count = static_cast<physx::PxU32>(vertices.size());
-    pxMeshDesc.points.stride = sizeof(physx::PxU32);
+    pxMeshDesc.points.stride = sizeof(std::remove_reference<decltype(vertices)>::type::value_type);
     pxMeshDesc.points.data = vertices.data();
     pxMeshDesc.flags = physx::PxConvexFlag::eCOMPUTE_CONVEX;
 
@@ -100,15 +106,10 @@ physx::PxConvexMesh* Glib::Internal::Geometory::CreateConvexMesh(const Mesh& mes
 physx::PxTriangleMeshGeometry Glib::Internal::Geometory::CreateTriangleMesh(const GameObjectPtr& gameObject, physx::PxTriangleMesh* const mesh)
 {
     const auto& scale = gameObject->Transform()->Scale();
-    const auto& rotation = gameObject->Transform()->Rotation();
     physx::PxTriangleMeshGeometry geometry{};
     geometry.scale.scale.x = Mathf::Max(scale.x, Mathf::EPSILON);
     geometry.scale.scale.y = Mathf::Max(scale.y, Mathf::EPSILON);
     geometry.scale.scale.z = Mathf::Max(scale.z, Mathf::EPSILON);
-    geometry.scale.rotation.x = rotation.x;
-    geometry.scale.rotation.y = rotation.y;
-    geometry.scale.rotation.z = rotation.z;
-    geometry.scale.rotation.w = rotation.w;
     geometry.triangleMesh = mesh;
     return geometry;
 }
@@ -116,15 +117,10 @@ physx::PxTriangleMeshGeometry Glib::Internal::Geometory::CreateTriangleMesh(cons
 physx::PxConvexMeshGeometry Glib::Internal::Geometory::CreateConvexMesh(const GameObjectPtr& gameObject, physx::PxConvexMesh* const mesh)
 {
     const auto& scale = gameObject->Transform()->Scale();
-    const auto& rotation = gameObject->Transform()->Rotation();
     physx::PxConvexMeshGeometry geometry{};
     geometry.scale.scale.x = Mathf::Max(scale.x, Mathf::EPSILON);
     geometry.scale.scale.y = Mathf::Max(scale.y, Mathf::EPSILON);
     geometry.scale.scale.z = Mathf::Max(scale.z, Mathf::EPSILON);
-    geometry.scale.rotation.x = rotation.x;
-    geometry.scale.rotation.y = rotation.y;
-    geometry.scale.rotation.z = rotation.z;
-    geometry.scale.rotation.w = rotation.w;
     geometry.convexMesh = mesh;
     return geometry;
 }

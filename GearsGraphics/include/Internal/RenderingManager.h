@@ -53,6 +53,7 @@ namespace Glib::Internal::Graphics
         bool Initialize();
         void Update();
         void Draw();
+        void DebugDraw();
 
         /**
          * @brief 環境光の色
@@ -97,9 +98,9 @@ namespace Glib::Internal::Graphics
 
         /**
          * @brief シャドウマップ用の変換行列を計算
-         * @param gazePoint 注視点
+         * @param cameraGaze 注視点
          */
-        Matrix4x4 CalculateMatrixForShadowMap(const Vector3& gazePoint) const;
+        Matrix4x4 CalculateMatrixForShadowMap(const Vector3& cameraGaze) const;
 
         /**
          * @brief シャドウマップのバイアスを設定
@@ -163,4 +164,3 @@ namespace Glib::Internal::Graphics
         );
     }
 }
-

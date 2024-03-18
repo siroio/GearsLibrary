@@ -50,24 +50,55 @@ namespace
     const Color LIGHT_DIFFUSE{ 0.7f, 0.7f, 0.7f, 1.0f };
 }
 
+template<class T> requires std::is_enum_v<T>
+class Enum
+{
+private:
+    using type = std::underlying_type_t<T>;
+
+public:
+    Enum() = default;
+    Enum(type val) : value(static_cast<T>(val))
+    {} // コンストラクター
+
+    // 明示的な型変換演算子（Enumオブジェクトからenum class型への変換）
+    explicit operator T() const
+    {
+        return value;
+    }
+
+    // 代入演算子のオーバーロード
+    Enum& operator=(const type& val)
+    {
+        value = static_cast<T>(val);
+        return *this;
+    }
+
+    // Enum<Asset>からintへの変換
+    operator int() const
+    {
+        return static_cast<int>(value);
+    }
+
+private:
+    T value;
+};
+
 // テスト用コンポーネント
 class TestMover : public Component
 {
 public:
     void Start()
     {
-        Debug::Log("Enable " + nameof(*this));
+        Debug::Log("Enable " + nameof<TestMover>());
         rigidbody_ = GameObject()->GetComponent<Rigidbody>();
         camera_ = GameObjectManager::Find("Camera")->GetComponent<Transform>();
     }
 
-    void FixedUpdate()
+    void Update()
     {
-        auto& transform = GameObject()->Transform();
-        Vector3 moveDir;
-        Vector3 rotation;
-        float speed = 2.0f;
-        float rotSpeed = 270 * GameTimer::FixedDeltaTime();
+        moveDir = Vector3::Zero();
+        float speed = 4.0f;
 
         if (InputSystem::GetKey(KeyCode::W))
         {
@@ -86,28 +117,19 @@ public:
             moveDir.x++;
         }
 
-        if (InputSystem::GetKey(KeyCode::Left))
-        {
-            rotation.y += rotSpeed;
-        }
-        if (InputSystem::GetKey(KeyCode::Right))
-        {
-            rotation.y -= rotSpeed;
-        }
-
         auto lstick = InputSystem::GetLeftStick();
-        auto rstick = InputSystem::GetRightStick();
-        if (lstick.SqrMagnitude() + rstick.SqrMagnitude() > 0.1f)
+        if (lstick.SqrMagnitude() > 0.1f)
         {
-            lstick *= speed;
-            rstick.y *= speed;
             moveDir = Vector3{ lstick.x, 0.0f, lstick.y };
-            rotation.y = rstick.x * rotSpeed;
         }
-        Vector3 cameraForward = Vector3::Scale(camera_->Forward(), Vector3{ 1.0f, 0.0f, 1.0f }).Normalized();
-        moveDir = speed * (camera_->Right() * moveDir.x + cameraForward * moveDir.z);
+        // カメラを基準にしてプレイヤーを動かす
+        // カメラの向きに対して移動方向を調整
+        moveDir = moveDir.Normalized() * speed;
+    }
+
+    void FixedUpdate()
+    {
         rigidbody_->AddForce(moveForceMultiplier * (moveDir - rigidbody_->LinearVelocity()));
-        transform->Rotate(rotation);
     }
 
     void OnCollisionEnter(const GameObjectPtr& gameObject)
@@ -118,6 +140,7 @@ public:
 private:
     WeakPtr<Rigidbody> rigidbody_;
     WeakPtr<Transform> camera_;
+    Vector3 moveDir{};
     float moveForceMultiplier{ 8.0f };
 };
 
@@ -180,19 +203,19 @@ private:
         auto mesh = GameObjectManager::Instantiate("Mesh");
         mesh->Transform()->Parent(GameObject()->Transform());
         mesh->Transform()->LocalPosition(Vector3{ 0.0f, 2.0f, 1.0f });
-        mesh->Transform()->LocalScale(Vector3{ 0.1f, 0.1f, 0.1f });
+        mesh->Transform()->LocalScale(Vector3{ 1.0f, 1.0f, 1.0f });
         mesh->AddComponent<TestMover>();
         mesh->AddComponent<Rigidbody>()->Constraints(RigidbodyConstraints::FreezeRotation);
         auto renderer = mesh->AddComponent<SkinnedMeshRenderer>();
         auto animator = mesh->AddComponent<Animator>();
         auto cap = mesh->AddComponent<CapsuleCollider>();
-        renderer->MeshID(0);
-        animator->AnimationID(0);
+        renderer->MeshID(2);
+        animator->AnimationID(2);
         animator->Loop(true);
         cap->IsVisible(true);
-        cap->Height(0.75f);
-        cap->Radius(2.4f);
-        cap->Center(Vector3{ 0.0f, 0.99f, 0.0f });
+        cap->Height(0.37f);
+        cap->Radius(0.38f);
+        cap->Center(Vector3{ 0.0f, 0.91f, 0.0f });
         mesh->Active(false);
 
         testObjects_.emplace(TestType::SkinnedMesh, mesh);
@@ -255,7 +278,7 @@ public:
     void Start() override
     {
         // アセット読み込み
-        bool isloaded = SkyboxManager::Instance()->Load(
+        bool isloaded = SkyboxManager::Load(
             0,
             "Assets/Skybox/DayTop.png",
             "Assets/Skybox/DayBottom.png",
@@ -273,7 +296,8 @@ public:
             auto ext = entry.path().extension().string();
             if (ext.ends_with("globj"))
             {
-                isloaded = MeshManager::Instance().Load(meshID, entry.path().string());
+                isloaded = MeshManager::Load(meshID, entry.path().string());
+                Debug::Log(entry.path().string() + "ID: " + std::to_string(meshID));
                 if (!isloaded)
                 {
                     Debug::Error(entry.path().string() + "のロードに失敗しました。");
@@ -283,7 +307,8 @@ public:
             }
             if (ext.ends_with("glanim"))
             {
-                isloaded = AnimationManager::Instance().Load(animID, entry.path().string());
+                isloaded = AnimationManager::Load(animID, entry.path().string());
+                Debug::Log(entry.path().string() + "ID: " + std::to_string(animID));
                 if (!isloaded)
                 {
                     Debug::Error(entry.path().string() + "のロードに失敗しました。");
@@ -293,7 +318,7 @@ public:
             }
             if (ext.ends_with("wav"))
             {
-                isloaded = AudioManager::Instance()->LoadVoice(audiID, entry.path().string());
+                isloaded = AudioManager::LoadVoice(audiID, entry.path().string());
                 if (!isloaded)
                 {
                     Debug::Error(entry.path().string() + "のロードに失敗しました。");
@@ -319,7 +344,7 @@ public:
             auto ext = entry.path().extension().string();
             if (ext.ends_with("png"))
             {
-                isloaded = TextureManager::Instance().Load(texID, entry.path().string());
+                isloaded = TextureManager::Load(texID, entry.path().string());
                 if (!isloaded)
                 {
                     Debug::Error(entry.path().string() + "のロードに失敗しました。");
@@ -337,11 +362,11 @@ public:
         light->GameObject()->Transform()->EulerAngles(LIGHT_DIRECTION);
 
         // 音設定
-        AudioManager::Instance()->AddSoundGroup(0);
-        AudioManager::Instance()->SetSoundGroupVolume(0, 0.1f);
+        AudioManager::AddSoundGroup(0);
+        AudioManager::SetSoundGroupVolume(0, 0.1f);
 
         // カメラ作成
-        SkyboxManager::Instance()->SetSkybox(0);
+        SkyboxManager::SetSkybox(0);
         auto camera = GameObjectManager::Instantiate("Camera");
         auto initPosition = Vector3{ 0.0f, 1.5f, -1.0f };
         camera->Transform()->Position(initPosition);
@@ -356,7 +381,7 @@ public:
         //rb->IsKinematic(true);
         mc->IsVisible(true);
         mc->MeshID(1);
-        Ground->Transform()->Scale(Vector3{ 100, 1, 100 });
+        Ground->Transform()->Scale(Vector3{ 1, 1, 1 });
 
 
         auto tester = GameObjectManager::Instantiate("Tester");
@@ -386,7 +411,7 @@ class MyGame : public Game
 
     void End() override
     {
-        Debug::Log("GAME END");
+
     }
 };
 

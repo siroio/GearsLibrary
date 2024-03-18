@@ -11,6 +11,7 @@ namespace Glib::Internal::Graphics::ShaderCode
         {
             float4x4 View;
             float4x4 Projection;
+            float4x4 LightVP;
         };
 
         struct VSInput
@@ -33,8 +34,7 @@ namespace Glib::Internal::Graphics::ShaderCode
         VSOutput VSmain(VSInput input)
         {
             VSOutput o;
-            input.position.w = 0.0f;
-            float4 viewPosition = mul(View, input.position);
+            float4 viewPosition = mul(View, float4(input.position.xyz, 0.0f));
             viewPosition.w = 1.0f;
             o.position = mul(Projection, viewPosition);
             o.uv = input.uv;

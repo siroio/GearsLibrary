@@ -37,7 +37,7 @@ void Glib::Animator::Update()
 
         if (!animation_.expired())
         {
-            auto keyFrame = animation_->GetKeyFrame(bone.name, currentFrame_);
+            const auto& keyFrame = animation_->GetKeyFrame(bone.name, currentFrame_);
             translation = keyFrame.position;
             rotation = keyFrame.rotation;
             scale = keyFrame.scale;
@@ -45,13 +45,10 @@ void Glib::Animator::Update()
             // 前のアニメーションをブレンド
             if (!prevAnimation_.expired())
             {
-                auto keyFrame = prevAnimation_->GetKeyFrame(bone.name, prevFrame_);
-                Vector3 prevtranslation = keyFrame.position;
-                Quaternion prevRotation = keyFrame.rotation;
-
+                const auto& blend = prevAnimation_->GetKeyFrame(bone.name, prevFrame_);
                 float ratio = elapsedTime_ / animationBlendTime_;
-                translation = Vector3::Lerp(prevtranslation, translation, ratio);
-                rotation = Quaternion::Slerp(prevRotation, rotation, ratio);
+                translation = Vector3::Lerp(blend.position, translation, ratio);
+                rotation = Quaternion::Slerp(blend.rotation, rotation, ratio);
             }
 
             matrix[bone.boneIndex]
@@ -61,7 +58,7 @@ void Glib::Animator::Update()
         }
 
         // 相対位置計算
-        const auto& transform = transforms[bone.boneIndex];
+        const auto& transform = transforms.at(bone.boneIndex);
         if (bone.parent != -1)
         {
             translation -= bones[bone.parent].position;

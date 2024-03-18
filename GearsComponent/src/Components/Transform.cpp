@@ -292,7 +292,7 @@ void Glib::Transform::OnGUI()
     GLGUI::DragVector3("Position", &local_position_, 0.01f);
 
     auto eulr = LocalEulerAngles();
-    if (GLGUI::DragVector3("Rotation", &eulr, 0.01f))
+    if (GLGUI::DragVector3("Rotation", &eulr, 0.1f))
     {
         LocalEulerAngles(eulr);
     }

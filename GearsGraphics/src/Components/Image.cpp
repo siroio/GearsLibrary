@@ -97,4 +97,3 @@ void Glib::Image::TextureID(unsigned int id)
     textureID_ = id;
     enabled_ = s_textureManager.Contains(id);
 }
-

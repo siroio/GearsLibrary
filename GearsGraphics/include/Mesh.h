@@ -14,6 +14,8 @@ namespace Glib
 {
     class Mesh
     {
+        using Vertex = Glib::GLObject::Vertex;
+
     private:
         struct Subset
         {
@@ -36,14 +38,14 @@ namespace Glib
 
         void DrawShadow();
 
-        const std::vector<GLObject::Vertex> Vertices() const;
+        const std::vector<Vertex> Vertices() const;
         const std::vector<unsigned int> Indices() const;
         const std::vector<Bone>& Bone() const;
 
     private:
         Internal::Graphics::VertexBuffer vertexBuffer_;
         Internal::Graphics::IndexBuffer indexBuffer_;
-        std::vector<GLObject::Vertex> vertices_;
+        std::vector<Vertex> vertices_;
         std::vector<unsigned int> indices_;
         std::vector<Subset> subsets_;
         std::vector<Material> materials_;

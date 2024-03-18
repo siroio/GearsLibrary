@@ -132,6 +132,7 @@ bool Glib::SkyboxManager::Initialize()
     pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_NEVER;
     pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
     pipelineDesc.InputLayout.NumElements = static_cast<UINT>(std::size(inputLayout));
+    pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
     s_shader->SetVertexShader(Internal::Graphics::ID::SKYBOX_SHADER, pipelineDesc);
     s_shader->SetPixelShader(Internal::Graphics::ID::SKYBOX_SHADER, pipelineDesc);
     return s_pipeline.CreatePipelineState(pipelineDesc);
@@ -139,7 +140,8 @@ bool Glib::SkyboxManager::Initialize()
 
 void Glib::SkyboxManager::Draw()
 {
-    if (!s_skyboxs.contains(s_drawSkyboxId)) return;
+    const auto& skybox = s_skyboxs.find(s_drawSkyboxId);
+    if (skybox == s_skyboxs.end()) return;
     s_vertexBuffer.SetBuffer();
     s_pipeline.SetPipeline();
     s_dx12->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
@@ -151,6 +153,6 @@ void Glib::SkyboxManager::Draw()
 
         camera->SetRenderTarget();
         camera->SetConstantBuffer(1);
-        s_skyboxs.at(s_drawSkyboxId).Draw();
+        skybox->second.Draw();
     }
 }

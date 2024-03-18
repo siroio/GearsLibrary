@@ -43,16 +43,6 @@ void Glib::SkinnedMeshRenderer::LateUpdate()
     boneConstantBuffer_.Update(static_cast<UINT>(sizeof(Matrix4x4) * boneMatrix_.size()), boneMatrix_.data());
 }
 
-void Glib::SkinnedMeshRenderer::OnGUI()
-{
-    Component::OnGUI();
-    int meshID = meshID_;
-    if (GLGUI::InputInt("MeshID", &meshID))
-    {
-        MeshID(meshID);
-    }
-}
-
 void Glib::SkinnedMeshRenderer::Draw(const WeakPtr<Internal::CameraBase>& camera)
 {
     if (!isEnabled_ || bones_.empty()) return;
@@ -142,4 +132,14 @@ const std::vector<Glib::WeakPtr<Glib::Transform>>& Glib::SkinnedMeshRenderer::Bo
 std::array<Matrix4x4, 512>& Glib::SkinnedMeshRenderer::BoneMatrix()
 {
     return boneMatrix_;
+}
+
+void Glib::SkinnedMeshRenderer::OnGUI()
+{
+    Component::OnGUI();
+    int meshID = MeshID();
+    if (GLGUI::InputInt("MeshID", &meshID))
+    {
+        MeshID(meshID);
+    }
 }

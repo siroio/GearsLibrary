@@ -250,7 +250,7 @@ void Glib::GLObject::ReadBone(std::ifstream& file)
 {
     // ボーン数の読み込み
     int boneCount{ 0 };
-    file.read(reinterpret_cast<char*>(&boneCount), sizeof(int));
+    ReadForBinary(file, &boneCount, sizeof(int));
 
     if (boneCount < 0)
     {

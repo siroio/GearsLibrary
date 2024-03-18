@@ -41,10 +41,28 @@ target_include_directories(
     ${PHYSX_ROOT_DIR}/include
 )
 
-target_link_directories(
-    ${LIB_NAME}
-    PUBLIC
-    ${PHYSX_ROOT_DIR}/bin/win.x86_64.vc143.mt/debug
+set(PHYSX_LIB_DIR ${PHYSX_ROOT_DIR}/bin/win.x86_64.vc143.mt)
+
+target_link_libraries(${LIB_NAME}
+    debug ${PHYSX_LIB_DIR}/debug/PhysX_64.lib
+    debug ${PHYSX_LIB_DIR}/debug/PhysXCommon_64.lib
+    debug ${PHYSX_LIB_DIR}/debug/PhysXCooking_64.lib
+    debug ${PHYSX_LIB_DIR}/debug/PhysXExtensions_static_64.lib
+    debug ${PHYSX_LIB_DIR}/debug/PhysXFoundation_64.lib
+    debug ${PHYSX_LIB_DIR}/debug/PhysXTask_static_64.lib
+    debug ${PHYSX_LIB_DIR}/debug/SceneQuery_static_64.lib
+    debug ${PHYSX_LIB_DIR}/debug/SimulationController_static_64.lib
+)
+
+target_link_libraries(${LIB_NAME} 
+    optimized ${PHYSX_LIB_DIR}/release/PhysX_64.lib
+    optimized ${PHYSX_LIB_DIR}/release/PhysXCommon_64.lib
+    optimized ${PHYSX_LIB_DIR}/release/PhysXCooking_64.lib
+    optimized ${PHYSX_LIB_DIR}/release/PhysXExtensions_static_64.lib
+    optimized ${PHYSX_LIB_DIR}/release/PhysXFoundation_64.lib
+    optimized ${PHYSX_LIB_DIR}/release/PhysXTask_static_64.lib
+    optimized ${PHYSX_LIB_DIR}/release/SceneQuery_static_64.lib
+    optimized ${PHYSX_LIB_DIR}/release/SimulationController_static_64.lib
 )
 
 target_link_libraries(
