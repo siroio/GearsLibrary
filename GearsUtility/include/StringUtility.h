@@ -1,6 +1,6 @@
 ﻿#pragma once
-#include <string_view>
 #include <string>
+#include <sstream>
 #include <vector>
 #include <cstdint>
 #include <Windows.h>
@@ -172,18 +172,15 @@ namespace Glib
     * @param str 文字列
     * @param delim 区切り文字
     */
-    static constexpr std::vector<std::string> Split(std::string_view str, char delim)
+    static std::vector<std::string> Split(std::string_view str, char delim)
     {
         std::vector<std::string> tokens;
-        auto begin = str.begin();
-        auto end = str.end();
-        tokens.reserve(std::count(str.begin(), str.end(), delim) + 1);
+        std::istringstream iss{ str.data() };
+        std::string buf;
 
-        while (begin != end)
+        while (std::getline(iss, buf, delim))
         {
-            auto pos = std::find(begin, end, delim);
-            tokens.emplace_back(std::string_view(&(*begin), pos - begin));
-            if (pos != end) begin = ++pos;
+            tokens.push_back(buf);
         }
 
         return tokens;

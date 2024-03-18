@@ -33,4 +33,3 @@ namespace Glib
         return result;
     }
 }
-
