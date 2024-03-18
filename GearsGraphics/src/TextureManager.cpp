@@ -20,7 +20,7 @@ bool Glib::TextureManager::Load(unsigned int id, std::string_view filePath)
     return true;
 }
 
-Glib::WeakPtr<Glib::Texture> Glib::TextureManager::Load(std::string_view filePath)
+Glib::WeakPtr<Glib::Texture> Glib::TextureManager::LoadMeshTex(std::string_view filePath)
 {
     if (!s_meshTextureResource.contains(filePath.data()))
     {
@@ -45,4 +45,3 @@ void Glib::TextureManager::SetTexture(unsigned int id, unsigned int rootParamInd
 {
     s_textureResource.at(id)->SetTexture(rootParamIndex);
 }
-

@@ -30,7 +30,7 @@ namespace Glib
          * @return 成功 true
          * @return 失敗 false
          */
-        static WeakPtr<Texture> Load(std::string_view filePath);
+        static WeakPtr<Texture> LoadMeshTex(std::string_view filePath);
 
         /**
          * @brief テクスチャIDが有効か確認
