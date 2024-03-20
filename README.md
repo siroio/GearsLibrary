@@ -29,7 +29,40 @@ GearsLibraryは、ゲーム開発者が効率的にゲームを制作するた�
 
 ## 機能一覧
 
-* 編集中
+・テクスチャ
+
+・スプライト描画
+
+・メッシュ描画
+
+・スカイボックス描画
+
+・メッシュスキニング
+
+・アニメーション
+
+・エフェクト再生
+
+・オーディオ再生
+
+・コンポーネントクラス
+
+・デバッグ用GUI
+
+・メッシュ・アニメーションフォーマット
+
+・MMDからのモデルコンバート
+
+・ゲームシーン管理
+
+・物理演算
+
+・コライダー（ボックス、カプセル、メッシュ）
+
+・数学系ライブラリ（Vector3、Quaternion、行列）
+
+etc...
+
 
 ## 使用方法
 
@@ -44,33 +77,39 @@ public:
         Debug::Log("Enable TestComponent");
 
         // オブジェクトの座標を指定
-        GameObject()->Transform()->Position(Vector3{ 1280, 720, 0 });
+        GameObject()->Transform()->Position(Vector3{ 0, 10, 0 });
     }
     
     void Update()
     {
         // 移動用処理
         auto& transform = GameObject()->Transform();
-        Vector3 velocity;
-        float speed = 500;
-        if (InputSystem::GetKey(KeyCode::Up))
+        Vector3 moveDir = Vector3::Zero();
+        float speed = 4.0f;
+        if (InputSystem::GetKey(KeyCode::W))
         {
-            velocity.y -= speed * GameTimer::DeltaTime();
+            moveDir.z++;
         }
-        if (InputSystem::GetKey(KeyCode::Down))
+        if (InputSystem::GetKey(KeyCode::S))
         {
-            velocity.y += speed * GameTimer::DeltaTime();
+            moveDir.z--;
         }
-        if (InputSystem::GetKey(KeyCode::Left))
+        if (InputSystem::GetKey(KeyCode::A))
         {
-            velocity.x -= speed * GameTimer::DeltaTime();
+            moveDir.x--;
         }
-        if (InputSystem::GetKey(KeyCode::Right))
+        if (InputSystem::GetKey(KeyCode::D))
         {
-            velocity.x += speed * GameTimer::DeltaTime();
+            moveDir.x++;
+        }
+        auto lstick = InputSystem::GetLeftStick();
+        if (lstick.SqrMagnitude() > 0.1f)
+        {
+            moveDir = Vector3{ lstick.x, 0.0f, lstick.y };
         }
 
-        transform->Position(transform->Position() + velocity);
+        Vector3 translate = moveDir.Normalized() * speed * Glib::GameTimer::DeltaTime();
+        transform->Position(transform->Position() + translate);
     }
 
     void FixedUpdate()
@@ -81,38 +120,10 @@ public:
 ```
 
 ```cpp
-// テスト用シーンクラス
-class TestScene : public Glib::Scene
-{
-public:
-    // シーン読み込み
-    void Start() override
-    {
-        // テクスチャを読み込み
-        auto& tex = TextureManager::Instance();
-        tex.Load(0, "texture.png");
-        Debug::Log("Scene Loaded...");
-
-        // キャンバスコンポーネントを持ったオブジェクトを生成
-        auto canvas = GameObjectManager::Instantiate("Canvas");
-        canvas->AddComponent<Canvas>();
-        
-        // Imageコンポーネントを持ったオブジェクト生成
-        auto img = GameObjectManager::Instantiate("Img");
-        img->Transform()->Parent(canvas->Transform());// キャンバスの子オブジェクトに
-        auto imgComp = img->AddComponent<Image>();
-        img->AddComponent<TestComponent>();
-        
-        // テクスチャと色を指定
-        imgComp->TextureID(0);
-        imgComp->Color(Color{ 1.0f, 1.0f, 1.0f, 1.0f });
-    }
-
-    void End() override
-    {
-        Debug::Log("Scene Ended...");
-    }
-};
+// テクスチャやその他アセットのロード
+TextureManager::Load(0, "texture.png");
+MeshManager::Load(0, "texture.globj");
+AnimationManager::Load(0, "texture.glanim");
 ```
 
 ```cpp
