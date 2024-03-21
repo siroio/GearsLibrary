@@ -50,40 +50,6 @@ namespace
     const Color LIGHT_DIFFUSE{ 0.7f, 0.7f, 0.7f, 1.0f };
 }
 
-template<class T> requires std::is_enum_v<T>
-class Enum
-{
-private:
-    using type = std::underlying_type_t<T>;
-
-public:
-    Enum() = default;
-    Enum(type val) : value(static_cast<T>(val))
-    {} // コンストラクター
-
-    // 明示的な型変換演算子（Enumオブジェクトからenum class型への変換）
-    explicit operator T() const
-    {
-        return value;
-    }
-
-    // 代入演算子のオーバーロード
-    Enum& operator=(const type& val)
-    {
-        value = static_cast<T>(val);
-        return *this;
-    }
-
-    // Enum<Asset>からintへの変換
-    operator int() const
-    {
-        return static_cast<int>(value);
-    }
-
-private:
-    T value;
-};
-
 // テスト用コンポーネント
 class TestMover : public Component
 {
@@ -210,7 +176,7 @@ private:
         auto animator = mesh->AddComponent<Animator>();
         auto cap = mesh->AddComponent<CapsuleCollider>();
         renderer->MeshID(2);
-        animator->AnimationID(2);
+        animator->AnimationID(10);
         animator->Loop(true);
         cap->IsVisible(true);
         cap->Height(0.37f);
