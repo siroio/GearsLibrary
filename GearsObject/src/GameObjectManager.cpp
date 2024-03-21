@@ -158,7 +158,7 @@ GameObjectPtr Glib::GameObjectManager::Find(std::string_view name)
 {
     const auto& it = std::ranges::find_if(gameObjects_, [name](const std::shared_ptr<GameObject>& gameObject)
     {
-        return gameObject->Name().compare(name);
+        return gameObject->Name() == name;
     });
 
     return it != gameObjects_.end() ? GameObjectPtr{ *it } : GameObjectPtr{ nullptr };
@@ -170,7 +170,7 @@ std::list<GameObjectPtr> Glib::GameObjectManager::FindGameObjectsWithTag(std::st
 
     std::ranges::copy_if(gameObjects_, std::back_inserter(result), [tag](const std::shared_ptr<GameObject>& gameObject)
     {
-        return gameObject->Tag().compare(tag);
+        return gameObject->Tag() == tag;
     });
 
     return result;
@@ -180,7 +180,7 @@ GameObjectPtr Glib::GameObjectManager::FindGameObjectWithTag(std::string_view ta
 {
     const auto& it = std::ranges::find_if(gameObjects_.begin(), gameObjects_.end(), [tag](const std::shared_ptr<GameObject>& gameObject)
     {
-        return gameObject->Tag().compare(tag);
+        return gameObject->Tag() == tag;
     });
 
     return it != gameObjects_.end() ? GameObjectPtr{ *it } : GameObjectPtr{ nullptr };
