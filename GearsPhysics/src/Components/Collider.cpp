@@ -233,5 +233,6 @@ void Glib::Collider::SetVisible()
 void Glib::Collider::SyncActive()
 {
     shape_->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, Active());
-    shape_->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, Active());
+    SetTrigger();
+    SetVisible();
 }

@@ -13,8 +13,9 @@ namespace Glib
 {
     class Physics
     {
-        bool Raycast(const Vector3& origin, const Vector3& direction, RaycastHit& hit, float maxDistance = FLT_MAX);
-        bool RaycastAll(const Vector3& origin, const Vector3& direction, std::vector<RaycastHit>& hit, float maxDistance = FLT_MAX);
-        void SetCollisionFlag(unsigned int layer1, unsigned int layer2, bool enable);
+    public:
+        static bool Raycast(const Vector3& origin, const Vector3& direction, RaycastHit& hit, float maxDistance = FLT_MAX);
+        static bool RaycastAll(const Vector3& origin, const Vector3& direction, std::vector<RaycastHit>& hit, float maxDistance = FLT_MAX);
+        static void SetCollisionFlag(unsigned int layer1, unsigned int layer2, bool enable);
     };
 }
