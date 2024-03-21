@@ -176,12 +176,12 @@ private:
         auto animator = mesh->AddComponent<Animator>();
         auto cap = mesh->AddComponent<CapsuleCollider>();
         renderer->MeshID(2);
-        animator->AnimationID(10);
+        animator->AnimationID(0);
         animator->Loop(true);
         cap->IsVisible(true);
         cap->Height(0.37f);
         cap->Radius(0.38f);
-        cap->Center(Vector3{ 0.0f, 0.91f, 0.0f });
+        cap->Center(Vector3{ 0.0f, 0.75f, 0.0f });
         mesh->Active(false);
 
         testObjects_.emplace(TestType::SkinnedMesh, mesh);
