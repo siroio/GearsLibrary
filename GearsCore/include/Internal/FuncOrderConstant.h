@@ -21,6 +21,12 @@ namespace Glib::Internal::Order
         constexpr int COMPONENT = 100;
     }
 
+    /* 更新順番一覧 */
+    namespace LateUpdate
+    {
+        constexpr int CAMERA = 100;
+    }
+
     /* 描画前順番一覧 */
     namespace BeginDraw
     {
@@ -44,4 +50,3 @@ namespace Glib::Internal::Order
         constexpr int GAMEOBJECT = -100;
     }
 }
-

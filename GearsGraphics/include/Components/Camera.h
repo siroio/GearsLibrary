@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <Internal/CameraBase.h>
 #include <Internal/DX12/ConstantBuffer.h>
+#include <Internal/FuncOrderConstant.h>
+#include <FuncOrderDefinition.h>
 #include <Components/Transform.h>
 #include <CameraClearFlags.h>
 #include <ComPtr.h>
@@ -36,7 +38,9 @@ namespace Glib
     /**
      * @brief カメラコンポーネント
      */
-    class Camera : public Internal::CameraBase
+    class Camera :
+        public Internal::CameraBase,
+        public Internal::Function::LateUpdateOrderSet<Internal::Order::LateUpdate::CAMERA>
     {
     public:
         Camera();
