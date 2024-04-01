@@ -21,6 +21,7 @@
 
 namespace
 {
+    float s_accumulatedTime{ 0.0f };
     using GameObjectPair = std::pair<GameObjectPtr, GameObjectPtr>;
 
     const Vector3 DEFAULT_GRAVITY{ 0, -9.81f, 0 };
@@ -122,13 +123,29 @@ bool Glib::Internal::Physics::PhysXManager::Initialize()
 
 void Glib::Internal::Physics::PhysXManager::Finalize()
 {
-    s_scene->release();
-    s_dispatcher->release();
-    s_physics->release();
-    s_foundation->release();
+    if (s_scene != nullptr)
+    {
+        s_scene->release();
+        s_scene = nullptr;
+    }
+    if (s_dispatcher != nullptr)
+    {
+        s_dispatcher->release();
+        s_dispatcher = nullptr;
+    }
+    if (s_physics != nullptr)
+    {
+        s_physics->release();
+        s_physics = nullptr;
+    }
+    if (s_foundation != nullptr)
+    {
+        s_foundation->release();
+        s_foundation = nullptr;
+    }
 }
 
-void Glib::Internal::Physics::PhysXManager::FixedUpdate()
+void Glib::Internal::Physics::PhysXManager::Update()
 {
     // rigidbodyのmapからvalueだけ参照
     const auto& rigidbodys = s_rigidbodys | std::ranges::views::values;
@@ -145,11 +162,15 @@ void Glib::Internal::Physics::PhysXManager::FixedUpdate()
         collider->SyncGeometry();
     }
 
-    const float delta{ GameTimer::FixedDeltaTime() };
+    s_accumulatedTime = std::fminf(s_accumulatedTime + GameTimer::DeltaTime(), GameTimer::MaximumAllowedTimeStep());
 
-    if (delta <= 0.0f) return;
-    s_scene->simulate(delta);
-    s_scene->fetchResults(true);
+    // fixedUpdateを溜まった時間分進める
+    while (s_accumulatedTime >= GameTimer::FixedTimeStep())
+    {
+        s_scene->simulate(GameTimer::FixedDeltaTime());
+        s_scene->fetchResults(true);
+        s_accumulatedTime -= GameTimer::FixedTimeStep();
+    }
 
     for (const auto& rigidbody : rigidbodys)
     {
@@ -159,12 +180,8 @@ void Glib::Internal::Physics::PhysXManager::FixedUpdate()
     // 衝突判定のコールバックを呼び出す
     ExecuteTriggerCallbacks();
     ExecuteCollisionCallbacks();
-}
 
 #if defined(DEBUG) || defined(_DEBUG)
-void Glib::Internal::Physics::PhysXManager::Update()
-{
-
     const auto& renderBuffer = s_scene->getRenderBuffer();
     const auto* line = renderBuffer.getLines();
     for (physx::PxU32 i = 0; i < renderBuffer.getNbLines(); i++)
@@ -172,8 +189,8 @@ void Glib::Internal::Physics::PhysXManager::Update()
         s_debugRenderer->AddVertex(ToVector3(line[i].pos0), Color::Green());
         s_debugRenderer->AddVertex(ToVector3(line[i].pos1), Color::Green());
     }
-}
 #endif
+}
 
 void Glib::Internal::Physics::PhysXManager::ExecuteTriggerCallbacks()
 {
@@ -401,16 +418,16 @@ void Glib::Internal::Physics::PhysXManager::onTrigger(physx::PxTriggerPair* pair
         if ((event & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND) != 0)
         {
             // 衝突時
-            s_collisionEnterCallbacks.push_back({ triggerObject, otherObject });
-            s_collisionEnterCallbacks.push_back({ otherObject, triggerObject });
+            s_triggerEnterCallbacks.push_back({ triggerObject, otherObject });
+            s_triggerEnterCallbacks.push_back({ otherObject, triggerObject });
         }
         else if ((event & physx::PxPairFlag::eNOTIFY_TOUCH_LOST) != 0)
         {
             // 離散時
-            s_collisionExitCallbacks.push_back({ triggerObject, otherObject });
-            s_collisionExitCallbacks.push_back({ otherObject, triggerObject });
-            s_collisionStayCallbacks.remove({ triggerObject, otherObject });
-            s_collisionStayCallbacks.remove({ otherObject, triggerObject });
+            s_triggerExitCallbacks.push_back({ triggerObject, otherObject });
+            s_triggerExitCallbacks.push_back({ otherObject, triggerObject });
+            s_triggerStayCallbacks.remove({ triggerObject, otherObject });
+            s_triggerStayCallbacks.remove({ otherObject, triggerObject });
         }
     }
 }

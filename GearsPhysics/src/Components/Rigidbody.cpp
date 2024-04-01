@@ -266,7 +266,7 @@ void Glib::Rigidbody::OnGUI()
     }
 }
 
-Glib::CDMODE Glib::Rigidbody::DetectionMode()
+Glib::CDMODE Glib::Rigidbody::DetectionMode() const
 {
     return detectionMode_;
 }

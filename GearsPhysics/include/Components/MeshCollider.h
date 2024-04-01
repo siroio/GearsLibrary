@@ -16,6 +16,12 @@ namespace Glib
         unsigned int MeshID() const;
         void MeshID(unsigned int id);
 
+        bool Convex() const;
+        void Convex(bool convex);
+
+        bool FlipNormals() const;
+        void FlipNormals(bool flip);
+
     private:
         void SyncGeometry() override;
         void CreateMesh();
@@ -25,5 +31,7 @@ namespace Glib
         unsigned int meshID_{ UINT_MAX };
         bool enableMesh_{ false };
         bool isConvex_{ false };
+        bool isFlipNormals_{ false };
+        bool initialized{ false };
     };
 }

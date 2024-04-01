@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <PxPhysicsAPI.h>
 #include <Component.h>
 #include <BitFlag.h>
 #include <Internal/IRigidbody.h>
@@ -72,7 +73,7 @@ namespace Glib
         bool UseGravity() const;
         void UseGravity(bool useGravity);
 
-        CDMODE DetectionMode();
+        CDMODE DetectionMode() const;
         void DetectionMode(CDMODE mode);
 
         void OnGUI() override;

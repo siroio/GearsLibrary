@@ -41,10 +41,7 @@ namespace Glib::Internal::Physics
     public:
         bool Initialize();
         void Finalize();
-        void FixedUpdate();
-#if defined(DEBUG) || defined(_DEBUG)
         void Update();
-#endif
 
         void ExecuteTriggerCallbacks();
         void ExecuteCollisionCallbacks();

@@ -34,7 +34,7 @@ physx::PxCapsuleGeometry Glib::Internal::Geometory::CreateCapsule(const GameObje
     return geometry;
 }
 
-physx::PxTriangleMesh* Glib::Internal::Geometory::CreateTriangleMesh(const Mesh& mesh)
+physx::PxTriangleMesh* Glib::Internal::Geometory::CreateTriangleMesh(const Mesh& mesh, bool flipNormals)
 {
     physx::PxTolerancesScale tolerancesScale;
     physx::PxCookingParams cookingParams{ tolerancesScale };
@@ -58,6 +58,7 @@ physx::PxTriangleMesh* Glib::Internal::Geometory::CreateTriangleMesh(const Mesh&
     pxMeshDesc.triangles.count = static_cast<physx::PxU32>(indices.size() / 3);
     pxMeshDesc.triangles.stride = 3 * sizeof(std::remove_reference<decltype(indices)>::type::value_type);
     pxMeshDesc.triangles.data = indices.data();
+    if (flipNormals) pxMeshDesc.flags = physx::PxMeshFlag::eFLIPNORMALS;
 
     physx::PxDefaultMemoryOutputStream writeBuffer;
     if (!PxCookTriangleMesh(cookingParams, pxMeshDesc, writeBuffer))

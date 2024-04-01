@@ -53,6 +53,7 @@ void Glib::MeshCollider::Start()
         auto* const ptr = std::get<physx::PxTriangleMesh*>(meshPtr_);
         CreateShape(Internal::Geometory::CreateTriangleMesh(GameObject(), ptr));
     }
+    initialized = true;
 }
 
 void Glib::MeshCollider::OnDestroy()
@@ -75,8 +76,45 @@ void Glib::MeshCollider::MeshID(unsigned int id)
     meshID_ = id;
 }
 
+bool Glib::MeshCollider::Convex() const
+{
+    return isConvex_;
+}
+
+void Glib::MeshCollider::Convex(bool convex)
+{
+    if (initialized)
+    {
+        Debug::Error("Please make changes before initialization.");
+        return;
+    }
+    isConvex_ = convex;
+}
+
+bool Glib::MeshCollider::FlipNormals() const
+{
+    return isFlipNormals_;
+}
+
+void Glib::MeshCollider::FlipNormals(bool flip)
+{
+    if (initialized)
+    {
+        Debug::Error("Please make changes before initialization.");
+        return;
+    }
+    isFlipNormals_ = flip;
+}
+
 void Glib::MeshCollider::SyncGeometry()
 {
+    const auto& transform = GameObject()->Transform();
+    physx::PxTransform pose{
+        Internal::Physics::PhysXManager::ToPxVec3(transform->LocalPosition()),
+        Internal::Physics::PhysXManager::ToPxQuat(transform->LocalRotation())
+    };
+    Shape()->setLocalPose(pose);
+
     if (isConvex_)
     {
         auto* const ptr = std::get<physx::PxConvexMesh*>(meshPtr_);
@@ -99,6 +137,6 @@ void Glib::MeshCollider::CreateMesh()
     }
     else
     {
-        meshPtr_ = Internal::Geometory::CreateTriangleMesh(s_meshManager.Mesh(meshID_));
+        meshPtr_ = Internal::Geometory::CreateTriangleMesh(s_meshManager.Mesh(meshID_), isFlipNormals_);
     }
 }
