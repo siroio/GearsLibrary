@@ -15,7 +15,7 @@ void Glib::Internal::ComponentManager::Update()
     s_accumulatedTime = std::fminf(s_accumulatedTime + deltaTime, GameTimer::MaximumAllowedTimeStep());
 
     // fixedUpdateを溜まった時間分進める
-    while (s_accumulatedTime > GameTimer::FixedTimeStep())
+    while (s_accumulatedTime >= GameTimer::FixedTimeStep())
     {
         normalFunction_.Execute(ComponentFunctionType::FixedUpdate);
         s_accumulatedTime -= GameTimer::FixedTimeStep();
@@ -30,4 +30,3 @@ void Glib::Internal::ComponentManager::Finalize()
     normalFunction_.Clear();
     eventFunction_.clear();
 }
-

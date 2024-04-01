@@ -11,8 +11,8 @@ HAS_FUNC_OBJECT(DrawShadow);
 HAS_FUNC_OBJECT(EndDraw);
 HAS_FUNC_OBJECT(Finalize);
 HAS_FUNC_OBJECT(Start);
-HAS_FUNC_OBJECT(Update);
 HAS_FUNC_OBJECT(FixedUpdate);
+HAS_FUNC_OBJECT(Update);
 HAS_FUNC_OBJECT(LateUpdate);
 
 /* Event Function */

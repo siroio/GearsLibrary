@@ -31,7 +31,6 @@
 namespace
 {
     auto& s_systemManager = SystemManager::Instance();
-    float s_accumulatedTime{ 0.0f };
 }
 
 int Glib::Game::Run()
@@ -98,14 +97,6 @@ bool Glib::Game::Initialize()
 
 void Glib::Game::Update()
 {
-    s_accumulatedTime = std::fminf(s_accumulatedTime + GameTimer::DeltaTime(), GameTimer::MaximumAllowedTimeStep());
-
-    // fixedUpdateを溜まった時間分進める
-    while (s_accumulatedTime > GameTimer::FixedTimeStep())
-    {
-        s_systemManager.FixedUpdate();
-        s_accumulatedTime -= GameTimer::FixedTimeStep();
-    }
     s_systemManager.Update();
 }
 
