@@ -53,7 +53,6 @@ namespace Glib::Internal::Graphics
         bool Initialize();
         void Update();
         void Draw();
-        void DebugDraw();
 
         /**
          * @brief 環境光の色
@@ -106,6 +105,11 @@ namespace Glib::Internal::Graphics
          * @brief シャドウマップのバイアスを設定
          */
         static void ShadowMapBias(float bias);
+
+        /**
+         * @brief シャドウマップのバイアスを設定
+         */
+        static void ShadowMapMomentBias(float bias);
 
         /**
          * @brief シャドウマップのNearとFarを設定

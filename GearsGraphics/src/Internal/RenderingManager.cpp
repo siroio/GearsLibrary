@@ -24,8 +24,8 @@ namespace
     Color s_specular{ 1.0f, 1.0f, 1.0f };
     Vector3 s_lightDirection{ 1.0f, -1.0f, 1.0f };
 
-    float s_shadowBias{ 0.001f };
-    float s_normalBias{ 1.0f };
+    float s_shadowBias{ 0.0001f };
+    float s_momentBias{ 0.0000f };
     float s_shadowNear{ 0.1f };
     float s_shadowFar{ 100.0f };
     Vector2 s_shadowRange{ 25.0f };
@@ -37,8 +37,8 @@ namespace
         Color diffuse;
         Color specular;
         Vector3 direction;
-        float shadowBias{ 0.005f };
-        float normalBias{ 0.4f };
+        float shadowBias{ 0.000f };
+        float momentBias{ 0.000f };
         Vector3 padding;
     };
 }
@@ -57,7 +57,7 @@ void Glib::Internal::Graphics::RenderingManager::Update()
     buffer.specular = s_specular;
     buffer.direction = s_lightDirection;
     buffer.shadowBias = s_shadowBias;
-    buffer.normalBias = s_normalBias;
+    buffer.momentBias = s_momentBias;
     s_constantBuffer.Update(sizeof(DirectionalLightConstant), &buffer);
 }
 
@@ -88,7 +88,7 @@ void Glib::Internal::Graphics::RenderingManager::Draw()
         }
 
         // シャドウマップにブラーをかける
-        camera->ExecuteShadowBulr();
+        camera->ExecuteShadowBlur();
 
         // オブジェクトの描画
         camera->SetRenderTarget();
@@ -100,37 +100,6 @@ void Glib::Internal::Graphics::RenderingManager::Draw()
             }
         }
     }
-}
-
-void Glib::Internal::Graphics::RenderingManager::DebugDraw()
-{
-    ImGui::Begin("ShadowMap");
-
-    float bias = s_shadowBias;
-    if (GLGUI::DragFloat("ShadowBias", &bias))
-    {
-        s_shadowBias = bias;
-    }
-
-    float nearZ = s_shadowNear;
-    if (GLGUI::DragFloat("Near", &nearZ))
-    {
-        s_shadowNear = nearZ;
-    }
-
-    float farZ = s_shadowFar;
-    if (GLGUI::DragFloat("Far", &farZ))
-    {
-        s_shadowFar = farZ;
-    }
-
-    Vector2 range = s_shadowRange;
-    if (GLGUI::DragVector2("Range", &range))
-    {
-        s_shadowRange = range;
-    }
-
-    ImGui::End();
 }
 
 const Color& Glib::Internal::Graphics::RenderingManager::LightAmbient()
@@ -183,6 +152,11 @@ Matrix4x4 Glib::Internal::Graphics::RenderingManager::CalculateMatrixForShadowMa
 void Glib::Internal::Graphics::RenderingManager::ShadowMapBias(float bias)
 {
     s_shadowBias = bias;
+}
+
+void Glib::Internal::Graphics::RenderingManager::ShadowMapMomentBias(float bias)
+{
+    s_momentBias = bias;
 }
 
 void Glib::Internal::Graphics::RenderingManager::ShadowMapClip(float nearZ, float farZ)
