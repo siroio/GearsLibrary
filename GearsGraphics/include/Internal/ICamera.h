@@ -63,6 +63,6 @@ namespace Glib::Internal::Interface
         /**
          * @brief シャドウマップにブラーをかける
          */
-        virtual void ExecuteShadowBulr() = 0;
+        virtual void ExecuteShadowBlur() = 0;
     };
 };

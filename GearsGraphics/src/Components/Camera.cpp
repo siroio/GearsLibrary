@@ -196,15 +196,16 @@ void Glib::Camera::InitializeRT()
 void Glib::Camera::InitializeSM()
 {
     const auto& windowSize = Window::WindowSize();
+    const DXGI_FORMAT format{ DXGI_FORMAT_R32G32_FLOAT };
     shadowMap_.Create(
         SHADOW_MAP_SIZE,
         SHADOW_MAP_SIZE,
         Color::White(),
-        DXGI_FORMAT_R32G32_FLOAT,
+        format,
         DXGI_FORMAT_D32_FLOAT
     );
 
-    shadowMapBlur.Initialize(shadowMap_.RenderTargetResource(), DXGI_FORMAT_R32G32_FLOAT);
+    shadowMapBlur.Initialize(shadowMap_.RenderTargetResource(), format);
 }
 
 void Glib::Camera::Draw()
@@ -304,7 +305,7 @@ void Glib::Camera::SetShadowMap(unsigned int rootParamIndex)
     shadowMapBlur.SetTexture(rootParamIndex);
 }
 
-void Glib::Camera::ExecuteShadowBulr()
+void Glib::Camera::ExecuteShadowBlur()
 {
     shadowMap_.AsTexture();
     shadowMapBlur.Execute(1.0f);

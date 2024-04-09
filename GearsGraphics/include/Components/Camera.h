@@ -84,7 +84,7 @@ namespace Glib
         virtual void SetConstantBuffer(unsigned int rootParamIndex) override;
         virtual void SetDepthStencil() override;
         virtual void SetShadowMap(unsigned int rootParamIndex) override;
-        virtual void ExecuteShadowBulr() override;
+        virtual void ExecuteShadowBlur() override;
         virtual void OnGUI() override;
 
     private:

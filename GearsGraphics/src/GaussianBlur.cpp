@@ -166,7 +166,7 @@ bool Glib::Graphics::GaussianBlur::CreatePipelines(DXGI_FORMAT format)
 bool Glib::Graphics::GaussianBlur::CreateBlurResource(UINT64 width, UINT height, DXGI_FORMAT format)
 {
     auto heapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_HEAP_TYPE_DEFAULT };
-    auto resDesc = CD3DX12_RESOURCE_DESC::Tex2D(format, static_cast<UINT64>(width), height, 1, 1);
+    auto resDesc = CD3DX12_RESOURCE_DESC::Tex2D(format, width, static_cast<UINT64>(height), 1, 1);
     resDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 
     float clearColor[4]{ 1.0f, 1.0f, 1.0f, 1.0f };
