@@ -37,7 +37,7 @@ namespace Glib::Internal::Graphics::ShaderCode
             float4 LightSpeculer;
             float3 LightDirection;
             float  ShadowBias;
-            float  NormalBias;
+            float  MomentBias;
             float3 Padding;
         };
 
@@ -79,40 +79,58 @@ namespace Glib::Internal::Graphics::ShaderCode
                             MeshBones[input.bones.z] * input.weight.z +
                             MeshBones[input.bones.w] * input.weight.w;
 
-            float4 localNormal = mul(localMatrix, float4(input.normal, 0.0f));
             float4 worldPosition = mul(World, mul(localMatrix, input.position));
             float4 viewPosition = mul(View, worldPosition);
             VSOutput o;
             o.position = mul(Projection, viewPosition);
             o.view = viewPosition.xyz;
             o.light = mul(LightVP, worldPosition);
-            o.normal = normalize(mul(World, localNormal).xyz);
             o.uv = input.uv;
-            o.tangent = normalize(mul(World, float4(input.tangent.xyz, 0.0f)));
-            o.binormal = normalize(cross(o.tangent, o.normal)) * input.tangent.w;
+            float4 localNormal = mul(localMatrix, float4(input.normal, 0.0f));
+            o.normal = mul(World, localNormal).xyz;
+            o.tangent = mul(World, float4(input.tangent.xyz, 0.0f)).xyz;
+            o.binormal = cross(o.tangent, o.normal) * input.tangent.w;
             return o;
+        }
+
+        float CalculateVSM(float2 moments, float fragDepth, float depthBias, float momentBias)
+        {
+            float2 b = lerp(moments, float2(0.5f, 0.5f), momentBias);
+            float fDepth = fragDepth - depthBias;
+            float E_x2 = b.y;
+            float Ex_2 = b.x * b.x;
+            float variance = E_x2 - Ex_2;
+            float mD = b.x - fDepth;
+            float mD_2 = mD * mD;
+            float p = variance / (variance + mD_2);
+            return max(p, fDepth <= b.x);
+        }
+
+        float linstep(float min, float max, float v)
+        {
+            return saturate((v - min) / (max - min));
         }
 
         float4 PSmain(PSInput input) : SV_TARGET
         {
-            float3 normal = normalTexture.Sample(albedoSampler, input.uv) * 2.0f - 1.0f;
+            float3 normal = normalize(normalTexture.Sample(albedoSampler, input.uv) * 2.0f - 1.0f);
             
-            float3 N = normalize(input.tangent * normal.x
-				                 + input.binormal * normal.y
-				                 + input.normal * normal.z);
+            float3x3 tbn = float3x3(input.tangent, input.binormal, input.normal);
+            bool useTangentSpace = !isnan(input.tangent) && !isnan(input.binormal) && dot(input.tangent, input.binormal) == 0.0f;
+            float3 N = normalize(useTangentSpace ? mul(normal, tbn) : input.normal);
 
             float3 L = normalize(-LightDirection);
             float3 V = normalize(-input.view);
             float3 H = normalize(L + V);
 
-            float3 posFromLightVP = input.light.xyz / input.light.w;
-            float2 shadowUV = (posFromLightVP.xy + float2(1.0f, -1.0f)) * float2(0.5f, -0.5f);
+            float3 lightPos = input.light.xyz / input.light.w;
+            float2 shadowUV = (lightPos.xy + float2(1.0f, -1.0f)) * float2(0.5f, -0.5f);
 
             float bias = clamp(ShadowBias * tan(acos(dot(N, L))), 0, 0.01);
             float2 shadowMapValue = shadowTexture.Sample(shadowSampler, shadowUV).xy;
-
-            float lightZ = posFromLightVP.z;
-            float visibility = shadowMapValue.x - bias < lightZ ? 0.5f : 1.0f;
+            float visibility = 1.0f;
+            visibility = CalculateVSM(shadowMapValue, min(lightPos.z, 1.0f), bias, MomentBias);
+            visibility = linstep(0.2f, 1.0f, visibility);
 
             float4 ambient  = LightAmbient * MatAmbient;
             float4 diffuse  = LightDiffuse * MatDiffuse * max(dot(N, L), 0.0f) * visibility;
@@ -123,7 +141,8 @@ namespace Glib::Internal::Graphics::ShaderCode
         })"
     };
 
-    constexpr char SKINNED_MESH_SHADOW_SHADER[]{
+    constexpr char SKINNED_MESH_SHADOW_SHADER[]
+    {
         R"(cbuffer CameraConstant : register(b0)
         {
             float4x4 View;
