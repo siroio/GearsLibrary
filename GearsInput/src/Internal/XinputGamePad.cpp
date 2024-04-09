@@ -14,6 +14,8 @@ bool Glib::Internal::Input::XinputGamePad::Initialize(DWORD controllerIndex)
 void Glib::Internal::Input::XinputGamePad::Update()
 {
     float now = GameTimer::Now();
+
+    prevPadState_ = currentPadState_;
     auto res = XInputGetState(controllerIndex_, &currentPadState_.state);
 
     if (res != ERROR_SUCCESS)
@@ -26,7 +28,7 @@ void Glib::Internal::Input::XinputGamePad::Update()
     }
 
     if (!currentPadState_.isConnected) return;
-    prevPadState_ = currentPadState_;
+
 
     // 振動停止
     if (currentPadState_.isVibrating) return;
