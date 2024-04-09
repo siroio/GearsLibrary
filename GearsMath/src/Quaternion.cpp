@@ -396,7 +396,7 @@ Quaternion& operator*=(Quaternion& q1, float scalar)
 
 bool operator==(const Quaternion& q1, const Quaternion& q2)
 {
-    return Mathf::Tolerance(Quaternion::Dot(q1, q2));
+    return Mathf::Abs(Quaternion::Dot(q1, q2) - 1.0f) < Mathf::EPSILON;
 }
 
 bool operator!=(const Quaternion& q1, const Quaternion& q2)
