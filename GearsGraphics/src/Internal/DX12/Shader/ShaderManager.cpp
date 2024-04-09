@@ -117,7 +117,7 @@ ComPtr<ID3DBlob> Glib::Internal::Graphics::ShaderManager::CompileFromFile(const 
         errorBlob.ReleaseAndGetAddressOf()
     ));
 
-    if (!result) ShaderError(errorBlob);
+    if (!result) ShaderError(shader, errorBlob);
     return result ? shaderBinary : nullptr;
 }
 
@@ -143,17 +143,17 @@ ComPtr<ID3DBlob> Glib::Internal::Graphics::ShaderManager::CompileFromCode(const 
         errorBlob.ReleaseAndGetAddressOf()
     ));
 
-    if (!result) ShaderError(errorBlob);
+    if (!result) ShaderError(shader, errorBlob);
     return result ? shaderBinary : nullptr;
 }
 
-void Glib::Internal::Graphics::ShaderManager::ShaderError(const ComPtr<ID3DBlob>& error) const
+void Glib::Internal::Graphics::ShaderManager::ShaderError(const Glib::Graphics::Shader& shader, const ComPtr<ID3DBlob>& error) const
 {
     Debug::Error("Shader Compile Error");
     Debug::Error(static_cast<LPCSTR>(error.Get()->GetBufferPointer()));
     MsgBox::Show(
         static_cast<LPCSTR>(error.Get()->GetBufferPointer()),       // message
-        "Shader Compile Error",                                     // title
+        "Shader Compile Error ID: " + std::to_string(shader.ID()),  // title
         MsgBox::STYLE::OK,                                          // style
         MsgBox::ICON::ERROR_ICON                                    // icon
     );

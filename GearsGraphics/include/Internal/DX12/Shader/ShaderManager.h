@@ -48,7 +48,6 @@ namespace Glib::Internal::Graphics
     private:
         ComPtr<ID3DBlob> CompileFromFile(const Glib::Graphics::Shader& shader);
         ComPtr<ID3DBlob> CompileFromCode(const Glib::Graphics::Shader& shader);
-        void ShaderError(const ComPtr<ID3DBlob>& error) const;
+        void ShaderError(const Glib::Graphics::Shader& shader, const ComPtr<ID3DBlob>& error) const;
     };
 }
-
