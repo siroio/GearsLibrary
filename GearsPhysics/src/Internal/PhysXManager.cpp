@@ -69,8 +69,8 @@ namespace
         }
 
         // トリガーかどうか
-        const bool hasTrigger = physx::PxFilterObjectIsTrigger(attributes0) || physx::PxFilterObjectIsTrigger(attributes1);
-        if (hasTrigger)
+        const bool isTrigger = physx::PxFilterObjectIsTrigger(attributes0) || physx::PxFilterObjectIsTrigger(attributes1);
+        if (isTrigger)
         {
             pairFlags |= physx::PxPairFlag::eTRIGGER_DEFAULT;
             return physx::PxFilterFlag::eDEFAULT;
