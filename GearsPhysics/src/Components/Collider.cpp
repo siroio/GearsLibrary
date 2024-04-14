@@ -150,7 +150,7 @@ void Glib::Collider::CreateShape(const physx::PxGeometry& geometry)
 
     physx::PxFilterData filter{};
     filter.word0 = GameObject()->Layer();
-    shape_->setQueryFilterData(filter);
+    shape_->setSimulationFilterData(filter);
     s_physX->AddCollider(WeakPtr<Collider>{ weak_from_this() });
 }
 
