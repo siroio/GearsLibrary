@@ -18,6 +18,7 @@
 #include <SceneManager.h>
 #include <AudioManager.h>
 #include <EffectManager.h>
+#include <Internal/RenderingManager.h>
 #include <GLGUI.h>
 
 #include <GameObject.h>
@@ -66,6 +67,11 @@ public:
         moveDir = Vector3::Zero();
         float speed = 4.0f;
 
+        if (InputSystem::GetButtonDown(GPADKey::B))
+        {
+            Debug::Log("Press B");
+        }
+
         if (InputSystem::GetKey(KeyCode::W))
         {
             moveDir.z++;
@@ -95,7 +101,9 @@ public:
 
     void FixedUpdate()
     {
-        rigidbody_->AddForce(moveForceMultiplier * (moveDir - rigidbody_->LinearVelocity()));
+        Vector3 curVelocity = rigidbody_->LinearVelocity();
+        Vector3 velocityChange = moveForceMultiplier * (moveDir - Vector3{ curVelocity.x, 0.0f, curVelocity.z });
+        rigidbody_->AddForce(velocityChange);
     }
 
     void OnCollisionEnter(const GameObjectPtr& gameObject)
@@ -169,13 +177,14 @@ private:
         auto mesh = GameObjectManager::Instantiate("Mesh");
         mesh->Transform()->Parent(GameObject()->Transform());
         mesh->Transform()->LocalPosition(Vector3{ 0.0f, 2.0f, 1.0f });
+        mesh->Transform()->LocalEulerAngles(Vector3{ 0.0f, 140.0f, 0.0f });
         mesh->Transform()->LocalScale(Vector3{ 1.0f, 1.0f, 1.0f });
         mesh->AddComponent<TestMover>();
         mesh->AddComponent<Rigidbody>()->Constraints(RigidbodyConstraints::FreezeRotation);
         auto renderer = mesh->AddComponent<SkinnedMeshRenderer>();
         auto animator = mesh->AddComponent<Animator>();
         auto cap = mesh->AddComponent<CapsuleCollider>();
-        renderer->MeshID(2);
+        renderer->MeshID(4);
         animator->AnimationID(0);
         animator->Loop(true);
         cap->IsVisible(true);
@@ -326,6 +335,7 @@ public:
         light->Ambient(LIGHT_AMBIENT);
         light->Diffuse(LIGHT_DIFFUSE);
         light->GameObject()->Transform()->EulerAngles(LIGHT_DIRECTION);
+        Internal::Graphics::RenderingManager::ShadowMapRange(Vector2{ 13.0f, 13.0f });
 
         // 音設定
         AudioManager::AddSoundGroup(0);
@@ -341,12 +351,13 @@ public:
 
         // 床
         auto Ground = GameObjectManager::Instantiate("Ground");
-        Ground->AddComponent<MeshRenderer>()->MeshID(1);
+        Ground->AddComponent<MeshRenderer>()->MeshID(3);
         //auto rb = Ground->AddComponent<Rigidbody>();
         auto mc = Ground->AddComponent<MeshCollider>();
         //rb->IsKinematic(true);
+        mc->FlipNormals(true);
         mc->IsVisible(true);
-        mc->MeshID(1);
+        mc->MeshID(3);
         Ground->Transform()->Scale(Vector3{ 1, 1, 1 });
 
 
@@ -384,4 +395,5 @@ class MyGame : public Game
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
     MyGame{}.Run();
+    return 0;
 }

@@ -19,14 +19,14 @@ namespace Glib
         void Set(uint layer1, uint layer2, bool enable)
         {
             if (layer1 > 32 || layer2 > 32) return;
-            layerMap_[layer1][static_cast<uint>(layer2)] = enable;
-            layerMap_[layer2][static_cast<uint>(layer1)] = enable;
+            layerMap_[layer1][layer2] = enable;
+            layerMap_[layer2][layer1] = enable;
         }
 
         bool Validate(uint layer1, uint layer2)
         {
             if (layer1 > 32 || layer2 > 32) return false;
-            return layerMap_[layer1][static_cast<uint>(layer2)];
+            return layerMap_[layer1][layer2];
         }
     private:
         std::unordered_map<uint, std::bitset<32>> layerMap_;
