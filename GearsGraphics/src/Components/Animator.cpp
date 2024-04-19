@@ -99,12 +99,22 @@ void Glib::Animator::Speed(float speed)
     animationSpeed_ = speed;
 }
 
-bool Glib::Animator::Resume() const
+float Glib::Animator::BlendTime() const
+{
+    return animationBlendTime_;
+}
+
+void Glib::Animator::BlendTime(float blendTime)
+{
+    animationBlendTime_ = blendTime;
+}
+
+bool Glib::Animator::Pause() const
 {
     return isResume_;
 }
 
-void Glib::Animator::Resume(bool enable)
+void Glib::Animator::Pause(bool enable)
 {
     isResume_ = enable;
 }
@@ -127,8 +137,6 @@ void Glib::Animator::AnimationID(unsigned int id, float offset)
     currentFrame_ = offset;
     elapsedTime_ = 0.0f;
 }
-
-static float prev = 0.0f;
 
 void Glib::Animator::OnGUI()
 {
