@@ -19,8 +19,11 @@ namespace Glib
         float Speed() const;
         void Speed(float speed);
 
-        bool Resume() const;
-        void Resume(bool enable);
+        float BlendTime() const;
+        void BlendTime(float blendTime);
+
+        bool Pause() const;
+        void Pause(bool enable);
 
         unsigned int AnimationID() const;
         void AnimationID(unsigned int id, float offset = 0.0f);
