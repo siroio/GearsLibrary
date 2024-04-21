@@ -103,7 +103,7 @@ bool Glib::GLGUI::InputVector4(std::string_view label, Vector4* value, bool same
     return ImGui::InputFloat4(label.data(), value->xyzw.data(), "%.3f", GL_ENTER_RETURN);
 }
 
-bool Glib::GLGUI::DragInt(std::string_view label, int* value, float speed, int min, int max, bool sameLine)
+bool Glib::GLGUI::DragInt(std::string_view label, int* value, int speed, int min, int max, bool sameLine)
 {
     if (sameLine) ImGui::SameLine();
     return ImGui::DragInt(label.data(), value, speed, min, max, "%d", GL_SLIDER_CLAMP);
@@ -145,13 +145,13 @@ bool Glib::GLGUI::SliderFloat(std::string_view label, float* value, float min, f
     return ImGui::SliderFloat(label.data(), value, min, max, "%.3f", GL_SLIDER_CLAMP);
 }
 
-bool Glib::GLGUI::CoorPicker3(std::string_view label, Color* color, bool sameLine)
+bool Glib::GLGUI::ColorPicker3(std::string_view label, Color* color, bool sameLine)
 {
     if (sameLine) ImGui::SameLine();
     return ImGui::ColorPicker3(label.data(), color->Raw(), GL_COLOR_PICK_FLAG);
 }
 
-bool Glib::GLGUI::CoorPicker4(std::string_view label, Color* color, bool sameLine)
+bool Glib::GLGUI::ColorPicker4(std::string_view label, Color* color, bool sameLine)
 {
     if (sameLine) ImGui::SameLine();
     return ImGui::ColorPicker4(label.data(), color->Raw(), GL_COLOR_PICK_FLAG);
