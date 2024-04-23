@@ -10,7 +10,7 @@ void Glib::CapsuleCollider::Start()
     if (Initialize())
     {
         CreateShape(
-            Internal::Geometory::CreateCapsule(GameObject(), height_, radius_)
+            Internal::Geometry::CreateCapsule(GameObject(), height_, radius_)
         );
 
         auto* shape = Shape();
@@ -44,7 +44,7 @@ void Glib::CapsuleCollider::Radius(float radius)
 
 void Glib::CapsuleCollider::SyncGeometry()
 {
-    Shape()->setGeometry(Internal::Geometory::CreateCapsule(GameObject(), height_, radius_));
+    Shape()->setGeometry(Internal::Geometry::CreateCapsule(GameObject(), height_, radius_));
 }
 
 void Glib::CapsuleCollider::OnGUI()

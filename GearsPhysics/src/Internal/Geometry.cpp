@@ -13,7 +13,7 @@ namespace
     auto s_physX = Glib::Internal::Physics::PhysXManager::Instance();
 }
 
-physx::PxBoxGeometry Glib::Internal::Geometory::CreateBox(const GameObjectPtr& gameObject, const Vector3& size)
+physx::PxBoxGeometry Glib::Internal::Geometry::CreateBox(const GameObjectPtr& gameObject, const Vector3& size)
 {
     physx::PxBoxGeometry geometry{};
     const Vector3& scale = gameObject->Transform()->Scale();
@@ -23,7 +23,16 @@ physx::PxBoxGeometry Glib::Internal::Geometory::CreateBox(const GameObjectPtr& g
     return geometry;
 }
 
-physx::PxCapsuleGeometry Glib::Internal::Geometory::CreateCapsule(const GameObjectPtr& gameObject, float height, float radius)
+physx::PxSphereGeometry Glib::Internal::Geometry::CreateSphere(const GameObjectPtr& gameObject, float radius)
+{
+    physx::PxSphereGeometry geometry{};
+    const Vector3& scale = gameObject->Transform()->Scale();
+    float maxScale = Mathf::Min(Mathf::Min(scale.x, scale.y), scale.z);
+    geometry.radius = Mathf::Max(radius * maxScale, Mathf::EPSILON);
+    return geometry;
+}
+
+physx::PxCapsuleGeometry Glib::Internal::Geometry::CreateCapsule(const GameObjectPtr& gameObject, float height, float radius)
 {
     const Vector3& scale = gameObject->Transform()->Scale();
     float maxScale = Mathf::Max(scale.x, scale.z);
@@ -33,7 +42,7 @@ physx::PxCapsuleGeometry Glib::Internal::Geometory::CreateCapsule(const GameObje
     return geometry;
 }
 
-physx::PxTriangleMesh* Glib::Internal::Geometory::CreateTriangleMesh(const Mesh& mesh, bool flipNormals)
+physx::PxTriangleMesh* Glib::Internal::Geometry::CreateTriangleMesh(const Mesh& mesh, bool flipNormals)
 {
     physx::PxTolerancesScale tolerancesScale;
     physx::PxCookingParams cookingParams{ tolerancesScale };
@@ -70,7 +79,7 @@ physx::PxTriangleMesh* Glib::Internal::Geometory::CreateTriangleMesh(const Mesh&
     return s_physX->Physcs().createTriangleMesh(readBuffer);
 }
 
-physx::PxConvexMesh* Glib::Internal::Geometory::CreateConvexMesh(const Mesh& mesh)
+physx::PxConvexMesh* Glib::Internal::Geometry::CreateConvexMesh(const Mesh& mesh)
 {
     physx::PxTolerancesScale tolerancesScale;
     physx::PxCookingParams cookingParams{ tolerancesScale };
@@ -103,7 +112,7 @@ physx::PxConvexMesh* Glib::Internal::Geometory::CreateConvexMesh(const Mesh& mes
     return s_physX->Physcs().createConvexMesh(readBuffer);
 }
 
-physx::PxTriangleMeshGeometry Glib::Internal::Geometory::CreateTriangleMesh(const GameObjectPtr& gameObject, physx::PxTriangleMesh* const mesh)
+physx::PxTriangleMeshGeometry Glib::Internal::Geometry::CreateTriangleMesh(const GameObjectPtr& gameObject, physx::PxTriangleMesh* const mesh)
 {
     const auto& scale = gameObject->Transform()->Scale();
     physx::PxTriangleMeshGeometry geometry{};
@@ -114,7 +123,7 @@ physx::PxTriangleMeshGeometry Glib::Internal::Geometory::CreateTriangleMesh(cons
     return geometry;
 }
 
-physx::PxConvexMeshGeometry Glib::Internal::Geometory::CreateConvexMesh(const GameObjectPtr& gameObject, physx::PxConvexMesh* const mesh)
+physx::PxConvexMeshGeometry Glib::Internal::Geometry::CreateConvexMesh(const GameObjectPtr& gameObject, physx::PxConvexMesh* const mesh)
 {
     const auto& scale = gameObject->Transform()->Scale();
     physx::PxConvexMeshGeometry geometry{};

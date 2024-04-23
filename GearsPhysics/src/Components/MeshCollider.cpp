@@ -46,12 +46,12 @@ void Glib::MeshCollider::Start()
     if (isConvex_)
     {
         auto* const ptr = std::get<physx::PxConvexMesh*>(meshPtr_);
-        CreateShape(Internal::Geometory::CreateConvexMesh(GameObject(), ptr));
+        CreateShape(Internal::Geometry::CreateConvexMesh(GameObject(), ptr));
     }
     else
     {
         auto* const ptr = std::get<physx::PxTriangleMesh*>(meshPtr_);
-        CreateShape(Internal::Geometory::CreateTriangleMesh(GameObject(), ptr));
+        CreateShape(Internal::Geometry::CreateTriangleMesh(GameObject(), ptr));
     }
     initialized = true;
 }
@@ -118,12 +118,12 @@ void Glib::MeshCollider::SyncGeometry()
     if (isConvex_)
     {
         auto* const ptr = std::get<physx::PxConvexMesh*>(meshPtr_);
-        Shape()->setGeometry(Internal::Geometory::CreateConvexMesh(GameObject(), ptr));
+        Shape()->setGeometry(Internal::Geometry::CreateConvexMesh(GameObject(), ptr));
     }
     else
     {
         auto* const ptr = std::get<physx::PxTriangleMesh*>(meshPtr_);
-        Shape()->setGeometry(Internal::Geometory::CreateTriangleMesh(GameObject(), ptr));
+        Shape()->setGeometry(Internal::Geometry::CreateTriangleMesh(GameObject(), ptr));
     }
 }
 
@@ -133,10 +133,10 @@ void Glib::MeshCollider::CreateMesh()
 
     if (isConvex_)
     {
-        meshPtr_ = Internal::Geometory::CreateConvexMesh(s_meshManager.Mesh(meshID_));
+        meshPtr_ = Internal::Geometry::CreateConvexMesh(s_meshManager.Mesh(meshID_));
     }
     else
     {
-        meshPtr_ = Internal::Geometory::CreateTriangleMesh(s_meshManager.Mesh(meshID_), isFlipNormals_);
+        meshPtr_ = Internal::Geometry::CreateTriangleMesh(s_meshManager.Mesh(meshID_), isFlipNormals_);
     }
 }

@@ -9,7 +9,7 @@ void Glib::BoxCollider::Start()
     if (Initialize())
     {
         CreateShape(
-            Internal::Geometory::CreateBox(GameObject(), size_)
+            Internal::Geometry::CreateBox(GameObject(), size_)
         );
     }
 }
@@ -26,7 +26,7 @@ void Glib::BoxCollider::Size(const Vector3& size)
 
 void Glib::BoxCollider::SyncGeometry()
 {
-    Shape()->setGeometry(Internal::Geometory::CreateBox(GameObject(), size_));
+    Shape()->setGeometry(Internal::Geometry::CreateBox(GameObject(), size_));
 }
 
 void Glib::BoxCollider::OnGUI()

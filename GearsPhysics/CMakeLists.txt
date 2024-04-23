@@ -8,6 +8,7 @@ set(SOURCE_FILE
     ./src/Components/Rigidbody.cpp
     ./src/Components/Collider.cpp
     ./src/Components/BoxCollider.cpp
+    ./src/Components/SphereCollider.cpp
     ./src/Components/CapsuleCollider.cpp
     ./src/Components/MeshCollider.cpp
     ./src/Physics.cpp
@@ -23,6 +24,7 @@ set(HEADER_FILE
     ./include/Components/Rigidbody.h
     ./include/Components/Collider.h
     ./include/Components/BoxCollider.h
+    ./include/Components/SphereCollider.h
     ./include/Components/CapsuleCollider.h
     ./include/Components/MeshCollider.h
     ./include/Physics.h

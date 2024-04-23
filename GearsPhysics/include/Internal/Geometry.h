@@ -5,6 +5,7 @@
 namespace physx
 {
     class PxBoxGeometry;
+    class PxSphereGeometry;
     class PxCapsuleGeometry;
     class PxTriangleMesh;
     class PxConvexMesh;
@@ -19,14 +20,15 @@ namespace Glib
 
 namespace Glib::Internal
 {
-    class Geometory
+    class Geometry
     {
     private:
-        Geometory() = default;
-        ~Geometory() = default;
+        Geometry() = default;
+        ~Geometry() = default;
 
     public:
         static physx::PxBoxGeometry CreateBox(const GameObjectPtr& gameObject, const Vector3& size);
+        static physx::PxSphereGeometry CreateSphere(const GameObjectPtr& gameObject, float radius);
         static physx::PxCapsuleGeometry CreateCapsule(const GameObjectPtr& gameObject, float height, float radius);
         static physx::PxTriangleMesh* CreateTriangleMesh(const Mesh& mesh, bool flipNormals = false);
         static physx::PxConvexMesh* CreateConvexMesh(const Mesh& mesh);
