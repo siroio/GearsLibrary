@@ -11,9 +11,9 @@ namespace Glib
 {
     template<class T>
     class WeakPtr;
-}
 
-class EventParamt;
+    class EventMsg;
+}
 
 namespace Glib::Internal
 {
@@ -23,13 +23,14 @@ namespace Glib::Internal
         using FunctionInfo = ComponentFunctionInfo<ReturnType, Args...>;
         using FunctionVariant = std::variant<
             FunctionInfo<void, GameObjectPtr>,
-            FunctionInfo<void, EventParamt>>;
+            FunctionInfo<void, EventMsg>>;
         using FunctionType = ComponentFunctionType;
 
     public:
         bool Empty() const;
 
         void Execute(FunctionType type, const GameObjectPtr& gameObject);
+        void Execute(FunctionType type, const EventMsg& msg);
 
         template<class T> requires std::derived_from<T, Component>
         void AddFunction(const std::shared_ptr<T>& component);
@@ -68,6 +69,11 @@ namespace Glib::Internal
         void AddOnCollisionExit(...)
         {}
 
+        template<class T> requires HasReceiveMsgFunc<T, void, EventMsg>
+        void AddReceiveMsg(const std::shared_ptr<T>& component);
+        void AddReceiveMsg(...)
+        {}
+
     private:
         std::unordered_map<FunctionType, std::deque<FunctionVariant>> functions_;
     };
@@ -81,6 +87,7 @@ namespace Glib::Internal
         AddOnCollisionEnter(component);
         AddOnCollisionStay(component);
         AddOnCollisionExit(component);
+        AddReceiveMsg(component);
     }
 
     template<std::size_t index, class ...Args>
@@ -144,5 +151,12 @@ namespace Glib::Internal
             FunctionInfo<void, GameObjectPtr>{ component, std::make_shared<Function::HasOnCollisionExitObject<T, void, GameObjectPtr>>(component)}
         );
     }
-}
 
+    template<class T> requires HasReceiveMsgFunc<T, void, EventMsg>
+    inline void ComponentEventFunctionList::AddReceiveMsg(const std::shared_ptr<T>& component)
+    {
+        functions_[FunctionType::ReceiveMsg].push_back(
+            FunctionInfo<void, EventMsg>{ component, std::make_shared<Function::HasReceiveMsgObject<T, void, EventMsg>>(component) }
+        );
+    }
+}

@@ -10,10 +10,10 @@ namespace Glib::Internal::Interface
     {
     protected:
         virtual ~IFunc() = default;
+
     public:
         virtual ReturnType Call(const Args&... args) = 0;
         virtual bool IsDelete() = 0;
         virtual int Order() = 0;
     };
 }
-

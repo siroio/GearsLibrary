@@ -10,3 +10,7 @@ void Glib::Internal::ComponentEventFunctionList::Execute(FunctionType type, cons
     ExecuteFromVariant<0>(type, gameObject);
 }
 
+void Glib::Internal::ComponentEventFunctionList::Execute(FunctionType type, const EventMsg& msg)
+{
+    ExecuteFromVariant<1>(type, msg);
+}

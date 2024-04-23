@@ -28,7 +28,7 @@ namespace Glib
         void ResetGameObjects();
 
     private:
-        void DrawDebugParams(GameObjectPtr gameObject);
+        void DrawDebugParameter(GameObjectPtr gameObject);
 
     public:
 
@@ -70,4 +70,3 @@ namespace Glib
         static inline std::list<std::shared_ptr<GameObject>> gameObjects_;
     };
 }
-

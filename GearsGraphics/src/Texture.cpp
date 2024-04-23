@@ -97,15 +97,15 @@ bool Glib::Texture::CreateTexture(std::string_view path)
 
     // アップロード用のバッファにコピー
     uint8_t* mapped{ nullptr };
-    if (FAILED(uploadBuffer->Map(0, nullptr, (void**)&mapped))) return false;
+    if (FAILED(uploadBuffer->Map(0, nullptr, reinterpret_cast<void**>(&mapped)))) return false;
 
-    auto srcAdress = img->pixels;
+    auto srcImg = img->pixels;
     auto rowPitch = AlignmentedSize(img->rowPitch, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
 
     for (unsigned int y = 0; y < img->height; y++)
     {
-        std::copy_n(srcAdress, rowPitch, mapped);
-        srcAdress += img->rowPitch;
+        std::copy_n(srcImg, rowPitch, mapped);
+        srcImg += img->rowPitch;
         mapped += rowPitch;
     }
     uploadBuffer->Unmap(0, nullptr);

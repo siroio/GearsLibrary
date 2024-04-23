@@ -4,13 +4,17 @@ cmake_minimum_required(VERSION 3.4)
 set(SOURCE_FILE
     ./src/GameObjectManager.cpp
     ./src/GameObject.cpp
+    ./src/EventMsg.cpp
 )
 
 set(HEADER_FILE
     ./include/Internal/IGameObject.h
+    ./include/Internal/IMsgValue.h
+    ./include/Internal/MsgValue.h
     ./include/GameObjectPtr.h
 	./include/GameObjectManager.h
 	./include/GameObject.h
+	./include/EventMsg.h
 )
 
 set(LIB_NAME GearsObject)

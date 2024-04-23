@@ -21,7 +21,7 @@ namespace Glib::Internal
     class ComponentManager final :
         public Interface::ISystem,
         public SingletonPtr<ComponentManager>,
-        public Internal::Function::UpdateOrderSet<Internal::Order::Update::COMPONENT>
+        public Function::UpdateOrderSet<Order::Update::COMPONENT>
     {
     private:
         friend WeakPtr<ComponentManager> SingletonPtr<ComponentManager>::Instance();

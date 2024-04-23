@@ -24,4 +24,3 @@ namespace Glib::Internal
         std::shared_ptr<Interface::IFunc<ReturnType, Args...>> function;
     };
 }
-

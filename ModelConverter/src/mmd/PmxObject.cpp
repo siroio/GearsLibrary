@@ -186,7 +186,7 @@ bool PmxModel::ReadMaterials(std::ifstream& pmxFile, const PmxHeader& header)
 {
     // マテリアル
     int materialSize{ 0 };
-    FileUtility::ReadForBinary(pmxFile, &materialSize, sizeof(4));
+    FileUtility::ReadForBinary(pmxFile, &materialSize, sizeof(int));
     materials.resize(materialSize);
 
     for (int i = 0; i < materialSize; i++)
@@ -240,7 +240,6 @@ bool PmxModel::ReadBones(std::ifstream& pmxFile, const PmxHeader& header)
     // ボーン
     int boneSize{ 0 };
     int ikLinkSize{ 0 };
-    unsigned char angleLimit = 0;
     FileUtility::ReadForBinary(pmxFile, &boneSize, sizeof(int));
 
     bones.resize(boneSize);
@@ -308,7 +307,7 @@ bool PmxModel::ReadBones(std::ifstream& pmxFile, const PmxHeader& header)
             for (int j = 0; j < ikLinkSize; ++j)
             {
                 FileUtility::ReadForBinary(pmxFile, &bone.ikLinks[j].index, header.Info[4]);
-                angleLimit = pmxFile.get();
+                unsigned char angleLimit = pmxFile.get();
                 bone.ikLinks[j].existAngleLimited = false;
                 if (angleLimit == 1)
                 {

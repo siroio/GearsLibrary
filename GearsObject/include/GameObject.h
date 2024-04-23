@@ -8,6 +8,7 @@
 #include <Internal/ComponentManager.h>
 #include <GameObjectManager.h>
 #include <Components/Transform.h>
+#include <EventMsg.h>
 
 class Component;
 
@@ -78,6 +79,18 @@ public:
      */
     template<class T> requires IsComponent<T>
     Glib::WeakPtr<T> GetComponentsInParent() const;
+
+    /**
+     * @brief メッセージを送信
+     */
+    template<class T>
+    void SendMsg(unsigned int msgID, const T& value, const GameObjectPtr& other);
+
+    /**
+     * @brief メッセージを自身へ送信
+     */
+    template<class T>
+    void SendMsg(unsigned int msgID, const T& value);
 
     /**
      * @brief コンポーネントの削除
@@ -176,6 +189,7 @@ public:
 
 private:
     virtual void Initialize() override;
+    void ReceiveMsg(const Glib::EventMsg& msg);
 
 private:
     bool isDead_{ false };
@@ -276,3 +290,14 @@ inline Glib::WeakPtr<T> GameObject::GetComponentsInParent() const
     return components;
 }
 
+template<class T>
+inline void GameObject::SendMsg(unsigned int msgID, const T& value, const GameObjectPtr& other)
+{
+    other->ReceiveMsg({ msgID, value });
+}
+
+template<class T>
+inline void GameObject::SendMsg(unsigned int msgID, const T& value)
+{
+    weak_from_this()->SendMsg(msgID, value, weak_from_this());
+}

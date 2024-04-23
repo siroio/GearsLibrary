@@ -1,8 +1,14 @@
 ﻿#include <GameObject.h>
 #include <Component.h>
 #include <Components/Transform.h>
+#include <Internal/ComponentManager.h>
 #include <Internal/ImGuiInc.h>
 #include <StringUtility.h>
+
+namespace
+{
+    auto componentManager = Glib::Internal::ComponentManager::Instance();
+}
 
 GameObject::GameObject(std::string_view name) : name_{ name }
 {}
@@ -15,6 +21,11 @@ GameObject::~GameObject()
 void GameObject::Initialize()
 {
     transform_ = AddComponent<Glib::Transform>();
+}
+
+void GameObject::ReceiveMsg(const Glib::EventMsg& msg)
+{
+    componentManager->ExecuteEventFunction(weak_from_this(), ComponentFunctionType::ReceiveMsg, msg);
 }
 
 void GameObject::RemoveComponents()

@@ -17,11 +17,13 @@ namespace
 
 void Glib::GameObjectManager::Update()
 {
+    // Deadフラグの立ったオブジェクトを削除
     std::erase_if(gameObjects_, [](const std::shared_ptr<GameObject>& gameObject)
     {
         return gameObject->IsDead();
     });
 
+    // Deadフラグの立ったコンポーネントを削除
     for (const auto& gameObject : gameObjects_)
     {
         gameObject->RemoveDeadComponents();
@@ -47,7 +49,7 @@ void Glib::GameObjectManager::DebugDraw()
         {
             // パラメーター表示
             if (!go->IsRoot()) continue;
-            DrawDebugParams(go);
+            DrawDebugParameter(go);
         }
         ImGui::End();
     }
@@ -107,16 +109,17 @@ void Glib::GameObjectManager::ResetGameObjects()
     }
 }
 
-void Glib::GameObjectManager::DrawDebugParams(GameObjectPtr gameObject)
+void Glib::GameObjectManager::DrawDebugParameter(GameObjectPtr gameObject)
 {
     ImGuiTreeNodeFlags flag =
         ImGuiTreeNodeFlags_OpenOnArrow |
         ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
-    // check leaf
+    // 葉ノード
     if (gameObject->Transform()->Children().empty())
         flag |= ImGuiTreeNodeFlags_Leaf;
 
+    // 選択されているか
     if (gameObject == s_selectObject)
         flag |= ImGuiTreeNodeFlags_Selected;
 
@@ -129,10 +132,10 @@ void Glib::GameObjectManager::DrawDebugParams(GameObjectPtr gameObject)
 
     if (opened)
     {
-        // 子供を再帰的に呼び出す
+        // 子供を描画
         for (const auto& child : gameObject->Transform()->Children())
         {
-            DrawDebugParams(child->GameObject());
+            DrawDebugParameter(child->GameObject());
         }
         ImGui::TreePop();
     }
@@ -140,22 +143,21 @@ void Glib::GameObjectManager::DrawDebugParams(GameObjectPtr gameObject)
 
 GameObjectPtr Glib::GameObjectManager::Instantiate()
 {
-    return gameObjects_.empty() ?
-        Instantiate("GameObject") :
-        Instantiate("GameObject " + std::to_string(gameObjects_.size()));
+    return Instantiate("GameObject");
 }
 
 GameObjectPtr Glib::GameObjectManager::Instantiate(std::string_view name)
 {
-    const auto gameObject = std::make_shared<GameObject>(name);
+    auto gameObject = std::make_shared<GameObject>(name);
     gameObjects_.push_back(gameObject);
-    const WeakPtr<Internal::Interface::IGameObject> iGameObj{ gameObject };
-    iGameObj->Initialize();
+    WeakPtr<Internal::Interface::IGameObject> iGameObject{ gameObject };
+    iGameObject->Initialize();
     return GameObjectPtr{ gameObject };
 }
 
 GameObjectPtr Glib::GameObjectManager::Find(std::string_view name)
 {
+    // 名前を線形探索
     const auto& it = std::ranges::find_if(gameObjects_, [name](const std::shared_ptr<GameObject>& gameObject)
     {
         return gameObject->Name() == name;
@@ -168,6 +170,7 @@ std::list<GameObjectPtr> Glib::GameObjectManager::FindGameObjectsWithTag(std::st
 {
     std::list<GameObjectPtr> result;
 
+    // 名前を線形探索
     std::ranges::copy_if(gameObjects_, std::back_inserter(result), [tag](const std::shared_ptr<GameObject>& gameObject)
     {
         return gameObject->Tag() == tag;
