@@ -29,7 +29,6 @@ physx::PxCapsuleGeometry Glib::Internal::Geometory::CreateCapsule(const GameObje
     float maxScale = Mathf::Max(scale.x, scale.z);
 
     radius *= maxScale;
-    float halfHeight = (height * scale.y * 0.5f) - radius;
     physx::PxCapsuleGeometry geometry{ radius, Mathf::Max(height, Mathf::EPSILON) };
     return geometry;
 }
