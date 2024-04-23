@@ -20,7 +20,7 @@ namespace Glib::Internal::Graphics::ShaderCode
         {
             float4 MatAmbient;
             float4 MatDiffuse;
-            float4 MatSpeculer;
+            float4 MatSpecular;
             float  MatShininess;
             float3 MatPadding;
         };
@@ -34,7 +34,7 @@ namespace Glib::Internal::Graphics::ShaderCode
         {
             float4 LightAmbient;
             float4 LightDiffuse;
-            float4 LightSpeculer;
+            float4 LightSpecular;
             float3 LightDirection;
             float  ShadowBias;
             float  MomentBias;
@@ -134,9 +134,9 @@ namespace Glib::Internal::Graphics::ShaderCode
 
             float4 ambient  = LightAmbient * MatAmbient;
             float4 diffuse  = LightDiffuse * MatDiffuse * max(dot(N, L), 0.0f) * visibility;
-            float4 speculer = LightSpeculer * MatSpeculer * pow(max(dot(N, H), 0.0f), MatShininess) * visibility;
+            float4 specular = LightSpecular * MatSpecular * pow(max(dot(N, H), 0.0f), MatShininess) * visibility;
             float4 baseColor = albedoTexture.Sample(albedoSampler, input.uv);
-            float4 color = (ambient + diffuse) * baseColor + speculer;
+            float4 color = (ambient + diffuse) * baseColor + specular;
             return float4(color.rgb, baseColor.a);
         })"
     };
@@ -159,7 +159,7 @@ namespace Glib::Internal::Graphics::ShaderCode
         {
             float4 MatAmbient;
             float4 MatDiffuse;
-            float4 MatSpeculer;
+            float4 MatSpecular;
             float  MatShininess;
             float3 MatPadding;
         };
@@ -167,17 +167,6 @@ namespace Glib::Internal::Graphics::ShaderCode
         cbuffer BoneConstant : register(b3)
         {
             float4x4 MeshBones[512];
-        };
-
-        cbuffer DirectionalLight : register(b4)
-        {
-            float4 LightAmbient;
-            float4 LightDiffuse;
-            float4 LightSpeculer;
-            float3 LightDirection;
-            float  ShadowBias;
-            float  NormalBias;
-            float3 Padding;
         };
 
         Texture2D<float4> albedoTexture : register(t0);

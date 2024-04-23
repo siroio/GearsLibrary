@@ -25,7 +25,7 @@ bool Glib::AnimationClip::Load(std::string_view fileName)
         keyframes_[motion.boneName].push_back(std::move(keyFrame));
     }
 
-    // メモリをsizeに合わせる
+    // フレームを昇順にソート
     for (auto& [bone, frame] : keyframes_)
     {
         std::ranges::sort(frame, [](const KeyFrame& lhs, const KeyFrame& rhs)
