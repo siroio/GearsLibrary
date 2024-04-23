@@ -21,12 +21,10 @@ Glib::MsgBox::RESULT Glib::MsgBox::Show(std::string_view msg, std::string_view t
 
 Glib::MsgBox::RESULT Glib::MsgBox::Show(std::string_view msg, std::string_view title, std::function<void(RESULT)> callback)
 {
-    if (&title == nullptr) return Show(msg, "MessageBox", STYLE::OK, ICON::ASTERISK_ICON, callback);
-    return Show(msg, title, STYLE::OK, ICON::ASTERISK_ICON, callback);
+    return Show(msg, title.empty() ? "MessageBox" : title, STYLE::OK, ICON::ASTERISK_ICON, callback);
 }
 
 Glib::MsgBox::RESULT Glib::MsgBox::Show(std::string_view msg, std::function<void(RESULT)> callback)
 {
     return Show(msg, "", STYLE::OK, ICON::ASTERISK_ICON, callback);
 }
-
