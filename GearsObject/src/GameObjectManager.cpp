@@ -74,12 +74,14 @@ void Glib::GameObjectManager::DebugDraw()
 
             // 名前の表示
             auto name = s_selectObject->Name();
-            ImGui::Text(name.c_str());
-
             if (ImGui::InputText("##Name", name.data(), name.size(), flags))
             {
                 s_selectObject->Name(name);
             }
+
+            // レイヤーの表示
+            std::string tag = "Tag: " + (s_selectObject->Tag().empty() ? "None" : s_selectObject->Tag());
+            ImGui::Text(tag.c_str());
             ImGui::SameLine();
 
             // レイヤーの表示
