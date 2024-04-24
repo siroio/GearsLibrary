@@ -25,7 +25,7 @@ void GameObject::Initialize()
 
 void GameObject::ReceiveMsg(const Glib::EventMsg& msg)
 {
-    componentManager->ExecuteEventFunction(weak_from_this(), ComponentFunctionType::ReceiveMsg, msg);
+    componentManager->ExecuteEventFunction(shared_from_this(), ComponentFunctionType::ReceiveMsg, msg);
 }
 
 void GameObject::RemoveComponents()

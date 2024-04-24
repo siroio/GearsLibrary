@@ -13,13 +13,17 @@ namespace Glib
 
         /**
          * @brief メッセージIDの取得
-         * @return
          */
         unsigned int MsgID() const;
 
         /**
+         * @brief メッセージの型を確認
+         */
+        template<class T>
+        bool ValidateType() const;
+
+        /**
          * @brief 内容を取得
-         * @return
          */
         template<class T>
         const T& Msg() const;
@@ -32,6 +36,12 @@ namespace Glib
     inline EventMsg::EventMsg(unsigned int msgID, const T& value) :
         msgValue_{ std::make_unique<Internal::MsgValue<T>>(msgID, value) }
     {}
+
+    template<class T>
+    inline bool EventMsg::ValidateType() const
+    {
+        return typeid(T) == msgValue_->GetValueType();
+    }
 
     template<class T>
     inline const T& EventMsg::Msg() const

@@ -10,11 +10,10 @@ namespace Glib::Internal
     class MsgValue : public Interface::IMsgValue
     {
     public:
-        using value = T;
         MsgValue(unsigned int msgID, const T& msg);
         unsigned int GetMsgID() const override;
         const std::type_info& GetValueType() const override;
-        const value& Msg() const;
+        const T& Msg() const;
 
     private:
         unsigned int msgID_{};
@@ -35,11 +34,11 @@ namespace Glib::Internal
     template<class T>
     inline const std::type_info& MsgValue<T>::GetValueType() const
     {
-        return typeid(MsgValue<T>::value);
+        return typeid(T);
     }
 
     template<class T>
-    inline const MsgValue<T>::value& MsgValue<T>::Msg() const
+    inline const T& MsgValue<T>::Msg() const
     {
         return value_;
     }

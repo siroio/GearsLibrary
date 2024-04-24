@@ -293,11 +293,11 @@ inline Glib::WeakPtr<T> GameObject::GetComponentsInParent() const
 template<class T>
 inline void GameObject::SendMsg(unsigned int msgID, const T& value, const GameObjectPtr& other)
 {
-    other->ReceiveMsg({ msgID, value });
+    other->ReceiveMsg(Glib::EventMsg{ msgID, value });
 }
 
 template<class T>
 inline void GameObject::SendMsg(unsigned int msgID, const T& value)
 {
-    weak_from_this()->SendMsg(msgID, value, weak_from_this());
+    shared_from_this()->SendMsg(msgID, value, shared_from_this());
 }
