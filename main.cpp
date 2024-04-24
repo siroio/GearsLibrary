@@ -171,6 +171,14 @@ public:
         }
     }
 
+    void ReceiveMsg(const EventMsg& msg)
+    {
+        if (msg.ValidateType<std::string>())
+        {
+            Debug::Log(std::to_string(msg.MsgID()) + " : " + msg.Msg<std::string>());
+        }
+    }
+
 private:
     void SetupMesh()
     {
@@ -233,6 +241,7 @@ private:
         Component::OnGUI();
         if (GLGUI::ComboBox("Test Type", current_, combo_))
         {
+            GameObject()->SendMsg(1, current_, GameObject());
             const auto& it = std::find(combo_.begin(), combo_.end(), current_);
             const auto idx = std::distance(combo_.begin(), it);
             currenType_ = static_cast<TestType>(idx);
