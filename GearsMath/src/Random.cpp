@@ -21,7 +21,7 @@ uint32_t Glib::Pcg32Fast::Gen()
 bool Glib::Random::Initialize()
 {
     generator = std::make_unique<Pcg32Fast>(std::random_device{}());
-    return generator != nullptr ? true : false;
+    return generator != nullptr;
 }
 
 void Glib::Random::Seed(uint64_t seed)
