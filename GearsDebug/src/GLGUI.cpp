@@ -103,7 +103,7 @@ bool Glib::GLGUI::InputVector4(std::string_view label, Vector4* value, bool same
     return ImGui::InputFloat4(label.data(), value->xyzw.data(), "%.3f", GL_ENTER_RETURN);
 }
 
-bool Glib::GLGUI::DragInt(std::string_view label, int* value, int speed, int min, int max, bool sameLine)
+bool Glib::GLGUI::DragInt(std::string_view label, int* value, float speed, int min, int max, bool sameLine)
 {
     if (sameLine) ImGui::SameLine();
     return ImGui::DragInt(label.data(), value, speed, min, max, "%d", GL_SLIDER_CLAMP);
