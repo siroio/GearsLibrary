@@ -27,7 +27,7 @@ physx::PxSphereGeometry Glib::Internal::Geometry::CreateSphere(const GameObjectP
 {
     physx::PxSphereGeometry geometry{};
     const Vector3& scale = gameObject->Transform()->Scale();
-    float maxScale = Mathf::Min(Mathf::Min(scale.x, scale.y), scale.z);
+    float maxScale = Mathf::Max(Mathf::Max(scale.x, scale.y), scale.z);
     geometry.radius = Mathf::Max(radius * maxScale, Mathf::EPSILON);
     return geometry;
 }
