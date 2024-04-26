@@ -133,8 +133,8 @@ public:
         auto se = GameObject()->GetComponent<AudioSource>();
         if (InputSystem::GetKeyDown(KeyCode::Space))
         {
-            GameObject()->Destroy();
             se->Play();
+            GameObject()->Destroy();
         }
     }
 };

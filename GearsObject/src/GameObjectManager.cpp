@@ -17,17 +17,17 @@ namespace
 
 void Glib::GameObjectManager::Update()
 {
-    // Deadフラグの立ったオブジェクトを削除
-    gameObjects_.remove_if([](const std::shared_ptr<GameObject>& gameObject)
-    {
-        return gameObject->IsDead();
-    });
-
     // Deadフラグの立ったコンポーネントを削除
     for (const auto& gameObject : gameObjects_)
     {
         gameObject->RemoveDeadComponents();
     }
+
+    // Deadフラグの立ったオブジェクトを削除
+    gameObjects_.remove_if([](const std::shared_ptr<GameObject>& gameObject)
+    {
+        return gameObject->IsDead();
+    });
 }
 
 void Glib::GameObjectManager::DebugDraw()

@@ -61,12 +61,11 @@ void Glib::Internal::ComponentFunctionList::ExecuteClear(FunctionType type, cons
 
 void Glib::Internal::ComponentFunctionList::Remove(FunctionType type)
 {
-    std::erase_if(functions_[type], [](const auto& variant)
+    functions_[type].remove_if([](const FunctionVariant& variant)
     {
-        return std::visit([&variant](auto& v)
+        return std::visit([](auto& v)
         {
             return v.function->IsDelete();
         }, variant);
     });
 }
-

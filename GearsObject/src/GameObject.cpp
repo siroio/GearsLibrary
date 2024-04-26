@@ -35,7 +35,7 @@ void GameObject::RemoveComponents()
 
 void GameObject::RemoveDeadComponents()
 {
-    std::erase_if(components_, [](const Glib::WeakPtr<Component>& component)
+    components_.remove_if([](const Glib::WeakPtr<Component>& component)
     {
         return component->IsDead();
     });
@@ -58,17 +58,16 @@ void GameObject::DrawGUI()
 
 void GameObject::Destroy()
 {
-    isActive_ = false;
-    isDead_ = true;
-
-    for (const auto& component : components_)
-    {
-        component->Destroy();
-    }
-
     for (const auto& child : transform_->Children())
     {
         child->Destroy();
+    }
+
+    isActive_ = false;
+    isDead_ = true;
+    for (const auto& component : components_)
+    {
+        component->Destroy();
     }
 }
 

@@ -22,7 +22,7 @@ Glib::Collider::~Collider()
         material_ = nullptr;
     }
 
-    if (shape_ != nullptr)
+    if (!rigidbody_.expired() && shape_ != nullptr)
     {
         shape_->release();
         shape_ = nullptr;
@@ -215,7 +215,7 @@ void Glib::Collider::OnGUI()
 
 void Glib::Collider::SetTrigger()
 {
-    // trigger, shimulationフラグの切り替え
+    // trigger, simulationフラグの切り替え
     auto disable = physx::PxShapeFlag::eTRIGGER_SHAPE;
     auto enable = physx::PxShapeFlag::eSIMULATION_SHAPE;
 
