@@ -1,7 +1,8 @@
 ﻿#include <Components/Transform.h>
 #include <Matrix4x4.h>
-#include <GLGUI.h>
+#include <GameObject.h>
 #include <Mathf.h>
+#include <GLGUI.h>
 
 Glib::Transform::~Transform()
 {
@@ -262,6 +263,18 @@ void Glib::Transform::Parent(Glib::WeakPtr<Transform> parent)
 Glib::WeakPtr<Glib::Transform> Glib::Transform::Parent() const
 {
     return parent_;
+}
+
+Glib::WeakPtr<Glib::Transform> Glib::Transform::Find(std::string_view name)
+{
+    for (const auto& child : children_)
+    {
+        if (child->GameObject()->Name() == name) return child;
+        auto nextChild = child->Find(name); // 子供からも検索
+        if (!nextChild.expired()) return nextChild;
+    }
+
+    return Glib::WeakPtr<Glib::Transform>{};
 }
 
 const std::list<Glib::WeakPtr<Glib::Transform>>& Glib::Transform::Children() const

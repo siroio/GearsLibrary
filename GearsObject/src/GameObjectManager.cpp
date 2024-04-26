@@ -18,7 +18,7 @@ namespace
 void Glib::GameObjectManager::Update()
 {
     // Deadフラグの立ったオブジェクトを削除
-    std::erase_if(gameObjects_, [](const std::shared_ptr<GameObject>& gameObject)
+    gameObjects_.remove_if([](const std::shared_ptr<GameObject>& gameObject)
     {
         return gameObject->IsDead();
     });
@@ -159,7 +159,6 @@ GameObjectPtr Glib::GameObjectManager::Instantiate(std::string_view name)
 
 GameObjectPtr Glib::GameObjectManager::Find(std::string_view name)
 {
-    // 名前を線形探索
     const auto& it = std::ranges::find_if(gameObjects_, [name](const std::shared_ptr<GameObject>& gameObject)
     {
         return gameObject->Name() == name;
@@ -171,8 +170,6 @@ GameObjectPtr Glib::GameObjectManager::Find(std::string_view name)
 std::list<GameObjectPtr> Glib::GameObjectManager::FindGameObjectsWithTag(std::string_view tag)
 {
     std::list<GameObjectPtr> result;
-
-    // 名前を線形探索
     std::ranges::copy_if(gameObjects_, std::back_inserter(result), [tag](const std::shared_ptr<GameObject>& gameObject)
     {
         return gameObject->Tag() == tag;

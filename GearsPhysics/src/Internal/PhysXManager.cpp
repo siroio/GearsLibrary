@@ -28,6 +28,7 @@ namespace
 
     Glib::Layer2D s_layer;
     std::unordered_map<uintptr_t, Glib::WeakPtr<Glib::Internal::Interface::IRigidbody>> s_rigidbodys;
+    std::unordered_map<uintptr_t, GameObjectPtr> s_staticRigidbodys;
     std::list<Glib::WeakPtr<Glib::Internal::Interface::ICollider>> s_colliders;
 
     std::list<GameObjectPair> s_triggerEnterCallbacks;
@@ -81,6 +82,22 @@ namespace
         pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_LOST;
 
         return physx::PxFilterFlag::eDEFAULT;
+    }
+
+    GameObjectPtr GetGameObject(const physx::PxActor* actor)
+    {
+        uintptr_t id = reinterpret_cast<uintptr_t>(actor);
+        auto rb = s_rigidbodys.find(id);
+        if (rb != s_rigidbodys.end())
+        {
+            return rb->second->GetGameObject();
+        }
+        auto staticRb = s_staticRigidbodys.find(id);
+        if (staticRb != s_staticRigidbodys.end())
+        {
+            return staticRb->second;
+        }
+        return nullptr;
     }
 }
 
@@ -274,10 +291,10 @@ bool Glib::Internal::Physics::PhysXManager::Raycast(const Vector3& origin, const
     const auto& isHit = s_scene->raycast(ToPxVec3(origin), ToPxVec3(direction), maxDistance, buffer);
 
     if (!isHit) return false;
-    const auto& rigidbody = s_rigidbodys.find(reinterpret_cast<uintptr_t>(buffer.block.actor));
+    const auto& gameObject = GetGameObject(buffer.block.actor);
 
-    if (rigidbody == s_rigidbodys.end()) return false;
-    hit.gameObject = rigidbody->second->GetGameObject();
+    if (gameObject.expired()) return false;
+    hit.gameObject = gameObject;
     hit.distance = buffer.block.distance;
     hit.normal = ToVector3(buffer.block.normal);
     hit.point = ToVector3(buffer.block.position);
@@ -286,11 +303,13 @@ bool Glib::Internal::Physics::PhysXManager::Raycast(const Vector3& origin, const
 
 bool Glib::Internal::Physics::PhysXManager::RaycastAll(const Vector3& origin, const Vector3& direction, std::vector<RaycastHit>& hits, float maxDistance)
 {
-    std::vector<physx::PxRaycastHit> raycastHits(s_physics->getNbShapes());
     physx::PxRaycastBuffer buffer{};
-    buffer.touches = &raycastHits.front();
+    buffer.maxNbTouches = s_physics->getNbShapes();
+    std::vector<physx::PxRaycastHit> raycastHits{};
+    raycastHits.resize(buffer.maxNbTouches);
+    buffer.touches = raycastHits.data();
 
-    const auto& isHit = s_scene->raycast(ToPxVec3(origin), ToPxVec3(direction), maxDistance, buffer);
+    bool isHit = s_scene->raycast(ToPxVec3(origin), ToPxVec3(direction), maxDistance, buffer);
     if (!isHit) return false;
 
     hits.resize(buffer.nbTouches);
@@ -298,9 +317,9 @@ bool Glib::Internal::Physics::PhysXManager::RaycastAll(const Vector3& origin, co
     for (physx::PxU32 i = 0; i < buffer.nbTouches; i++)
     {
         const physx::PxRaycastHit& hitInfo = buffer.getTouch(i);
-        const auto& rigidbody = s_rigidbodys.find(reinterpret_cast<uintptr_t>(hitInfo.actor));
-
-        hits.at(i).gameObject = rigidbody->second->GetGameObject();
+        const auto& gameObject = GetGameObject(hitInfo.actor);
+        if (gameObject.expired()) continue;
+        hits.at(i).gameObject = gameObject;
         hits.at(i).distance = hitInfo.distance;
         hits.at(i).normal = ToVector3(hitInfo.normal);
         hits.at(i).point = ToVector3(hitInfo.position);
@@ -309,29 +328,32 @@ bool Glib::Internal::Physics::PhysXManager::RaycastAll(const Vector3& origin, co
     return isHit;
 }
 
-physx::PxRigidActor* Glib::Internal::Physics::PhysXManager::CreateRigidBody(const Vector3& position, const Quaternion& rotation, bool isStatic, const WeakPtr<Interface::IRigidbody>& rigidbody)
+physx::PxRigidActor* Glib::Internal::Physics::PhysXManager::CreateRigidBody(const Vector3& position, const Quaternion& rotation, const WeakPtr<Interface::IRigidbody>& rigidbody)
 {
     physx::PxTransform pose{ ToPxVec3(position), ToPxQuat(rotation) };
-    physx::PxRigidActor* actor;
-    if (isStatic)
-    {
-        actor = s_physics->createRigidStatic(pose);
-    }
-    else
-    {
-        actor = s_physics->createRigidDynamic(pose);
-        s_rigidbodys.emplace(reinterpret_cast<uintptr_t>(actor), rigidbody);
-    }
-
+    physx::PxRigidActor* actor = s_physics->createRigidDynamic(pose);
+    s_rigidbodys.emplace(reinterpret_cast<uintptr_t>(actor), rigidbody);
     s_scene->addActor(*actor);
     return actor;
 }
 
-void Glib::Internal::Physics::PhysXManager::RemoveRigidbody(const WeakPtr<Interface::IRigidbody>& rigidbody)
+physx::PxRigidActor* Glib::Internal::Physics::PhysXManager::CreateRigidStatic(const Vector3& position, const Quaternion& rotation, const GameObjectPtr& gameObject)
 {
-    if (rigidbody.expired()) return;
-    s_rigidbodys.erase(reinterpret_cast<uintptr_t>(&rigidbody->GetRigidDynamic()));
-    s_scene->removeActor(rigidbody->GetRigidDynamic());
+    physx::PxTransform pose{ ToPxVec3(position), ToPxQuat(rotation) };
+    physx::PxRigidActor* actor = s_physics->createRigidStatic(pose);
+    s_staticRigidbodys.emplace(reinterpret_cast<uintptr_t>(actor), gameObject);
+    s_scene->addActor(*actor);
+    return actor;
+}
+
+void Glib::Internal::Physics::PhysXManager::RemoveActor(physx::PxActor* actor)
+{
+    if (actor == nullptr) return;
+    uintptr_t actorID = reinterpret_cast<uintptr_t>(actor);
+    s_rigidbodys.erase(actorID);
+    s_staticRigidbodys.erase(actorID);
+    s_scene->removeActor(*actor);
+    actor->release();
 }
 
 physx::PxMaterial* Glib::Internal::Physics::PhysXManager::CreateMaterial(float dynamicFriction, float staticFriction, float bounce)
@@ -378,13 +400,10 @@ void Glib::Internal::Physics::PhysXManager::onContact(const physx::PxContactPair
 {
     for (physx::PxU32 i = 0; i < nbPairs; i++)
     {
-        const auto& actor0 = s_rigidbodys.find(reinterpret_cast<uintptr_t>(pairHeader.actors[0]));
-        const auto& actor1 = s_rigidbodys.find(reinterpret_cast<uintptr_t>(pairHeader.actors[1]));
-        if (actor0 == s_rigidbodys.end() || actor1 == s_rigidbodys.end()) return;
-
         const physx::PxU16& event = pairs[i].events;
-        const auto& gameObject0 = actor0->second->GetGameObject();
-        const auto& gameObject1 = actor1->second->GetGameObject();
+        const auto& gameObject0 = GetGameObject(pairHeader.actors[0]);
+        const auto& gameObject1 = GetGameObject(pairHeader.actors[1]);
+        if (gameObject0.expired() || gameObject1.expired()) return;
 
         if ((event & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND) != 0)
         {
@@ -407,13 +426,10 @@ void Glib::Internal::Physics::PhysXManager::onTrigger(physx::PxTriggerPair* pair
 {
     for (physx::PxU32 i = 0; i < count; i++)
     {
-        const auto& trigger = s_rigidbodys.find(reinterpret_cast<uintptr_t>(pairs[i].triggerActor));
-        const auto& other = s_rigidbodys.find(reinterpret_cast<uintptr_t>(pairs[i].otherActor));
-        if (trigger == s_rigidbodys.end() || other == s_rigidbodys.end()) return;
-
         const physx::PxU16& event = pairs[i].status;
-        const auto& triggerObject = trigger->second->GetGameObject();
-        const auto& otherObject = other->second->GetGameObject();
+        const auto& triggerObject = GetGameObject(pairs[i].triggerActor);
+        const auto& otherObject = GetGameObject(pairs[i].otherActor);
+        if (triggerObject.expired() || otherObject.expired()) return;
 
         if ((event & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND) != 0)
         {

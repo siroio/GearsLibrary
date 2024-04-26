@@ -205,7 +205,8 @@ private:
 template<class T, class... Args> requires IsComponent<T>
 inline Glib::WeakPtr<T> GameObject::AddComponent(Args&& ...args)
 {
-    auto component = Glib::Internal::ComponentManager::Instance()->AddComponent<T>(weak_from_this(), args...);
+    auto manager = Glib::Internal::ComponentManager::Instance();
+    auto component = manager->AddComponent<T>(weak_from_this(), std::forward<Args>(args)...);
     components_.push_back(component);
     return Glib::WeakPtr<T>{ component };
 }

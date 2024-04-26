@@ -43,8 +43,9 @@ namespace Glib
         public Internal::Interface::IRigidbody
     {
     public:
+        ~Rigidbody();
+
         void Start();
-        void OnDestroy();
 
         void AddForce(const Vector3& force, ForceMode mode = ForceMode::Force);
         void AddTorque(const Vector3& torque, ForceMode mode = ForceMode::Force);

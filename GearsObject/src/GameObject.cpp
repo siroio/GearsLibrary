@@ -65,6 +65,11 @@ void GameObject::Destroy()
     {
         component->Destroy();
     }
+
+    for (const auto& child : transform_->Children())
+    {
+        child->Destroy();
+    }
 }
 
 bool GameObject::DontDestroyOnLoad() const

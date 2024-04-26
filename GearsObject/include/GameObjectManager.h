@@ -15,6 +15,7 @@ namespace Glib
     class GameObjectManager final :
         public Internal::Interface::ISystem,
         public SingletonPtr<GameObjectManager>,
+        public Internal::Function::UpdateOrderSet<Internal::Order::Update::GAMEOBJECT>,
         public Internal::Function::FinalizeOrderSet<Internal::Order::Finalize::GAMEOBJECT>
     {
     private:

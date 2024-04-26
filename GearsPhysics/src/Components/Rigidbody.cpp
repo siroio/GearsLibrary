@@ -12,13 +12,21 @@ namespace
     std::vector<std::string> s_combo{ "Discrete", "Continuous", "Continuous Dynamic", "Continuous Speculative" };
 }
 
+Glib::Rigidbody::~Rigidbody()
+{
+    if (rigidDynamic_ != nullptr)
+    {
+        s_physX->RemoveActor(rigidDynamic_);
+        rigidDynamic_ = nullptr;
+    }
+}
+
 void Glib::Rigidbody::Start()
 {
     const auto& transform = GameObject()->Transform();
     rigidDynamic_ = static_cast<physx::PxRigidDynamic*>(s_physX->CreateRigidBody(
         transform->Position(),
         transform->Rotation(),
-        false,
         WeakPtr<Rigidbody>{ shared_from_this() }
     ));
 
@@ -44,15 +52,9 @@ void Glib::Rigidbody::Start()
     }
 }
 
-void Glib::Rigidbody::OnDestroy()
-{
-    s_physX->RemoveRigidbody(WeakPtr<Rigidbody>{ shared_from_this() });
-}
-
 void Glib::Rigidbody::AddForce(const Vector3& force, ForceMode mode)
 {
     if (rigidDynamic_ == nullptr) return;
-
     rigidDynamic_->addForce(
         Internal::Physics::PhysXManager::ToPxVec3(force),
         static_cast<physx::PxForceMode::Enum>(mode)

@@ -10,8 +10,8 @@ namespace Glib
         using PxMeshPtr = std::variant<physx::PxTriangleMesh*, physx::PxConvexMesh*>;
 
     public:
+        ~MeshCollider();
         void Start();
-        void OnDestroy();
 
         unsigned int MeshID() const;
         void MeshID(unsigned int id);

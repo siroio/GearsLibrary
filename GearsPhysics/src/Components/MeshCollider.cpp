@@ -14,6 +14,20 @@ namespace
     auto s_physX = Glib::Internal::Physics::PhysXManager::Instance();
 }
 
+Glib::MeshCollider::~MeshCollider()
+{
+    std::visit([](auto&& ptr)
+    {
+        delete& ptr;
+    }, meshPtr_);
+
+    if (rigidStatic_ != nullptr)
+    {
+        s_physX->RemoveActor(rigidStatic_);
+        rigidStatic_ = nullptr;
+    }
+}
+
 void Glib::MeshCollider::Start()
 {
     if (!enableMesh_)
@@ -36,11 +50,10 @@ void Glib::MeshCollider::Start()
     }
 
     const auto& transform = GameObject()->Transform();
-    rigidStatic_ = static_cast<physx::PxRigidStatic*>(s_physX->CreateRigidBody(
+    rigidStatic_ = static_cast<physx::PxRigidStatic*>(s_physX->CreateRigidStatic(
         transform->Position(),
         transform->Rotation(),
-        true,
-        nullptr));
+        GameObject()));
 
     CreateMesh();
     if (isConvex_)
@@ -54,14 +67,6 @@ void Glib::MeshCollider::Start()
         CreateShape(Internal::Geometry::CreateTriangleMesh(GameObject(), ptr));
     }
     initialized = true;
-}
-
-void Glib::MeshCollider::OnDestroy()
-{
-    std::visit([](auto&& ptr)
-    {
-        delete& ptr;
-    }, meshPtr_);
 }
 
 unsigned int Glib::MeshCollider::MeshID() const

@@ -84,7 +84,8 @@ namespace Glib::Internal
         {
             if (variant.index() != index) continue;
             const auto& info = std::get<index>(variant);
-            if (info.component->Active())
+            bool isCall = !info.component.expired() || info.component->Active();
+            if (isCall)
             {
                 info.function->Call(args...);
             }
@@ -127,4 +128,3 @@ namespace Glib::Internal
         );
     }
 }
-

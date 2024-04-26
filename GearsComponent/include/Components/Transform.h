@@ -67,6 +67,7 @@ namespace Glib
 
         void Parent(Glib::WeakPtr<Transform> parent);
         Glib::WeakPtr<Transform> Parent() const;
+        Glib::WeakPtr<Transform> Find(std::string_view name);
         const std::list<Glib::WeakPtr<Transform>>& Children() const;
         void ClearChildren();
 

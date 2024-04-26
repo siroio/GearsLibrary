@@ -1,9 +1,10 @@
 ﻿#pragma once
 #include <Singleton.h>
 #include <Internal/ISystem.h>
-#include <vector>
 #include <PxConfig.h>
 #include <PxPhysicsAPI.h>
+#include <GameObjectPtr.h>
+#include <vector>
 
 struct Matrix4x4;
 struct Vector3;
@@ -49,8 +50,9 @@ namespace Glib::Internal::Physics
         bool Raycast(const Vector3& origin, const Vector3& direction, RaycastHit& hit, float maxDistance = FLT_MAX);
         bool RaycastAll(const Vector3& origin, const Vector3& direction, std::vector<RaycastHit>& hits, float maxDistance = FLT_MAX);
 
-        physx::PxRigidActor* CreateRigidBody(const Vector3& position, const Quaternion& rotation, bool isStatic, const WeakPtr<Interface::IRigidbody>& rigidbody);
-        void RemoveRigidbody(const WeakPtr<Interface::IRigidbody>& rigidbody);
+        physx::PxRigidActor* CreateRigidBody(const Vector3& position, const Quaternion& rotation, const WeakPtr<Interface::IRigidbody>& rigidbody);
+        physx::PxRigidActor* CreateRigidStatic(const Vector3& position, const Quaternion& rotation, const GameObjectPtr& gameObject);
+        void RemoveActor(physx::PxActor* actor);
         physx::PxMaterial* CreateMaterial(float dynamicFriction, float staticFriction, float bounce);
         void AddCollider(const WeakPtr<Interface::ICollider>& collider);
 
