@@ -60,7 +60,7 @@ void GameObject::Destroy()
 {
     for (const auto& child : transform_->Children())
     {
-        child->Destroy();
+        child->GameObject()->Destroy();
     }
 
     isActive_ = false;

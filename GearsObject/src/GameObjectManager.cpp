@@ -45,11 +45,11 @@ void Glib::GameObjectManager::DebugDraw()
     {
         ImGui::Begin("Hierarchy", &s_enableHierarchy);
         ImGui::Separator();
-        for (const auto& go : gameObjects_)
+        for (const auto& gameObject : gameObjects_)
         {
             // パラメーター表示
-            if (!go->IsRoot()) continue;
-            DrawDebugParameter(go);
+            if (!gameObject->IsRoot()) continue;
+            DrawDebugParameter(gameObject);
         }
         ImGui::End();
     }
