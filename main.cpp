@@ -388,6 +388,7 @@ class MyGame : public Game
 {
     void Start() override
     {
+
         Debug::Log("GAME STARTTING");
         SceneManager::Register<TestScene>();
         Debug::Log("Scene: " + SceneManager::SceneName<TestScene>() + " Registered");
@@ -404,6 +405,8 @@ class MyGame : public Game
 
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
+    Window::BorderlessWindow(true);
+    Window::WindowSize(Vector2{ 2560.0f, 1440.0f });
     MyGame{}.Run();
     return 0;
 }

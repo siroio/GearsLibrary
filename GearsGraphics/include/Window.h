@@ -29,8 +29,6 @@ namespace Glib
         */
         void Finalize();
 
-    public:
-
         /**
          * @brief インスタンスハンドルの取得
          */
@@ -85,5 +83,16 @@ namespace Glib
          * @brief デバッグ時のウィンドウサイズを設定
          */
         static void WindowDebugSize(const Vector2& size);
+
+        /**
+         * @brief ボーダレスかを取得
+         */
+        static bool BorderlessWindow();
+
+        /**
+         * @brief ボーダレスに設定
+         * @param borderless
+         */
+        static void BorderlessWindow(bool borderless);
     };
 }

@@ -13,7 +13,7 @@ namespace
     std::string s_windowName{ "GameWindow" };
     Vector2 s_windowSize{ 1240.0f, 720.0f };
     Vector2 s_windowDebugSize{ 1240.0f, 720.0f };
-    bool s_isFullScreen{ false };
+    bool s_isBorderless{ false };
 }
 
 LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -38,28 +38,30 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 bool Glib::Window::Initialize()
 {
     // 作成済みかチェック
-    if (s_windowHandle != NULL) return false;
+    if (s_windowHandle != nullptr) return false;
 
     // Comの初期化
-    if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED))) return false;
+    if (FAILED(CoInitializeEx(nullptr, COINIT_MULTITHREADED))) return false;
 
     // ウィンドウの作成
     s_windowClass.cbSize = sizeof(WNDCLASSEX);
     GetModuleHandleEx(0, nullptr, &s_hInstance);
     s_windowClass.hInstance = s_hInstance;
     s_windowClass.lpfnWndProc = (WNDPROC)::WindowProcedure;
+
+
+#if defined(DEBUG) || defined(_DEBUG)
+    RECT rect{ 0, 0, static_cast<LONG>(s_windowDebugSize.x), static_cast<LONG>(s_windowDebugSize.y) };
     auto style = WS_OVERLAPPEDWINDOW;
+#else
+    RECT rect{ 0, 0, static_cast<LONG>(s_windowSize.x), static_cast<LONG>(s_windowSize.y) };
+    auto style = s_isBorderless ? WS_POPUP : WS_OVERLAPPEDWINDOW;
+#endif
 
 #ifdef UNICODE
     s_windowClass.lpszClassName = StringToWide(s_windowName).c_str();
 #else
     s_windowClass.lpszClassName = s_windowName.c_str();
-#endif
-
-#if defined(DEBUG) || defined(_DEBUG)
-    RECT rect{ 0, 0, static_cast<LONG>(s_windowDebugSize.x), static_cast<LONG>(s_windowDebugSize.y) };
-#else
-    RECT rect{ 0, 0, static_cast<LONG>(s_windowSize.x), static_cast<LONG>(s_windowSize.y) };
 #endif
 
     if (!RegisterClassEx(&s_windowClass)) return false;
@@ -128,7 +130,7 @@ std::string& Glib::Window::WindowName()
 
 void Glib::Window::WindowName(const std::string& name)
 {
-    if (s_windowHandle != NULL) return;
+    if (s_windowHandle != nullptr) return;
     s_windowName = name;
 }
 
@@ -139,7 +141,7 @@ const Vector2& Glib::Window::WindowSize()
 
 void Glib::Window::WindowSize(const Vector2& size)
 {
-    if (s_windowHandle != NULL) return;
+    if (s_windowHandle != nullptr) return;
     s_windowSize = size;
 }
 
@@ -150,6 +152,18 @@ const Vector2& Glib::Window::WindowDebugSize()
 
 void Glib::Window::WindowDebugSize(const Vector2& size)
 {
-    if (s_windowHandle != NULL) return;
+    if (s_windowHandle != nullptr) return;
     s_windowDebugSize = size;
+}
+
+bool Glib::Window::BorderlessWindow()
+{
+    return s_isBorderless;
+}
+
+void Glib::Window::BorderlessWindow(bool borderless)
+{
+    if (s_windowHandle != nullptr) return;
+    // スタイルを変更
+    s_isBorderless = borderless;
 }
