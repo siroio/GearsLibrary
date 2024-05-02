@@ -16,11 +16,14 @@ namespace
 
 Glib::MeshCollider::~MeshCollider()
 {
-    std::visit([](auto&& ptr)
+    std::visit([](auto mesh)
     {
-        delete& ptr;
+        if (mesh != nullptr)
+        {
+            mesh->release();
+            mesh = nullptr;
+        }
     }, meshPtr_);
-
     if (rigidStatic_ != nullptr)
     {
         s_physX->RemoveActor(rigidStatic_);
