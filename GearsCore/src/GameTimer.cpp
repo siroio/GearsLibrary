@@ -2,10 +2,10 @@
 
 void Glib::GameTimer::Update()
 {
-    const auto now = Clock::now();
-    const Duration unscaledDeltaTime = now - prevTime_;
-    if (unscaledDeltaTime > maxDeltaTime_) unscaledDeltaTime_ = maxDeltaTime_;
-    deltaTime_ = unscaledDeltaTime * timeScale_;
+    const TimePoint now = Clock::now();
+    const Duration deltaTime = now - prevTime_;
+    unscaledDeltaTime_ = std::min(deltaTime, maxDeltaTime_);
+    deltaTime_ = unscaledDeltaTime_ * timeScale_;
     prevTime_ = now;
 }
 

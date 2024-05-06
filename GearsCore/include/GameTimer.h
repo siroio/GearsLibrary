@@ -89,7 +89,7 @@ namespace Glib
         static inline Duration unscaledDeltaTime_{ 1.0f };
         static inline Duration maximumAllowedTimeStep_{ 0.3333333f };
         static inline float timeScale_{ 1.0f };
-        static inline float fixedTimeStep_{ 0.02f };
+        static inline float fixedTimeStep_{ 0.0167f }; // 60FPS
         TimePoint prevTime_{ Clock::now() };
     };
 }
