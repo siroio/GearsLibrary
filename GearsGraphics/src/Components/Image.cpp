@@ -8,6 +8,7 @@
 #include <GameObject.h>
 #include <Window.h>
 #include <Mathf.h>
+#include <GLGUI.h>
 
 namespace
 {
@@ -37,7 +38,7 @@ Glib::Image::Image()
 void Glib::Image::Start()
 {
     auto canvas = GameObject()->GetComponentInParent<Canvas>();
-    s_canvasManager->AddUI(shared_from_this(), canvas);
+    s_canvasManager->AddUI(WeakPtr<Image>{ shared_from_this() }, canvas);
 }
 
 void Glib::Image::LateUpdate()
@@ -96,4 +97,17 @@ void Glib::Image::TextureID(unsigned int id)
 {
     textureID_ = id;
     enabled_ = s_textureManager.Contains(id);
+}
+
+void Glib::Image::OnGUI()
+{
+    Component::OnGUI();
+
+    int texID = static_cast<int>(textureID_);
+    if (GLGUI::InputInt("TextureID", &texID))
+    {
+        TextureID(static_cast<unsigned int>(texID));
+    }
+    GLGUI::DragVector2("Center", &center_, 0.01f, 0.0f, 1.0f);
+    GLGUI::ColorPicker4("Color", &color_);
 }

@@ -18,6 +18,7 @@
 #include <list>
 #include <Layer2D.h>
 #include <ranges>
+#include <Mathf.h>
 
 namespace
 {
@@ -184,8 +185,11 @@ void Glib::Internal::Physics::PhysXManager::Update()
     // fixedUpdateを溜まった時間分進める
     while (s_accumulatedTime >= GameTimer::FixedTimeStep())
     {
-        s_scene->simulate(GameTimer::FixedDeltaTime());
-        s_scene->fetchResults(true);
+        if (GameTimer::FixedDeltaTime() > Mathf::EPSILON)
+        {
+            s_scene->simulate(GameTimer::FixedDeltaTime());
+            s_scene->fetchResults(true);
+        }
         s_accumulatedTime -= GameTimer::FixedTimeStep();
     }
 

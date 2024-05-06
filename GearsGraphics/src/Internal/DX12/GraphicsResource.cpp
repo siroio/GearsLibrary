@@ -66,7 +66,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateTexture(unsigned int id, 
     static constexpr UINT64 width = 4;
     static constexpr UINT64 height = 4;
     static constexpr UINT64 datasize = width * height * sizeof(unsigned char);
-    auto texHeapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0 };
+    auto texHeapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0, 0, 0 };
     auto resDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R8G8B8A8_UNORM, width, height, 1, 1);
     // リソースの作成
     auto result = s_dx12->Device()->CreateCommittedResource(

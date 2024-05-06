@@ -120,20 +120,20 @@ Quaternion Quaternion::FromToRotation(const Vector3& fromDirection, const Vector
 Quaternion Quaternion::LookRotation(const Vector3& view, const Vector3& up)
 {
     Vector3 forward = Vector3::Normalize(view);
-    if (forward.SqrMagnitude() < (Mathf::EPSILON_SQRT))
+    if (forward.SqrMagnitude() < Mathf::EPSILON_SQRT)
     {
         forward = Vector3{ 0.0f, 0.0f, 1.0f };
     }
 
     Vector3 right = Vector3::Cross(up, forward);
-    if (right.SqrMagnitude() < (Mathf::EPSILON_SQRT))
+    if (right.SqrMagnitude() < Mathf::EPSILON_SQRT)
     {
         right = Vector3{ 1.0f, 0.0f, 0.0f };
     }
 
     Vector3 upwards = Vector3::Cross(forward, right);
     upwards.Normalize();
-    right = Vector3::Cross(forward, upwards);
+    right = Vector3::Cross(upwards, forward);
     Quaternion result;
     float radicand = right.x + upwards.y + forward.z;
     if (radicand > 0.0f)

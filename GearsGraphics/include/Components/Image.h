@@ -28,7 +28,7 @@ namespace Glib
         void Center(const Vector2& center);
 
         /**
-         * @brief 色を取得 
+         * @brief 色を取得
          */
         const Color& Color() const;
 
@@ -48,6 +48,9 @@ namespace Glib
         void TextureID(unsigned int id);
 
     private:
+        void OnGUI() override;
+
+    private:
         bool enabled_{ false };
         Internal::Graphics::ConstantBuffer constantBuffer_{};
         unsigned int textureID_{ UINT_MAX };
@@ -55,4 +58,3 @@ namespace Glib
         ::Color color_{ Color::White() };
     };
 }
-

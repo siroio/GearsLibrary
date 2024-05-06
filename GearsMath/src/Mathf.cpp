@@ -1,6 +1,11 @@
 ﻿#include <Mathf.h>
 #include <cmath>
 
+float Mathf::Inverse(const float v)
+{
+    return 1.0f / v;
+}
+
 float Mathf::DegToRad(float degree)
 {
     return degree * DEG2RAD;
@@ -100,6 +105,27 @@ float Mathf::Pow(const float a, const float b)
 float Mathf::Sqrt(const float a)
 {
     return Pow(a, 0.5f);
+}
+
+float Mathf::InvSqrt(const float a)
+{
+    return 1 / Sqrt(a);
+}
+
+float Mathf::FastInvSqrt(const float a)
+{
+    long X, Y;
+    float y;
+    X = *(long*)&a;
+    Y = 0x5F3759DF - (X >> 1); // Magic number!
+    y = *(float*)&Y;
+
+    // Newton's method
+    const float threehalfs = 1.5F;
+    float x2 = a * 0.5F;
+    y = y * (threehalfs - (x2 * y * y));   // 1st iteration
+    //  y = y * (threehalfs - (x2 * y * y));   // 2nd iteration
+    return y;
 }
 
 float Mathf::Exp(float power)

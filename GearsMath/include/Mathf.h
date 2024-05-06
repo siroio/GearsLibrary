@@ -22,12 +22,7 @@ public:
     static constexpr float NEGATIVE_INFINITY = -std::numeric_limits<float>::infinity();
     static constexpr float QUIET_NAN = std::numeric_limits<float>::quiet_NaN();
 
-
-    static constexpr float Inverse(const float v)
-    {
-        return 1.0f / v;
-    }
-
+    static float Inverse(const float v);
     static float DegToRad(float degree);
     static float RadToDeg(float rad);
 
@@ -50,6 +45,8 @@ public:
 
     static float Pow(const float a, const float b);
     static float Sqrt(const float a);
+    static float InvSqrt(const float a);
+    static float FastInvSqrt(const float a);
     static float Exp(float power);
     static float Log(float f, float p);
     static float Log(float f);
