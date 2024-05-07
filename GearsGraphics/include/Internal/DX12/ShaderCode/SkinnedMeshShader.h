@@ -120,8 +120,7 @@ namespace Glib::Internal::Graphics::ShaderCode
         {
             float3 normal = normalize(normalTexture.Sample(albedoSampler, input.uv) * 2.0f - 1.0f);
             float3x3 tbn = float3x3(input.tangent, input.binormal, input.normal);
-            bool useTangentSpace = !isnan(input.tangent) && !isnan(input.binormal) && (dot(input.tangent, input.binormal) == 0.0f);
-            float3 N = normalize(useTangentSpace ? normalize(mul(normal, tbn)) : input.normal);
+            float3 N = normalize(mul(normal, tbn));
 
             float3 L = normalize(-LightDirection);
             float3 V = normalize(-input.view);
