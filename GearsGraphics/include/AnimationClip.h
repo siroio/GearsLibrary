@@ -52,7 +52,7 @@ namespace Glib
         std::tuple<int, int> SearchKeyFrame(const KeyFrames& keys, float frameNo) const;
 
     private:
-        float endFrame_;
+        float endFrame_{ 0.0f };
         std::unordered_map<std::string, KeyFrames> keyframes_;
     };
 }
