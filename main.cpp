@@ -18,7 +18,6 @@
 #include <SceneManager.h>
 #include <AudioManager.h>
 #include <EffectManager.h>
-#include <Internal/RenderingManager.h>
 #include <GLGUI.h>
 
 #include <GameObject.h>
@@ -46,9 +45,10 @@ using namespace Glib;
 
 namespace
 {
-    const Vector3 LIGHT_DIRECTION{ 30.0f, 40.0f, 0.0f };
+    const Vector3 LIGHT_DIRECTION{ 50.0f, -30.0f, 0.0f };
     const Color LIGHT_AMBIENT{ 0.7f, 0.7f, 0.7f, 1.0f };
     const Color LIGHT_DIFFUSE{ 0.7f, 0.7f, 0.7f, 1.0f };
+    const Color LIGHT_SPECULAR{ 0.1f, 0.1f, 0.1f, 0.1f };
 }
 
 // テスト用コンポーネント
@@ -344,8 +344,8 @@ public:
             ->AddComponent<DirectionalLight>();
         light->Ambient(LIGHT_AMBIENT);
         light->Diffuse(LIGHT_DIFFUSE);
+        light->Specular(LIGHT_SPECULAR);
         light->GameObject()->Transform()->EulerAngles(LIGHT_DIRECTION);
-        Internal::Graphics::RenderingManager::ShadowMapRange(Vector2{ 13.0f, 13.0f });
 
         // 音設定
         AudioManager::AddSoundGroup(0);
