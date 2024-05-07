@@ -65,12 +65,14 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateTexture(unsigned int id, 
 {
     static constexpr UINT64 width = 4;
     static constexpr UINT64 height = 4;
-    static constexpr UINT64 datasize = width * height * sizeof(unsigned char);
-    auto texHeapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0, 0, 0 };
-    auto resDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R8G8B8A8_UNORM, width, height, 1, 1);
+    static constexpr UINT64 datasize = width * height * 4;
+    CD3DX12_HEAP_PROPERTIES heapProp{ D3D12_HEAP_TYPE_CUSTOM, 0U, 0U };
+    heapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+    heapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+    CD3DX12_RESOURCE_DESC resDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R8G8B8A8_UNORM, width, height, 1U, 1U);
     // リソースの作成
     auto result = s_dx12->Device()->CreateCommittedResource(
-        &texHeapProp,
+        &heapProp,
         D3D12_HEAP_FLAG_NONE,
         &resDesc,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
@@ -82,7 +84,7 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateTexture(unsigned int id, 
     std::array<unsigned char, datasize> texData{};
     for (int i = 0; i < texData.size(); i++)
     {
-        int idx = (static_cast<uint64_t>(i) * 4ull) >> 32ull;
+        int idx = i % 4;
         if (idx == 0) texData.at(i) = r;
         else if (idx == 1) texData.at(i) = g;
         else if (idx == 2) texData.at(i) = b;
