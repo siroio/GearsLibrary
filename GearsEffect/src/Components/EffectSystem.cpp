@@ -17,7 +17,6 @@ Glib::EffectSystem::~EffectSystem()
 void Glib::EffectSystem::Start()
 {
     transform_ = GameObject()->Transform();
-    effectState_.Set(EffectState::Looping, true);
     if (effectState_ == EffectState::PlayOnStart) Play();
 }
 
