@@ -85,12 +85,9 @@ namespace Glib::Internal::Graphics::ShaderCode
         {
             float2 bMoments = lerp(moments, float2(0.5f, 0.5f), momentBias);
             float bFragDepth = fragDepth - depthBias;
-            float E_xSqr = bMoments.y;
-            float E_xSqrM = bMoments.x * bMoments.x;
-            float variance = E_xSqr - E_xSqrM;
-            float mD = bMoments.x - bFragDepth;
-            float mDSqr = mD * mD;
-            float visibility = variance / (variance + mDSqr);
+            float variance = bMoments.y- bMoments.x * bMoments.x;
+            float mD = bFragDepth - bMoments.x;
+            float visibility = variance / (variance + mD * mD);
             return max(visibility, bFragDepth <= bMoments.x);
         }
 
@@ -107,8 +104,8 @@ namespace Glib::Internal::Graphics::ShaderCode
         float4 PSmain(PSInput input) : SV_TARGET
         {
             float3 normal = normalize(normalTexture.Sample(albedoSampler, input.uv) * 2.0f - 1.0f);
-            float3x3 tbn = float3x3(input.tangent, input.binormal, input.normal);
-            float3 N = normalize(mul(normal, tbn));
+            float3x3 TBN = float3x3(input.tangent, input.binormal, input.normal);
+            float3 N = normalize(mul(normal, TBN));
 
             float3 L = normalize(-LightDirection);
             float3 V = normalize(-input.view);
@@ -119,14 +116,19 @@ namespace Glib::Internal::Graphics::ShaderCode
 
             float bias = clamp(ShadowBias * tan(acos(dot(N, L))), 0, 0.01);
             float2 shadowMapValue = shadowTexture.Sample(shadowSampler, shadowUV).xy;
-            float visibility = CalculateVSM(shadowMapValue, min(lightPos.z, 1.0f), bias, MomentBias);
-            visibility = ReduceLightBleeding(visibility, 0.3f);
 
-            float4 ambient  = LightAmbient * MatAmbient;
-            float4 diffuse  = LightDiffuse * MatDiffuse * max(dot(N, L), 0.0f) * visibility;
-            float4 specular = LightSpecular * MatSpecular * pow(max(dot(N, H), 0.0f), MatShininess) * visibility;
+            float visibility = 1.0f;
+            if (lightPos.z > shadowMapValue.x && lightPos.z <= 1.0f)
+            {
+                visibility = CalculateVSM(shadowMapValue, lightPos.z, bias, MomentBias);
+                visibility = ReduceLightBleeding(visibility, 0.3f);
+            }
+
+            float4 ambient   = LightAmbient  * MatAmbient;
+            float4 diffuse   = LightDiffuse  * MatDiffuse  * max(dot(N, L), 0.0f) * visibility;
+            float4 specular  = LightSpecular * MatSpecular * pow(max(dot(N, H), 0.0f), MatShininess) * visibility;
             float4 baseColor = albedoTexture.Sample(albedoSampler, input.uv);
-            float4 color = (ambient + diffuse) * baseColor + specular;
+            float4 color     = (ambient + diffuse) * baseColor + specular;
             return float4(color.rgb, baseColor.a);
         })"
     };
@@ -172,7 +174,12 @@ namespace Glib::Internal::Graphics::ShaderCode
         {
             float4 depth = input.position;
             depth.xyz /= depth.w;
-            return float4(depth.z, depth.z * depth.z, 0.0f, 1.0f);
+            float2 moments;
+            moments.x = depth.z;
+            float dx = ddx(depth.z);
+            float dy = ddy(depth.z);
+            moments.y = depth.z * depth.z + 0.25f * (dx * dx + dy * dy);
+            return float4(moments, 0.0f, 1.0f);
         })"
     };
 }

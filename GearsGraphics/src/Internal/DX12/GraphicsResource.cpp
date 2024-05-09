@@ -85,11 +85,13 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateTexture(unsigned int id, 
     for (int i = 0; i < texData.size(); i++)
     {
         int idx = i % 4;
-        if (idx == 0) texData.at(i) = r;
-        else if (idx == 1) texData.at(i) = g;
-        else if (idx == 2) texData.at(i) = b;
-        else if (idx == 3) texData.at(i) = a;
-        else texData.at(i) = 0xff;
+        switch (idx)
+        {
+            case 0: texData.at(i) = r; break;
+            case 1: texData.at(i) = g; break;
+            case 2: texData.at(i) = b; break;
+            case 3: texData.at(i) = a; break;
+        }
     }
 
     // データ転送
