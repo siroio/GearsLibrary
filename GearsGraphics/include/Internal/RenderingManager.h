@@ -130,6 +130,8 @@ namespace Glib::Internal::Graphics
         template<class T> requires Concepts::IsRenderer<T>
         void AddRenderer(const std::shared_ptr<T>& renderer);
 
+        void DebugDraw();
+
     private:
         template<class T> requires HasDrawFunc<T, void, WeakPtr<CameraBase>>
         void AddDraw(const std::shared_ptr<T>& renderer);

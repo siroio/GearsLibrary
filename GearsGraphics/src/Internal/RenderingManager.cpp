@@ -9,6 +9,7 @@
 #include <Vector3.h>
 #include <Vector2.h>
 #include <ranges>
+#include <Mathf.h>
 #include <imgui.h>
 #include <GLGUI.h>
 
@@ -41,6 +42,11 @@ namespace
         float momentBias{ 0.000f };
         Vector3 padding;
     };
+}
+
+namespace
+{
+    bool s_enableShadowMapWindow{ false };
 }
 
 bool Glib::Internal::Graphics::RenderingManager::Initialize()
@@ -173,4 +179,29 @@ void Glib::Internal::Graphics::RenderingManager::ShadowMapRange(const Vector2& r
 void Glib::Internal::Graphics::RenderingManager::SetDirectionalLightConstant(unsigned int rootParamIndex)
 {
     s_constantBuffer.SetBuffer(rootParamIndex);
+}
+
+void Glib::Internal::Graphics::RenderingManager::DebugDraw()
+{
+    ImGui::BeginMainMenuBar();
+    if (ImGui::BeginMenu("Window"))
+    {
+        GLGUI::CheckBox("ShadowMap", &s_enableShadowMapWindow);
+        ImGui::EndMenu();
+    }
+    ImGui::EndMainMenuBar();
+
+    if (s_enableShadowMapWindow)
+    {
+        ImGui::Begin("Hierarchy", &s_enableShadowMapWindow);
+        ImGui::Separator();
+
+        GLGUI::DragFloat("ShadowBias", &s_shadowBias, 0.0001f, 0.0f);
+        GLGUI::DragFloat("MomentBias", &s_momentBias, 0.0001f, 0.0f);
+        GLGUI::DragFloat("Near", &s_shadowNear, 0.1f, Mathf::EPSILON);
+        GLGUI::DragFloat("Far", &s_shadowFar, 0.1f, Mathf::EPSILON);
+        GLGUI::DragVector2("Size", &s_shadowRange, 1.0f, 0.0f);
+
+        ImGui::End();
+    }
 }
