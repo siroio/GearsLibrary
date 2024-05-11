@@ -16,7 +16,7 @@ namespace Glib::Internal::Graphics::ShaderCode
 
         struct VSInput
         {
-            float4 position : POSITION;
+            float3 position : POSITION;
             float2 uv : TEXCOORD;
         };
 
@@ -34,16 +34,16 @@ namespace Glib::Internal::Graphics::ShaderCode
         VSOutput VSmain(VSInput input)
         {
             VSOutput o;
-            float4 viewPosition = mul(View, float4(input.position.xyz, 0.0f));
-            viewPosition.w = 1.0f;
-            o.position = mul(Projection, viewPosition);
+            float3 viewPosition = mul(View, input.position);
+            float4 clipPosition = mul(Projection, float4(viewPosition, 1.0f));
+            o.position = clipPosition;
             o.uv = input.uv;
             return o;
         }
 
         float4 PSmain(PSInput input) : SV_TARGET
         {
-            return skyboxTex.Sample(smp, input.uv);
+            return float4(skyboxTex.Sample(smp, input.uv).rgb, 1.0f);
         })"
     };
 }

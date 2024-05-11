@@ -132,7 +132,7 @@ namespace Glib::Internal::Graphics::ShaderCode
             if (lightPos.z > shadowMapValue.x && lightPos.z <= 1.0f)
             {
                 visibility = CalculateVSM(shadowMapValue, lightPos.z, bias, MomentBias);
-                visibility = ReduceLightBleeding(visibility, 0.3f);
+                visibility = ReduceLightBleeding(visibility, 0.4f);
             }
 
             float4 ambient   = LightAmbient  * MatAmbient;
