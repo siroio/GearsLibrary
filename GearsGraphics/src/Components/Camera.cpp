@@ -52,7 +52,7 @@ void Glib::Camera::LateUpdate()
     CameraConstant buffer;
     ViewMatrix(buffer.View);
     ProjectionMatrix(buffer.Projection);
-    buffer.LightVP = s_renderingManager->CalculateMatrixForShadowMap(transform_->Position() + transform_->Forward());
+    buffer.LightVP = s_renderingManager->ComputeShadowMapViewMatrix(transform_->Position() + transform_->Forward());
 
     // バッファの更新
     constantBuffer_.Update(sizeof(buffer), &buffer);
@@ -150,8 +150,8 @@ Vector3 Glib::Camera::WorldToScreenPoint(const Vector3& position)
     ProjectionMatrix(projection);
 
     const auto& size = Window::WindowSize();
-    const auto windowX = size.x / 2;
-    const auto windowY = size.y / 2;
+    const auto windowX = size.x * 0.5f;
+    const auto windowY = size.y * 0.5f;
     Matrix4x4 screen{
         windowX, 0.0f, 0.0f, 0.0f,
         0.0f, -windowY, 0.0f, 0.0f,

@@ -148,11 +148,12 @@ void Glib::Internal::Graphics::RenderingManager::LightDirection(const Vector3& d
     s_lightDirection = direction;
 }
 
-Matrix4x4 Glib::Internal::Graphics::RenderingManager::CalculateMatrixForShadowMap(const Vector3& cameraGaze) const
+Matrix4x4 Glib::Internal::Graphics::RenderingManager::ComputeShadowMapViewMatrix(const Vector3& cameraGaze) const
 {
     Vector3 lightPosition = cameraGaze - (s_lightDirection.Normalized() * (s_shadowFar - s_shadowNear) * 0.5f);
-    return Matrix4x4::LookAt(lightPosition, cameraGaze, Vector3::Up()) *
-        Matrix4x4::Orthographic(s_shadowRange.x, s_shadowRange.y, s_shadowNear, s_shadowFar);
+    const auto& lightView = Matrix4x4::LookAt(lightPosition, cameraGaze, Vector3::Up());
+    const auto& lightProj = Matrix4x4::Orthographic(s_shadowRange.x, s_shadowRange.y, s_shadowNear, s_shadowFar);
+    return lightView * lightProj;
 }
 
 void Glib::Internal::Graphics::RenderingManager::ShadowMapBias(float bias)

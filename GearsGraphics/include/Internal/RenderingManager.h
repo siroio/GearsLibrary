@@ -99,7 +99,7 @@ namespace Glib::Internal::Graphics
          * @brief シャドウマップ用の変換行列を計算
          * @param cameraGaze 注視点
          */
-        Matrix4x4 CalculateMatrixForShadowMap(const Vector3& cameraGaze) const;
+        Matrix4x4 ComputeShadowMapViewMatrix(const Vector3& cameraGaze) const;
 
         /**
          * @brief シャドウマップのバイアスを設定

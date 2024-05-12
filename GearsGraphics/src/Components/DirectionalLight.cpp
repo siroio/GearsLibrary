@@ -14,7 +14,7 @@ void Glib::DirectionalLight::Start()
 
 void Glib::DirectionalLight::LateUpdate()
 {
-    RenderingManager::LightDirection(transform_->Forward().Normalized());
+    RenderingManager::LightDirection(transform_->Forward());
 }
 
 void Glib::DirectionalLight::Ambient(const Color& ambient)
