@@ -18,22 +18,22 @@ float Mathf::RadToDeg(float rad)
 
 float Mathf::Sin(float f)
 {
-    return sinf(f);
+    return std::sinf(f);
 }
 
 float Mathf::Cos(float f)
 {
-    return cosf(f);
+    return std::cosf(f);
 }
 
 float Mathf::Tan(float f)
 {
-    return tanf(f);
+    return std::tanf(f);
 }
 
 float Mathf::Asin(float f)
 {
-    return asinf(f);
+    return std::asinf(f);
 }
 
 float Mathf::FastAsin(float f)
@@ -54,17 +54,17 @@ float Mathf::FastAsin(float f)
 
 float Mathf::Acos(float f)
 {
-    return acosf(f);
+    return std::acosf(f);
 }
 
 float Mathf::Atan(float f)
 {
-    return atanf(f);
+    return std::atanf(f);
 }
 
 float Mathf::Atan2(float y, float x)
 {
-    return atan2f(y, x);
+    return std::atan2f(y, x);
 }
 
 float Mathf::Abs(float f)
@@ -129,37 +129,37 @@ float Mathf::FastInvSqrt(const float a)
 
 float Mathf::Exp(float power)
 {
-    return expf(power);
+    return std::expf(power);
 }
 
 float Mathf::Log(float f, float p)
 {
-    return logf(f) / logf(p);
+    return std::logf(f) / std::logf(p);
 }
 
 float Mathf::Log(float f)
 {
-    return logf(f);
+    return std::logf(f);
 }
 
 float Mathf::Log10(float f)
 {
-    return log10f(f);
+    return std::log10f(f);
 }
 
 float Mathf::Ceil(float f)
 {
-    return ceilf(f);
+    return std::ceilf(f);
 }
 
 float Mathf::Floor(float f)
 {
-    return floorf(f);
+    return std::floorf(f);
 }
 
 float Mathf::Round(float f)
 {
-    return roundf(f);
+    return std::roundf(f);
 }
 
 float Mathf::Mod(float a, float b)
@@ -169,17 +169,17 @@ float Mathf::Mod(float a, float b)
 
 int Mathf::CeilToInt(float f)
 {
-    return static_cast<int>(ceilf(f));
+    return static_cast<int>(std::ceilf(f));
 }
 
 int Mathf::FloorToInt(float f)
 {
-    return static_cast<int>(floorf(f));
+    return static_cast<int>(std::floorf(f));
 }
 
 int Mathf::RoundToInt(float f)
 {
-    return static_cast<int>(roundf(f));
+    return static_cast<int>(std::roundf(f));
 }
 
 float Mathf::Sign(float f)
