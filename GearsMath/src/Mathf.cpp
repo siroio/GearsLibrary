@@ -104,7 +104,7 @@ float Mathf::Pow(const float a, const float b)
 
 float Mathf::Sqrt(const float a)
 {
-    return Pow(a, 0.5f);
+    return std::sqrtf(a);
 }
 
 float Mathf::InvSqrt(const float a)
@@ -121,10 +121,9 @@ float Mathf::FastInvSqrt(const float a)
     y = *(float*)&Y;
 
     // Newton's method
-    const float threehalfs = 1.5F;
+    constexpr float threehalfs = 1.5F;
     float x2 = a * 0.5F;
-    y = y * (threehalfs - (x2 * y * y));   // 1st iteration
-    //  y = y * (threehalfs - (x2 * y * y));   // 2nd iteration
+    y = y * (threehalfs - (x2 * y * y));
     return y;
 }
 

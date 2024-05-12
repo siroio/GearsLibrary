@@ -91,7 +91,7 @@ float Easing::Evaluate(Ease type, float time, float duration, float overshootOrA
                 overshootOrAmplitude = 1.0f;
                 s0 = period / 4.0f;
             }
-            else s0 = period / Mathf::TWO_PI * Mathf::Asin(1 / overshootOrAmplitude);
+            else s0 = period / Mathf::TWO_PI * Mathf::FastAsin(1 / overshootOrAmplitude);
             return -(overshootOrAmplitude * Mathf::Pow(2.0f, 10.0f * (time -= 1.0f)) * Mathf::Sin((time * duration - s0) * Mathf::TWO_PI / period));
         case Ease::OutElastic:
             float s1;
@@ -103,7 +103,7 @@ float Easing::Evaluate(Ease type, float time, float duration, float overshootOrA
                 overshootOrAmplitude = 1.0f;
                 s1 = period / 4.0f;
             }
-            else s1 = period / Mathf::TWO_PI * Mathf::Asin(1.0f / overshootOrAmplitude);
+            else s1 = period / Mathf::TWO_PI * Mathf::FastAsin(1.0f / overshootOrAmplitude);
             return (overshootOrAmplitude * Mathf::Pow(2.0f, -10.0f * time) * Mathf::Sin((time * duration - s1) * Mathf::TWO_PI / period) + 1.0f);
         case Ease::InOutElastic:
             float s;
@@ -115,7 +115,7 @@ float Easing::Evaluate(Ease type, float time, float duration, float overshootOrA
                 overshootOrAmplitude = 1.0f;
                 s = period / 4.0f;
             }
-            else s = period / Mathf::TWO_PI * Mathf::Asin(1.0f / overshootOrAmplitude);
+            else s = period / Mathf::TWO_PI * Mathf::FastAsin(1.0f / overshootOrAmplitude);
             if (time < 1.0f) return -0.5f * (overshootOrAmplitude * Mathf::Pow(2.0f, 10.0f * (time -= 1.0f)) * Mathf::Sin((time * duration - s) * Mathf::TWO_PI / period));
             return overshootOrAmplitude * Mathf::Pow(2.0f, -10.0f * (time -= 1.0f)) * Mathf::Sin((time * duration - s) * Mathf::TWO_PI / period) * 0.5f + 1;
     }
