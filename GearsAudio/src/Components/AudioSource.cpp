@@ -106,6 +106,7 @@ void Glib::AudioSource::Is3DSound(bool enable)
 
 bool Glib::AudioSource::Loop() const
 {
+    if (audioClip_.expired()) return false;
     return audioClip_->Loop();
 }
 
