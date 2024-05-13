@@ -101,4 +101,12 @@ public:
 
 private:
     static float Linear(float time, float duration);
+    static float OutBounce(float time, float duration);
+    static float InBounce(float time, float duration);
+    static float InOutBounce(float time, float duration);
+    static float Flash(float time, float duration, float overshootOrAmplitude, float period);
+    static float InFlash(float time, float duration, float overshootOrAmplitude, float period);
+    static float OutFlash(float time, float duration, float overshootOrAmplitude, float period);
+    static float InOutFlash(float time, float duration, float overshootOrAmplitude, float period);
+    static float WeightedEase(float overshootOrAmplitude, float period, int stepIndex, float stepDuration, float dir, float res);
 };

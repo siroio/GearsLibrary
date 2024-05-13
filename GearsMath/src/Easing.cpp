@@ -55,11 +55,11 @@ float Easing::Evaluate(Ease type, float time, float duration, float overshootOrA
             if ((time /= duration * 0.5f) < 1.0f) return 0.5f * (time * time * (((overshootOrAmplitude *= (1.525f)) + 1.0f) * time - overshootOrAmplitude));
             return 0.5f * ((time -= 2.0f) * time * (((overshootOrAmplitude *= (1.525f)) + 1.0f) * time + overshootOrAmplitude) + 2.0f);
         case Ease::InBounce:
-            return 0.0f;
+            return InBounce(time, duration);
         case Ease::OutBounce:
-            return 0.0f;
+            return OutBounce(time, duration);
         case Ease::InOutBounce:
-            return 0.0f;
+            return InOutBounce(time, duration);
         case Ease::InCubic:
             return (time /= duration) * time * time;
         case Ease::OutCubic:
@@ -72,7 +72,7 @@ float Easing::Evaluate(Ease type, float time, float duration, float overshootOrA
         case Ease::OutQuint:
             return ((time = time / duration - 1.0f) * time * time * time * time + 1.0f);
         case Ease::InOutQuint:
-            if ((time /= duration * 0.5f) < 1) return 0.5f * time * time * time * time * time;
+            if ((time /= duration * 0.5f) < 1.0f) return 0.5f * time * time * time * time * time;
             return 0.5f * ((time -= 2.0f) * time * time * time * time + 2.0f);
         case Ease::InCirc:
             return -(Mathf::Sqrt(1.0f - (time /= duration) * time) - 1.0f);
@@ -117,11 +117,19 @@ float Easing::Evaluate(Ease type, float time, float duration, float overshootOrA
             }
             else s = period / Mathf::TWO_PI * Mathf::FastAsin(1.0f / overshootOrAmplitude);
             if (time < 1.0f) return -0.5f * (overshootOrAmplitude * Mathf::Pow(2.0f, 10.0f * (time -= 1.0f)) * Mathf::Sin((time * duration - s) * Mathf::TWO_PI / period));
-            return overshootOrAmplitude * Mathf::Pow(2.0f, -10.0f * (time -= 1.0f)) * Mathf::Sin((time * duration - s) * Mathf::TWO_PI / period) * 0.5f + 1;
+            return overshootOrAmplitude * Mathf::Pow(2.0f, -10.0f * (time -= 1.0f)) * Mathf::Sin((time * duration - s) * Mathf::TWO_PI / period) * 0.5f + 1.0f;
+        case Ease::Flash:
+            return Flash(time, duration, overshootOrAmplitude, period);
+        case Ease::InFlash:
+            return InFlash(time, duration, overshootOrAmplitude, period);
+        case Ease::OutFlash:
+            return OutFlash(time, duration, overshootOrAmplitude, period);
+        case Ease::InOutFlash:
+            return InOutFlash(time, duration, overshootOrAmplitude, period);
     }
 
     // outquad
-    return -(time /= duration) * (time - 2);
+    return -(time /= duration) * (time - 2.0f);
 }
 
 float Easing::CustomEase(float time, float duration, float overshootOrAmplitude, float period, CustomFunc function)
@@ -132,4 +140,110 @@ float Easing::CustomEase(float time, float duration, float overshootOrAmplitude,
 float Easing::Linear(float time, float duration)
 {
     return time / duration;
+}
+
+float Easing::OutBounce(float time, float duration)
+{
+    if ((time /= duration) < (1 / 2.75f))
+    {
+        return (7.5625f * time * time);
+    }
+    if (time < (2 / 2.75f))
+    {
+        return (7.5625f * (time -= (1.5f / 2.75f)) * time + 0.75f);
+    }
+    if (time < (2.5f / 2.75f))
+    {
+        return (7.5625f * (time -= (2.25f / 2.75f)) * time + 0.9375f);
+    }
+    return (7.5625f * (time -= (2.625f / 2.75f)) * time + 0.984375f);
+}
+
+float Easing::InBounce(float time, float duration)
+{
+    return 1.0f - OutBounce(duration - time, duration);
+}
+
+float Easing::InOutBounce(float time, float duration)
+{
+    if (time < duration * 0.5f)
+    {
+        return InBounce(time * 2.0f, duration) * 0.5f;
+    }
+    return OutBounce(time * 2.0f - duration, duration) * 0.5f + 0.5f;
+}
+
+float Easing::Flash(float time, float duration, float overshootOrAmplitude, float period)
+{
+    int stepIndex = Mathf::CeilToInt((time / duration) * overshootOrAmplitude);
+    float stepDuration = duration / overshootOrAmplitude;
+    time -= stepDuration * (stepIndex - 1.0f);
+    float dir = (stepIndex % 2 != 0) ? 1.0f : -1.0f;
+    if (dir < 0.0f) time -= stepDuration;
+    float res = (time * dir) / stepDuration;
+    return WeightedEase(overshootOrAmplitude, period, stepIndex, stepDuration, dir, res);
+}
+
+float Easing::InFlash(float time, float duration, float overshootOrAmplitude, float period)
+{
+    int stepIndex = Mathf::CeilToInt((time / duration) * overshootOrAmplitude);
+    float stepDuration = duration / overshootOrAmplitude;
+    time -= stepDuration * (stepIndex - 1.0f);
+    float dir = (stepIndex % 2 != 0) ? 1.0f : -1.0f;
+    if (dir < 0.0f) time -= stepDuration;
+    time = time * dir;
+    float res = (time /= stepDuration) * time;
+    return WeightedEase(overshootOrAmplitude, period, stepIndex, stepDuration, dir, res);
+}
+
+float Easing::OutFlash(float time, float duration, float overshootOrAmplitude, float period)
+{
+    int stepIndex = Mathf::CeilToInt((time / duration) * overshootOrAmplitude);
+    float stepDuration = duration / overshootOrAmplitude;
+    time -= stepDuration * (stepIndex - 1.0f);
+    float dir = (stepIndex % 2 != 0) ? 1.0f : -1.0f;
+    if (dir < 0.0f) time -= stepDuration;
+    time = time * dir;
+    float res = -(time /= stepDuration) * (time - 2.0f);
+    return WeightedEase(overshootOrAmplitude, period, stepIndex, stepDuration, dir, res);
+}
+
+float Easing::InOutFlash(float time, float duration, float overshootOrAmplitude, float period)
+{
+    int stepIndex = Mathf::CeilToInt((time / duration) * overshootOrAmplitude); // 1 to overshootOrAmplitude
+    float stepDuration = duration / overshootOrAmplitude;
+    time -= stepDuration * (stepIndex - 1.0f);
+    float dir = (stepIndex % 2 != 0) ? 1.0f : -1.0f;
+    if (dir < 0.0f) time -= stepDuration;
+    time = time * dir;
+    float res = (time /= stepDuration * 0.5f) < 1.0f
+        ? 0.5f * time * time
+        : -0.5f * ((--time) * (time - 2.0f) - 1.0f);
+    return WeightedEase(overshootOrAmplitude, period, stepIndex, stepDuration, dir, res);
+}
+
+float Easing::WeightedEase(float overshootOrAmplitude, float period, int stepIndex, float stepDuration, float dir, float res)
+{
+    float easedRes = 0.0f;
+    float finalDecimals = 0.0f;
+    if (dir > 0.0f && static_cast<int>(overshootOrAmplitude) % 2 == 0) stepIndex++;
+    else if (dir < 0.0f && static_cast<int>(overshootOrAmplitude) % 2 != 0) stepIndex++;
+
+    if (period > 0.0f)
+    {
+        float finalTruncated = Mathf::Truncate(overshootOrAmplitude);
+        finalDecimals = overshootOrAmplitude - finalTruncated;
+        if (Mathf::Mod(finalTruncated, 2.0f) > 0.0f) finalDecimals = 1.0f - finalDecimals;
+        finalDecimals = (finalDecimals * stepIndex) / overshootOrAmplitude;
+        easedRes = (res * (overshootOrAmplitude - stepIndex)) / overshootOrAmplitude;
+    }
+    else if (period < 0.0f)
+    {
+        period = -period;
+        easedRes = (res * stepIndex) / overshootOrAmplitude;
+    }
+    float diff = easedRes - res;
+    res += (diff * period) + finalDecimals;
+    if (res > 1.0f) res = 1.0f;
+    return res;
 }
