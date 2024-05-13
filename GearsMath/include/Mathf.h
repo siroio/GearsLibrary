@@ -54,6 +54,7 @@ public:
     static float Ceil(float f);
     static float Floor(float f);
     static float Round(float f);
+    static float Truncate(float a);
     static float Mod(float a, float b);
     static int CeilToInt(float f);
     static int FloorToInt(float f);

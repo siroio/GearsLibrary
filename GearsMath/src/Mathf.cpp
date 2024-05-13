@@ -162,6 +162,11 @@ float Mathf::Round(float f)
     return std::roundf(f);
 }
 
+float Mathf::Truncate(float a)
+{
+    return std::trunc(a);
+}
+
 float Mathf::Mod(float a, float b)
 {
     return std::fmod(a, b);
