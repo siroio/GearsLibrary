@@ -18,7 +18,7 @@ namespace
     auto s_renderingManager = Glib::Internal::Graphics::RenderingManager::Instance();
 
     /*　シャドウマップの大きさ　*/
-    constexpr unsigned int SHADOW_MAP_SIZE = 2048;
+    constexpr unsigned int SHADOW_MAP_SIZE{ 4096 };
 
     struct CameraConstant
     {
