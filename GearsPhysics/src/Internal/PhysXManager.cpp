@@ -242,7 +242,7 @@ void Glib::Internal::Physics::PhysXManager::ExecuteTriggerCallbacks()
     {
         s_componentManager->ExecuteEventFunction(
             body1,
-            ComponentFunctionType::OnCollisionExit,
+            ComponentFunctionType::OnTriggerExit,
             body2
         );
     }
