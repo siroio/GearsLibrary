@@ -193,7 +193,7 @@ private:
         auto renderer = mesh->AddComponent<SkinnedMeshRenderer>();
         auto animator = mesh->AddComponent<Animator>();
         auto cap = mesh->AddComponent<CapsuleCollider>();
-        renderer->MeshID(4);
+        renderer->MeshID(1);
         animator->AnimationID(0);
         animator->Loop(true);
         cap->IsVisible(true);
@@ -256,14 +256,19 @@ private:
     std::unordered_map<TestType, GameObjectPtr> testObjects_;
 };
 
-// テスト用シーンクラス
-class TestScene : public Scene
+class TestLoadScene : public Scene
 {
 public:
     void Start() override
     {
-        // アセット読み込み
-        bool isloaded = SkyboxManager::Load(
+        MeshManager::Load(0, "Assets/Model/Plane/Plane.globj");
+        MeshManager::Load(1, "Assets/Model/Warrior/Warrior.globj");
+        MeshManager::Load(2, "Assets/Model/Stage/Stage.globj");
+
+        AnimationManager::Load(0, "Assets/Animation/Warrior@Idle1_0.glanim");
+        AnimationManager::Load(1, "Assets/Animation/Warrior@nRun_F_1.glanim");
+
+        SkyboxManager::Load(
             0,
             "Assets/Skybox/DayTop.png",
             "Assets/Skybox/DayBottom.png",
@@ -272,72 +277,26 @@ public:
             "Assets/Skybox/DayFront.png",
             "Assets/Skybox/DayBack.png"
         );
-        if (!isloaded) return;
 
-        int meshID{ 0 }, animID{ 0 }, audiID{ 0 }, texID{ 0 }, effectID{ 0 };
-        for (const auto& entry : std::filesystem::recursive_directory_iterator("Assets"))
-        {
-            if (!entry.is_regular_file()) continue;
-            auto ext = entry.path().extension().string();
-            if (ext.ends_with("globj"))
-            {
-                isloaded = MeshManager::Load(meshID, entry.path().string());
-                Debug::Log(entry.path().string() + "ID: " + std::to_string(meshID));
-                if (!isloaded)
-                {
-                    Debug::Error(entry.path().string() + "のロードに失敗しました。");
-                    continue;
-                }
-                meshID++;
-            }
-            if (ext.ends_with("glanim"))
-            {
-                isloaded = AnimationManager::Load(animID, entry.path().string());
-                Debug::Log(entry.path().string() + "ID: " + std::to_string(animID));
-                if (!isloaded)
-                {
-                    Debug::Error(entry.path().string() + "のロードに失敗しました。");
-                    continue;
-                }
-                animID++;
-            }
-            if (ext.ends_with("wav"))
-            {
-                isloaded = AudioManager::LoadVoice(audiID, entry.path().string());
-                if (!isloaded)
-                {
-                    Debug::Error(entry.path().string() + "のロードに失敗しました。");
-                    continue;
-                }
-                audiID++;
-            }
-            if (ext.ends_with("efk"))
-            {
-                isloaded = EffectManager::Load(effectID, entry.path().string());
-                if (!isloaded)
-                {
-                    Debug::Error(entry.path().string() + "のロードに失敗しました。");
-                    continue;
-                }
-                effectID++;
-            }
-        }
+        TextureManager::Load(0, "Assets/Sprite/Ten_Icon.png");
 
-        for (const auto& entry : std::filesystem::recursive_directory_iterator("Assets/Sprite"))
-        {
-            if (!entry.is_regular_file()) continue;
-            auto ext = entry.path().extension().string();
-            if (ext.ends_with("png"))
-            {
-                isloaded = TextureManager::Load(texID, entry.path().string());
-                if (!isloaded)
-                {
-                    Debug::Error(entry.path().string() + "のロードに失敗しました。");
-                    continue;
-                }
-                texID++;
-            }
-        }
+        AudioManager::LoadVoice(0, "Assets/SE/correct_answer3.wav");
+
+        EffectManager::Load(0, "Assets/Effect/Laser01.efk");
+
+        SceneManager::LoadScene("TestScene");
+    }
+
+    void End() override
+    {}
+};
+
+// テスト用シーンクラス
+class TestScene : public Scene
+{
+public:
+    void Start() override
+    {
 
         // 平行光源設定
         auto light = GameObjectManager::Instantiate("Light")
@@ -361,13 +320,11 @@ public:
 
         // 床
         auto Ground = GameObjectManager::Instantiate("Ground");
-        Ground->AddComponent<MeshRenderer>()->MeshID(3);
-        //auto rb = Ground->AddComponent<Rigidbody>();
+        Ground->AddComponent<MeshRenderer>()->MeshID(2);
         auto mc = Ground->AddComponent<MeshCollider>();
-        //rb->IsKinematic(true);
         mc->FlipNormals(true);
         mc->IsVisible(true);
-        mc->MeshID(3);
+        mc->MeshID(2);
         Ground->Transform()->Scale(Vector3{ 1, 1, 1 });
 
 
@@ -390,10 +347,10 @@ class MyGame : public Game
     {
 
         Debug::Log("GAME STARTTING");
+        SceneManager::Register<TestLoadScene>();
         SceneManager::Register<TestScene>();
-        Debug::Log("Scene: " + SceneManager::SceneName<TestScene>() + " Registered");
         Debug::Log("TestScene Load Start");
-        SceneManager::LoadScene("TestScene");
+        SceneManager::LoadScene("TestLoadScene");
         Debug::Log("TestScene Load Complete");
     }
 
