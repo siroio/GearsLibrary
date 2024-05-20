@@ -43,12 +43,14 @@ float Glib::Random::Nextf()
 
 int Glib::Random::Range(int min, int max)
 {
+    if (min == max) return min;
     uint32_t num = generator->Gen();
     return (num % (max - min)) + min;
 }
 
 float Glib::Random::Range(float min, float max)
 {
+    if (min == max) return min;
     uint32_t num = generator->Gen();
     return static_cast<float>((min + (max - min) * (num * Pcg32Fast::DIVIDE)));
 }
