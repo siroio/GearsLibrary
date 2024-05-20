@@ -63,6 +63,7 @@ namespace Glib
         void OnGUI() override;
 
     private:
+        void SetLocalPosition(const Vector3& postiion);
         void SetTrigger();
         void SetVisible();
         void SyncActive() override;

@@ -148,6 +148,10 @@ void Glib::Collider::CreateShape(const physx::PxGeometry& geometry)
     shape_ = physx::PxRigidActorExt::createExclusiveShape(*actor, geometry, *material_);
     shape_->setFlag(physx::PxShapeFlag::eVISUALIZATION, isVisible_);
 
+    // 位置とトリガーフラグを設定
+    SetLocalPosition(center_);
+    SetTrigger();
+
     physx::PxFilterData filter{};
     filter.word0 = GameObject()->Layer();
     shape_->setSimulationFilterData(filter);
@@ -163,12 +167,12 @@ void Glib::Collider::OnGUI()
 {
     Component::OnGUI();
 
-    if (GLGUI::CheckBox("Is Trigger", &isTrigger_))
+    if (GLGUI::CheckBox("IsTrigger", &isTrigger_))
     {
         SetTrigger();
     }
 
-    if (GLGUI::CheckBox("Is Visible", &isVisible_))
+    if (GLGUI::CheckBox("IsVisible", &isVisible_))
     {
         SetVisible();
     }
@@ -210,6 +214,17 @@ void Glib::Collider::OnGUI()
     if (GLGUI::DragVector3("Center", &center, 0.01f))
     {
         Center(center);
+    }
+}
+
+void Glib::Collider::SetLocalPosition(const Vector3& postiion)
+{
+    auto pose = shape_->getLocalPose();
+    pose.p = Internal::Physics::PhysXManager::ToPxVec3(postiion);
+    shape_->setLocalPose(pose);
+    if (!rigidbody_.expired())
+    {
+        rigidbody_->GetRigidDynamic().setCMassLocalPose(pose);
     }
 }
 

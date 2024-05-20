@@ -51,6 +51,6 @@ void Glib::CapsuleCollider::OnGUI()
 {
     Collider::OnGUI();
 
-    GLGUI::DragFloat("HalfHeight", &height_, 0.01f, Mathf::EPSILON);
+    GLGUI::DragFloat("Height", &height_, 0.01f, Mathf::EPSILON);
     GLGUI::DragFloat("Radius", &radius_, 0.01f, Mathf::EPSILON);
 }

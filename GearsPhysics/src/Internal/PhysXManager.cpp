@@ -180,7 +180,8 @@ void Glib::Internal::Physics::PhysXManager::Update()
         collider->SyncGeometry();
     }
 
-    s_accumulatedTime = std::fminf(s_accumulatedTime + GameTimer::DeltaTime(), GameTimer::MaximumAllowedTimeStep());
+
+    s_accumulatedTime = Mathf::Min(s_accumulatedTime + GameTimer::DeltaTime(), GameTimer::MaximumAllowedTimeStep());
 
     // fixedUpdateを溜まった時間分進める
     while (s_accumulatedTime >= GameTimer::FixedTimeStep())
