@@ -39,9 +39,10 @@ void Glib::Graphics::GaussianBlur::Execute(float power)
     GaussianBlurConstant buffer{};
     float total = 0.0f;
 
+    float invP = 1.0f / power;
     for (int i = 0; i < 8; i++)
     {
-        buffer.weights[i] = Mathf::Exp(-0.5f * (i * i) / power);
+        buffer.weights[i] = Mathf::Exp(-0.5f * (i * i) * invP);
         total += 2.0f * buffer.weights[i];
     }
     for (int i = 0; i < 8; i++)

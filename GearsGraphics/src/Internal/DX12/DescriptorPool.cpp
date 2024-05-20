@@ -1,6 +1,5 @@
 ﻿#include <Internal/DX12/DescriptorPool.h>
 #include <Internal/DX12/DirectX12.h>
-#include <cassert>
 
 namespace
 {
@@ -110,4 +109,3 @@ void Glib::Internal::Graphics::DescriptorPool::Resize(size_t numDescriptors)
     if (!result) throw std::bad_alloc{};
     heap_.Swap(newHeap);
 }
-

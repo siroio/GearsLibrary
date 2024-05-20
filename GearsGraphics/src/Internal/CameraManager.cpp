@@ -2,6 +2,7 @@
 #include <Internal/CameraBase.h>
 #include <Internal/DX12/DirectX12.h>
 #include <Internal/ImGuiManager.h>
+
 namespace
 {
     auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();

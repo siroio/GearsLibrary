@@ -180,6 +180,8 @@ void Glib::Internal::Debug::ImGuiManager::Finalize()
     ImGui_ImplDX12_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
+    s_renderTargetSRV.reset();
+    s_imguiResource.reset();
 }
 
 void Glib::Internal::Debug::ImGuiManager::Log(std::string_view message, LogLevel loglevel)
@@ -214,7 +216,7 @@ void Glib::Internal::Debug::ImGuiManager::DrawConsole()
     ImGui::Begin("Console", &s_enableConsole);
     if (ImGui::Button("Clear")) s_consoleLog.clear();
     ImGui::SameLine();
-    ImGui::Text("FPS: %d", static_cast<int>(1.0f / GameTimer::DeltaTime()));
+    ImGui::Text("FPS: %d", static_cast<int>(1.0f / GameTimer::UnscaledDeltaTime()));
     ImGui::Separator();
 
     ImGui::BeginChild("Message");

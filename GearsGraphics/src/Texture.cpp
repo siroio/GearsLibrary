@@ -29,9 +29,9 @@ namespace
     };
 
     /* アライメント計算 */
-    size_t AlignmentedSize(size_t size, size_t alignment)
+    size_t AlignmentedSize(size_t size)
     {
-        return (size + alignment - 1) & ~(alignment - 1);
+        return (size + D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1) & ~(D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1);
     }
 }
 
@@ -61,7 +61,7 @@ bool Glib::Texture::CreateTexture(std::string_view path)
     // アップロード用バッファ作成
     ComPtr<ID3D12Resource> uploadBuffer{ nullptr };
     auto heapProp = CD3DX12_HEAP_PROPERTIES{ D3D12_HEAP_TYPE_UPLOAD };
-    auto resDesc = CD3DX12_RESOURCE_DESC::Buffer(AlignmentedSize(img->rowPitch, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT) * img->height);
+    auto resDesc = CD3DX12_RESOURCE_DESC::Buffer(AlignmentedSize(img->rowPitch) * img->height);
 
     if (FAILED(s_dx12->Device()->CreateCommittedResource(
         &heapProp,
@@ -100,7 +100,7 @@ bool Glib::Texture::CreateTexture(std::string_view path)
     if (FAILED(uploadBuffer->Map(0, nullptr, reinterpret_cast<void**>(&mapped)))) return false;
 
     auto srcImg = img->pixels;
-    auto rowPitch = AlignmentedSize(img->rowPitch, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
+    auto rowPitch = AlignmentedSize(img->rowPitch);
 
     for (unsigned int y = 0; y < img->height; y++)
     {
@@ -118,7 +118,7 @@ bool Glib::Texture::CreateTexture(std::string_view path)
     src.PlacedFootprint.Footprint.Width = static_cast<UINT>(metadata.width);
     src.PlacedFootprint.Footprint.Height = static_cast<UINT>(metadata.height);
     src.PlacedFootprint.Footprint.Depth = static_cast<UINT>(metadata.depth);
-    src.PlacedFootprint.Footprint.RowPitch = static_cast<UINT>(AlignmentedSize(img->rowPitch, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT));
+    src.PlacedFootprint.Footprint.RowPitch = static_cast<UINT>(AlignmentedSize(img->rowPitch));
     src.PlacedFootprint.Footprint.Format = img->format;
 
     D3D12_TEXTURE_COPY_LOCATION dst{};
