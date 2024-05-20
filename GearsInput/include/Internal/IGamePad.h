@@ -4,7 +4,7 @@ struct Vector2;
 
 namespace Glib
 {
-    enum class GPADKey : unsigned short;
+    enum class GPADKey : unsigned;
 }
 
 namespace Glib::Internal::Interface

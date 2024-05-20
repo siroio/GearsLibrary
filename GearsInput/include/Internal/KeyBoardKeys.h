@@ -5,7 +5,7 @@ namespace Glib
     /**
      * @brief キーボード列挙型
     */
-    enum class KeyCode : unsigned short
+    enum class KeyCode : unsigned
     {
         None = 0,                   // キーなし
         Escape = 0x01,              // ESCキー

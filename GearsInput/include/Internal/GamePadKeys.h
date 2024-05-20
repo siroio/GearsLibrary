@@ -2,7 +2,7 @@
 
 namespace Glib
 {
-    enum class GPADKey : unsigned short
+    enum class GPADKey : unsigned
     {
         UP = 0x0001,
         DOWN = 0x0002,

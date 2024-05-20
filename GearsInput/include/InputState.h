@@ -3,9 +3,9 @@
 
 namespace Glib
 {
-    enum class MouseButton : unsigned short;
-    enum class KeyCode : unsigned short;
-    enum class GPADKey : unsigned short;
+    enum class MouseButton : unsigned;
+    enum class KeyCode : unsigned;
+    enum class GPADKey : unsigned;
 
     enum class InputType
     {

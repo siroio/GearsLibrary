@@ -2,7 +2,7 @@
 
 namespace Glib
 {
-    enum class MouseButton : unsigned short
+    enum class MouseButton : unsigned
     {
         Left,
         Right,

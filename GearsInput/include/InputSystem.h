@@ -140,5 +140,53 @@ namespace Glib
          * @param deadZone デッドゾーン
         */
         static float GetRightTrigger(unsigned int pad = 0, float deadZone = 0.2f);
+
+        /**
+         * @brief マウスボタンを押したか
+         * @param button ボタンの種類
+         */
+        static bool GetMouseDown(MouseButton button);
+
+        /**
+         * @brief マウスボタン離したか
+         * @param button ボタンの種類
+         */
+        static bool GetMouseUp(MouseButton button);
+
+        /**
+         * @brief マウスボタンを押しているか
+         * @param button ボタンの種類
+         */
+        static bool GetMousePressed(MouseButton button);
+
+        /**
+         * @brief マウスの位置
+         */
+        static Vector2 GetMousePosition();
+
+        /**
+         * @brief マウスの移動量
+         */
+        static Vector2 GetMouseDelta();
+
+        /**
+         * @brief マウスのホイール
+         */
+        static float GetMouseWheel();
+
+        /**
+         * @brief カーソルの表示
+         */
+        static void ShowCursor();
+
+        /**
+         * @brief カーソルの非表示
+         */
+        static void HideCursor();
+
+        /**
+         * @brief マウスの位置
+         */
+        static void SetPosition(const Vector2& position);
     };
 }

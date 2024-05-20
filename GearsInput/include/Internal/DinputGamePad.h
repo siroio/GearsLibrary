@@ -23,6 +23,10 @@ namespace Glib::Internal::Input
         float GetRightTrigger(float deadZone) override;
 
     private:
+        Vector2 GetStickPosition(long xAxis, long yAxis, float deadZone);
+        float GetTriggerValue(long triggerValue, float deadZone);
+
+    private:
         ComPtr<IDirectInputDevice8> device_{ nullptr };
         DIJOYSTATE currentState_;
         DIJOYSTATE prevState_;
