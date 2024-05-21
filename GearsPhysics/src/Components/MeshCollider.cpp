@@ -125,12 +125,12 @@ void Glib::MeshCollider::SyncGeometry()
 
     if (isConvex_)
     {
-        auto* const ptr = std::get<physx::PxConvexMesh*>(meshPtr_);
+        physx::PxConvexMesh* const ptr = std::get<physx::PxConvexMesh*>(meshPtr_);
         Shape()->setGeometry(Internal::Geometry::CreateConvexMesh(GameObject(), ptr));
     }
     else
     {
-        auto* const ptr = std::get<physx::PxTriangleMesh*>(meshPtr_);
+        physx::PxTriangleMesh* const ptr = std::get<physx::PxTriangleMesh*>(meshPtr_);
         Shape()->setGeometry(Internal::Geometry::CreateTriangleMesh(GameObject(), ptr));
     }
 }

@@ -20,6 +20,8 @@
 #include <ranges>
 #include <Mathf.h>
 
+using namespace physx;
+
 namespace
 {
     float s_accumulatedTime{ 0.0f };
@@ -40,12 +42,12 @@ namespace
     std::list<GameObjectPair> s_collisionStayCallbacks;
     std::list<GameObjectPair> s_collisionExitCallbacks;
 
-    physx::PxDefaultAllocator s_defaultAllocator;
-    physx::PxDefaultErrorCallback s_defaultErrorCallback;
-    physx::PxFoundation* s_foundation{ nullptr };
-    physx::PxPhysics* s_physics{ nullptr };
-    physx::PxDefaultCpuDispatcher* s_dispatcher{ nullptr };
-    physx::PxScene* s_scene{ nullptr };
+    PxDefaultAllocator s_defaultAllocator;
+    PxDefaultErrorCallback s_defaultErrorCallback;
+    PxFoundation* s_foundation{ nullptr };
+    PxPhysics* s_physics{ nullptr };
+    PxDefaultCpuDispatcher* s_dispatcher{ nullptr };
+    PxScene* s_scene{ nullptr };
 }
 
 namespace
@@ -55,37 +57,37 @@ namespace
         return collider.expired();
     }
 
-    physx::PxFilterFlags SimulationFilterShader(
-        physx::PxFilterObjectAttributes attributes0,
-        physx::PxFilterData filterData0,
-        physx::PxFilterObjectAttributes attributes1,
-        physx::PxFilterData filterData1,
-        physx::PxPairFlags& pairFlags,
+    PxFilterFlags SimulationFilterShader(
+        PxFilterObjectAttributes attributes0,
+        PxFilterData filterData0,
+        PxFilterObjectAttributes attributes1,
+        PxFilterData filterData1,
+        PxPairFlags& pairFlags,
         const void* constantBlock,
-        physx::PxU32 constantBlockSize)
+        PxU32 constantBlockSize)
     {
         // 衝突が無効なグループであれば衝突を無視
         if (!s_layer.Validate(filterData0.word0, filterData1.word0))
         {
-            return physx::PxFilterFlag::eSUPPRESS;
+            return PxFilterFlag::eSUPPRESS;
         }
 
         // トリガーかどうか
-        const bool isTrigger = physx::PxFilterObjectIsTrigger(attributes0) || physx::PxFilterObjectIsTrigger(attributes1);
+        const bool isTrigger = PxFilterObjectIsTrigger(attributes0) || PxFilterObjectIsTrigger(attributes1);
         if (isTrigger)
         {
-            pairFlags |= physx::PxPairFlag::eTRIGGER_DEFAULT;
-            return physx::PxFilterFlag::eDEFAULT;
+            pairFlags |= PxPairFlag::eTRIGGER_DEFAULT;
+            return PxFilterFlag::eDEFAULT;
         }
 
-        pairFlags |= physx::PxPairFlag::eCONTACT_DEFAULT;
-        pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_FOUND;
-        pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_LOST;
+        pairFlags |= PxPairFlag::eCONTACT_DEFAULT;
+        pairFlags |= PxPairFlag::eNOTIFY_TOUCH_FOUND;
+        pairFlags |= PxPairFlag::eNOTIFY_TOUCH_LOST;
 
-        return physx::PxFilterFlag::eDEFAULT;
+        return PxFilterFlag::eDEFAULT;
     }
 
-    GameObjectPtr GetGameObject(const physx::PxActor* actor)
+    GameObjectPtr GetGameObject(const PxActor* actor)
     {
         uintptr_t id = reinterpret_cast<uintptr_t>(actor);
         auto rb = s_rigidbodys.find(id);
@@ -115,25 +117,25 @@ bool Glib::Internal::Physics::PhysXManager::Initialize()
     s_foundation = PxCreateFoundation(PX_PHYSICS_VERSION, s_defaultAllocator, s_defaultErrorCallback);
     if (s_foundation == nullptr) return false;
 
-    const auto scale = physx::PxTolerancesScale{};
+    const auto scale = PxTolerancesScale{};
     s_physics = PxCreatePhysics(PX_PHYSICS_VERSION, *s_foundation, scale, true);
     if (s_physics == nullptr) return false;
 
-    s_dispatcher = physx::PxDefaultCpuDispatcherCreate(std::thread::hardware_concurrency() - 1);
+    s_dispatcher = PxDefaultCpuDispatcherCreate(std::thread::hardware_concurrency() - 1);
     if (s_dispatcher == nullptr) return false;
 
-    physx::PxSceneDesc sceneDesc{ s_physics->getTolerancesScale() };
+    PxSceneDesc sceneDesc{ s_physics->getTolerancesScale() };
     sceneDesc.gravity = ToPxVec3(DEFAULT_GRAVITY);
-    sceneDesc.flags |= physx::PxSceneFlag::eENABLE_CCD;
+    sceneDesc.flags |= PxSceneFlag::eENABLE_CCD;
     sceneDesc.filterShader = SimulationFilterShader;
     sceneDesc.cpuDispatcher = s_dispatcher;
-    sceneDesc.simulationEventCallback = static_cast<physx::PxSimulationEventCallback*>(this);
+    sceneDesc.simulationEventCallback = static_cast<PxSimulationEventCallback*>(this);
     s_scene = s_physics->createScene(sceneDesc);
     if (s_scene == nullptr) return false;
 
 #if defined(DEBUG) || defined(_DEBUG)
-    s_scene->setVisualizationParameter(physx::PxVisualizationParameter::eSCALE, 1.0f);
-    s_scene->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_SHAPES, 1.0f);
+    s_scene->setVisualizationParameter(PxVisualizationParameter::eSCALE, 1.0f);
+    s_scene->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_SHAPES, 1.0f);
 #endif
 
     return true;
@@ -206,7 +208,7 @@ void Glib::Internal::Physics::PhysXManager::Update()
 #if defined(DEBUG) || defined(_DEBUG)
     const auto& renderBuffer = s_scene->getRenderBuffer();
     const auto* line = renderBuffer.getLines();
-    for (physx::PxU32 i = 0; i < renderBuffer.getNbLines(); i++)
+    for (PxU32 i = 0; i < renderBuffer.getNbLines(); i++)
     {
         s_debugRenderer->AddVertex(ToVector3(line[i].pos0), Color::Green());
         s_debugRenderer->AddVertex(ToVector3(line[i].pos1), Color::Green());
@@ -292,8 +294,10 @@ void Glib::Internal::Physics::PhysXManager::ExecuteCollisionCallbacks()
 
 bool Glib::Internal::Physics::PhysXManager::Raycast(const Vector3& origin, const Vector3& direction, RaycastHit& hit, float maxDistance)
 {
-    physx::PxRaycastBuffer buffer{};
-    const auto& isHit = s_scene->raycast(ToPxVec3(origin), ToPxVec3(direction), maxDistance, buffer);
+    PxRaycastBuffer buffer{};
+    PxQueryFilterData fd;
+    fd.flags |= PxQueryFlag::eANY_HIT;
+    const auto& isHit = s_scene->raycast(ToPxVec3(origin), ToPxVec3(direction), maxDistance, buffer, PxHitFlag::eDEFAULT, fd);
 
     if (!isHit) return false;
     const auto& gameObject = GetGameObject(buffer.block.actor);
@@ -308,20 +312,22 @@ bool Glib::Internal::Physics::PhysXManager::Raycast(const Vector3& origin, const
 
 bool Glib::Internal::Physics::PhysXManager::RaycastAll(const Vector3& origin, const Vector3& direction, std::vector<RaycastHit>& hits, float maxDistance)
 {
-    physx::PxRaycastBuffer buffer{};
-    buffer.maxNbTouches = s_physics->getNbShapes();
-    std::vector<physx::PxRaycastHit> raycastHits{};
-    raycastHits.resize(buffer.maxNbTouches);
-    buffer.touches = raycastHits.data();
 
-    bool isHit = s_scene->raycast(ToPxVec3(origin), ToPxVec3(direction), maxDistance, buffer);
+    PxRaycastBuffer buffer{};
+    buffer.maxNbTouches = s_physics->getNbShapes();
+    auto raycastHits = std::make_unique<PxRaycastHit[]>(buffer.maxNbTouches);
+    buffer.touches = raycastHits.get();
+
+    PxQueryFilterData fd;
+    fd.flags |= PxQueryFlag::eANY_HIT;
+    bool isHit = s_scene->raycast(ToPxVec3(origin), ToPxVec3(direction), maxDistance, buffer, PxHitFlag::eDEFAULT, fd);
     if (!isHit) return false;
 
     hits.resize(buffer.nbTouches);
 
-    for (physx::PxU32 i = 0; i < buffer.nbTouches; i++)
+    for (PxU32 i = 0; i < buffer.nbTouches; i++)
     {
-        const physx::PxRaycastHit& hitInfo = buffer.getTouch(i);
+        const PxRaycastHit& hitInfo = buffer.getTouch(i);
         const auto& gameObject = GetGameObject(hitInfo.actor);
         if (gameObject.expired()) continue;
         hits.at(i).gameObject = gameObject;
@@ -333,25 +339,25 @@ bool Glib::Internal::Physics::PhysXManager::RaycastAll(const Vector3& origin, co
     return isHit;
 }
 
-physx::PxRigidActor* Glib::Internal::Physics::PhysXManager::CreateRigidBody(const Vector3& position, const Quaternion& rotation, const WeakPtr<Interface::IRigidbody>& rigidbody)
+PxRigidActor* Glib::Internal::Physics::PhysXManager::CreateRigidBody(const Vector3& position, const Quaternion& rotation, const WeakPtr<Interface::IRigidbody>& rigidbody)
 {
-    physx::PxTransform pose{ ToPxVec3(position), ToPxQuat(rotation) };
-    physx::PxRigidActor* actor = s_physics->createRigidDynamic(pose);
+    PxTransform pose{ ToPxVec3(position), ToPxQuat(rotation) };
+    PxRigidActor* actor = s_physics->createRigidDynamic(pose);
     s_rigidbodys.emplace(reinterpret_cast<uintptr_t>(actor), rigidbody);
     s_scene->addActor(*actor);
     return actor;
 }
 
-physx::PxRigidActor* Glib::Internal::Physics::PhysXManager::CreateRigidStatic(const Vector3& position, const Quaternion& rotation, const GameObjectPtr& gameObject)
+PxRigidActor* Glib::Internal::Physics::PhysXManager::CreateRigidStatic(const Vector3& position, const Quaternion& rotation, const GameObjectPtr& gameObject)
 {
-    physx::PxTransform pose{ ToPxVec3(position), ToPxQuat(rotation) };
-    physx::PxRigidActor* actor = s_physics->createRigidStatic(pose);
+    PxTransform pose{ ToPxVec3(position), ToPxQuat(rotation) };
+    PxRigidActor* actor = s_physics->createRigidStatic(pose);
     s_staticRigidbodys.emplace(reinterpret_cast<uintptr_t>(actor), gameObject);
     s_scene->addActor(*actor);
     return actor;
 }
 
-void Glib::Internal::Physics::PhysXManager::RemoveActor(physx::PxActor* actor)
+void Glib::Internal::Physics::PhysXManager::RemoveActor(PxActor* actor)
 {
     if (actor == nullptr) return;
     uintptr_t actorID = reinterpret_cast<uintptr_t>(actor);
@@ -361,7 +367,7 @@ void Glib::Internal::Physics::PhysXManager::RemoveActor(physx::PxActor* actor)
     actor->release();
 }
 
-physx::PxMaterial* Glib::Internal::Physics::PhysXManager::CreateMaterial(float dynamicFriction, float staticFriction, float bounce)
+PxMaterial* Glib::Internal::Physics::PhysXManager::CreateMaterial(float dynamicFriction, float staticFriction, float bounce)
 {
     return s_physics->createMaterial(staticFriction, dynamicFriction, bounce);
 }
@@ -376,47 +382,47 @@ void Glib::Internal::Physics::PhysXManager::SetCollisionFlags(unsigned int layer
     s_layer.Set(layer1, layer2, enable);
 }
 
-physx::PxPhysics& Glib::Internal::Physics::PhysXManager::Physcs()
+PxPhysics& Glib::Internal::Physics::PhysXManager::Physcs()
 {
     return *s_physics;
 }
 
-physx::PxVec3 Glib::Internal::Physics::PhysXManager::ToPxVec3(const Vector3& v)
+PxVec3 Glib::Internal::Physics::PhysXManager::ToPxVec3(const Vector3& v)
 {
-    return physx::PxVec3{ v.x, v.y, v.z };
+    return PxVec3{ v.x, v.y, v.z };
 }
 
-Vector3 Glib::Internal::Physics::PhysXManager::ToVector3(const physx::PxVec3& v)
+Vector3 Glib::Internal::Physics::PhysXManager::ToVector3(const PxVec3& v)
 {
     return Vector3{ v.x, v.y, v.z };
 }
 
-physx::PxQuat Glib::Internal::Physics::PhysXManager::ToPxQuat(const Quaternion& q)
+PxQuat Glib::Internal::Physics::PhysXManager::ToPxQuat(const Quaternion& q)
 {
-    return physx::PxQuat{ q.x, q.y, q.z, q.w };
+    return PxQuat{ q.x, q.y, q.z, q.w };
 }
 
-Quaternion Glib::Internal::Physics::PhysXManager::ToQuaternion(const physx::PxQuat& q)
+Quaternion Glib::Internal::Physics::PhysXManager::ToQuaternion(const PxQuat& q)
 {
     return Quaternion{ q.x, q.y, q.z, q.w };
 }
 
-void Glib::Internal::Physics::PhysXManager::onContact(const physx::PxContactPairHeader& pairHeader, const physx::PxContactPair* pairs, physx::PxU32 nbPairs)
+void Glib::Internal::Physics::PhysXManager::onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs)
 {
-    for (physx::PxU32 i = 0; i < nbPairs; i++)
+    for (PxU32 i = 0; i < nbPairs; i++)
     {
-        const physx::PxU16& event = pairs[i].events;
+        const PxU16& event = pairs[i].events;
         const auto& gameObject0 = GetGameObject(pairHeader.actors[0]);
         const auto& gameObject1 = GetGameObject(pairHeader.actors[1]);
         if (gameObject0.expired() || gameObject1.expired()) return;
 
-        if ((event & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND) != 0)
+        if ((event & PxPairFlag::eNOTIFY_TOUCH_FOUND) != 0)
         {
             // 衝突時
             s_collisionEnterCallbacks.push_back({ gameObject0, gameObject1 });
             s_collisionEnterCallbacks.push_back({ gameObject1, gameObject0 });
         }
-        else if ((event & physx::PxPairFlag::eNOTIFY_TOUCH_LOST) != 0)
+        else if ((event & PxPairFlag::eNOTIFY_TOUCH_LOST) != 0)
         {
             // 離散時
             s_collisionExitCallbacks.push_back({ gameObject0, gameObject1 });
@@ -427,22 +433,22 @@ void Glib::Internal::Physics::PhysXManager::onContact(const physx::PxContactPair
     }
 }
 
-void Glib::Internal::Physics::PhysXManager::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 count)
+void Glib::Internal::Physics::PhysXManager::onTrigger(PxTriggerPair* pairs, PxU32 count)
 {
-    for (physx::PxU32 i = 0; i < count; i++)
+    for (PxU32 i = 0; i < count; i++)
     {
-        const physx::PxU16& event = pairs[i].status;
+        const PxU16& event = pairs[i].status;
         const auto& triggerObject = GetGameObject(pairs[i].triggerActor);
         const auto& otherObject = GetGameObject(pairs[i].otherActor);
         if (triggerObject.expired() || otherObject.expired()) return;
 
-        if ((event & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND) != 0)
+        if ((event & PxPairFlag::eNOTIFY_TOUCH_FOUND) != 0)
         {
             // 衝突時
             s_triggerEnterCallbacks.push_back({ triggerObject, otherObject });
             s_triggerEnterCallbacks.push_back({ otherObject, triggerObject });
         }
-        else if ((event & physx::PxPairFlag::eNOTIFY_TOUCH_LOST) != 0)
+        else if ((event & PxPairFlag::eNOTIFY_TOUCH_LOST) != 0)
         {
             // 離散時
             s_triggerExitCallbacks.push_back({ triggerObject, otherObject });
@@ -453,14 +459,14 @@ void Glib::Internal::Physics::PhysXManager::onTrigger(physx::PxTriggerPair* pair
     }
 }
 
-void Glib::Internal::Physics::PhysXManager::onConstraintBreak(physx::PxConstraintInfo* constraints, physx::PxU32 count)
+void Glib::Internal::Physics::PhysXManager::onConstraintBreak(PxConstraintInfo* constraints, PxU32 count)
 {}
 
-void Glib::Internal::Physics::PhysXManager::onWake(physx::PxActor** actors, physx::PxU32 count)
+void Glib::Internal::Physics::PhysXManager::onWake(PxActor** actors, PxU32 count)
 {}
 
-void Glib::Internal::Physics::PhysXManager::onSleep(physx::PxActor** actors, physx::PxU32 count)
+void Glib::Internal::Physics::PhysXManager::onSleep(PxActor** actors, PxU32 count)
 {}
 
-void Glib::Internal::Physics::PhysXManager::onAdvance(const physx::PxRigidBody* const* bodyBuffer, const physx::PxTransform* poseBuffer, const physx::PxU32 count)
+void Glib::Internal::Physics::PhysXManager::onAdvance(const PxRigidBody* const* bodyBuffer, const PxTransform* poseBuffer, const PxU32 count)
 {}

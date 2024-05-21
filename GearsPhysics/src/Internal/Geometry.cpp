@@ -46,13 +46,11 @@ physx::PxTriangleMesh* Glib::Internal::Geometry::CreateTriangleMesh(const Mesh& 
 {
     physx::PxTolerancesScale tolerancesScale;
     physx::PxCookingParams cookingParams{ tolerancesScale };
-    cookingParams.convexMeshCookingType = physx::PxConvexMeshCookingType::Enum::eQUICKHULL;
-    cookingParams.gaussMapLimit = 256;
 
     std::vector<Vector3> vertices;
     const auto& srcVert = mesh.Vertices();
     vertices.reserve(srcVert.size());
-    std::transform(srcVert.begin(), srcVert.end(), std::back_inserter(vertices), [&](const auto& vert)
+    std::transform(srcVert.begin(), srcVert.end(), std::back_inserter(vertices), [](const auto& vert)
     {
         return Vector3{ vert.position[0], vert.position[1], vert.position[2] };
     });
@@ -89,7 +87,7 @@ physx::PxConvexMesh* Glib::Internal::Geometry::CreateConvexMesh(const Mesh& mesh
     std::vector<Vector3> vertices;
     const auto& srcVert = mesh.Vertices();
     vertices.reserve(srcVert.size());
-    std::transform(srcVert.begin(), srcVert.end(), std::back_inserter(vertices), [&](const auto& vert)
+    std::transform(srcVert.begin(), srcVert.end(), std::back_inserter(vertices), [](const auto& vert)
     {
         return Vector3{ vert.position[0], vert.position[1], vert.position[2] };
     });

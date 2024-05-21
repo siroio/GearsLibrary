@@ -1,4 +1,5 @@
 ﻿#include <Window.h>
+#include <ranges>
 #include <unordered_map>
 #include <Internal/DX12/DirectX12.h>
 #include <Vector2.h>
@@ -18,8 +19,9 @@ namespace
 
 LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    for (const auto& [_, proc] : s_windowProcedures)
+    for (const auto& proc : s_windowProcedures | std::ranges::views::values)
     {
+        if (proc == nullptr) continue;
         std::invoke(proc, hwnd, msg, wparam, lparam);
     }
 
