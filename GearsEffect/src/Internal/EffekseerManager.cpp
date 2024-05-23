@@ -126,13 +126,6 @@ void Glib::Internal::Effect::EffekseerManager::Draw()
     }
 }
 
-void Glib::Internal::Effect::EffekseerManager::Finalize()
-{
-    s_efkCommandList.Reset();
-    s_efkMemoryPool.Reset();
-    s_efkRenderer.Reset();
-}
-
 bool Glib::Internal::Effect::EffekseerManager::Load(unsigned int id, std::string_view path)
 {
     if (!Glib::ExistsFile(path))

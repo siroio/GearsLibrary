@@ -150,6 +150,7 @@ void Glib::GLObject::ReadHeader(std::ifstream& file)
 
     version_ = header.version;
     signature_ = header.signature;
+    std::memset(header.endian, 0, 2);
     endianInfo_ = header.endian;
 }
 

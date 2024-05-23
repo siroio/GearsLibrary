@@ -33,7 +33,6 @@ namespace Glib::Internal::Effect
         bool Initialize();
         void Update();
         void Draw();
-        void Finalize();
 
         /**
          * @brief エフェクトのロード
