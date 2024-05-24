@@ -15,7 +15,7 @@ namespace
     auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
     auto s_graphics = Glib::Internal::Graphics::GraphicsResource::Instance();
     auto s_canvasManager = Glib::Internal::Graphics::CanvasManager::Instance();
-    auto& s_textureManager = Glib::TextureManager::Instance();
+    auto s_textureManager = Glib::TextureManager::Instance();
 
     struct ImageConstant
     {
@@ -50,7 +50,7 @@ void Glib::Image::LateUpdate()
     buffer.center = center_;
     buffer.scale = transform->Scale();
     buffer.angle = transform->EulerAngles().z * Mathf::DEG2RAD;
-    buffer.textureSize = s_textureManager.TextureSize(textureID_);
+    buffer.textureSize = s_textureManager->TextureSize(textureID_);
     buffer.windowSize = Window::WindowSize();
     buffer.color = color_;
     constantBuffer_.Update(sizeof(buffer), &buffer);
@@ -63,7 +63,7 @@ void Glib::Image::DrawUI()
     s_graphics->SetPipelineState(ID::IMAGE_PIPELINESTATE);
     s_graphics->SetVertexBuffer(ID::IMAGE_VERTEX);
     constantBuffer_.SetBuffer(1);
-    s_textureManager.SetTexture(textureID_, 0);
+    s_textureManager->SetTexture(textureID_, 0);
     s_dx12->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
     s_dx12->CommandList()->DrawInstanced(4, 1, 0, 0);
 }
@@ -96,7 +96,7 @@ unsigned int Glib::Image::TextureID() const
 void Glib::Image::TextureID(unsigned int id)
 {
     textureID_ = id;
-    enabled_ = s_textureManager.Contains(id);
+    enabled_ = s_textureManager->Contains(id);
 }
 
 void Glib::Image::OnGUI()

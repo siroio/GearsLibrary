@@ -54,6 +54,11 @@ bool Glib::Internal::Graphics::RenderingManager::Initialize()
     return s_constantBuffer.Create(sizeof(DirectionalLightConstant));
 }
 
+void Glib::Internal::Graphics::RenderingManager::Finalize()
+{
+    s_constantBuffer.Release();
+}
+
 void Glib::Internal::Graphics::RenderingManager::Update()
 {
     // 定数バッファの更新

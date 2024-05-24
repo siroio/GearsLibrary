@@ -8,6 +8,11 @@ namespace
     const std::vector<Glib::Bone> s_NullBone;
 }
 
+void Glib::MeshManager::Finalize()
+{
+    s_meshs.clear();
+}
+
 bool Glib::MeshManager::Load(unsigned int id, std::string_view path)
 {
     auto mesh = std::make_unique<Glib::Mesh>();

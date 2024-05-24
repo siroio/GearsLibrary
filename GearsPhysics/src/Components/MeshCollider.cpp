@@ -10,7 +10,7 @@
 
 namespace
 {
-    auto& s_meshManager = Glib::MeshManager::Instance();
+    auto s_meshManager = Glib::MeshManager::Instance();
     auto s_physX = Glib::Internal::Physics::PhysXManager::Instance();
 }
 
@@ -79,7 +79,7 @@ unsigned int Glib::MeshCollider::MeshID() const
 
 void Glib::MeshCollider::MeshID(unsigned int id)
 {
-    enableMesh_ = s_meshManager.Contains(id);
+    enableMesh_ = s_meshManager->Contains(id);
     if (!enableMesh_) return;
     meshID_ = id;
 }
@@ -141,10 +141,10 @@ void Glib::MeshCollider::CreateMesh()
 
     if (isConvex_)
     {
-        meshPtr_ = Internal::Geometry::CreateConvexMesh(s_meshManager.Mesh(meshID_));
+        meshPtr_ = Internal::Geometry::CreateConvexMesh(s_meshManager->Mesh(meshID_));
     }
     else
     {
-        meshPtr_ = Internal::Geometry::CreateTriangleMesh(s_meshManager.Mesh(meshID_), isFlipNormals_);
+        meshPtr_ = Internal::Geometry::CreateTriangleMesh(s_meshManager->Mesh(meshID_), isFlipNormals_);
     }
 }

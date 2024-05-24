@@ -22,12 +22,6 @@ Glib::Internal::Graphics::DescriptorPool::DescriptorPool() : handles_{}, heap_{}
     });
 }
 
-Glib::Internal::Graphics::DescriptorPool::~DescriptorPool()
-{
-    handles_.Clear();
-    descriptorSize_ = 0;
-}
-
 bool Glib::Internal::Graphics::DescriptorPool::Create(const D3D12_DESCRIPTOR_HEAP_DESC* desc, std::shared_ptr<DescriptorPool>& pool)
 {
     if (s_dx12->Device() == nullptr || desc == nullptr) return false;
@@ -56,7 +50,7 @@ const ComPtr<ID3D12DescriptorHeap> Glib::Internal::Graphics::DescriptorPool::Get
 
 std::shared_ptr<Glib::Internal::Graphics::DescriptorHandle> Glib::Internal::Graphics::DescriptorPool::GetHandle()
 {
-    return std::shared_ptr<DescriptorHandle>{ handles_.Get(), [&](DescriptorHandle*& obj)
+    return std::shared_ptr<DescriptorHandle>{ handles_.Get(), [&](DescriptorHandle* obj)
     {
         Release(obj);
     }};

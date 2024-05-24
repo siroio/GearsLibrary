@@ -17,7 +17,7 @@ namespace
     auto s_dx12 = DirectX12::Instance();
     auto s_resource = GraphicsResource::Instance();
     auto s_renderingManager = RenderingManager::Instance();
-    auto& s_textureManager = Glib::TextureManager::Instance();
+    auto s_textureManager = Glib::TextureManager::Instance();
 
     struct SpriteConstant
     {
@@ -101,7 +101,7 @@ void Glib::SpriteRenderer::Draw(const WeakPtr<Internal::CameraBase>& camera)
     s_resource->SetPipelineState(ID::SPRITE_PIPELINESTATE);
     camera->SetConstantBuffer(1);
     constantBuffer_.SetBuffer(2);
-    s_textureManager.SetTexture(textureID_, 0);
+    s_textureManager->SetTexture(textureID_, 0);
     s_dx12->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
     s_dx12->CommandList()->DrawInstanced(4, 1, 0, 0);
 }
@@ -173,10 +173,10 @@ unsigned int Glib::SpriteRenderer::TextureID() const
 
 void Glib::SpriteRenderer::TextureID(unsigned int id, bool isResetSize)
 {
-    enabled_ = s_textureManager.Contains(id);
+    enabled_ = s_textureManager->Contains(id);
     if (!enabled_) return;
     textureID_ = id;
-    textureSize_ = s_textureManager.TextureSize(id);
+    textureSize_ = s_textureManager->TextureSize(id);
     if (isResetSize) clippingSize_ = textureSize_;
 }
 

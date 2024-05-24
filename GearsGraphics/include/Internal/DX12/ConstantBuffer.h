@@ -16,6 +16,8 @@ namespace Glib::Internal::Graphics
     class ConstantBuffer
     {
     public:
+        ~ConstantBuffer();
+
         /**
          * @brief 定数バッファーの作成
          * @param bufferSize バッファーのサイズ
@@ -36,9 +38,13 @@ namespace Glib::Internal::Graphics
          */
         void Update(unsigned int size, const void* data);
 
+        /**
+         * @brief バッファを解放
+         */
+        void Release();
+
     private:
         ComPtr<ID3D12Resource> buffer_;
         std::shared_ptr<DescriptorHandle> handle_{ nullptr };
     };
 }
-

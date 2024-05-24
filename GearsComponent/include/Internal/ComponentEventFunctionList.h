@@ -37,7 +37,7 @@ namespace Glib::Internal
 
     private:
         template<size_t index, class... Args>
-        void ExecuteFromVariant(FunctionType type, const Args&... args);
+        void ExecuteFunction(FunctionType type, const Args&... args);
 
         template<class T> requires HasOnTriggerEnterFunc<T, void, GameObjectPtr>
         void AddOnTriggerEnter(const std::shared_ptr<T>& component);
@@ -90,8 +90,8 @@ namespace Glib::Internal
         AddReceiveMsg(component);
     }
 
-    template<std::size_t index, class ...Args>
-    inline void ComponentEventFunctionList::ExecuteFromVariant(FunctionType type, const Args& ...args)
+    template<size_t index, class ...Args>
+    inline void ComponentEventFunctionList::ExecuteFunction(FunctionType type, const Args& ...args)
     {
         for (const auto& variant : functions_[type])
         {

@@ -362,8 +362,23 @@ class MyGame : public Game
 
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
-    Window::BorderlessWindow(true);
-    Window::WindowSize(Vector2{ 2560.0f, 1440.0f });
-    MyGame{}.Run();
+    if (!AttachConsole(ATTACH_PARENT_PROCESS))
+    {
+        // エクスプローラから起動した場合は新規にコンソールを割り当てる
+        AllocConsole();
+    }
+    freopen("CONIN$", "r", stdin);  // "CONIN$", "CONOUT$", "CON" の違いがよく分かっていない
+    freopen("CONOUT$", "w", stdout);
+    freopen("CONOUT$", "w", stderr);
+    try
+    {
+        Window::BorderlessWindow(true);
+        Window::WindowSize(Vector2{ 2560.0f, 1440.0f });
+        MyGame{}.Run();
+    }
+    catch (std::exception& ex)
+    {
+        printf_s(ex.what());
+    }
     return 0;
 }

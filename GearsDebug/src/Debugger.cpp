@@ -1,5 +1,4 @@
 ﻿#include <Debugger.h>
-#include <cassert>
 #include <Internal/ImGuiManager.h>
 
 #if defined(DEBUG) || defined(_DEBUG)

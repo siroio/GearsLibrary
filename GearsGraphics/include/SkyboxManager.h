@@ -15,6 +15,8 @@ namespace Glib
         friend WeakPtr<SkyboxManager> SingletonPtr<SkyboxManager>::Instance();
 
     public:
+        void Finalize();
+
         /**
          * @brief スカイボックス用テクスチャの読み込み
          * @param up

@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <Internal/ISystem.h>
 #include <Singleton.h>
 #include <string_view>
 
@@ -9,12 +10,15 @@ namespace Glib
     class Texture;
 
     class TextureManager :
-        public Singleton<TextureManager>
+        public Internal::Interface::ISystem,
+        public SingletonPtr<TextureManager>
     {
         TextureManager() = default;
-        friend TextureManager& Singleton<TextureManager>::Instance();
+        friend WeakPtr<TextureManager> SingletonPtr<TextureManager>::Instance();
 
     public:
+        void Finalize();
+
         /**
          * @brief テクスチャの読み込み
          * @param id テクスチャID

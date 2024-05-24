@@ -45,6 +45,14 @@ bool Glib::Internal::Graphics::GraphicsResource::Initialize()
     return true;
 }
 
+void Glib::Internal::Graphics::GraphicsResource::Finalize()
+{
+    s_vertexBuffers.clear();
+    s_pipelines.clear();
+    s_textureResources.clear();
+    s_srvHandles.clear();
+}
+
 void Glib::Internal::Graphics::GraphicsResource::SetVertexBuffer(unsigned int id)
 {
     s_vertexBuffers.at(id).SetBuffer();

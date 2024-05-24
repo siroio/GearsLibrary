@@ -86,6 +86,14 @@ bool Glib::Internal::Effect::EffekseerManager::Initialize()
     return true;
 }
 
+void Glib::Internal::Effect::EffekseerManager::Finalize()
+{
+    s_effects.clear();
+    s_efkCommandList.Reset();
+    s_efkMemoryPool.Reset();
+    s_efkRenderer.Reset();
+}
+
 void Glib::Internal::Effect::EffekseerManager::Update()
 {
     // エフェクトの更新
@@ -113,6 +121,7 @@ void Glib::Internal::Effect::EffekseerManager::Draw()
         // 描画開始処理
         s_efkMemoryPool->NewFrame();
         EffekseerRendererDX12::BeginCommandList(s_efkCommandList, s_dx12->CommandList().Get());
+        s_efkRenderer->SetCommandList(s_efkCommandList);
         s_efkRenderer->BeginRendering();
 
         // 描画
@@ -120,6 +129,7 @@ void Glib::Internal::Effect::EffekseerManager::Draw()
 
         // 描画終了処理
         s_efkRenderer->EndRendering();
+        s_efkRenderer->SetCommandList(nullptr);
         EffekseerRendererDX12::EndCommandList(s_efkCommandList);
 
         s_dx12->ExecuteCommandList();

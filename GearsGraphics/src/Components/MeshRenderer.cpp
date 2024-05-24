@@ -13,7 +13,7 @@ namespace
 {
     auto s_renderingManager = RenderingManager::Instance();
     auto s_graphics = GraphicsResource::Instance();
-    auto& s_meshManager = Glib::MeshManager::Instance();
+    auto s_meshManager = Glib::MeshManager::Instance();
 
     struct MeshConstant
     {
@@ -56,7 +56,7 @@ void Glib::MeshRenderer::Draw(const WeakPtr<Internal::CameraBase>& camera)
     s_renderingManager->SetDirectionalLightConstant(ID::MESH_DIRECTIONAL_LIGHT);
     camera->SetConstantBuffer(ID::MESH_CAMERA_CONSTANT);
     camera->SetShadowMap(ID::MESH_SHADOW_MAP);
-    s_meshManager.Draw(meshID_);
+    s_meshManager->Draw(meshID_);
 }
 
 void Glib::MeshRenderer::DrawShadow(const WeakPtr<Internal::CameraBase>& camera)
@@ -73,7 +73,7 @@ void Glib::MeshRenderer::DrawShadow(const WeakPtr<Internal::CameraBase>& camera)
     s_graphics->SetPipelineState(ID::MESH_SHADOW_PIPELINESTATE);
     camera->SetConstantBuffer(0);
     constantBuffer_.SetBuffer(1);
-    s_meshManager.DrawShadow(meshID_);
+    s_meshManager->DrawShadow(meshID_);
 
 }
 
@@ -85,7 +85,7 @@ unsigned int Glib::MeshRenderer::MeshID() const
 void Glib::MeshRenderer::MeshID(unsigned int id)
 {
     meshID_ = id;
-    isEnabled_ = s_meshManager.Contains(id);
+    isEnabled_ = s_meshManager->Contains(id);
 }
 
 void Glib::MeshRenderer::OnGUI()

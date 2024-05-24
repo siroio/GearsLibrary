@@ -40,7 +40,7 @@ namespace
     constexpr unsigned int FRAME_COUNT{ 2 };
 
     /* バックバッファ */
-    std::array<Glib::Graphics::RenderTarget, FRAME_COUNT> s_backBuffers;
+    std::unique_ptr<Glib::Graphics::RenderTarget[]> s_backBuffers;
 
     /* シザー矩形 */
     D3D12_RECT s_scissorRect{};
@@ -84,6 +84,7 @@ bool Glib::Internal::Graphics::DirectX12::Initialize()
     s_swapChain->SetMaximumFrameLatency(1);
 
     // バックバッファの作成
+    s_backBuffers = std::make_unique<Glib::Graphics::RenderTarget[]>(FRAME_COUNT);
     for (auto idx = 0; idx < FRAME_COUNT; idx++)
     {
         if (!s_backBuffers[idx].Create(idx, s_swapChain)) return false;
@@ -145,6 +146,11 @@ void Glib::Internal::Graphics::DirectX12::EndDraw()
 void Glib::Internal::Graphics::DirectX12::Finalize()
 {
     WaitGPU();
+    s_backBuffers.reset();
+    s_descriptors[static_cast<int>(PoolType::RES)].reset();
+    s_descriptors[static_cast<int>(PoolType::SMP)].reset();
+    s_descriptors[static_cast<int>(PoolType::RTV)].reset();
+    s_descriptors[static_cast<int>(PoolType::DSV)].reset();
     s_window.Finalize();
 }
 

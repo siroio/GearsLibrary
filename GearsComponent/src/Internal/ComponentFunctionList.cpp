@@ -4,31 +4,29 @@
 
 void Glib::Internal::ComponentFunctionList::Update()
 {
-    for (auto it = addedFunction_.begin(); it != addedFunction_.end();)
+    std::erase_if(addedFunction_, [&](auto& pair)
     {
         // 期限を確認
         if (std::visit([](const auto& v)
         {
             return v.component.expired();
-        }, it->second))
+        }, pair.second))
         {
-            it = addedFunction_.erase(it);
+            return true; // 削除
         }
 
         // アクティブを確認
-        else if (std::visit([](const auto& v)
+        if (std::visit([](const auto& v)
         {
             return v.component->Active();
-        }, it->second))
+        }, pair.second))
         {
-            functions_[it->first].push_back(it->second);
-            it = addedFunction_.erase(it);
+            functions_[pair.first].push_back(pair.second);
+            return true; // 削除
         }
-        else
-        {
-            ++it;
-        }
-    }
+
+        return false; // 保持
+    });
 }
 
 void Glib::Internal::ComponentFunctionList::Clear()
@@ -39,12 +37,14 @@ void Glib::Internal::ComponentFunctionList::Clear()
 
 void Glib::Internal::ComponentFunctionList::Execute(FunctionType type)
 {
-    ExecuteFromVariant<0>(type);
+    Remove(type);
+    ExecuteFunction<0>(type);
 }
 
 void Glib::Internal::ComponentFunctionList::Execute(FunctionType type, const Glib::WeakPtr<CameraBase>& camera)
 {
-    ExecuteFromVariant<1>(type, camera);
+    Remove(type);
+    ExecuteFunction<1>(type, camera);
 }
 
 void Glib::Internal::ComponentFunctionList::ExecuteClear(FunctionType type)

@@ -41,7 +41,7 @@ namespace Glib::Internal
         void Remove(FunctionType type);
 
         template<size_t index, class... Args>
-        void ExecuteFromVariant(FunctionType type, const Args&... args);
+        void ExecuteFunction(FunctionType type, const Args&... args);
 
         template<class T> requires HasStartFunc<T, void>
         void AddStart(const std::shared_ptr<T>& component);
@@ -78,7 +78,7 @@ namespace Glib::Internal
     }
 
     template<size_t index, class ...Args>
-    inline void ComponentFunctionList::ExecuteFromVariant(FunctionType type, const Args& ...args)
+    inline void ComponentFunctionList::ExecuteFunction(FunctionType type, const Args& ...args)
     {
         for (const auto& variant : functions_[type])
         {

@@ -14,7 +14,7 @@ namespace
 {
     auto s_renderingManager = RenderingManager::Instance();
     auto s_graphics = GraphicsResource::Instance();
-    auto& s_meshManager = Glib::MeshManager::Instance();
+    auto s_meshManager = Glib::MeshManager::Instance();
 }
 
 Glib::SkinnedMeshRenderer::SkinnedMeshRenderer()
@@ -53,7 +53,7 @@ void Glib::SkinnedMeshRenderer::Draw(const WeakPtr<Internal::CameraBase>& camera
     s_renderingManager->SetDirectionalLightConstant(ID::SKINNED_MESH_DIRECTIONAL_LIGHT);
     camera->SetConstantBuffer(ID::SKINNED_MESH_CAMERA_CONSTANT);
     camera->SetShadowMap(ID::SKINNED_MESH_SHADOW_MAP);
-    s_meshManager.Draw(meshID_);
+    s_meshManager->Draw(meshID_);
 }
 
 void Glib::SkinnedMeshRenderer::DrawShadow(const WeakPtr<Internal::CameraBase>& camera)
@@ -62,7 +62,7 @@ void Glib::SkinnedMeshRenderer::DrawShadow(const WeakPtr<Internal::CameraBase>& 
     camera->SetConstantBuffer(0);
     worldConstantBuffer_.SetBuffer(1);
     boneConstantBuffer_.SetBuffer(2);
-    s_meshManager.DrawShadow(meshID_);
+    s_meshManager->DrawShadow(meshID_);
 }
 
 unsigned int Glib::SkinnedMeshRenderer::MeshID() const
@@ -74,7 +74,7 @@ void Glib::SkinnedMeshRenderer::MeshID(unsigned int id)
 {
     // メッシュとボーンを取得
     meshID_ = id;
-    bones_ = s_meshManager.Bone(id);
+    bones_ = s_meshManager->Bone(id);
     CreateBoneGameObject();
     isEnabled_ = !bones_.empty();
 }

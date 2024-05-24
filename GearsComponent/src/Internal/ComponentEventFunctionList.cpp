@@ -7,10 +7,10 @@ bool Glib::Internal::ComponentEventFunctionList::Empty() const
 
 void Glib::Internal::ComponentEventFunctionList::Execute(FunctionType type, const GameObjectPtr& gameObject)
 {
-    ExecuteFromVariant<0>(type, gameObject);
+    ExecuteFunction<0>(type, gameObject);
 }
 
 void Glib::Internal::ComponentEventFunctionList::Execute(FunctionType type, const EventMsg& msg)
 {
-    ExecuteFromVariant<1>(type, msg);
+    ExecuteFunction<1>(type, msg);
 }

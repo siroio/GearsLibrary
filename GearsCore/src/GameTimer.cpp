@@ -48,7 +48,7 @@ void Glib::GameTimer::TimeScale(float timeScale)
 
 void Glib::GameTimer::MaximumAllowedTimeStep(float maximumAllowedTimeStep)
 {
-    maximumAllowedTimeStep_ = std::chrono::duration_cast<Duration>(Duration{ maximumAllowedTimeStep });
+    maximumAllowedTimeStep_ = Duration{ maximumAllowedTimeStep };
 }
 
 float Glib::GameTimer::UnscaledDeltaTime()

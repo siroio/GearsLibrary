@@ -24,8 +24,6 @@ namespace Glib::Internal::Graphics
         static bool Create(const D3D12_DESCRIPTOR_HEAP_DESC* desc, std::shared_ptr<DescriptorPool>& pool);
 
     public:
-        ~DescriptorPool();
-
         /**
          * @brief ヒープの取得
          */
@@ -62,4 +60,3 @@ namespace Glib::Internal::Graphics
         uint32_t descriptorSize_;
     };
 }
-

@@ -28,6 +28,11 @@ namespace Glib::Internal::Graphics
         bool Initialize();
 
         /**
+         * @brief シェーダーの削除
+         */
+        void Finalize();
+
+        /**
          * @brief 頂点シェーダーの設定
          */
         void SetVertexShader(unsigned int id, D3D12_GRAPHICS_PIPELINE_STATE_DESC& desc);

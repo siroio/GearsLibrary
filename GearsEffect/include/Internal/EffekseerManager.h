@@ -31,6 +31,7 @@ namespace Glib::Internal::Effect
 
     public:
         bool Initialize();
+        void Finalize();
         void Update();
         void Draw();
 

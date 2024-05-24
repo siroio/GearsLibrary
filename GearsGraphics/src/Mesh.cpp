@@ -13,7 +13,7 @@ namespace
 {
     auto s_dx12 = DirectX12::Instance();
     auto s_resource = GraphicsResource::Instance();
-    auto& s_textureManager = Glib::TextureManager::Instance();
+    auto s_textureManager = Glib::TextureManager::Instance();
 }
 
 bool Glib::Mesh::Load(std::string_view path)
@@ -43,12 +43,12 @@ bool Glib::Mesh::Load(std::string_view path)
         if (!materials[i].texture.empty())
         {
             auto texPath = folderPath.remove_filename().generic_string() + materials[i].texture;
-            materials_[i].albedo = s_textureManager.LoadMeshTex(texPath);
+            materials_[i].albedo = s_textureManager->LoadMeshTex(texPath);
         }
         if (!materials[i].normal.empty())
         {
             auto normalPath = folderPath.remove_filename().generic_string() + materials[i].normal;
-            materials_[i].normal = s_textureManager.LoadMeshTex(normalPath);
+            materials_[i].normal = s_textureManager->LoadMeshTex(normalPath);
         }
     }
 

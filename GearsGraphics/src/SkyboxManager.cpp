@@ -35,6 +35,11 @@ namespace
     };
 }
 
+void Glib::SkyboxManager::Finalize()
+{
+    s_skyboxs.clear();
+}
+
 bool Glib::SkyboxManager::Load(unsigned int id, std::string_view up, std::string_view down, std::string_view left, std::string_view right, std::string_view front, std::string_view back)
 {
     Skybox skybox{};

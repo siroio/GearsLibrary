@@ -27,6 +27,8 @@
 #include <Random.h>
 #include <SceneManager.h>
 #include <SkyboxManager.h>
+#include <MeshManager.h>
+#include <TextureManager.h>
 
 namespace
 {
@@ -64,30 +66,29 @@ int Glib::Game::Run()
 
 void Glib::Game::RegisterSystem()
 {
-    SystemManager::AddSystem<Internal::Graphics::CameraManager>();
-    SystemManager::AddSystem<Internal::Graphics::CanvasManager>();
-    SystemManager::AddSystem<Internal::ComponentManager>();
     SystemManager::AddSystem<Internal::Graphics::DirectX12>();
-    SystemManager::AddSystem<Internal::Physics::PhysXManager>();
+    SystemManager::AddSystem<Internal::ComponentManager>();
+    SystemManager::AddSystem<Internal::Graphics::ShaderManager>();
+    SystemManager::AddSystem<Internal::Effect::EffekseerManager>();
     SystemManager::AddSystem<Internal::Graphics::GraphicsResource>();
     SystemManager::AddSystem<Internal::Graphics::RenderingManager>();
-    SystemManager::AddSystem<Internal::Graphics::ShaderManager>();
+    SystemManager::AddSystem<Internal::Graphics::CameraManager>();
+    SystemManager::AddSystem<Internal::Graphics::CanvasManager>();
     SystemManager::AddSystem<Internal::Audio::XAudioSystem>();
-    SystemManager::AddSystem<Internal::Effect::EffekseerManager>();
-    SystemManager::AddSystem<AudioManager>();
-    SystemManager::AddSystem<GameObjectManager>();
-    SystemManager::AddSystem<GameTimer>();
-    SystemManager::AddSystem<InputSystem>();
-    SystemManager::AddSystem<Random>();
-    SystemManager::AddSystem<SceneManager>();
-    SystemManager::AddSystem<SkyboxManager>();
-
-#if defined(DEBUG) || defined(_DEBUG)
-    // デバッグ用
+    SystemManager::AddSystem<Internal::Physics::PhysXManager>();
+#if defined(DEBUG) || defined(_DEBUG) // デバッグ表示用
     SystemManager::AddSystem<Internal::Debug::ImGuiManager>();
     SystemManager::AddSystem<Internal::Physics::PhysicsDebugRenderer>();
 #endif
-
+    SystemManager::AddSystem<GameTimer>();
+    SystemManager::AddSystem<SceneManager>();
+    SystemManager::AddSystem<GameObjectManager>();
+    SystemManager::AddSystem<SkyboxManager>();
+    SystemManager::AddSystem<TextureManager>();
+    SystemManager::AddSystem<MeshManager>();
+    SystemManager::AddSystem<AudioManager>();
+    SystemManager::AddSystem<InputSystem>();
+    SystemManager::AddSystem<Random>();
 }
 
 bool Glib::Game::Initialize()

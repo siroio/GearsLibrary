@@ -19,10 +19,9 @@ namespace
 
 LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    for (const auto& proc : s_windowProcedures | std::ranges::views::values)
+    for (const auto& proc : s_windowProcedures)
     {
-        if (proc == nullptr) continue;
-        std::invoke(proc, hwnd, msg, wparam, lparam);
+        std::invoke(proc.second, hwnd, msg, wparam, lparam);
     }
 
     switch (msg)
@@ -40,7 +39,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 bool Glib::Window::Initialize()
 {
     // 作成済みかチェック
-    if (s_windowHandle != nullptr) return false;
+    if (s_windowHandle != NULL) return false;
 
     // Comの初期化
     if (FAILED(CoInitializeEx(nullptr, COINIT_MULTITHREADED))) return false;
@@ -85,7 +84,7 @@ bool Glib::Window::Initialize()
         nullptr
     );
 
-    if (s_windowHandle == nullptr) return false;
+    if (s_windowHandle == NULL) return false;
 
     ShowWindow(s_windowHandle, SW_SHOW);
     UpdateWindow(s_windowHandle);
@@ -132,7 +131,7 @@ std::string& Glib::Window::WindowName()
 
 void Glib::Window::WindowName(const std::string& name)
 {
-    if (s_windowHandle != nullptr) return;
+    if (s_windowHandle != NULL) return;
     s_windowName = name;
 }
 
@@ -143,7 +142,7 @@ const Vector2& Glib::Window::WindowSize()
 
 void Glib::Window::WindowSize(const Vector2& size)
 {
-    if (s_windowHandle != nullptr) return;
+    if (s_windowHandle != NULL) return;
     s_windowSize = size;
 }
 
@@ -154,7 +153,7 @@ const Vector2& Glib::Window::WindowDebugSize()
 
 void Glib::Window::WindowDebugSize(const Vector2& size)
 {
-    if (s_windowHandle != nullptr) return;
+    if (s_windowHandle != NULL) return;
     s_windowDebugSize = size;
 }
 
@@ -165,7 +164,7 @@ bool Glib::Window::BorderlessWindow()
 
 void Glib::Window::BorderlessWindow(bool borderless)
 {
-    if (s_windowHandle != nullptr) return;
+    if (s_windowHandle != NULL) return;
     // スタイルを変更
     s_isBorderless = borderless;
 }

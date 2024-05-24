@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <Internal/ISystem.h>
 #include <string_view>
 #include <unordered_map>
 #include <Singleton.h>
@@ -6,12 +7,15 @@
 
 namespace Glib
 {
-    class MeshManager : public Singleton<MeshManager>
+    class MeshManager :
+        public Internal::Interface::ISystem,
+        public SingletonPtr<MeshManager>
     {
         MeshManager() = default;
-        friend MeshManager& Singleton<MeshManager>::Instance();
+        friend WeakPtr<MeshManager> SingletonPtr<MeshManager>::Instance();
 
     public:
+        void Finalize();
 
         /**
          * @brief メッシュを読み込む

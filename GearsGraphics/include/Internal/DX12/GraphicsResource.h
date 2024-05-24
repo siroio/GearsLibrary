@@ -22,6 +22,9 @@ namespace Glib::Internal::Graphics
          */
         bool Initialize();
 
+
+        void Finalize();
+
         /**
          * @brief 頂点バッファの設定
          */
@@ -67,4 +70,3 @@ namespace Glib::Internal::Graphics
         bool CreateSkinnedMeshShadowPipelineState();
     };
 }
-

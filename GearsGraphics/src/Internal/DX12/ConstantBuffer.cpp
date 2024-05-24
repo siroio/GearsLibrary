@@ -8,6 +8,11 @@ namespace
     auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
 }
 
+Glib::Internal::Graphics::ConstantBuffer::~ConstantBuffer()
+{
+    Release();
+}
+
 bool Glib::Internal::Graphics::ConstantBuffer::Create(UINT64 bufferSize)
 {
     // バッファー作成
@@ -50,3 +55,8 @@ void Glib::Internal::Graphics::ConstantBuffer::Update(unsigned int size, const v
     buffer_->Unmap(0, nullptr);
 }
 
+void Glib::Internal::Graphics::ConstantBuffer::Release()
+{
+    buffer_.Reset();
+    handle_.reset();
+}

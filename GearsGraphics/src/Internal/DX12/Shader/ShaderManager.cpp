@@ -58,6 +58,12 @@ bool Glib::Internal::Graphics::ShaderManager::Initialize()
     return true;
 }
 
+void Glib::Internal::Graphics::ShaderManager::Finalize()
+{
+    s_vertexShader.clear();
+    s_pixelShader.clear();
+}
+
 void Glib::Internal::Graphics::ShaderManager::SetVertexShader(unsigned int id, D3D12_GRAPHICS_PIPELINE_STATE_DESC& desc)
 {
     desc.VS.pShaderBytecode = s_vertexShader.at(id)->GetBufferPointer();

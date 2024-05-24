@@ -9,6 +9,12 @@ namespace
     std::unordered_map<std::string, std::shared_ptr<Glib::Texture>> s_meshTextureResource;
 }
 
+void Glib::TextureManager::Finalize()
+{
+    s_textureResource.clear();
+    s_meshTextureResource.clear();
+}
+
 bool Glib::TextureManager::Load(unsigned int id, std::string_view filePath)
 {
     if (!s_textureResource.contains(id))

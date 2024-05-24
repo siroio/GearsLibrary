@@ -140,7 +140,6 @@ namespace Glib
     template<class T>
     inline void ObjectPool<T>::Release(T*& object)
     {
-        std::lock_guard lock{ mutex_ };
         if (!initialized_) return;
         const auto it = borrowedObjects_.find(reinterpret_cast<uintptr_t>(object));
         if (it != borrowedObjects_.end())
