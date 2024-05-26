@@ -160,13 +160,12 @@ public:
 
     void Update()
     {
+        std::erase_if(testObjects_, [](auto v)
+        {
+            return v.second.expired();
+        });
         for (auto& [type, gameObject] : testObjects_)
         {
-            if (gameObject.expired())
-            {
-                testObjects_.erase(type);
-                continue;
-            }
             gameObject->Active(type == currenType_);
         }
     }
