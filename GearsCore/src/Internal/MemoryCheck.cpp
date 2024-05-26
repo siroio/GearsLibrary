@@ -1,8 +1,8 @@
-﻿#if defined(DEBUG) || defined(_DEBUG)
+﻿#include <Internal/MemoryCheck.h>
+#if defined(DEBUG) || defined(_DEBUG)
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
-#include <Internal/MemoryCheck.h>
 
 void Glib::Internal::MemoryCheck::Start()
 {
