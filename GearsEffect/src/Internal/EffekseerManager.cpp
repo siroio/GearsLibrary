@@ -38,19 +38,23 @@ namespace
 
 bool Glib::Internal::Effect::EffekseerManager::Initialize()
 {
+    // 描画デバイス作成
+    auto graphicsDevice = EffekseerRendererDX12::CreateGraphicsDevice(
+        s_dx12->Device().Get(),
+        s_dx12->CommandQueue().Get(),
+        s_dx12->BackBufferNum()
+    );
+
     // レンダラーの作成
     auto format{ DXGI_FORMAT_R8G8B8A8_UNORM };
     s_efkRenderer = EffekseerRendererDX12::Create(
-        s_dx12->Device().Get(),
-        s_dx12->CommandQueue().Get(),
-        s_dx12->BackBufferNum(),
+        graphicsDevice,
         &format,
         1,
         DXGI_FORMAT_D32_FLOAT,
         false,
         MAX_SQAURE
     );
-
     if (s_efkRenderer == nullptr) return false;
 
     // マネージャーの作成
@@ -120,6 +124,7 @@ void Glib::Internal::Effect::EffekseerManager::Draw()
         // 描画開始処理
         s_efkMemoryPool->NewFrame();
         EffekseerRendererDX12::BeginCommandList(s_efkCommandList, s_dx12->CommandList().Get());
+        s_efkRenderer->SetCommandList(s_efkCommandList);
         s_efkRenderer->BeginRendering();
 
         // 描画
@@ -127,6 +132,7 @@ void Glib::Internal::Effect::EffekseerManager::Draw()
 
         // 描画終了処理
         s_efkRenderer->EndRendering();
+        s_efkRenderer->SetCommandList(nullptr);
         EffekseerRendererDX12::EndCommandList(s_efkCommandList);
 
         s_dx12->ExecuteCommandList();
@@ -219,19 +225,25 @@ void Glib::Internal::Effect::EffekseerManager::SetMatrix(EffectHandle handle, co
 Effekseer::Matrix44 Glib::Internal::Effect::EffekseerManager::ToMatrix44(const Matrix4x4& matrix)
 {
     Effekseer::Matrix44 mat{};
-    std::memcpy(mat.Values[0], matrix[0].data(), 4);
-    std::memcpy(mat.Values[1], matrix[1].data(), 4);
-    std::memcpy(mat.Values[2], matrix[2].data(), 4);
-    std::memcpy(mat.Values[3], matrix[3].data(), 4);
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            mat.Values[i][j] = matrix[i][j];
+        }
+    }
     return mat;
 }
 
 Effekseer::Matrix43 Glib::Internal::Effect::EffekseerManager::ToMatrix43(const Matrix4x4& matrix)
 {
     Effekseer::Matrix43 mat{};
-    std::memcpy(mat.Value[0], matrix[0].data(), 3);
-    std::memcpy(mat.Value[1], matrix[1].data(), 3);
-    std::memcpy(mat.Value[2], matrix[2].data(), 3);
-    std::memcpy(mat.Value[3], matrix[3].data(), 3);
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            mat.Value[i][j] = matrix[i][j];
+        }
+    }
     return mat;
 }
