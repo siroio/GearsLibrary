@@ -3,7 +3,6 @@
 #include <Singleton.h>
 #include <FuncOrderDefinition.h>
 #include <Internal/FuncOrderConstant.h>
-#include <memory>
 
 struct Vector3;
 struct Color;
@@ -19,7 +18,5 @@ namespace Glib::Internal::Physics
         bool Initialize();
         void Draw();
         void AddVertex(const Vector3& position, const Color& color);
-
-    private:
     };
 }

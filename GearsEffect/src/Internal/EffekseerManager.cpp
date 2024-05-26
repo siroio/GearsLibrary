@@ -1,5 +1,6 @@
 ﻿#include <Internal/EffekseerManager.h>
 #pragma warning(push)
+#pragma warning(disable: 4244)
 #pragma warning(disable: 6385)
 #pragma warning(disable: 26495)
 #include <Effekseer.h>
@@ -37,23 +38,19 @@ namespace
 
 bool Glib::Internal::Effect::EffekseerManager::Initialize()
 {
-    // 描画デバイス作成
-    auto graphicsDevice = EffekseerRendererDX12::CreateGraphicsDevice(
-        s_dx12->Device().Get(),
-        s_dx12->CommandQueue().Get(),
-        s_dx12->BackBufferNum()
-    );
-
     // レンダラーの作成
     auto format{ DXGI_FORMAT_R8G8B8A8_UNORM };
     s_efkRenderer = EffekseerRendererDX12::Create(
-        graphicsDevice,
+        s_dx12->Device().Get(),
+        s_dx12->CommandQueue().Get(),
+        s_dx12->BackBufferNum(),
         &format,
         1,
         DXGI_FORMAT_D32_FLOAT,
         false,
         MAX_SQAURE
     );
+
     if (s_efkRenderer == nullptr) return false;
 
     // マネージャーの作成
@@ -89,6 +86,7 @@ bool Glib::Internal::Effect::EffekseerManager::Initialize()
 void Glib::Internal::Effect::EffekseerManager::Finalize()
 {
     s_effects.clear();
+    s_efkManager.Reset();
     s_efkCommandList.Reset();
     s_efkMemoryPool.Reset();
     s_efkRenderer.Reset();
@@ -102,15 +100,16 @@ void Glib::Internal::Effect::EffekseerManager::Update()
 
 void Glib::Internal::Effect::EffekseerManager::Draw()
 {
+    Matrix4x4 view;
+    Matrix4x4 proj;
     for (const auto& camera : s_cameraManager->Cameras())
     {
         if (!camera->Active()) continue;
 
+        // 描画先指定
         camera->SetRenderTarget();
 
         // 変換行列の取得
-        Matrix4x4 view;
-        Matrix4x4 proj;
         camera->ViewMatrix(view);
         camera->ProjectionMatrix(proj);
 
@@ -121,7 +120,6 @@ void Glib::Internal::Effect::EffekseerManager::Draw()
         // 描画開始処理
         s_efkMemoryPool->NewFrame();
         EffekseerRendererDX12::BeginCommandList(s_efkCommandList, s_dx12->CommandList().Get());
-        s_efkRenderer->SetCommandList(s_efkCommandList);
         s_efkRenderer->BeginRendering();
 
         // 描画
@@ -129,7 +127,6 @@ void Glib::Internal::Effect::EffekseerManager::Draw()
 
         // 描画終了処理
         s_efkRenderer->EndRendering();
-        s_efkRenderer->SetCommandList(nullptr);
         EffekseerRendererDX12::EndCommandList(s_efkCommandList);
 
         s_dx12->ExecuteCommandList();
@@ -144,7 +141,7 @@ bool Glib::Internal::Effect::EffekseerManager::Load(unsigned int id, std::string
         return false;
     }
 
-    auto effect = Effekseer::Effect::Create(s_efkManager, reinterpret_cast<char16_t*>(StringToWide(path).data()));
+    auto effect = Effekseer::Effect::Create(s_efkManager, reinterpret_cast<const EFK_CHAR*>(StringToWide(path).data()));
     if (effect == nullptr)
     {
         Debug::Error("Effect could not be loaded.");
@@ -222,25 +219,19 @@ void Glib::Internal::Effect::EffekseerManager::SetMatrix(EffectHandle handle, co
 Effekseer::Matrix44 Glib::Internal::Effect::EffekseerManager::ToMatrix44(const Matrix4x4& matrix)
 {
     Effekseer::Matrix44 mat{};
-    for (int y = 0; y < 4; y++)
-    {
-        for (int x = 0; x < 4; x++)
-        {
-            mat.Values[y][x] = matrix[y][x];
-        }
-    }
+    std::memcpy(mat.Values[0], matrix[0].data(), 4);
+    std::memcpy(mat.Values[1], matrix[1].data(), 4);
+    std::memcpy(mat.Values[2], matrix[2].data(), 4);
+    std::memcpy(mat.Values[3], matrix[3].data(), 4);
     return mat;
 }
 
 Effekseer::Matrix43 Glib::Internal::Effect::EffekseerManager::ToMatrix43(const Matrix4x4& matrix)
 {
     Effekseer::Matrix43 mat{};
-    for (int y = 0; y < 4; y++)
-    {
-        for (int x = 0; x < 3; x++)
-        {
-            mat.Value[y][x] = matrix[y][x];
-        }
-    }
+    std::memcpy(mat.Value[0], matrix[0].data(), 3);
+    std::memcpy(mat.Value[1], matrix[1].data(), 3);
+    std::memcpy(mat.Value[2], matrix[2].data(), 3);
+    std::memcpy(mat.Value[3], matrix[3].data(), 3);
     return mat;
 }

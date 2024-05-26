@@ -19,6 +19,17 @@ namespace Glib::Internal::Interface
     public:
 
         /**
+         * @brief 初期化
+         * @param controllerIndex コントローラーの番号
+         */
+        virtual bool Initialize(DWORD controllerIndex) = 0;
+
+        /**
+         * @brief 更新
+         */
+        virtual void Update() = 0;
+
+        /**
          * @brief キーが押されているか
          * @param button ボタン
          */
@@ -69,7 +80,6 @@ namespace Glib::Internal::Interface
          * @param right 右
          * @param time 時間
          */
-        virtual void VibratePad(float left, float right, float time)
-        {};
+        virtual void VibratePad(float left, float right, float time) = 0;
     };
 }

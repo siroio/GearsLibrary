@@ -7,8 +7,8 @@ namespace Glib::Internal::Input
     class XinputGamePad : public Interface::IGamePad
     {
     public:
-        bool Initialize(DWORD controllerIndex);
-        void Update();
+        bool Initialize(DWORD controllerIndex) override;
+        void Update() override;
 
         bool GetButton(GPADKey button) override;
         bool GetButtonDown(GPADKey button) override;

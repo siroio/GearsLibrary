@@ -143,6 +143,10 @@ bool Glib::Internal::Physics::PhysXManager::Initialize()
 
 void Glib::Internal::Physics::PhysXManager::Finalize()
 {
+    s_rigidbodys.clear();
+    s_staticRigidbodys.clear();
+    s_colliders.clear();
+
     if (s_scene != nullptr)
     {
         s_scene->release();

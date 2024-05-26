@@ -1,42 +1,80 @@
 ﻿#include <Internal/KeyBoardDevice.h>
+#include <Windows.h>
+#include <Debugger.h>
 
-bool Glib::Internal::Input::KeyBoardDevice::Initialize(ComPtr<IDirectInput8>& dinput)
+Glib::Internal::Input::KeyBoardDevice::~KeyBoardDevice()
 {
-    if (FAILED(dinput->CreateDevice(GUID_SysKeyboard, device_.ReleaseAndGetAddressOf(), nullptr))) return false;
-    if (FAILED(device_->SetDataFormat(&c_dfDIKeyboard))) return false;
-    if (FAILED(device_->SetCooperativeLevel(GetActiveWindow(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE))) return false;
-    if (FAILED(device_->Acquire())) return false;
+    rawInputDevice_->dwFlags = RIDEV_REMOVE;
+    RegisterRawInputDevices(rawInputDevice_.get(), 1, sizeof(RAWINPUTDEVICE));
+    rawInputDevice_.reset();
+}
 
-    currentKeyState.fill(0U);
-    prevKeyState.fill(0U);
+bool Glib::Internal::Input::KeyBoardDevice::Initialize()
+{
+    // キーボード取得のデバイスを作成
+    rawInputDevice_ = std::make_unique<RAWINPUTDEVICE>(0x01, 0x06, 0, nullptr);
+    // デバイスの登録
+    if (!RegisterRawInputDevices(rawInputDevice_.get(), 1, sizeof(RAWINPUTDEVICE))) return false;
+
+    // メッセージ取得用のプロシージャ登録
+    Window::RegisterProcedure(this);
+
     return true;
 }
 
 void Glib::Internal::Input::KeyBoardDevice::Update()
 {
-    prevKeyState = currentKeyState;
-    if (FAILED(device_->GetDeviceState(256, currentKeyState.data())))
+    prevKeyState_ = currentKeyState_;
+
+    // バッファから入力を取得
+    for (int i = 0; i < currentKeyState_.size(); i++)
     {
-        auto hr = device_->Acquire();
-        device_->GetDeviceState(256, currentKeyState.data());
+        currentKeyState_[i] = frameBuffer_[i] ? 0x80 : 0x00;
     }
 }
 
 bool Glib::Internal::Input::KeyBoardDevice::GetKey(KeyCode key) const
 {
-    return currentKeyState.at(static_cast<unsigned char>(key)) & 0x80;
+    return currentKeyState_.at(static_cast<unsigned char>(key)) & 0x80;
 }
 
 bool Glib::Internal::Input::KeyBoardDevice::GetKeyDown(KeyCode key) const
 {
-    unsigned char prevState = ~(prevKeyState.at(static_cast<unsigned char>(key)) & 0x80);
-    unsigned char currentState = currentKeyState.at(static_cast<unsigned char>(key)) & 0x80;
+    unsigned char prevState = ~(prevKeyState_.at(static_cast<unsigned char>(key)) & 0x80);
+    unsigned char currentState = currentKeyState_.at(static_cast<unsigned char>(key)) & 0x80;
     return prevState & currentState;
 }
 
 bool Glib::Internal::Input::KeyBoardDevice::GetKeyUp(KeyCode key) const
 {
-    unsigned char prevState = prevKeyState.at(static_cast<unsigned char>(key)) & 0x80;
-    unsigned char currentState = ~(currentKeyState.at(static_cast<unsigned char>(key)) & 0x80);
+    unsigned char prevState = prevKeyState_.at(static_cast<unsigned char>(key)) & 0x80;
+    unsigned char currentState = ~(currentKeyState_.at(static_cast<unsigned char>(key)) & 0x80);
     return prevState & currentState;
+}
+
+void Glib::Internal::Input::KeyBoardDevice::ProcessKeyboard(const HRAWINPUT* hRawInput)
+{
+    UINT size = 0;
+    GetRawInputData(*hRawInput, RID_INPUT, nullptr, &size, sizeof(RAWINPUTHEADER));
+    auto buffer = std::make_unique<BYTE[]>(size);
+    if (GetRawInputData(*hRawInput, RID_INPUT, buffer.get(), &size, sizeof(RAWINPUTHEADER)) != size)
+    {
+        return;
+    }
+
+    // バッファに追加
+    RAWINPUT* raw = reinterpret_cast<RAWINPUT*>(buffer.get());
+    if (raw->header.dwType == RIM_TYPEKEYBOARD)
+    {
+        auto key = raw->data.keyboard.VKey;
+        auto flags = raw->data.keyboard.Flags;
+        frameBuffer_[key] = !(flags & RI_KEY_BREAK);
+    }
+}
+
+void Glib::Internal::Input::KeyBoardDevice::operator()(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    if (msg != WM_INPUT) return;
+    auto inputs = reinterpret_cast<HRAWINPUT>(lparam);
+    ProcessKeyboard(&inputs);
 }

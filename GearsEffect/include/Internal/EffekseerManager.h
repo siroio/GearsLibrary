@@ -26,8 +26,8 @@ namespace Glib::Internal::Effect
         public SingletonPtr<EffekseerManager>,
         public Function::DrawOrderSet<Order::Draw::EFFECT>
     {
-        EffekseerManager() = default;
         friend WeakPtr<EffekseerManager> SingletonPtr<EffekseerManager>::Instance();
+        EffekseerManager() = default;
 
     public:
         bool Initialize();

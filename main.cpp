@@ -40,7 +40,6 @@
 #include <filesystem>
 #include <unordered_map>
 
-
 using namespace Glib;
 
 namespace
@@ -320,11 +319,12 @@ public:
 
         // 床
         auto Ground = GameObjectManager::Instantiate("Ground");
-        Ground->AddComponent<MeshRenderer>()->MeshID(2);
+        auto renderer = Ground->AddComponent<MeshRenderer>();
+        renderer->MeshID(0);
         auto mc = Ground->AddComponent<MeshCollider>();
         mc->FlipNormals(true);
         mc->IsVisible(true);
-        mc->MeshID(2);
+        mc->MeshID(renderer->MeshID());
         Ground->Transform()->Scale(Vector3{ 1, 1, 1 });
 
 
@@ -345,7 +345,6 @@ class MyGame : public Game
 {
     void Start() override
     {
-
         Debug::Log("GAME STARTTING");
         SceneManager::Register<TestLoadScene>();
         SceneManager::Register<TestScene>();
@@ -360,16 +359,16 @@ class MyGame : public Game
     }
 };
 
-int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
+int WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
 {
     if (!AttachConsole(ATTACH_PARENT_PROCESS))
     {
-        // エクスプローラから起動した場合は新規にコンソールを割り当てる
         AllocConsole();
     }
-    freopen("CONIN$", "r", stdin);  // "CONIN$", "CONOUT$", "CON" の違いがよく分かっていない
-    freopen("CONOUT$", "w", stdout);
-    freopen("CONOUT$", "w", stderr);
+    FILE* stream;
+    freopen_s(&stream, "CONIN$", "r", stdin);
+    freopen_s(&stream, "CONOUT$", "w", stdout);
+    freopen_s(&stream, "CONOUT$", "w", stderr);
     try
     {
         Window::BorderlessWindow(true);
@@ -380,5 +379,6 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
     {
         printf_s(ex.what());
     }
+    FreeConsole();
     return 0;
 }

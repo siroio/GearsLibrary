@@ -1,6 +1,7 @@
 ﻿#include <Window.h>
+#include <algorithm>
 #include <ranges>
-#include <unordered_map>
+#include <list>
 #include <Internal/DX12/DirectX12.h>
 #include <Vector2.h>
 #include <StringUtility.h>
@@ -10,7 +11,7 @@ namespace
     WNDCLASSEX s_windowClass;
     HINSTANCE s_hInstance;
     HWND s_windowHandle;
-    std::unordered_map<int, Glib::WindowProcedure> s_windowProcedures;
+    std::list<Glib::IWindowMessage*> s_windowProcedures;
     std::string s_windowName{ "GameWindow" };
     Vector2 s_windowSize{ 1240.0f, 720.0f };
     Vector2 s_windowDebugSize{ 1240.0f, 720.0f };
@@ -19,14 +20,25 @@ namespace
 
 LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    for (const auto& proc : s_windowProcedures)
+
+    for (auto it = s_windowProcedures.begin(); it != s_windowProcedures.end();)
     {
-        std::invoke(proc.second, hwnd, msg, wparam, lparam);
+        if ((*it) == nullptr)
+        {
+            auto eit = std::ranges::find(s_windowProcedures, *it);
+            s_windowProcedures.erase(eit);
+        }
+        else
+        {
+            (**it)(hwnd, msg, wparam, lparam);
+            it++;
+        }
     }
 
     switch (msg)
     {
         case WM_DESTROY:
+            s_windowProcedures.clear();
             CoUninitialize();
             PostQuitMessage(0);
             break;
@@ -56,7 +68,7 @@ bool Glib::Window::Initialize()
     auto style = WS_OVERLAPPEDWINDOW;
 #else
     RECT rect{ 0, 0, static_cast<LONG>(s_windowSize.x), static_cast<LONG>(s_windowSize.y) };
-    auto style = s_isBorderless ? WS_POPUP : WS_OVERLAPPEDWINDOW;
+    auto style = s_isBorderless ? WS_POPUP | WS_BORDER : WS_OVERLAPPEDWINDOW;
 #endif
 
 #ifdef UNICODE
@@ -110,18 +122,20 @@ HWND Glib::Window::WindowHandle()
     return s_windowHandle;
 }
 
-int Glib::Window::RegisterProcedure(const WindowProcedure& proc, int id)
+void Glib::Window::RegisterProcedure(IWindowMessage* const proc)
 {
     // IDがマイナスの場合はIDを割り振る
-    id = (id < 0) ? static_cast<int>(s_windowProcedures.size()) : id;
-    s_windowProcedures.emplace(id, proc);
-    return id;
+    if (proc == nullptr) return;
+    s_windowProcedures.push_back(proc);
 }
 
-void Glib::Window::UnRegisterProcedure(int id)
+void Glib::Window::UnRegisterProcedure(IWindowMessage* const proc)
 {
-    if (!s_windowProcedures.contains(id)) return;
-    s_windowProcedures.erase(id);
+    if (s_windowProcedures.empty()) return;;
+    std::erase_if(s_windowProcedures, [&](IWindowMessage* value)
+    {
+        return value == proc;
+    });
 }
 
 std::string& Glib::Window::WindowName()

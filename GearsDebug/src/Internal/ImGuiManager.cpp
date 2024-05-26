@@ -6,13 +6,16 @@
 #include <ComPtr.h>
 #include <Color.h>
 #include <Vector2.h>
-#include <Window.h>
 #include <RenderTarget.h>
 #include <TimeUtility.h>
 #include <GameTimer.h>
+#include <Debugger.h>
 #include <filesystem>
 #include <unordered_map>
 #include <list>
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
+    HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 namespace
 {
@@ -38,12 +41,9 @@ namespace
     std::string s_fontPath{ R"(C:/Windows/Fonts/meiryo.ttc)" };
 }
 
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
-    HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
 bool Glib::Internal::Debug::ImGuiManager::Initialize()
 {
-    s_window.RegisterProcedure(ImGui_ImplWin32_WndProcHandler);
+    s_window.RegisterProcedure(this);
     auto hwnd = Window::WindowHandle();
     const Vector2& windowSize = Window::WindowSize();
     auto resPool = s_dx12->DescriptorPool(Internal::Graphics::DirectX12::PoolType::RES);
@@ -182,6 +182,8 @@ void Glib::Internal::Debug::ImGuiManager::Finalize()
     ImGui::DestroyContext();
     s_renderTargetSRV.reset();
     s_imguiResource.reset();
+    s_renderTarget.Release();
+    s_consoleLog.clear();
 }
 
 void Glib::Internal::Debug::ImGuiManager::Log(std::string_view message, LogLevel loglevel)
@@ -403,4 +405,9 @@ void Glib::Internal::Debug::ImGuiManager::SetGUIStyle()
     style.LogSliderDeadzone = 4;
     style.TabRounding = 4;
     style.WindowMenuButtonPosition = ImGuiDir_None;
+}
+
+void Glib::Internal::Debug::ImGuiManager::operator()(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam);
 }

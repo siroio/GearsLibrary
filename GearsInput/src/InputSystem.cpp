@@ -41,11 +41,19 @@ bool Glib::InputSystem::Initialize()
     if (!(s_gamePad && s_keyBoard && s_mouse)) return false;
 
     // 初期化を確認
-    if (!s_gamePad->Initialize(s_dinput)) return false;
-    if (!s_keyBoard->Initialize(s_dinput)) return false;
+    if (!s_gamePad->Initialize()) return false;
+    if (!s_keyBoard->Initialize()) return false;
     if (!s_mouse->Initialize(s_dinput)) return false;
 
     return true;
+}
+
+void Glib::InputSystem::Finalize()
+{
+    s_gamePad.reset();
+    s_keyBoard.reset();
+    s_mouse.reset();
+    s_inputState.clear();
 }
 
 void Glib::InputSystem::Update()

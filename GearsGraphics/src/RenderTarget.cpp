@@ -182,3 +182,11 @@ void Glib::Graphics::RenderTarget::AsRenderTarget()
         D3D12_RESOURCE_STATE_RENDER_TARGET
     );
 }
+
+void Glib::Graphics::RenderTarget::Release()
+{
+    dsvHandle_.reset();
+    rtvHandle_.reset();
+    depthStencil_.Reset();
+    renderTarget_.Reset();
+}

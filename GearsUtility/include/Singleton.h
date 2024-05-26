@@ -11,9 +11,6 @@ namespace Glib
     class Singleton
     {
     protected:
-        static inline std::mutex singleton_mutex;
-
-    protected:
         Singleton() = default;
         virtual ~Singleton() = default;
         Singleton(const Singleton&) = delete;
@@ -25,7 +22,6 @@ namespace Glib
          */
         static inline T& Instance()
         {
-            std::lock_guard lock{ singleton_mutex };
             static T instance;
             return instance;
         }

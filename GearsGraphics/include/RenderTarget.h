@@ -77,6 +77,11 @@ namespace Glib::Graphics
         */
         void AsRenderTarget();
 
+        /**
+         * @brief レンダーターゲットを開放
+         */
+        void Release();
+
     private:
         bool CreateRenderTargetBuffer(DXGI_FORMAT format);
         bool CreateDepthStencilBuffer(DXGI_FORMAT format);
@@ -96,4 +101,3 @@ namespace Glib::Graphics
         std::shared_ptr<Glib::Internal::Graphics::DescriptorHandle> dsvHandle_{ nullptr };
     };
 }
-

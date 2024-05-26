@@ -10,7 +10,12 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 
 namespace Glib
 {
-    using WindowProcedure = std::function<LRESULT(HWND, UINT, WPARAM, LPARAM)>;
+    class IWindowMessage
+    {
+    public:
+        virtual ~IWindowMessage() = default;
+        virtual void operator()(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) = 0;
+    };
 
     class Window : public Singleton<Window>
     {
@@ -42,15 +47,14 @@ namespace Glib
         /**
          * @brief ウィンドウプロシージャを登録
          * @param proc プロシージャ
-         * @param id ID
          */
-        static int RegisterProcedure(const Glib::WindowProcedure& proc, int id = -1);
+        static void RegisterProcedure(IWindowMessage* const proc);
 
         /**
          * @brief ウィンドウプロシージャを解除
          * @param proc
          */
-        static void UnRegisterProcedure(int id);
+        static void UnRegisterProcedure(IWindowMessage* const proc);
 
         /**
          * @brief ウィンドウの名前を取得

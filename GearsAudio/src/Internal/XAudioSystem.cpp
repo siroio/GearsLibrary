@@ -75,11 +75,11 @@ bool Glib::Internal::Audio::XAudioSystem::Initialize()
 
 void Glib::Internal::Audio::XAudioSystem::Finalize()
 {
-    if (s_masterVoice != nullptr)
+    for (auto&& clip : s_audioClips | std::ranges::views::values)
     {
-        s_masterVoice->DestroyVoice();
-        s_masterVoice = nullptr;
+        clip.reset();
     }
+    s_audioClips.clear();
 
     for (auto&& subMixVoice : s_subMixVoice | std::ranges::views::values)
     {
@@ -91,11 +91,11 @@ void Glib::Internal::Audio::XAudioSystem::Finalize()
     }
     s_subMixVoice.clear();
 
-    for (auto&& clip : s_audioClips | std::ranges::views::values)
+    if (s_masterVoice != nullptr)
     {
-        clip.reset();
+        s_masterVoice->DestroyVoice();
+        s_masterVoice = nullptr;
     }
-    s_audioClips.clear();
 }
 
 bool Glib::Internal::Audio::XAudioSystem::LoadVoice(unsigned id, std::string_view path)

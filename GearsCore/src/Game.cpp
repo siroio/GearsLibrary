@@ -67,7 +67,6 @@ int Glib::Game::Run()
 void Glib::Game::RegisterSystem()
 {
     SystemManager::AddSystem<Internal::Graphics::DirectX12>();
-    SystemManager::AddSystem<Internal::ComponentManager>();
     SystemManager::AddSystem<Internal::Graphics::ShaderManager>();
     SystemManager::AddSystem<Internal::Effect::EffekseerManager>();
     SystemManager::AddSystem<Internal::Graphics::GraphicsResource>();
@@ -76,6 +75,7 @@ void Glib::Game::RegisterSystem()
     SystemManager::AddSystem<Internal::Graphics::CanvasManager>();
     SystemManager::AddSystem<Internal::Audio::XAudioSystem>();
     SystemManager::AddSystem<Internal::Physics::PhysXManager>();
+    SystemManager::AddSystem<Internal::ComponentManager>();
 #if defined(DEBUG) || defined(_DEBUG) // デバッグ表示用
     SystemManager::AddSystem<Internal::Debug::ImGuiManager>();
     SystemManager::AddSystem<Internal::Physics::PhysicsDebugRenderer>();

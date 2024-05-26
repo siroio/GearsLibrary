@@ -1,15 +1,17 @@
 ﻿#pragma once
-#include <Internal/DirectInput8.h>
 #include <Internal/KeyBoardKeys.h>
+#include <Window.h>
+#include <memory>
 #include <array>
-#include <ComPtr.h>
+#include <unordered_map>
 
 namespace Glib::Internal::Input
 {
-    class KeyBoardDevice
+    class KeyBoardDevice : public IWindowMessage
     {
     public:
-        bool Initialize(ComPtr<IDirectInput8>& dinput);
+        ~KeyBoardDevice();
+        bool Initialize();
         void Update();
 
         /**
@@ -26,10 +28,15 @@ namespace Glib::Internal::Input
          * @brief キーが押されたか
         */
         bool GetKeyUp(KeyCode key) const;
+
     private:
-        ComPtr<IDirectInputDevice8> device_{ nullptr };
-        std::array<unsigned char, 256U> prevKeyState{ 0U };
-        std::array<unsigned char, 256U> currentKeyState{ 0U };
+        void ProcessKeyboard(const HRAWINPUT* hRawInput);
+        void operator()(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) override;
+
+    private:
+        std::array<unsigned char, 256U> prevKeyState_{ 0U };
+        std::array<unsigned char, 256U> currentKeyState_{ 0U };
+        std::unordered_map<unsigned short, bool> frameBuffer_;
+        std::unique_ptr<RAWINPUTDEVICE> rawInputDevice_;
     };
 }
-

@@ -2,10 +2,15 @@
 #include <FuncOrderDefinition.h>
 #include <Internal/ISystem.h>
 #include <Singleton.h>
-#include <Debugger.h>
+#include <Window.h>
 
 struct ImVec2;
 struct Vector2;
+
+namespace Glib
+{
+    enum class LogLevel;
+}
 
 namespace Glib::Internal::Debug
 {
@@ -24,8 +29,12 @@ namespace Glib::Internal::Debug
         public Interface::ISystem,
         public SingletonPtr<ImGuiManager>,
         public Function::DebugDrawOrderSet<-1>,
-        public Function::EndDrawOrderSet<-1>
+        public Function::EndDrawOrderSet<-1>,
+        public IWindowMessage
     {
+        friend WeakPtr<ImGuiManager> SingletonPtr<ImGuiManager>::Instance();
+        ImGuiManager() = default;
+
     public:
         bool Initialize();
         void BeginDraw();
@@ -34,7 +43,7 @@ namespace Glib::Internal::Debug
         void Finalize();
 
     public:
-        void Log(std::string_view message, LogLevel loglevel = LogLevel::Info);
+        void Log(std::string_view message, LogLevel loglevel);
         void SetRenderTarget() const;
         bool static WindowActive(std::string_view windowName);
 
@@ -44,6 +53,6 @@ namespace Glib::Internal::Debug
         void DrawGameView();
         void ResetLayout();
         void SetGUIStyle();
+        void operator()(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) override;
     };
 }
-

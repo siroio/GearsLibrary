@@ -1,10 +1,10 @@
 ﻿#pragma once
 #include <Internal/DinputGamePad.h>
 #include <Internal/XinputGamePad.h>
+#include <Internal/IGamePad.h>
 #include <Internal/GamePadKeys.h>
-#include <ComPtr.h>
 #include <array>
-#include <variant>
+#include <memory>
 
 namespace Glib::Internal::Input
 {
@@ -20,10 +20,7 @@ namespace Glib::Internal::Input
     class GamePadDevice
     {
     public:
-        using GamePad = std::variant<XinputGamePad, DinputGamePad>;
-
-    public:
-        bool Initialize(ComPtr<IDirectInput8>& dinput);
+        bool Initialize();
         void Update();
 
         bool GetButton(PadNum pad, GPADKey button);
@@ -36,6 +33,6 @@ namespace Glib::Internal::Input
         void VibrateGamepad(PadNum padNum, float left, float right, float time);
 
     private:
-        std::array<GamePad, 4> devices_;
+        std::array<std::unique_ptr<Interface::IGamePad>, 4> devices_;
     };
 }

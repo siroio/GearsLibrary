@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.4)
 # == CONFIG ==
 set(SOURCE_FILE
     ./src/Internal/XinputGamePad.cpp
-    ./src/Internal/DinputGamePad.cpp
     ./src/Internal/GamePadDevice.cpp
     ./src/Internal/KeyBoardDevice.cpp
     ./src/Internal/MouseDevice.cpp
@@ -19,7 +18,6 @@ set(HEADER_FILE
     ./include/Internal/GamePadKeys.h
     ./include/Internal/GamePadDevice.h
     ./include/Internal/XinputGamePad.h
-    ./include/Internal/DinputGamePad.h
     ./include/Internal/KeyBoardDevice.h
     ./include/Internal/MouseDevice.h
     ./include/Internal/MouseButton.h

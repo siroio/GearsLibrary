@@ -1,10 +1,11 @@
 ﻿#include <GameTimer.h>
+#include <Mathf.h>
 
 void Glib::GameTimer::Update()
 {
     const TimePoint now = Clock::now();
     const Duration deltaTime = now - prevTime_;
-    unscaledDeltaTime_ = std::min(deltaTime, maxDeltaTime_);
+    unscaledDeltaTime_ = min(deltaTime, maxDeltaTime_);
     deltaTime_ = unscaledDeltaTime_ * timeScale_;
     prevTime_ = now;
 }
@@ -33,7 +34,7 @@ float Glib::GameTimer::FixedTimeStep()
 
 void Glib::GameTimer::FixedTimeStep(float timeStep)
 {
-    fixedTimeStep_ = std::max(timeStep, 0.0f);
+    fixedTimeStep_ = Mathf::Max(timeStep, 0.0f);
 }
 
 float Glib::GameTimer::MaximumAllowedTimeStep()
@@ -43,7 +44,7 @@ float Glib::GameTimer::MaximumAllowedTimeStep()
 
 void Glib::GameTimer::TimeScale(float timeScale)
 {
-    timeScale_ = std::max(timeScale, 0.0f);
+    timeScale_ = Mathf::Max(timeScale, 0.0f);
 }
 
 void Glib::GameTimer::MaximumAllowedTimeStep(float maximumAllowedTimeStep)

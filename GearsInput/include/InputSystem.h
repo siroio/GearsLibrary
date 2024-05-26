@@ -27,6 +27,11 @@ namespace Glib
         bool Initialize();
 
         /**
+         * @brief デバイスの削除
+         */
+        void Finalize();
+
+        /**
          * @brief 入力を取得
          */
         void Update();
