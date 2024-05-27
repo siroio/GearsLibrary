@@ -32,9 +32,6 @@
 #pragma comment(lib, "PhysXCooking_64.lib")
 #pragma comment(lib, "PhysXExtensions_static_64.lib")
 #pragma comment(lib, "PhysXFoundation_64.lib")
-#pragma comment(lib, "PhysXTask_static_64.lib")
-#pragma comment(lib, "SceneQuery_static_64.lib")
-#pragma comment(lib, "SimulationController_static_64.lib")
 #else
 /* RELEASE BUILD LIB */
 #pragma comment(lib, "Gears3DObject.lib")
@@ -57,7 +54,4 @@
 #pragma comment(lib, "PhysXCooking_64.lib")
 #pragma comment(lib, "PhysXExtensions_static_64.lib")
 #pragma comment(lib, "PhysXFoundation_64.lib")
-#pragma comment(lib, "PhysXTask_static_64.lib")
-#pragma comment(lib, "SceneQuery_static_64.lib")
-#pragma comment(lib, "SimulationController_static_64.lib")
 #endif // _DEBUG

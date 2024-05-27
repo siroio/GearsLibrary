@@ -1,18 +1,17 @@
 ﻿#include <InputSystem.h>
-#include <unordered_map>
-#include <deque>
 #include <Internal/GamePadDevice.h>
 #include <Internal/KeyBoardDevice.h>
 #include <Internal/MouseDevice.h>
-#include <Vector2.h>
 #include <InputState.h>
+#include <Vector2.h>
 #include <Debugger.h>
+#include <unordered_map>
+#include <deque>
 
 using namespace Glib::Internal;
 
 namespace
 {
-    ComPtr<IDirectInput8> s_dinput;
     std::unique_ptr<Input::GamePadDevice> s_gamePad;
     std::unique_ptr<Input::KeyBoardDevice> s_keyBoard;
     std::unique_ptr<Input::MouseDevice> s_mouse;
@@ -21,18 +20,6 @@ namespace
 
 bool Glib::InputSystem::Initialize()
 {
-    if (s_dinput != nullptr) return false;
-
-    // LPDIRECTINPUT8を作成
-    auto res = FAILED(DirectInput8Create(
-        GetModuleHandle(nullptr),
-        DIRECTINPUT_VERSION,
-        IID_IDirectInput8,
-        reinterpret_cast<void**>(s_dinput.ReleaseAndGetAddressOf()),
-        nullptr
-    ));
-    if (res) return false;
-
     s_gamePad = std::make_unique<Input::GamePadDevice>();
     s_keyBoard = std::make_unique<Input::KeyBoardDevice>();
     s_mouse = std::make_unique<Input::MouseDevice>();
@@ -43,7 +30,7 @@ bool Glib::InputSystem::Initialize()
     // 初期化を確認
     if (!s_gamePad->Initialize()) return false;
     if (!s_keyBoard->Initialize()) return false;
-    if (!s_mouse->Initialize(s_dinput)) return false;
+    if (!s_mouse->Initialize()) return false;
 
     return true;
 }
@@ -88,14 +75,14 @@ bool Glib::InputSystem::GetInput(const std::string& name)
     }
     for (const auto& key : state->second)
     {
-        switch (key.type)
+        switch (key.input.index())
         {
             case InputType::MOUSE:
-                return false;
+                return GetMousePressed(std::get<InputType::MOUSE>(key.input));
             case InputType::KEYBOARD:
-                return GetKey(key.keyboard);
+                return GetKey(std::get<InputType::KEYBOARD>(key.input));
             case InputType::GAMEPAD:
-                return GetButton(key.pad);
+                return GetButton(std::get<InputType::GAMEPAD>(key.input));
             default:
                 return false;
         }
@@ -113,14 +100,14 @@ bool Glib::InputSystem::GetInputDown(const std::string& name)
     }
     for (const auto& key : state->second)
     {
-        switch (key.type)
+        switch (key.input.index())
         {
             case InputType::MOUSE:
-                return false;
+                return GetMouseDown(std::get<InputType::MOUSE>(key.input));
             case InputType::KEYBOARD:
-                return GetKeyDown(key.keyboard);
+                return GetKeyDown(std::get<InputType::KEYBOARD>(key.input));
             case InputType::GAMEPAD:
-                return GetButtonDown(key.pad);
+                return GetButtonDown(std::get<InputType::GAMEPAD>(key.input));
             default:
                 return false;
         }
@@ -138,14 +125,16 @@ bool Glib::InputSystem::GetInputUp(const std::string& name)
     }
     for (const auto& key : state->second)
     {
-        switch (key.type)
+        switch (key.input.index())
         {
             case InputType::MOUSE:
-                return false;
+                return GetMouseUp(std::get<InputType::MOUSE>(key.input));
             case InputType::KEYBOARD:
-                return GetKeyUp(key.keyboard);
+                return GetKeyUp(std::get<InputType::KEYBOARD>(key.input));
             case InputType::GAMEPAD:
-                return GetButtonUp(key.pad);
+                return GetButtonUp(std::get<InputType::GAMEPAD>(key.input));
+            default:
+                return false;
         }
     }
     return false;

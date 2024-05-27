@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <string>
+#include <variant>
 
 namespace Glib
 {
@@ -7,11 +8,17 @@ namespace Glib
     enum class KeyCode : unsigned;
     enum class GPADKey : unsigned;
 
-    enum class InputType
+    /**
+     * @brief 入力の種類
+     */
+    struct InputType
     {
-        MOUSE,
-        KEYBOARD,
-        GAMEPAD,
+        enum
+        {
+            MOUSE = 0x0,
+            KEYBOARD = 0x1,
+            GAMEPAD = 0x2,
+        };
     };
 
     /**
@@ -27,16 +34,6 @@ namespace Glib
         /**
          * @brief 入力情報
          */
-        union
-        {
-            MouseButton mouse;
-            KeyCode keyboard;
-            GPADKey pad;
-        };
-
-        /**
-         * @brief 入力種類
-         */
-        InputType type;
+        std::variant<MouseButton, KeyCode, GPADKey> input;
     };
 }

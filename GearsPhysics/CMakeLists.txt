@@ -51,9 +51,6 @@ target_link_libraries(${LIB_NAME}
     debug ${PHYSX_LIB_DIR}/debug/PhysXCooking_64.lib
     debug ${PHYSX_LIB_DIR}/debug/PhysXExtensions_static_64.lib
     debug ${PHYSX_LIB_DIR}/debug/PhysXFoundation_64.lib
-    debug ${PHYSX_LIB_DIR}/debug/PhysXTask_static_64.lib
-    debug ${PHYSX_LIB_DIR}/debug/SceneQuery_static_64.lib
-    debug ${PHYSX_LIB_DIR}/debug/SimulationController_static_64.lib
 )
 
 target_link_libraries(${LIB_NAME} 
@@ -62,9 +59,6 @@ target_link_libraries(${LIB_NAME}
     optimized ${PHYSX_LIB_DIR}/release/PhysXCooking_64.lib
     optimized ${PHYSX_LIB_DIR}/release/PhysXExtensions_static_64.lib
     optimized ${PHYSX_LIB_DIR}/release/PhysXFoundation_64.lib
-    optimized ${PHYSX_LIB_DIR}/release/PhysXTask_static_64.lib
-    optimized ${PHYSX_LIB_DIR}/release/SceneQuery_static_64.lib
-    optimized ${PHYSX_LIB_DIR}/release/SimulationController_static_64.lib
 )
 
 target_link_libraries(

@@ -78,7 +78,9 @@ set(EXTERNAL_LIBS
     DirectXTex
     nlohmann_json
     Effekseer
+    EffekseerRendererCommon
     EffekseerRendererDX12
+    EffekseerRendererLLGI
     LLGI
 )
 
@@ -167,6 +169,8 @@ set_target_properties(
 set_target_properties(
     Effekseer
     EffekseerRendererDX12
+    EffekseerRendererCommon
+    EffekseerRendererLLGI
     LLGI
     PROPERTIES FOLDER Modules/Effekseer
 )

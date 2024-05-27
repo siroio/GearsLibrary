@@ -1,6 +1,5 @@
 ﻿#include <Internal/KeyBoardDevice.h>
-#include <Windows.h>
-#include <Debugger.h>
+#include <WinUser.h>
 
 Glib::Internal::Input::KeyBoardDevice::~KeyBoardDevice()
 {
@@ -29,26 +28,26 @@ void Glib::Internal::Input::KeyBoardDevice::Update()
     // バッファから入力を取得
     for (int i = 0; i < currentKeyState_.size(); i++)
     {
-        currentKeyState_[i] = frameBuffer_[i] ? 0x80 : 0x00;
+        currentKeyState_[i] = frameBuffer_[i] ? 0x10 : 0x00;
     }
 }
 
 bool Glib::Internal::Input::KeyBoardDevice::GetKey(KeyCode key) const
 {
-    return currentKeyState_.at(static_cast<unsigned char>(key)) & 0x80;
+    return currentKeyState_.at(static_cast<unsigned char>(key)) & 0x10;
 }
 
 bool Glib::Internal::Input::KeyBoardDevice::GetKeyDown(KeyCode key) const
 {
-    unsigned char prevState = ~(prevKeyState_.at(static_cast<unsigned char>(key)) & 0x80);
-    unsigned char currentState = currentKeyState_.at(static_cast<unsigned char>(key)) & 0x80;
+    unsigned char prevState = ~(prevKeyState_.at(static_cast<unsigned char>(key)) & 0x10);
+    unsigned char currentState = currentKeyState_.at(static_cast<unsigned char>(key)) & 0x10;
     return prevState & currentState;
 }
 
 bool Glib::Internal::Input::KeyBoardDevice::GetKeyUp(KeyCode key) const
 {
-    unsigned char prevState = prevKeyState_.at(static_cast<unsigned char>(key)) & 0x80;
-    unsigned char currentState = ~(currentKeyState_.at(static_cast<unsigned char>(key)) & 0x80);
+    unsigned char prevState = prevKeyState_.at(static_cast<unsigned char>(key)) & 0x10;
+    unsigned char currentState = ~(currentKeyState_.at(static_cast<unsigned char>(key)) & 0x10);
     return prevState & currentState;
 }
 
@@ -75,6 +74,6 @@ void Glib::Internal::Input::KeyBoardDevice::ProcessKeyboard(const HRAWINPUT* hRa
 void Glib::Internal::Input::KeyBoardDevice::operator()(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
     if (msg != WM_INPUT) return;
-    auto inputs = reinterpret_cast<HRAWINPUT>(lparam);
-    ProcessKeyboard(&inputs);
+    auto inputData = reinterpret_cast<HRAWINPUT>(lparam);
+    ProcessKeyboard(&inputData);
 }

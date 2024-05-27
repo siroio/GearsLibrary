@@ -19,6 +19,7 @@
 #include <AudioManager.h>
 #include <EffectManager.h>
 #include <GLGUI.h>
+#include <imgui.h>
 
 #include <GameObject.h>
 #include <Component.h>
@@ -364,10 +365,10 @@ int WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, _In_ LP
     {
         AllocConsole();
     }
-    FILE* stream;
-    freopen_s(&stream, "CONIN$", "r", stdin);
-    freopen_s(&stream, "CONOUT$", "w", stdout);
-    freopen_s(&stream, "CONOUT$", "w", stderr);
+    FILE* output;
+    FILE* error;
+    freopen_s(&output, "CONOUT$", "w", stdout);
+    freopen_s(&error, "CONOUT$", "w", stderr);
     try
     {
         Window::BorderlessWindow(true);

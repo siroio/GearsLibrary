@@ -1,20 +1,28 @@
 ﻿#pragma once
 #include <Internal/DirectInput8.h>
 #include <Internal/MouseButton.h>
-#include <ComPtr.h>
+#include <Window.h>
 #include <Vector2.h>
+#include <memory>
+#include <array>
+#include <deque>
 
 namespace Glib::Internal::Input
 {
-    class MouseDevice
+    class MouseDevice : public IWindowMessage
     {
-    public:
-        MouseDevice() = default;
-        ~MouseDevice();
-        MouseDevice(const MouseDevice&) = delete;
-        MouseDevice& operator = (const MouseDevice&) = delete;
+    private:
+        struct MouseBuffer
+        {
+            Vector2 Position;
+            Vector2 Delta;
+            float Wheel;
+            std::array<bool, 5> Buttons;
+        };
 
-        bool Initialize(ComPtr<IDirectInput8>& dinput);
+    public:
+        ~MouseDevice();
+        bool Initialize();
         void Update();
 
         bool ButtonDown(MouseButton button) const;
@@ -28,8 +36,13 @@ namespace Glib::Internal::Input
         void SetPosition(const Vector2& position) const;
 
     private:
-        DIMOUSESTATE2 currentMouseState_{ NULL };
-        DIMOUSESTATE2 prevMouseState_{ NULL };
-        LPDIRECTINPUTDEVICE8 inputDevice_{ nullptr };
+        void ProcessMouse(const HRAWINPUT* hRawInput);
+        void operator()(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) override;
+
+    private:
+        MouseBuffer prevMouseBuffer_;
+        MouseBuffer currentMouseBuffer_;
+        std::deque<MouseBuffer> frameBuffer_;
+        std::unique_ptr<RAWINPUTDEVICE> rawInputDevice_;
     };
 }

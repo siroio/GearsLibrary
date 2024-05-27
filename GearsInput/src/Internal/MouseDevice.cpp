@@ -1,93 +1,77 @@
 ﻿#include <Internal/MouseDevice.h>
+#include <WinUser.h>
 #include <vector>
-
-namespace
-{
-    enum KEY : unsigned char
-    {
-        DOWN = 0,
-        UP = 1
-    };
-}
 
 Glib::Internal::Input::MouseDevice::~MouseDevice()
 {
-    // デバイスの削除
-    if (inputDevice_ != nullptr)
-    {
-        inputDevice_->Unacquire();
-        inputDevice_->Release();
-        inputDevice_ = nullptr;
-    }
+    rawInputDevice_->dwFlags = RIDEV_REMOVE;
+    RegisterRawInputDevices(rawInputDevice_.get(), 1, sizeof(RAWINPUTDEVICE));
+    rawInputDevice_.reset();
 }
 
-bool Glib::Internal::Input::MouseDevice::Initialize(ComPtr<IDirectInput8>& dinput)
+bool Glib::Internal::Input::MouseDevice::Initialize()
 {
-    // デバイスの作成
-    auto hr = dinput->CreateDevice(
-        GUID_SysMouse,
-        &inputDevice_,
-        nullptr
-    );
-    if (FAILED(hr)) return false;
+    // キーボード取得のデバイスを作成
+    rawInputDevice_ = std::make_unique<RAWINPUTDEVICE>(0x01, 0x02, 0, nullptr);
+    // デバイスの登録
+    if (!RegisterRawInputDevices(rawInputDevice_.get(), 1, sizeof(RAWINPUTDEVICE))) return false;
 
-    // フォーマット設定
-    hr = inputDevice_->SetDataFormat(&c_dfDIMouse2);
-    if (FAILED(hr)) return false;
-
-    hr = inputDevice_->SetCooperativeLevel(
-        GetActiveWindow(),
-        DISCL_FOREGROUND | DISCL_NONEXCLUSIVE
-    );
-    if (FAILED(hr)) return false;
-    inputDevice_->Acquire();
+    // メッセージ取得用のプロシージャ登録
+    Window::RegisterProcedure(this);
 
     return true;
 }
 
 void Glib::Internal::Input::MouseDevice::Update()
 {
-    prevMouseState_ = currentMouseState_;
-    if (FAILED(inputDevice_->GetDeviceState(sizeof(currentMouseState_), &currentMouseState_)))
+    prevMouseBuffer_ = currentMouseBuffer_;
+
+    // バッファから取得
+    for (const auto& buffer : frameBuffer_)
     {
-        inputDevice_->Acquire();
-        inputDevice_->GetDeviceState(sizeof(currentMouseState_), &currentMouseState_);
+        currentMouseBuffer_.Position = buffer.Position;
+        currentMouseBuffer_.Wheel = buffer.Wheel;
+        for (char i = 0; i < 5; i++)
+        {
+            currentMouseBuffer_.Buttons[i] |= buffer.Buttons[i];
+        }
     }
+    currentMouseBuffer_.Delta = currentMouseBuffer_.Position - prevMouseBuffer_.Position;
+    frameBuffer_.clear();
 }
 
 bool Glib::Internal::Input::MouseDevice::ButtonDown(MouseButton button) const
 {
-    return currentMouseState_.rgbButtons[static_cast<BYTE>(button)] & 0x80;
+    bool prev = prevMouseBuffer_.Buttons[static_cast<int>(button)];
+    bool current = currentMouseBuffer_.Buttons[static_cast<int>(button)];
+    return !prev && current;
 }
 
 bool Glib::Internal::Input::MouseDevice::ButtonUP(MouseButton button) const
 {
-    return currentMouseState_.rgbButtons[static_cast<BYTE>(button)] & 0x8 &
-        ~prevMouseState_.rgbButtons[static_cast<BYTE>(button)] & 0x8;
+    bool prev = prevMouseBuffer_.Buttons[static_cast<int>(button)];
+    bool current = currentMouseBuffer_.Buttons[static_cast<int>(button)];
+    return prev && !current;
 }
 
 bool Glib::Internal::Input::MouseDevice::Pressed(MouseButton button) const
 {
-    return prevMouseState_.rgbButtons[static_cast<BYTE>(button)] & 0x8 &
-        ~currentMouseState_.rgbButtons[static_cast<BYTE>(button)] & 0x8;
+    return currentMouseBuffer_.Buttons[static_cast<int>(button)];
 }
 
 Vector2 Glib::Internal::Input::MouseDevice::Position() const
 {
-    POINT mousePos;
-    GetCursorPos(&mousePos);
-    ScreenToClient(GetActiveWindow(), &mousePos);
-    return Vector2{ static_cast<float>(mousePos.x), static_cast<float>(mousePos.y) };
+    return currentMouseBuffer_.Position;
 }
 
 Vector2 Glib::Internal::Input::MouseDevice::Delta() const
 {
-    return Vector2{ static_cast<float>(currentMouseState_.lX), static_cast<float>(currentMouseState_.lY) };
+    return currentMouseBuffer_.Delta;
 }
 
 float Glib::Internal::Input::MouseDevice::Wheel() const
 {
-    return currentMouseState_.lZ / 120.0f;
+    return currentMouseBuffer_.Wheel;
 }
 
 void Glib::Internal::Input::MouseDevice::ShowCursor() const
@@ -105,4 +89,91 @@ void Glib::Internal::Input::MouseDevice::SetPosition(const Vector2& position) co
     POINT leftTop{ 0, 0 };
     ScreenToClient(GetActiveWindow(), &leftTop);
     SetCursorPos(static_cast<int>(position.x - leftTop.x), static_cast<int>(position.y - leftTop.y));
+}
+
+void Glib::Internal::Input::MouseDevice::ProcessMouse(const HRAWINPUT* hRawInput)
+{
+    UINT size = 0;
+    GetRawInputData(*hRawInput, RID_INPUT, nullptr, &size, sizeof(RAWINPUTHEADER));
+    auto buffer = std::make_unique<BYTE[]>(size);
+    if (GetRawInputData(*hRawInput, RID_INPUT, buffer.get(), &size, sizeof(RAWINPUTHEADER)) != size)
+    {
+        return;
+    }
+
+    // バッファに追加
+    RAWINPUT* raw = reinterpret_cast<RAWINPUT*>(buffer.get());
+    if (raw->header.dwType == RIM_TYPEMOUSE)
+    {
+        auto mouse = raw->data.mouse;
+        auto flags = raw->data.mouse.usFlags;
+        auto buttonFlags = raw->data.mouse.usButtonFlags;
+        MouseBuffer buffer;
+
+        // 位置情報の取得
+        if (flags & MOUSE_MOVE_ABSOLUTE)
+        {
+            // 仮想デスクトップか確認
+            RECT rect{};
+            if (flags & MOUSE_VIRTUAL_DESKTOP)
+            {
+                rect.left = GetSystemMetrics(SM_XVIRTUALSCREEN);
+                rect.top = GetSystemMetrics(SM_YVIRTUALSCREEN);
+                rect.right = GetSystemMetrics(SM_CXVIRTUALSCREEN);
+                rect.bottom = GetSystemMetrics(SM_CYVIRTUALSCREEN);
+            }
+            else
+            {
+                rect.left = 0;
+                rect.top = 0;
+                rect.right = GetSystemMetrics(SM_CXSCREEN);
+                rect.bottom = GetSystemMetrics(SM_CYSCREEN);
+            }
+
+            // 位置を計算
+            buffer.Position = Vector2{
+                static_cast<float>(MulDiv(mouse.lLastX, rect.right, 65535) + rect.left),
+                static_cast<float>(MulDiv(mouse.lLastY, rect.bottom, 65535) + rect.top)
+            };
+        }
+        else if (mouse.lLastX != 0 || mouse.lLastY != 0)
+        {
+            POINT currentPos{};
+            GetCursorPos(&currentPos);
+            ScreenToClient(GetActiveWindow(), &currentPos);
+            buffer.Position = Vector2{
+                static_cast<float>(currentPos.x + mouse.lLastX),
+                static_cast<float>(currentPos.y + mouse.lLastY)
+            };
+        }
+
+        // マウスホイールの取得
+        if (buttonFlags & RI_MOUSE_WHEEL)
+        {
+            float delta = static_cast<float>(raw->data.mouse.usButtonData);
+            buffer.Wheel = delta / WHEEL_DELTA;
+        }
+
+        // ボタンを確認
+        if (buttonFlags & RI_MOUSE_BUTTON_1_DOWN) buffer.Buttons[0] = true;
+        if (buttonFlags & RI_MOUSE_BUTTON_1_UP) buffer.Buttons[0] = false;
+        if (buttonFlags & RI_MOUSE_BUTTON_2_DOWN) buffer.Buttons[1] = true;
+        if (buttonFlags & RI_MOUSE_BUTTON_2_UP) buffer.Buttons[1] = false;
+        if (buttonFlags & RI_MOUSE_BUTTON_3_DOWN) buffer.Buttons[2] = true;
+        if (buttonFlags & RI_MOUSE_BUTTON_3_UP) buffer.Buttons[2] = false;
+        if (buttonFlags & RI_MOUSE_BUTTON_4_DOWN) buffer.Buttons[3] = true;
+        if (buttonFlags & RI_MOUSE_BUTTON_4_UP) buffer.Buttons[3] = false;
+        if (buttonFlags & RI_MOUSE_BUTTON_5_DOWN) buffer.Buttons[4] = true;
+        if (buttonFlags & RI_MOUSE_BUTTON_5_UP) buffer.Buttons[4] = false;
+
+        // バッファに追加
+        frameBuffer_.push_back(std::move(buffer));
+    }
+}
+
+void Glib::Internal::Input::MouseDevice::operator()(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    if (msg != WM_INPUT) return;
+    auto inputData = reinterpret_cast<HRAWINPUT>(lparam);
+    ProcessMouse(&inputData);
 }
