@@ -1,7 +1,7 @@
 ﻿#include <Window.h>
 #include <algorithm>
 #include <ranges>
-#include <list>
+#include <deque>
 #include <Internal/DX12/DirectX12.h>
 #include <Vector2.h>
 #include <StringUtility.h>
@@ -11,7 +11,7 @@ namespace
     WNDCLASSEX s_windowClass;
     HINSTANCE s_hInstance;
     HWND s_windowHandle;
-    std::list<Glib::IWindowMessage*> s_windowProcedures;
+    std::deque<Glib::IWindowMessage*> s_windowProcedures;
     std::string s_windowName{ "GameWindow" };
     Vector2 s_windowSize{ 1240.0f, 720.0f };
     Vector2 s_windowDebugSize{ 1240.0f, 720.0f };
@@ -20,19 +20,13 @@ namespace
 
 LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
+    auto it = std::ranges::remove(s_windowProcedures, nullptr);
+    s_windowProcedures.erase(it.begin(), it.end());
 
-    for (auto it = s_windowProcedures.begin(); it != s_windowProcedures.end();)
+    for (auto* proc : s_windowProcedures)
     {
-        if ((*it) == nullptr)
-        {
-            auto eit = std::ranges::find(s_windowProcedures, *it);
-            s_windowProcedures.erase(eit);
-        }
-        else
-        {
-            (**it)(hwnd, msg, wparam, lparam);
-            it++;
-        }
+        if (proc == nullptr) continue;
+        (*proc)(hwnd, msg, wparam, lparam);
     }
 
     switch (msg)
