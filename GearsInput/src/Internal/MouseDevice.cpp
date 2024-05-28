@@ -7,6 +7,8 @@ Glib::Internal::Input::MouseDevice::~MouseDevice()
     rawInputDevice_->dwFlags = RIDEV_REMOVE;
     RegisterRawInputDevices(rawInputDevice_.get(), 1, sizeof(RAWINPUTDEVICE));
     rawInputDevice_.reset();
+
+    Window::UnRegisterProcedure(this);
 }
 
 bool Glib::Internal::Input::MouseDevice::Initialize()

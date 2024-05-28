@@ -20,9 +20,6 @@ namespace
 
 LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    auto it = std::ranges::remove(s_windowProcedures, nullptr);
-    s_windowProcedures.erase(it.begin(), it.end());
-
     for (auto* proc : s_windowProcedures)
     {
         if (proc == nullptr) continue;
@@ -118,14 +115,13 @@ HWND Glib::Window::WindowHandle()
 
 void Glib::Window::RegisterProcedure(IWindowMessage* const proc)
 {
-    // IDがマイナスの場合はIDを割り振る
     if (proc == nullptr) return;
     s_windowProcedures.push_back(proc);
 }
 
 void Glib::Window::UnRegisterProcedure(IWindowMessage* const proc)
 {
-    if (s_windowProcedures.empty()) return;;
+    if (s_windowProcedures.empty()) return;
     std::erase_if(s_windowProcedures, [&](IWindowMessage* value)
     {
         return value == proc;

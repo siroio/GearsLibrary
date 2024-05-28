@@ -16,19 +16,10 @@ void Glib::Internal::Input::XinputGamePad::Update()
     float now = GameTimer::Now();
 
     prevPadState_ = currentPadState_;
+
     auto res = XInputGetState(controllerIndex_, &currentPadState_.state);
-
-    if (res != ERROR_SUCCESS)
-    {
-        currentPadState_.isConnected = false;
-    }
-    else
-    {
-        currentPadState_.isConnected = true;
-    }
-
+    currentPadState_.isConnected = (res == ERROR_SUCCESS);
     if (!currentPadState_.isConnected) return;
-
 
     // 振動停止
     if (currentPadState_.isVibrating) return;
@@ -55,16 +46,14 @@ bool Glib::Internal::Input::XinputGamePad::GetButtonDown(GPADKey button)
 {
     if (!CheckConnection()) return false;
     auto type = static_cast<unsigned int>(button);
-    return currentPadState_.state.Gamepad.wButtons & type &
-        ~prevPadState_.state.Gamepad.wButtons & type;
+    return (currentPadState_.state.Gamepad.wButtons & type) & (~prevPadState_.state.Gamepad.wButtons & type);
 }
 
 bool Glib::Internal::Input::XinputGamePad::GetButtonUp(GPADKey button)
 {
     if (!CheckConnection()) return false;
     auto type = static_cast<unsigned int>(button);
-    return prevPadState_.state.Gamepad.wButtons & type &
-        ~currentPadState_.state.Gamepad.wButtons & type;
+    return (~currentPadState_.state.Gamepad.wButtons & type) & (prevPadState_.state.Gamepad.wButtons & type);
 }
 
 Vector2 Glib::Internal::Input::XinputGamePad::GetLeftStick(float deadZone)
@@ -79,7 +68,7 @@ Vector2 Glib::Internal::Input::XinputGamePad::GetLeftStick(float deadZone)
         y / (y > 0 ? 32767.0f : 32768.0f),
     };
 
-    return (stickVal.SqrMagnitude() < deadZone * deadZone) ?
+    return (stickVal.SqrMagnitude() < (deadZone * deadZone)) ?
         Vector2::Zero() :
         stickVal;
 }
@@ -96,7 +85,7 @@ Vector2 Glib::Internal::Input::XinputGamePad::GetRightStick(float deadZone)
         y / (y > 0 ? 32767.0f : 32768.0f),
     };
 
-    return (stickVal.SqrMagnitude() < deadZone * deadZone) ?
+    return (stickVal.SqrMagnitude() < (deadZone * deadZone)) ?
         Vector2::Zero() :
         stickVal;
 }

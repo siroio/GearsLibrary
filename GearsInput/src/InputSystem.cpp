@@ -78,13 +78,16 @@ bool Glib::InputSystem::GetInput(const std::string& name)
         switch (key.input.index())
         {
             case InputType::MOUSE:
-                return GetMousePressed(std::get<InputType::MOUSE>(key.input));
+                if (GetMousePressed(std::get<InputType::MOUSE>(key.input))) return true;
+                break;
             case InputType::KEYBOARD:
-                return GetKey(std::get<InputType::KEYBOARD>(key.input));
+                if (GetKey(std::get<InputType::KEYBOARD>(key.input))) return false;
+                break;
             case InputType::GAMEPAD:
-                return GetButton(std::get<InputType::GAMEPAD>(key.input));
+                if (GetButton(std::get<InputType::GAMEPAD>(key.input))) return false;
+                break;
             default:
-                return false;
+                break;
         }
     }
     return false;
@@ -103,13 +106,16 @@ bool Glib::InputSystem::GetInputDown(const std::string& name)
         switch (key.input.index())
         {
             case InputType::MOUSE:
-                return GetMouseDown(std::get<InputType::MOUSE>(key.input));
+                if (GetMouseDown(std::get<InputType::MOUSE>(key.input))) return true;
+                break;
             case InputType::KEYBOARD:
-                return GetKeyDown(std::get<InputType::KEYBOARD>(key.input));
+                if (GetKeyDown(std::get<InputType::KEYBOARD>(key.input))) return true;
+                break;
             case InputType::GAMEPAD:
-                return GetButtonDown(std::get<InputType::GAMEPAD>(key.input));
+                if (GetButtonDown(std::get<InputType::GAMEPAD>(key.input))) return true;
+                break;
             default:
-                return false;
+                break;
         }
     }
     return false;
@@ -128,13 +134,16 @@ bool Glib::InputSystem::GetInputUp(const std::string& name)
         switch (key.input.index())
         {
             case InputType::MOUSE:
-                return GetMouseUp(std::get<InputType::MOUSE>(key.input));
+                if (GetMouseUp(std::get<InputType::MOUSE>(key.input))) return true;
+                break;
             case InputType::KEYBOARD:
-                return GetKeyUp(std::get<InputType::KEYBOARD>(key.input));
+                if (GetKeyUp(std::get<InputType::KEYBOARD>(key.input))) return true;
+                break;
             case InputType::GAMEPAD:
-                return GetButtonUp(std::get<InputType::GAMEPAD>(key.input));
+                if (GetButtonUp(std::get<InputType::GAMEPAD>(key.input))) return true;
+                break;
             default:
-                return false;
+                break;
         }
     }
     return false;

@@ -6,6 +6,8 @@ Glib::Internal::Input::KeyBoardDevice::~KeyBoardDevice()
     rawInputDevice_->dwFlags = RIDEV_REMOVE;
     RegisterRawInputDevices(rawInputDevice_.get(), 1, sizeof(RAWINPUTDEVICE));
     rawInputDevice_.reset();
+
+    Window::UnRegisterProcedure(this);
 }
 
 bool Glib::Internal::Input::KeyBoardDevice::Initialize()
