@@ -1,6 +1,7 @@
 ﻿#include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/d3dx12Inc.h>
 #include <Internal/DX12/CommandList.h>
+#include <Internal/DX12/Fence.h>
 #include <RenderTarget.h>
 #include <Window.h>
 #include <Color.h>
@@ -24,13 +25,10 @@ namespace
     ComPtr<IDXGISwapChain4> s_swapChain{ nullptr };
 
     /* コマンドリスト */
-    std::shared_ptr<Glib::Internal::Graphics::CommandList> s_cmdList;
+    std::shared_ptr<Glib::Internal::Graphics::CommandList> s_cmdList{ nullptr };
 
     /* フェンス */
-    ComPtr<ID3D12Fence> s_fence{ nullptr };
-
-    /* フェンス値 */
-    UINT64 s_fenceValue{ 0 };
+    std::shared_ptr<Glib::Internal::Graphics::Fence> s_fence{ nullptr };
 
     /* ディスクリプタプール */
     std::array<std::shared_ptr<Glib::Internal::Graphics::DescriptorPool>,
@@ -90,7 +88,7 @@ bool Glib::Internal::Graphics::DirectX12::Initialize()
         if (!s_backBuffers[idx].Create(idx, s_swapChain)) return false;
     }
 
-    if (FAILED(s_device->CreateFence(s_fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(s_fence.ReleaseAndGetAddressOf())))) return false;
+    if (!Fence::Create(0, D3D12_FENCE_FLAG_NONE, s_fence)) return false;
 
 #if defined(DEBUG) || defined(_DEBUG)
     const auto& windowSize = Window::WindowDebugSize();
@@ -350,12 +348,6 @@ void Glib::Internal::Graphics::DirectX12::EnableDebugLayer()
 
 void Glib::Internal::Graphics::DirectX12::WaitGPU()
 {
-    s_cmdList->Queue()->Signal(s_fence.Get(), ++s_fenceValue);
-    if (s_fence->GetCompletedValue() < s_fenceValue)
-    {
-        auto event = CreateEvent(nullptr, false, false, nullptr);
-        s_fence->SetEventOnCompletion(s_fenceValue, event);
-        WaitForSingleObject(event, INFINITE);
-        CloseHandle(event);
-    }
+    s_fence->Signal(s_cmdList);
+    s_fence->WaitGPU();
 }

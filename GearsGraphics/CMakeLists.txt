@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.4)
 set(SOURCE_FILE 
 	./src/Internal/DX12/DirectX12.cpp
 	./src/Internal/DX12/CommandList.cpp
+	./src/Internal/DX12/Fence.cpp
     ./src/Internal/DX12/BlendState.cpp
     ./src/Internal/DX12/GraphicsPipeline.cpp
 	./src/Internal/DX12/DescriptorHandle.cpp
@@ -42,6 +43,7 @@ set(HEADER_FILE
     ./include/Internal/DX12/d3dx12Inc.h
 	./include/Internal/DX12/DirectX12.h
 	./include/Internal/DX12/CommandList.h
+	./include/Internal/DX12/Fence.h
     ./include/Internal/DX12/BlendState.h
     ./include/Internal/DX12/GraphicsPipeline.h
     ./include/Internal/DX12/DescriptorHandle.h
