@@ -44,7 +44,6 @@ void Glib::GameObjectManager::DebugDraw()
     if (s_enableHierarchy)
     {
         ImGui::Begin("Hierarchy", &s_enableHierarchy);
-        ImGui::Separator();
         for (const auto& gameObject : gameObjects_)
         {
             // パラメーター表示
@@ -57,7 +56,6 @@ void Glib::GameObjectManager::DebugDraw()
     if (s_enableProperties)
     {
         ImGui::Begin("Properties", &s_enableProperties);
-        ImGui::Separator();
         if (!s_selectObject.expired())
         {
             ImGuiInputTextFlags flags =
@@ -87,12 +85,10 @@ void Glib::GameObjectManager::DebugDraw()
             // レイヤーの表示
             std::string layer = "Layer: " + std::to_string(s_selectObject->Layer());
             ImGui::Text(layer.c_str());
-            ImGui::Separator();
 
             // コンポーネントの表示
             s_selectObject->DrawGUI();
         }
-
         ImGui::End();
     }
 }
