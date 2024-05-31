@@ -16,7 +16,6 @@ namespace Glib::Internal::Graphics
     {
     public:
         Fence() = default;
-        ~Fence();
 
         /**
          * @brief フェンスの作成

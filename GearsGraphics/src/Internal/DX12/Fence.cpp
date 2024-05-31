@@ -8,11 +8,6 @@ namespace
     auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
 }
 
-Glib::Internal::Graphics::Fence::~Fence()
-{
-    CloseHandle(fenceEvent_);
-}
-
 bool Glib::Internal::Graphics::Fence::Create(const UINT64& initValue, D3D12_FENCE_FLAGS flags, std::shared_ptr<Fence>& fence)
 {
     fence = std::make_shared<Fence>();
