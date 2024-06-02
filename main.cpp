@@ -131,10 +131,9 @@ public:
     void Update()
     {
         auto se = GameObject()->GetComponent<AudioSource>();
-        if (InputSystem::GetKeyDown(KeyCode::Space))
+        if (InputSystem::GetInputDown("SE"))
         {
             se->Play();
-            GameObject()->Destroy();
         }
     }
 };
@@ -308,6 +307,9 @@ public:
         // 音設定
         AudioManager::AddSoundGroup(0);
         AudioManager::SetSoundGroupVolume(0, 0.1f);
+
+        InputSystem::AddInput("SE", GPADKey::B);
+        InputSystem::AddInput("SE", KeyCode::Space);
 
         // カメラ作成
         SkyboxManager::SetSkybox(0);
