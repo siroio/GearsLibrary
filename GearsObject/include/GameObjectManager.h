@@ -27,6 +27,7 @@ namespace Glib
         void DebugDraw();
         void Finalize();
         void ResetGameObjects();
+        void RemoveDestroyableObjects();
 
     private:
         void DrawDebugParameter(GameObjectPtr gameObject);

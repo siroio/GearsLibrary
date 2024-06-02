@@ -13,6 +13,7 @@ void Glib::SceneManager::Update()
     if (next_.expired()) return;
     if (!current_.expired()) current_->End();
     s_gameObjectManager->ResetGameObjects();
+    s_gameObjectManager->RemoveDestroyableObjects();
     current_ = next_;
     next_ = nullptr;
     current_->Start();
@@ -37,4 +38,3 @@ std::list<std::string> Glib::SceneManager::Scenes()
     }
     return scenes;
 }
-

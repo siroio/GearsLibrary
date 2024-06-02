@@ -17,17 +17,7 @@ namespace
 
 void Glib::GameObjectManager::Update()
 {
-    // Deadフラグの立ったコンポーネントを削除
-    for (const auto& gameObject : gameObjects_)
-    {
-        gameObject->RemoveDeadComponents();
-    }
-
-    // Deadフラグの立ったオブジェクトを削除
-    gameObjects_.remove_if([](const std::shared_ptr<GameObject>& gameObject)
-    {
-        return gameObject->IsDead();
-    });
+    RemoveDestroyableObjects();
 }
 
 void Glib::GameObjectManager::DebugDraw()
@@ -105,6 +95,21 @@ void Glib::GameObjectManager::ResetGameObjects()
         if (gameObject->DontDestroyOnLoad()) continue;
         gameObject->Destroy();
     }
+}
+
+void Glib::GameObjectManager::RemoveDestroyableObjects()
+{
+    // Deadフラグの立ったコンポーネントを削除
+    for (const auto& gameObject : gameObjects_)
+    {
+        gameObject->RemoveDeadComponents();
+    }
+
+    // Deadフラグの立ったオブジェクトを削除
+    gameObjects_.remove_if([](const std::shared_ptr<GameObject>& gameObject)
+    {
+        return gameObject->IsDead();
+    });
 }
 
 void Glib::GameObjectManager::DrawDebugParameter(GameObjectPtr gameObject)
