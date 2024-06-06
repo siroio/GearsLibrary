@@ -386,7 +386,7 @@ void Glib::Internal::Physics::PhysXManager::SetCollisionFlags(unsigned int layer
     s_layer.Set(layer1, layer2, enable);
 }
 
-PxPhysics& Glib::Internal::Physics::PhysXManager::Physcs()
+PxPhysics& Glib::Internal::Physics::PhysXManager::Physics()
 {
     return *s_physics;
 }

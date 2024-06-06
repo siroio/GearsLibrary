@@ -64,7 +64,10 @@ physx::PxTriangleMesh* Glib::Internal::Geometry::CreateTriangleMesh(const Mesh& 
     pxMeshDesc.triangles.count = static_cast<physx::PxU32>(indices.size() / 3);
     pxMeshDesc.triangles.stride = 3 * sizeof(std::remove_reference<decltype(indices)>::type::value_type);
     pxMeshDesc.triangles.data = indices.data();
-    if (flipNormals) pxMeshDesc.flags = physx::PxMeshFlag::eFLIPNORMALS;
+    if (!flipNormals)
+    {
+        pxMeshDesc.flags = physx::PxMeshFlag::eFLIPNORMALS;
+    }
 
     physx::PxDefaultMemoryOutputStream writeBuffer;
     if (!PxCookTriangleMesh(cookingParams, pxMeshDesc, writeBuffer))
@@ -74,7 +77,7 @@ physx::PxTriangleMesh* Glib::Internal::Geometry::CreateTriangleMesh(const Mesh& 
     }
     physx::PxDefaultMemoryInputData readBuffer{ writeBuffer.getData(), writeBuffer.getSize() };
 
-    return s_physX->Physcs().createTriangleMesh(readBuffer);
+    return s_physX->Physics().createTriangleMesh(readBuffer);
 }
 
 physx::PxConvexMesh* Glib::Internal::Geometry::CreateConvexMesh(const Mesh& mesh)
@@ -107,7 +110,7 @@ physx::PxConvexMesh* Glib::Internal::Geometry::CreateConvexMesh(const Mesh& mesh
     }
     physx::PxDefaultMemoryInputData readBuffer{ writeBuffer.getData(), writeBuffer.getSize() };
 
-    return s_physX->Physcs().createConvexMesh(readBuffer);
+    return s_physX->Physics().createConvexMesh(readBuffer);
 }
 
 physx::PxTriangleMeshGeometry Glib::Internal::Geometry::CreateTriangleMesh(const GameObjectPtr& gameObject, physx::PxTriangleMesh* const mesh)

@@ -58,7 +58,7 @@ namespace Glib::Internal::Physics
 
         void SetCollisionFlags(unsigned int layer1, unsigned int layer2, bool enable);
 
-        physx::PxPhysics& Physcs();
+        physx::PxPhysics& Physics();
 
     private:
         void onContact(const physx::PxContactPairHeader& pairHeader, const physx::PxContactPair* pairs, physx::PxU32 nbPairs) override;
