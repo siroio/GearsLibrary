@@ -3,6 +3,7 @@
 #include <string_view>
 #include <algorithm>
 #include <memory>
+#include <deque>
 #include <list>
 #include <Internal/IGameObject.h>
 #include <Internal/ComponentManager.h>
@@ -198,7 +199,7 @@ private:
     unsigned int layer_{ 0 };
     std::string name_{ "" };
     std::string tag_{ "" };
-    std::list<std::shared_ptr<Component>> components_;
+    std::deque<std::shared_ptr<Component>> components_;
     Glib::WeakPtr<Glib::Transform> transform_{ nullptr };
 };
 
@@ -216,7 +217,7 @@ inline Glib::WeakPtr<T> GameObject::GetComponent() const
 {
     for (const auto& component : components_)
     {
-        if (typeid(T) != typeid(*component.get())) continue;
+        if (typeid(T) != std::remove_pointer<decltype(component.get())>::type) continue;
         return Glib::WeakPtr<T>(std::dynamic_pointer_cast<T>(component));
     }
 
@@ -256,7 +257,7 @@ inline std::list<Glib::WeakPtr<T>> GameObject::GetComponents() const
 
     for (const auto& component : components_)
     {
-        if (typeid(T) != typeid(*(component.get()))) continue;
+        if (typeid(T) != std::remove_pointer<decltype(component.get())>::type) continue;
         result.push_back(Glib::WeakPtr<T>{ std::dynamic_pointer_cast<T>(component) });
     }
 
