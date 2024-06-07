@@ -53,10 +53,7 @@ void Glib::MeshCollider::Start()
     }
 
     const auto& transform = GameObject()->Transform();
-    rigidStatic_ = static_cast<physx::PxRigidStatic*>(s_physX->CreateRigidStatic(
-        transform->Position(),
-        transform->Rotation(),
-        GameObject()));
+    rigidStatic_ = static_cast<physx::PxRigidStatic*>(s_physX->CreateRigidStatic(GameObject()));
 
     CreateMesh();
     if (isConvex_)
@@ -69,6 +66,12 @@ void Glib::MeshCollider::Start()
         auto* const ptr = std::get<physx::PxTriangleMesh*>(meshPtr_);
         CreateShape(Internal::Geometry::CreateTriangleMesh(GameObject(), ptr));
     }
+
+    auto* shape = Shape();
+    auto pose = shape->getLocalPose();
+    pose.p = Internal::Physics::PhysXManager::ToPxVec3(transform->Position());
+    pose.q = Internal::Physics::PhysXManager::ToPxQuat(transform->Rotation());
+    shape->setLocalPose(pose);
     initialized = true;
 }
 
@@ -118,8 +121,8 @@ void Glib::MeshCollider::SyncGeometry()
 {
     const auto& transform = GameObject()->Transform();
     physx::PxTransform pose{
-        Internal::Physics::PhysXManager::ToPxVec3(transform->LocalPosition()),
-        Internal::Physics::PhysXManager::ToPxQuat(transform->LocalRotation())
+        Internal::Physics::PhysXManager::ToPxVec3(transform->Position()),
+        Internal::Physics::PhysXManager::ToPxQuat(transform->Rotation())
     };
     Shape()->setLocalPose(pose);
 

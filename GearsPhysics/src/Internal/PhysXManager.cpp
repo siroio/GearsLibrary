@@ -352,9 +352,9 @@ PxRigidActor* Glib::Internal::Physics::PhysXManager::CreateRigidBody(const Vecto
     return actor;
 }
 
-PxRigidActor* Glib::Internal::Physics::PhysXManager::CreateRigidStatic(const Vector3& position, const Quaternion& rotation, const GameObjectPtr& gameObject)
+PxRigidActor* Glib::Internal::Physics::PhysXManager::CreateRigidStatic(const GameObjectPtr& gameObject)
 {
-    PxTransform pose{ ToPxVec3(position), ToPxQuat(rotation) };
+    PxTransform pose{};
     PxRigidActor* actor = s_physics->createRigidStatic(pose);
     s_staticRigidbodys.emplace(reinterpret_cast<uintptr_t>(actor), gameObject);
     s_scene->addActor(*actor);
