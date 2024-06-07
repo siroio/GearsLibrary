@@ -354,7 +354,7 @@ PxRigidActor* Glib::Internal::Physics::PhysXManager::CreateRigidBody(const Vecto
 
 PxRigidActor* Glib::Internal::Physics::PhysXManager::CreateRigidStatic(const GameObjectPtr& gameObject)
 {
-    PxTransform pose{};
+    PxTransform pose{ PxVec3{ 0.0f }, PxQuat{ 0.0f, 0.0f, 0.0f, 1.0f } };
     PxRigidActor* actor = s_physics->createRigidStatic(pose);
     s_staticRigidbodys.emplace(reinterpret_cast<uintptr_t>(actor), gameObject);
     s_scene->addActor(*actor);
