@@ -217,7 +217,7 @@ inline Glib::WeakPtr<T> GameObject::GetComponent() const
 {
     for (const auto& component : components_)
     {
-        if (typeid(T) != std::remove_pointer<decltype(component.get())>::type) continue;
+        if (typeid(T) != typeid(*component.get())) continue;
         return Glib::WeakPtr<T>(std::dynamic_pointer_cast<T>(component));
     }
 
@@ -257,7 +257,7 @@ inline std::list<Glib::WeakPtr<T>> GameObject::GetComponents() const
 
     for (const auto& component : components_)
     {
-        if (typeid(T) != std::remove_pointer<decltype(component.get())>::type) continue;
+        if (typeid(T) != typeid(*component.get())) continue;
         result.push_back(Glib::WeakPtr<T>{ std::dynamic_pointer_cast<T>(component) });
     }
 

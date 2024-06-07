@@ -35,10 +35,11 @@ void GameObject::RemoveComponents()
 
 void GameObject::RemoveDeadComponents()
 {
-    components_.remove_if([](const Glib::WeakPtr<Component>& component)
+    auto newIt = std::ranges::remove_if(components_, [](const Glib::WeakPtr<Component>& component)
     {
         return component->IsDead();
     });
+    components_.erase(newIt.begin(), newIt.end());
 }
 
 void GameObject::DrawGUI()
