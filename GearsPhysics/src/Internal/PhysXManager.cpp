@@ -48,6 +48,7 @@ namespace
     PxPhysics* s_physics{ nullptr };
     PxDefaultCpuDispatcher* s_dispatcher{ nullptr };
     PxScene* s_scene{ nullptr };
+    PxPvd* s_pvd{ nullptr };
 }
 
 namespace
@@ -117,9 +118,21 @@ bool Glib::Internal::Physics::PhysXManager::Initialize()
     s_foundation = PxCreateFoundation(PX_PHYSICS_VERSION, s_defaultAllocator, s_defaultErrorCallback);
     if (s_foundation == nullptr) return false;
 
-    const auto scale = PxTolerancesScale{};
-    s_physics = PxCreatePhysics(PX_PHYSICS_VERSION, *s_foundation, scale, true);
+#if defined(DEBUG) || defined(_DEBUG)
+    s_pvd = PxCreatePvd(*s_foundation);
+    if (s_pvd == nullptr) return false;
+
+    PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
+    s_pvd->connect(*transport, physx::PxPvdInstrumentationFlag::eALL);
+
+    s_physics = PxCreatePhysics(PX_PHYSICS_VERSION, *s_foundation, PxTolerancesScale{}, true, s_pvd);
     if (s_physics == nullptr) return false;
+
+    if (!PxInitExtensions(*s_physics, s_pvd)) return false;
+#else
+    s_physics = PxCreatePhysics(PX_PHYSICS_VERSION, *s_foundation, PxTolerancesScale{}, true);
+    if (s_physics == nullptr) return false;
+#endif
 
     s_dispatcher = PxDefaultCpuDispatcherCreate(std::thread::hardware_concurrency() - 1);
     if (s_dispatcher == nullptr) return false;
@@ -161,6 +174,15 @@ void Glib::Internal::Physics::PhysXManager::Finalize()
     {
         s_physics->release();
         s_physics = nullptr;
+    }
+    if (s_pvd != nullptr)
+    {
+        s_pvd->disconnect();
+        PxPvdTransport* transport = s_pvd->getTransport();
+        transport->release();
+        s_pvd->release();
+        transport = nullptr;
+        s_pvd = nullptr;
     }
     if (s_foundation != nullptr)
     {

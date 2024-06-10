@@ -51,6 +51,8 @@ target_link_libraries(${LIB_NAME}
     debug ${PHYSX_LIB_DIR}/debug/PhysXCooking_64.lib
     debug ${PHYSX_LIB_DIR}/debug/PhysXExtensions_static_64.lib
     debug ${PHYSX_LIB_DIR}/debug/PhysXFoundation_64.lib
+    debug ${PHYSX_LIB_DIR}/debug/PhysXPvdSDK_static_64.lib
+    debug ${PHYSX_LIB_DIR}/debug/PVDRuntime_64.lib
 )
 
 target_link_libraries(${LIB_NAME} 

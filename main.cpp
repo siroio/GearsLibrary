@@ -262,6 +262,9 @@ public:
         MeshManager::Load(0, "Assets/Model/Plane/Plane.globj");
         MeshManager::Load(1, "Assets/Model/Warrior/Warrior.globj");
         MeshManager::Load(2, "Assets/Model/Stage/Stage.globj");
+        MeshManager::Load(3, "Assets/Model/Primitive/Cube.globj");
+        MeshManager::Load(4, "Assets/Model/Primitive/Sphere.globj");
+        MeshManager::Load(5, "Assets/Model/Primitive/Ground.globj");
 
         AnimationManager::Load(0, "Assets/Animation/Warrior@Idle1_0.glanim");
         AnimationManager::Load(1, "Assets/Animation/Warrior@nRun_F_1.glanim");
@@ -320,18 +323,28 @@ public:
         camera->AddComponent<AudioListener>();
 
         // 床
-        auto Ground = GameObjectManager::Instantiate("Ground");
-        auto renderer = Ground->AddComponent<MeshRenderer>();
-        renderer->MeshID(0);
-        auto mc = Ground->AddComponent<MeshCollider>();
-        mc->FlipNormals(true);
-        mc->IsVisible(true);
-        mc->MeshID(renderer->MeshID());
-        Ground->Transform()->Scale(Vector3{ 1, 1, 1 });
+        {
+            auto Ground = GameObjectManager::Instantiate("Ground");
+            auto renderer = Ground->AddComponent<MeshRenderer>();
+            renderer->MeshID(0);
+            auto mc = Ground->AddComponent<MeshCollider>();
+            mc->IsVisible(true);
+            mc->MeshID(renderer->MeshID());
+            Ground->Transform()->Scale(Vector3{ 1, 1, 1 });
+        }
 
+        // プリミティブ
+        {
+            auto Ground = GameObjectManager::Instantiate("Primitive");
+            auto renderer = Ground->AddComponent<MeshRenderer>();
+            renderer->MeshID(4);
+            auto mc = Ground->AddComponent<MeshCollider>();
+            mc->IsVisible(true);
+            mc->MeshID(renderer->MeshID());
+        }
 
-        auto tester = GameObjectManager::Instantiate("Tester");
-        tester->AddComponent<Tester>();
+        //auto tester = GameObjectManager::Instantiate("Tester");
+        //tester->AddComponent<Tester>();
 
         Debug::Log("Scene Loading...");
     }
