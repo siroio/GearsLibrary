@@ -321,9 +321,7 @@ void Glib::Internal::Physics::PhysXManager::ExecuteCollisionCallbacks()
 bool Glib::Internal::Physics::PhysXManager::Raycast(const Vector3& origin, const Vector3& direction, RaycastHit& hit, float maxDistance)
 {
     PxRaycastBuffer buffer{};
-    PxQueryFilterData fd;
-    fd.flags |= PxQueryFlag::eANY_HIT;
-    const auto& isHit = s_scene->raycast(ToPxVec3(origin), ToPxVec3(direction), maxDistance, buffer, PxHitFlag::eDEFAULT, fd);
+    const auto& isHit = s_scene->raycast(ToPxVec3(origin), ToPxVec3(direction), maxDistance, buffer, PxHitFlag::eDEFAULT);
 
     if (!isHit) return false;
     const auto& gameObject = GetGameObject(buffer.block.actor);
@@ -344,9 +342,7 @@ bool Glib::Internal::Physics::PhysXManager::RaycastAll(const Vector3& origin, co
     auto raycastHits = std::make_unique<PxRaycastHit[]>(buffer.maxNbTouches);
     buffer.touches = raycastHits.get();
 
-    PxQueryFilterData fd;
-    fd.flags |= PxQueryFlag::eANY_HIT;
-    bool isHit = s_scene->raycast(ToPxVec3(origin), ToPxVec3(direction), maxDistance, buffer, PxHitFlag::eDEFAULT, fd);
+    bool isHit = s_scene->raycast(ToPxVec3(origin), ToPxVec3(direction), maxDistance, buffer, PxHitFlag::eDEFAULT);
     if (!isHit) return false;
 
     hits.resize(buffer.nbTouches);
