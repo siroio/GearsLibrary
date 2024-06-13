@@ -47,7 +47,7 @@ bool Glib::Window::Initialize()
     // Comの初期化
     if (FAILED(CoInitializeEx(nullptr, COINIT_MULTITHREADED))) return false;
 
-    // ウィンドウの作成
+    // ウィンドウの設定
     s_windowClass.cbSize = sizeof(WNDCLASSEX);
     GetModuleHandleEx(0, nullptr, &s_hInstance);
     s_windowClass.hInstance = s_hInstance;
@@ -169,6 +169,5 @@ bool Glib::Window::BorderlessWindow()
 void Glib::Window::BorderlessWindow(bool borderless)
 {
     if (s_windowHandle != NULL) return;
-    // スタイルを変更
     s_isBorderless = borderless;
 }
