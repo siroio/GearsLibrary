@@ -13,7 +13,7 @@ namespace Glib
         public Internal::Function::UpdateOrderSet<Internal::Order::Update::TIME>
     {
     private:
-        using Clock = std::chrono::high_resolution_clock;
+        using Clock = std::chrono::steady_clock;
         using TimePoint = Clock::time_point;
         using Duration = std::chrono::duration<float>;
         friend WeakPtr<GameTimer> SingletonPtr<GameTimer>::Instance();
