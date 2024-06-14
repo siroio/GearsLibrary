@@ -343,8 +343,8 @@ public:
             mc->MeshID(renderer->MeshID());
         }
 
-        //auto tester = GameObjectManager::Instantiate("Tester");
-        //tester->AddComponent<Tester>();
+        auto tester = GameObjectManager::Instantiate("Tester");
+        tester->AddComponent<Tester>();
 
         Debug::Log("Scene Loading...");
     }
