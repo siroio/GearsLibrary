@@ -6,6 +6,7 @@
 #include <Internal/DX12/Shader/ShaderManager.h>
 #include <Internal/DX12/GraphicsResource.h>
 #include <Internal/DX12/GraphicsResourceID.h>
+#include <Internal/DX12/DynamicConstantBuffer.h>
 #include <Vector2.h>
 #include <Mathf.h>
 
@@ -29,28 +30,28 @@ bool Glib::Graphics::GaussianBlur::Initialize(const ComPtr<ID3D12Resource>& text
     if (!CreateBlurResource(desc.Width, desc.Height, desc.Format)) return false;
     CreateViews(texture, format);
     if (!CreatePipelines(format)) return false;
-    if (!constantBuffer_.Create(sizeof(GaussianBlurConstant))) return false;
     return true;
 }
 
 void Glib::Graphics::GaussianBlur::Execute(float power)
 {
     // 定数バッファ更新
-    GaussianBlurConstant buffer{};
+    GaussianBlurConstant cbuffer{};
     float total = 0.0f;
 
     float invP = 1.0f / power;
     for (int i = 0; i < 8; i++)
     {
-        buffer.weights[i] = Mathf::Exp(-0.5f * (i * i) * invP);
-        total += 2.0f * buffer.weights[i];
+        cbuffer.weights[i] = Mathf::Exp(-0.5f * (i * i) * invP);
+        total += 2.0f * cbuffer.weights[i];
     }
     for (int i = 0; i < 8; i++)
     {
-        buffer.weights[i] /= total;
+        cbuffer.weights[i] /= total;
     }
 
-    constantBuffer_.Update(sizeof(buffer), &buffer);
+    auto buffer = s_dx12->GetConstantBuffer();
+    constantBuffer_ = buffer->Alloc(&cbuffer, sizeof(GaussianBlurConstant));
 
     s_resources->SetVertexBuffer(ID::CAMERA_VERTEX);
     s_dx12->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
@@ -64,7 +65,8 @@ void Glib::Graphics::GaussianBlur::Execute(float power)
             D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
             D3D12_RESOURCE_STATE_RENDER_TARGET);
         pipelines_[0].SetPipeline();
-        constantBuffer_.SetBuffer(0);
+
+        s_dx12->CommandList()->SetGraphicsRootConstantBufferView(0, constantBuffer_.Address());
         s_dx12->CommandList()->OMSetRenderTargets(1, &rtvHandle_[0]->CPU(), false, nullptr);
         s_dx12->CommandList()->ClearRenderTargetView(rtvHandle_[0]->CPU(), clearColor, 0, nullptr);
 
@@ -89,7 +91,7 @@ void Glib::Graphics::GaussianBlur::Execute(float power)
             D3D12_RESOURCE_STATE_RENDER_TARGET);
 
         pipelines_[1].SetPipeline();
-        constantBuffer_.SetBuffer(0);
+        s_dx12->CommandList()->SetGraphicsRootConstantBufferView(0, constantBuffer_.Address());
         s_dx12->CommandList()->OMSetRenderTargets(1, &rtvHandle_[1]->CPU(), false, nullptr);
         s_dx12->CommandList()->ClearRenderTargetView(rtvHandle_[1]->CPU(), clearColor, 0, nullptr);
 

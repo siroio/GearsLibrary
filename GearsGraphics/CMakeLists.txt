@@ -10,6 +10,8 @@ set(SOURCE_FILE
 	./src/Internal/DX12/DescriptorHandle.cpp
 	./src/Internal/DX12/DescriptorPool.cpp
     ./src/Internal/DX12/ConstantBuffer.cpp
+    ./src/Internal/DX12/ConstantBufferAddress.cpp
+    ./src/Internal/DX12/DynamicConstantBuffer.cpp
     ./src/Internal/DX12/IndexBuffer.cpp
     ./src/Internal/DX12/VertexBuffer.cpp
     ./src/Internal/DX12/GraphicsResource.cpp
@@ -49,6 +51,8 @@ set(HEADER_FILE
     ./include/Internal/DX12/DescriptorHandle.h
     ./include/Internal/DX12/DescriptorPool.h
     ./include/Internal/DX12/ConstantBuffer.h
+    ./include/Internal/DX12/ConstantBufferAddress.h
+    ./include/Internal/DX12/DynamicConstantBuffer.h
     ./include/Internal/DX12/IndexBuffer.h
     ./include/Internal/DX12/VertexBuffer.h
     ./include/Internal/DX12/InputLayout.h

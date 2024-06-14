@@ -2,8 +2,9 @@
 #include <Internal/DX12/d3dx12Inc.h>
 #include <Internal/CameraManager.h>
 #include <Internal/CameraBase.h>
-#include <Internal/DX12/ConstantBuffer.h>
 #include <Internal/DX12/DirectX12.h>
+#include <Internal/DX12/ConstantBufferAddress.h>
+#include <Internal/DX12/DynamicConstantBuffer.h>
 #include <Matrix4x4.h>
 #include <Color.h>
 #include <Vector3.h>
@@ -18,7 +19,7 @@ namespace
     auto s_cameraManager = Glib::Internal::Graphics::CameraManager::Instance();
     auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
 
-    Glib::Internal::Graphics::ConstantBuffer s_constantBuffer{};
+    Glib::Internal::Graphics::ConstantBufferAddress s_constantBuffer{};
 
     Color s_ambient{ 1.0f, 1.0f, 1.0f };
     Color s_diffuse{ 1.0f, 1.0f, 1.0f };
@@ -49,27 +50,19 @@ namespace
     bool s_enableShadowMapWindow{ false };
 }
 
-bool Glib::Internal::Graphics::RenderingManager::Initialize()
-{
-    return s_constantBuffer.Create(sizeof(DirectionalLightConstant));
-}
-
-void Glib::Internal::Graphics::RenderingManager::Finalize()
-{
-    s_constantBuffer.Release();
-}
-
 void Glib::Internal::Graphics::RenderingManager::Update()
 {
     // 定数バッファの更新
-    DirectionalLightConstant buffer;
-    buffer.ambient = s_ambient;
-    buffer.diffuse = s_diffuse;
-    buffer.specular = s_specular;
-    buffer.direction = s_lightDirection;
-    buffer.shadowBias = s_shadowBias;
-    buffer.momentBias = s_momentBias;
-    s_constantBuffer.Update(sizeof(DirectionalLightConstant), &buffer);
+    DirectionalLightConstant cbuffer;
+    cbuffer.ambient = s_ambient;
+    cbuffer.diffuse = s_diffuse;
+    cbuffer.specular = s_specular;
+    cbuffer.direction = s_lightDirection;
+    cbuffer.shadowBias = s_shadowBias;
+    cbuffer.momentBias = s_momentBias;
+
+    auto buffer = s_dx12->GetConstantBuffer();
+    s_constantBuffer = buffer->Alloc(&cbuffer, sizeof(DirectionalLightConstant));
 }
 
 void Glib::Internal::Graphics::RenderingManager::Draw()
@@ -184,7 +177,7 @@ void Glib::Internal::Graphics::RenderingManager::ShadowMapRange(const Vector2& r
 
 void Glib::Internal::Graphics::RenderingManager::SetDirectionalLightConstant(unsigned int rootParamIndex)
 {
-    s_constantBuffer.SetBuffer(rootParamIndex);
+    s_dx12->CommandList()->SetGraphicsRootConstantBufferView(rootParamIndex, s_constantBuffer.Address());
 }
 
 void Glib::Internal::Graphics::RenderingManager::DebugDraw()

@@ -25,7 +25,7 @@ namespace Glib::Internal::Graphics
          * @return 成功 true
          * @return 失敗 false
          */
-        static bool Create(D3D12_COMMAND_LIST_TYPE type, const D3D12_COMMAND_QUEUE_DESC& desc, std::shared_ptr<CommandList>& cmdList);
+        static bool Create(D3D12_COMMAND_LIST_TYPE type, const D3D12_COMMAND_QUEUE_DESC& desc, CommandList* cmdList);
 
         /**
          * @brief バンドル用のコマンドリストを作成
@@ -86,4 +86,3 @@ namespace Glib::Internal::Graphics
         ComPtr<ID3D12CommandQueue> cmdQueue_{ nullptr };
     };
 }
-

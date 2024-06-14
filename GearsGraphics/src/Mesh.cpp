@@ -39,7 +39,7 @@ bool Glib::Mesh::Load(std::string_view path)
     for (int i = 0; i < materials.size(); i++)
     {
         if (!materials_[i].params.Create(paramSize)) return false;
-        materials_[i].params.Update(paramSize, &materials[i]);
+        materials_[i].params.Update(&materials[i], paramSize);
         if (!materials[i].texture.empty())
         {
             auto texPath = folderPath.remove_filename().generic_string() + materials[i].texture;

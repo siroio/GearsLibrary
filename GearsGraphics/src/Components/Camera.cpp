@@ -3,6 +3,7 @@
 #include <Internal/DX12/d3dx12Inc.h>
 #include <Internal/DX12/GraphicsResource.h>
 #include <Internal/DX12/GraphicsResourceID.h>
+#include <Internal/DX12/DynamicConstantBuffer.h>
 #include <Internal/CameraManager.h>
 #include <Internal/RenderingManager.h>
 #include <GameObject.h>
@@ -31,12 +32,6 @@ namespace
     std::vector<std::string> projectionTypes{ "Perspective", "Orthographic" };
 }
 
-Glib::Camera::Camera()
-{
-    // バッファーを作成
-    constantBuffer_.Create(sizeof(CameraConstant));
-}
-
 void Glib::Camera::Start()
 {
     transform_ = GameObject()->Transform();
@@ -49,13 +44,14 @@ void Glib::Camera::LateUpdate()
 {
     if (transform_.expired()) return;
 
-    CameraConstant buffer;
-    ViewMatrix(buffer.View);
-    ProjectionMatrix(buffer.Projection);
-    buffer.LightVP = s_renderingManager->ComputeShadowMapViewMatrix(transform_->Position() + transform_->Forward());
+    CameraConstant cbuffer;
+    ViewMatrix(cbuffer.View);
+    ProjectionMatrix(cbuffer.Projection);
+    cbuffer.LightVP = s_renderingManager->ComputeShadowMapViewMatrix(transform_->Position() + transform_->Forward());
 
     // バッファの更新
-    constantBuffer_.Update(sizeof(buffer), &buffer);
+    auto buffer = s_dx12->GetConstantBuffer();
+    constantBuffer_ = buffer->Alloc(&cbuffer, sizeof(CameraConstant));
 
     // レンダーターゲット、深度のクリア
     renderTarget_.AsRenderTarget();
@@ -284,7 +280,7 @@ void Glib::Camera::SetRenderTarget()
 
 void Glib::Camera::SetConstantBuffer(unsigned int rootParamIndex)
 {
-    constantBuffer_.SetBuffer(rootParamIndex);
+    s_dx12->CommandList()->SetGraphicsRootConstantBufferView(rootParamIndex, constantBuffer_.Address());
 }
 
 void Glib::Camera::SetDepthStencil()

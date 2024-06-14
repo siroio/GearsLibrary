@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include <Internal/DX12/ConstantBuffer.h>
+#include <Internal/DX12/ConstantBufferAddress.h>
 #include <Internal/Renderer.h>
 #include <Internal/CameraBase.h>
 #include <Components/Transform.h>
@@ -30,7 +30,7 @@ namespace Glib
 
     private:
         WeakPtr<Transform> transform_;
-        Internal::Graphics::ConstantBuffer constantBuffer_;
+        Internal::Graphics::ConstantBufferAddress constantBuffer_;
         unsigned int meshID_{ UINT_MAX };
         bool isEnabled_{ false };
     };

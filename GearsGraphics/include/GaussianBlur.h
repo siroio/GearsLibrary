@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include <Internal/DX12/ConstantBuffer.h>
+#include <Internal/DX12/ConstantBufferAddress.h>
 #include <Internal/DX12/GraphicsPipeline.h>
 #include <ComPtr.h>
 #include <memory>
@@ -30,7 +30,7 @@ namespace Glib::Graphics
         ComPtr<ID3D12Resource> yBlurResource_{ nullptr };
         std::shared_ptr<Internal::Graphics::DescriptorHandle> rtvHandle_[2]{ nullptr };
         std::shared_ptr<Internal::Graphics::DescriptorHandle> srvHandle_[3]{ nullptr };
-        Internal::Graphics::ConstantBuffer constantBuffer_{};
+        Internal::Graphics::ConstantBufferAddress constantBuffer_{};
         Internal::Graphics::GraphicsPipeline pipelines_[2]{};
     };
 }

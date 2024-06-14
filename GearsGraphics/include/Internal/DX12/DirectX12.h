@@ -16,6 +16,8 @@ struct D3D12_RESOURCE_DESC;
 
 namespace Glib::Internal::Graphics
 {
+    class DynamicConstantBuffer;
+
     class DirectX12 :
         public SingletonPtr<DirectX12>,
         public Interface::ISystem,
@@ -66,14 +68,19 @@ namespace Glib::Internal::Graphics
         void ExecuteCommandList();
 
         /**
+         * @brief GPUの処理待機
+         */
+        void WaitGPU(int frame);
+
+        /**
          * @brief レンダーターゲットの設定
          */
-        void SetDefaultRenderTarget();
+        void SetDefaultRenderTarget() const;
 
         /**
          * @brief ヒープを設定
          */
-        void SetHeaps();
+        void SetHeaps() const;
 
         /**
          * @brief デバイスを取得
@@ -94,6 +101,11 @@ namespace Glib::Internal::Graphics
          * @brief ディスクリプタプールを取得
          */
         std::shared_ptr<DescriptorPool> DescriptorPool(PoolType type) const;
+
+        /**
+         * @brief 動的定数バッファの取得
+         */
+        std::shared_ptr<DynamicConstantBuffer> GetConstantBuffer();
 
         /**
          * @brief リソースデスクを取得
@@ -149,10 +161,5 @@ namespace Glib::Internal::Graphics
          * @brief デバッグレイヤーの有効化
          */
         void EnableDebugLayer();
-
-        /**
-         * @brief GPUの処理待機
-         */
-        void WaitGPU();
     };
 }

@@ -1,15 +1,13 @@
 ﻿#pragma once
 #include <ComPtr.h>
 #include <memory>
-#include <d3d12.h>
+
+struct ID3D12Resource;
 
 namespace Glib::Internal::Graphics
 {
     class DescriptorHandle;
-}
 
-namespace Glib::Internal::Graphics
-{
     /**
      * @brief 定数バッファー
      */
@@ -36,7 +34,7 @@ namespace Glib::Internal::Graphics
          * @param size データサイズ
          * @param data データ
          */
-        void Update(unsigned int size, const void* data);
+        void Update(const void* data, unsigned int size);
 
         /**
          * @brief バッファを解放

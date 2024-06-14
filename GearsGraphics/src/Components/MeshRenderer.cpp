@@ -1,7 +1,9 @@
 ﻿#include <Components/MeshRenderer.h>
 #include <Internal/RenderingManager.h>
+#include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/GraphicsResource.h>
 #include <Internal/DX12/GraphicsResourceID.h>
+#include <Internal/DX12/DynamicConstantBuffer.h>
 #include <MeshManager.h>
 #include <GameObject.h>
 #include <Matrix4x4.h>
@@ -11,6 +13,7 @@ using namespace Glib::Internal::Graphics;
 
 namespace
 {
+    auto s_dx12 = DirectX12::Instance();
     auto s_renderingManager = RenderingManager::Instance();
     auto s_graphics = GraphicsResource::Instance();
     auto s_meshManager = Glib::MeshManager::Instance();
@@ -25,7 +28,6 @@ namespace
 Glib::MeshRenderer::MeshRenderer()
 {
     isEnabled_ = false;
-    constantBuffer_.Create(sizeof(MeshConstant));
 }
 
 void Glib::MeshRenderer::Start()
@@ -38,21 +40,22 @@ void Glib::MeshRenderer::Start()
 void Glib::MeshRenderer::LateUpdate()
 {
     if (!isEnabled_) return;
-    MeshConstant buffer;
-    buffer.world = Matrix4x4::TRS(
+    MeshConstant cbuffer;
+    cbuffer.world = Matrix4x4::TRS(
         transform_->Position(),
         transform_->Rotation(),
         transform_->Scale()
     );
 
-    constantBuffer_.Update(sizeof(buffer), &buffer);
+    auto buffer = s_dx12->GetConstantBuffer();
+    constantBuffer_ = buffer->Alloc(&cbuffer, sizeof(MeshConstant));
 }
 
 void Glib::MeshRenderer::Draw(const WeakPtr<Internal::CameraBase>& camera)
 {
     if (!isEnabled_) return;
     s_graphics->SetPipelineState(ID::MESH_PIPELINESTATE);
-    constantBuffer_.SetBuffer(ID::MESH_WORLD_MATRIX);
+    s_dx12->CommandList()->SetGraphicsRootConstantBufferView(ID::MESH_WORLD_MATRIX, constantBuffer_.Address());
     s_renderingManager->SetDirectionalLightConstant(ID::MESH_DIRECTIONAL_LIGHT);
     camera->SetConstantBuffer(ID::MESH_CAMERA_CONSTANT);
     camera->SetShadowMap(ID::MESH_SHADOW_MAP);
@@ -62,17 +65,20 @@ void Glib::MeshRenderer::Draw(const WeakPtr<Internal::CameraBase>& camera)
 void Glib::MeshRenderer::DrawShadow(const WeakPtr<Internal::CameraBase>& camera)
 {
     if (!isEnabled_) return;
-    MeshConstant buffer;
-    buffer.world = Matrix4x4::TRS(
+    MeshConstant cbuffer;
+    cbuffer.world = Matrix4x4::TRS(
         transform_->Position(),
         transform_->Rotation(),
         transform_->Scale()
     );
 
-    constantBuffer_.Update(sizeof(buffer), &buffer);
+    auto buffer = s_dx12->GetConstantBuffer();
+    constantBuffer_ = buffer->Alloc(&cbuffer, sizeof(MeshConstant));
+
+
     s_graphics->SetPipelineState(ID::MESH_SHADOW_PIPELINESTATE);
     camera->SetConstantBuffer(0);
-    constantBuffer_.SetBuffer(1);
+    s_dx12->CommandList()->SetGraphicsRootConstantBufferView(1, constantBuffer_.Address());
     s_meshManager->DrawShadow(meshID_);
 
 }

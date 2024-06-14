@@ -138,9 +138,6 @@ bool Glib::Texture::CreateTexture(std::string_view path)
     // ShaderResourceViewの作成
     CreateShaderResourceView(img->format);
 
-    // コマンドリストを実行してロードを完了させる
-    s_dx12->ExecuteCommandList();
-
     return true;
 }
 
