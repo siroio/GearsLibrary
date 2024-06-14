@@ -106,8 +106,8 @@ public:
 ```cpp
 // テクスチャやその他アセットのロード
 TextureManager::Load(0, "texture.png");
-MeshManager::Load(0, "texture.globj");
-AnimationManager::Load(0, "texture.glanim");
+MeshManager::Load(0, "Cube.globj");
+AnimationManager::Load(0, "Walk.glanim");
 ```
 
 ```cpp
