@@ -52,6 +52,7 @@ void Glib::EffectSystem::Play()
     {
         s_efkManager->UnPause(effectHandle_);
         effectState_.Set(EffectState::Looping, false);
+        effectState_.UnSet(EffectState::Pause);
     }
     else
     {

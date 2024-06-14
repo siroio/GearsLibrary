@@ -134,8 +134,6 @@ void Glib::Internal::Effect::EffekseerManager::Draw()
         s_efkRenderer->EndRendering();
         s_efkRenderer->SetCommandList(nullptr);
         EffekseerRendererDX12::EndCommandList(s_efkCommandList);
-
-        s_dx12->ExecuteCommandList();
     }
 }
 
