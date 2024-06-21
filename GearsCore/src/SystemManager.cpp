@@ -21,7 +21,7 @@ bool SystemManager::Initialize()
     systemFunctions_.erase(SystemFunctionType::Initialize);
     std::ranges::reverse(systemFunctions_.at(SystemFunctionType::Finalize));
 
-    for (auto&& funcList : systemFunctions_ | std::ranges::views::values)
+    for (auto& funcList : systemFunctions_ | std::ranges::views::values)
     {
         std::ranges::sort(funcList, [](const FunctionVariant& lhs, const FunctionVariant& rhs)
         {

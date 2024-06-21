@@ -162,8 +162,6 @@ bool Glib::Texture::CreateTexture(std::string_view path)
     fence->Signal(cmdList.get());
     fence->WaitGPU();
 
-    printf_s("Texture Loaded:  %s\n", path.data());
-
     return true;
 }
 

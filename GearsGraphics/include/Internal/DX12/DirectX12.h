@@ -22,6 +22,7 @@ namespace Glib::Internal::Graphics
         public SingletonPtr<DirectX12>,
         public Interface::ISystem,
         public Function::InitializeOrderSet<Order::Initialzie::DX12>,
+        public Function::UpdateOrderSet<Order::Update::DX12>,
         public Function::BeginDrawOrderSet<Order::BeginDraw::DX12>
     {
         DirectX12() = default;
@@ -46,6 +47,11 @@ namespace Glib::Internal::Graphics
          * @brief 初期化
          */
         bool Initialize();
+
+        /**
+         * @brief 描画準備
+         */
+        void Update();
 
         /**
          * @brief 描画開始

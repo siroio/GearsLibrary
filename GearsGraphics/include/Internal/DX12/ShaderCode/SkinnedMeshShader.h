@@ -172,13 +172,6 @@ namespace Glib::Internal::Graphics::ShaderCode
             float4x4 MeshBones[512];
         };
 
-        Texture2D<float4> albedoTexture : register(t0);
-        Texture2D<float4> normalTexture : register(t1);
-        Texture2D<float3> shadowTexture : register(t2);
-
-        SamplerState albedoSampler : register(s0);
-        SamplerState shadowSampler : register(s1);
-
         struct VSInput
         {
             float4 position : POSITION;

@@ -40,20 +40,20 @@ namespace
     /* フェンス */
     std::array<Fence, FRAME_COUNT> s_fence{};
 
-    /* ディスクリプタプール */
-    std::array<std::shared_ptr<DescriptorPool>,
-        static_cast<int>(DirectX12::PoolType::COUNT)> s_descriptors;
-
     /*　動的定数バッファのサイズ */
     constexpr uint32_t CONSTANT_BUFFER_SIZE{ 256 * 2000 };
 
     /* 動的定数バッファ */
-    std::shared_ptr<DynamicConstantBuffer> s_constatnBuffer;
+    std::array<std::shared_ptr<DynamicConstantBuffer>, FRAME_COUNT> s_constatnBuffers;
+
+    /* ディスクリプタプール */
+    std::array<std::shared_ptr<DescriptorPool>,
+        static_cast<int>(DirectX12::PoolType::COUNT)> s_descriptors;
 
     /* 描画フレーム */
 
-    uint32_t s_prevFrame{ 0 };
-    uint32_t s_currentFrame{ 0 };
+    int s_prevFrame{ -1 };
+    int s_currentFrame{ 0 };
 
     /* バックバッファ */
     std::unique_ptr<Glib::Graphics::RenderTarget[]> s_backBuffers;
@@ -105,10 +105,9 @@ bool DirectX12::Initialize()
     {
         if (!s_backBuffers[idx].Create(idx, s_swapChain)) return false;
         if (!Fence::Create(0, D3D12_FENCE_FLAG_NONE, &s_fence[idx])) return false;
+        s_constatnBuffers[idx] = std::make_shared<DynamicConstantBuffer>();
+        if (!s_constatnBuffers[idx]->Create(CONSTANT_BUFFER_SIZE)) return false;
     }
-
-    s_constatnBuffer = std::make_shared<DynamicConstantBuffer>();
-    if (!s_constatnBuffer->Create(CONSTANT_BUFFER_SIZE, FRAME_COUNT)) return false;
 
 #if defined(DEBUG) || defined(_DEBUG)
     const auto& windowSize = Window::WindowDebugSize();
@@ -133,14 +132,18 @@ bool DirectX12::Initialize()
     return true;
 }
 
-void DirectX12::BeginDraw()
+void DirectX12::Update()
 {
+    // バッファのクリア
     s_prevFrame = s_currentFrame;
     s_currentFrame = s_swapChain->GetCurrentBackBufferIndex();
 
     s_cmdList[s_currentFrame]->Reset();
-    s_constatnBuffer->ResetBuffer();
+    GetConstantBuffer()->ResetBuffer();
+}
 
+void DirectX12::BeginDraw()
+{
     Barrier(s_backBuffers[s_currentFrame].RenderTargetResource().Get(),
             D3D12_RESOURCE_STATE_PRESENT,
             D3D12_RESOURCE_STATE_RENDER_TARGET);
@@ -162,7 +165,6 @@ void DirectX12::EndDraw()
     WaitGPUPrevFrame();
     ExecuteCommandList();
     s_swapChain->Present(0, 0);
-    s_constatnBuffer->AdvanceFrame();
 }
 
 void DirectX12::Finalize()
@@ -243,7 +245,7 @@ std::shared_ptr<DescriptorPool> DirectX12::DescriptorPool(PoolType type) const
 
 std::shared_ptr<DynamicConstantBuffer> DirectX12::GetConstantBuffer()
 {
-    return s_constatnBuffer;
+    return s_constatnBuffers[s_currentFrame];
 }
 
 D3D12_RESOURCE_DESC DirectX12::BackBufferResourceDesc() const
@@ -340,6 +342,7 @@ bool DirectX12::InitCommand()
             s_cmdList[i].get());
 
         if (!result) return false;
+        s_cmdList[i]->CloseList();
     }
     return true;
 }
@@ -366,14 +369,22 @@ bool DirectX12::CreateSwapChain()
     swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
     swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH | DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT;
 
-    return SUCCEEDED(s_dxgiFactory->CreateSwapChainForHwnd(
+    // スワップチェインを作成
+    ComPtr<IDXGISwapChain1> swapChain{ nullptr };
+    auto hr = s_dxgiFactory->CreateSwapChainForHwnd(
         s_cmdQueue->Queue().Get(),
         s_window.WindowHandle(),
         &swapChainDesc,
         nullptr,
         nullptr,
-        reinterpret_cast<IDXGISwapChain1**>(s_swapChain.ReleaseAndGetAddressOf())
-    ));
+        swapChain.ReleaseAndGetAddressOf()
+    );
+    if (FAILED(hr)) return false;
+
+    // スワップチェインを変換
+    hr = swapChain.As(&s_swapChain);
+
+    return SUCCEEDED(hr);
 }
 
 bool DirectX12::CreateDescriptorPool()

@@ -107,13 +107,12 @@ bool Glib::SkyboxManager::Initialize()
 
     // パイプライン作成
     // テクスチャ 定数バッファ
-    CD3DX12_DESCRIPTOR_RANGE range[2]{};
-    range[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
-    range[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
+    CD3DX12_DESCRIPTOR_RANGE range{};
+    range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
 
     CD3DX12_ROOT_PARAMETER rootParams[2]{};
-    rootParams[0].InitAsDescriptorTable(1U, &range[0]);
-    rootParams[1].InitAsDescriptorTable(1U, &range[1]);
+    rootParams[0].InitAsDescriptorTable(1, &range);
+    rootParams[1].InitAsConstantBufferView(0);
 
     CD3DX12_STATIC_SAMPLER_DESC sampler{};
     sampler.Init(0,

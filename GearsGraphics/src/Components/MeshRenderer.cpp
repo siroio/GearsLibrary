@@ -18,10 +18,6 @@ namespace
     auto s_graphics = GraphicsResource::Instance();
     auto s_meshManager = Glib::MeshManager::Instance();
 
-    struct MeshConstant
-    {
-        Matrix4x4 world;
-    };
 }
 
 
@@ -40,15 +36,14 @@ void Glib::MeshRenderer::Start()
 void Glib::MeshRenderer::LateUpdate()
 {
     if (!isEnabled_) return;
-    MeshConstant cbuffer;
-    cbuffer.world = Matrix4x4::TRS(
+    Matrix4x4 world = Matrix4x4::TRS(
         transform_->Position(),
         transform_->Rotation(),
         transform_->Scale()
     );
 
     auto buffer = s_dx12->GetConstantBuffer();
-    constantBuffer_ = buffer->Alloc(&cbuffer, sizeof(MeshConstant));
+    constantBuffer_ = buffer->Alloc(&world, sizeof(Matrix4x4));
 }
 
 void Glib::MeshRenderer::Draw(const WeakPtr<Internal::CameraBase>& camera)
@@ -65,22 +60,10 @@ void Glib::MeshRenderer::Draw(const WeakPtr<Internal::CameraBase>& camera)
 void Glib::MeshRenderer::DrawShadow(const WeakPtr<Internal::CameraBase>& camera)
 {
     if (!isEnabled_) return;
-    MeshConstant cbuffer;
-    cbuffer.world = Matrix4x4::TRS(
-        transform_->Position(),
-        transform_->Rotation(),
-        transform_->Scale()
-    );
-
-    auto buffer = s_dx12->GetConstantBuffer();
-    constantBuffer_ = buffer->Alloc(&cbuffer, sizeof(MeshConstant));
-
-
     s_graphics->SetPipelineState(ID::MESH_SHADOW_PIPELINESTATE);
     camera->SetConstantBuffer(0);
     s_dx12->CommandList()->SetGraphicsRootConstantBufferView(1, constantBuffer_.Address());
     s_meshManager->DrawShadow(meshID_);
-
 }
 
 unsigned int Glib::MeshRenderer::MeshID() const

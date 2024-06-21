@@ -317,7 +317,7 @@ public:
         // カメラ作成
         SkyboxManager::SetSkybox(0);
         auto camera = GameObjectManager::Instantiate("Camera");
-        auto initPosition = Vector3{ 0.0f, 1.5f, -1.0f };
+        auto initPosition = Vector3{ 0.0f, 1.5f, -3.0f };
         camera->Transform()->Position(initPosition);
         camera->AddComponent<Camera>()->ClearFlags(CameraClearFlags::SkyBox);
         camera->AddComponent<AudioListener>();
@@ -336,6 +336,7 @@ public:
         // プリミティブ
         {
             auto Ground = GameObjectManager::Instantiate("Primitive");
+            Ground->Transform()->Position(Vector3{ 0.0f, 1.0f, 0.0 });
             auto renderer = Ground->AddComponent<MeshRenderer>();
             renderer->MeshID(4);
             auto mc = Ground->AddComponent<MeshCollider>();

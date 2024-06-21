@@ -30,7 +30,7 @@ void Glib::SkinnedMeshRenderer::Start()
 void Glib::SkinnedMeshRenderer::LateUpdate()
 {
     if (!isEnabled_ || bones_.empty()) return;
-    Matrix4x4 worldMatrix = Matrix4x4::TRS(
+    Matrix4x4 world = Matrix4x4::TRS(
         transform_->Position(),
         transform_->Rotation(),
         transform_->Scale()
@@ -38,7 +38,7 @@ void Glib::SkinnedMeshRenderer::LateUpdate()
 
     auto buffer = s_dx12->GetConstantBuffer();
 
-    worldConstantBuffer_ = buffer->Alloc(&worldMatrix, sizeof(Matrix4x4));
+    worldConstantBuffer_ = buffer->Alloc(&world, sizeof(Matrix4x4));
     ComputeBone();
     boneConstantBuffer_ = buffer->Alloc(boneMatrix_.data(), sizeof(sizeof(Matrix4x4) * boneMatrix_.size()));
 }

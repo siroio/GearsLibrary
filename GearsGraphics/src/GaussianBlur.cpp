@@ -122,13 +122,12 @@ bool Glib::Graphics::GaussianBlur::CreatePipelines(DXGI_FORMAT format)
         InputLayout::POSITION_2D
     };
 
-    CD3DX12_DESCRIPTOR_RANGE range[2]{};
-    range[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1U, 0U);
-    range[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1U, 0U);
+    CD3DX12_DESCRIPTOR_RANGE range{};
+    range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
 
     CD3DX12_ROOT_PARAMETER rootParam[2]{};
-    rootParam[0].InitAsDescriptorTable(1, &range[0]);
-    rootParam[1].InitAsDescriptorTable(1, &range[1]);
+    rootParam[0].InitAsConstantBufferView(0);
+    rootParam[1].InitAsDescriptorTable(1, &range);
 
     CD3DX12_STATIC_SAMPLER_DESC samplerDesc{};
     samplerDesc.Init(

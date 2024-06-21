@@ -2,7 +2,6 @@
 #include <Internal/DX12/ConstantBufferAddress.h>
 #include <ComPtr.h>
 #include <memory>
-#include <vector>
 
 struct ID3D12Resource;
 
@@ -22,7 +21,7 @@ namespace Glib::Internal::Graphics
          * @return 成功 : true
          * @return 失敗 : false
          */
-        bool Create(size_t bufferSize, size_t frameCount);
+        bool Create(size_t bufferSize);
 
         /**
          * @brief バッファの値をリセットします
@@ -38,11 +37,6 @@ namespace Glib::Internal::Graphics
         ConstantBufferAddress Alloc(const void* data, size_t size);
 
         /**
-         * @brief フレームを進める
-         */
-        void AdvanceFrame();
-
-        /**
          * @brief バッファ全体の開放
          */
         void Release();
@@ -50,8 +44,6 @@ namespace Glib::Internal::Graphics
     private:
         size_t bufferSize_{ 0 };
         size_t currentBufferIndex_{ 0 };
-        size_t frameCount_{ 0 };
-        size_t currentFrame_{ 0 };
-        std::vector<ComPtr<ID3D12Resource>> buffers_;
+        ComPtr<ID3D12Resource> buffers_;
     };
 }
