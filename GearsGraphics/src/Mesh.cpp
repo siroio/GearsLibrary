@@ -21,11 +21,17 @@ bool Glib::Mesh::Load(std::string_view path)
     GLObject object{};
     if (!object.ReadFile(path)) return false;
     std::filesystem::path folderPath = path;
+
+    // 頂点バッファの作成
     vertices_ = std::move(object.Vertices());
-    vertexBuffer_.Create(sizeof(Vertex), static_cast<unsigned int>(vertices_.size()));
+    bool result = vertexBuffer_.Create(sizeof(Vertex), static_cast<unsigned int>(vertices_.size()));
+    if (!result) return false;
     vertexBuffer_.Update(vertices_.data());
+
+    // インデックスバッファの作成
     indices_ = std::move(object.Indices());
-    indexBuffer_.Create(sizeof(unsigned int), static_cast<unsigned int>(indices_.size()));
+    result = indexBuffer_.Create(sizeof(unsigned int), static_cast<unsigned int>(indices_.size()));
+    if (!result) return false;
     indexBuffer_.Update(indices_.data());
 
     for (const auto& subset : object.Subsets())

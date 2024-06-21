@@ -73,6 +73,16 @@ namespace Glib::Internal::Graphics
         void WaitGPU(int frame);
 
         /**
+         * @brief 現在のフレームのGPU処理待機
+         */
+        void WaitGPUThisFrame();
+
+        /**
+         * @brief 前のフレームのGPU処理待機
+         */
+        void WaitGPUPrevFrame();
+
+        /**
          * @brief レンダーターゲットの設定
          */
         void SetDefaultRenderTarget() const;
@@ -121,7 +131,7 @@ namespace Glib::Internal::Graphics
         /**
          * @brief バリアの推移
         */
-        void Barrier(ID3D12Resource* resource, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after);
+        void Barrier(ID3D12Resource* resource, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after) const;
 
         /**
          * @brief 背景色の取得

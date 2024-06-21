@@ -1,6 +1,8 @@
 ﻿#include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/d3dx12Inc.h>
+#include <Internal/DX12/CommandAllocator.h>
 #include <Internal/DX12/CommandList.h>
+#include <Internal/DX12/CommandQueue.h>
 #include <Internal/DX12/Fence.h>
 #include <Internal/DX12/DynamicConstantBuffer.h>
 #include <RenderTarget.h>
@@ -29,24 +31,29 @@ namespace
     /* スワップチェーン */
     ComPtr<IDXGISwapChain4> s_swapChain{ nullptr };
 
-    /* コマンドリスト */
+    /* コマンド系統 */
+
+    std::array<std::shared_ptr<CommandAllocator>, FRAME_COUNT> s_cmdAllocator{};
     std::array<std::shared_ptr<CommandList>, FRAME_COUNT> s_cmdList{};
+    std::shared_ptr<CommandQueue> s_cmdQueue{};
 
     /* フェンス */
     std::array<Fence, FRAME_COUNT> s_fence{};
-
-    constexpr unsigned int CONSTANT_BUFFER_SIZE{ 256 * 2000 };
 
     /* ディスクリプタプール */
     std::array<std::shared_ptr<DescriptorPool>,
         static_cast<int>(DirectX12::PoolType::COUNT)> s_descriptors;
 
+    /*　動的定数バッファのサイズ */
+    constexpr uint32_t CONSTANT_BUFFER_SIZE{ 256 * 2000 };
+
     /* 動的定数バッファ */
     std::shared_ptr<DynamicConstantBuffer> s_constatnBuffer;
 
     /* 描画フレーム */
-    unsigned int s_prevFrame{ 0 };
-    unsigned int s_currentFrame{ 0 };
+
+    uint32_t s_prevFrame{ 0 };
+    uint32_t s_currentFrame{ 0 };
 
     /* バックバッファ */
     std::unique_ptr<Glib::Graphics::RenderTarget[]> s_backBuffers;
@@ -131,8 +138,8 @@ void DirectX12::BeginDraw()
     s_prevFrame = s_currentFrame;
     s_currentFrame = s_swapChain->GetCurrentBackBufferIndex();
 
-    s_constatnBuffer->ResetBuffer();
     s_cmdList[s_currentFrame]->Reset();
+    s_constatnBuffer->ResetBuffer();
 
     Barrier(s_backBuffers[s_currentFrame].RenderTargetResource().Get(),
             D3D12_RESOURCE_STATE_PRESENT,
@@ -152,6 +159,7 @@ void DirectX12::EndDraw()
             D3D12_RESOURCE_STATE_RENDER_TARGET,
             D3D12_RESOURCE_STATE_PRESENT);
 
+    WaitGPUPrevFrame();
     ExecuteCommandList();
     s_swapChain->Present(0, 0);
     s_constatnBuffer->AdvanceFrame();
@@ -159,7 +167,7 @@ void DirectX12::EndDraw()
 
 void DirectX12::Finalize()
 {
-    WaitGPU(s_currentFrame);
+    WaitGPUThisFrame();
     s_backBuffers.reset();
     s_descriptors[static_cast<int>(PoolType::RES)].reset();
     s_descriptors[static_cast<int>(PoolType::SMP)].reset();
@@ -170,7 +178,6 @@ void DirectX12::Finalize()
 
 void DirectX12::ExecuteCommandList()
 {
-    WaitGPU(s_prevFrame);
     s_cmdList[s_currentFrame]->CloseList();
     s_cmdList[s_currentFrame]->Execute();
 }
@@ -179,9 +186,20 @@ void DirectX12::WaitGPU(int frame)
 {
     if (0 <= frame || frame > FRAME_COUNT)
     {
-        s_fence[frame].Signal(s_cmdList[frame].get());
+        const auto& cmdList = s_cmdList[frame];
+        s_fence[frame].Signal(cmdList.get());
         s_fence[frame].WaitGPU();
     }
+}
+
+void Glib::Internal::Graphics::DirectX12::WaitGPUThisFrame()
+{
+    WaitGPU(s_currentFrame);
+}
+
+void Glib::Internal::Graphics::DirectX12::WaitGPUPrevFrame()
+{
+    WaitGPU(s_prevFrame);
 }
 
 void DirectX12::SetDefaultRenderTarget() const
@@ -215,7 +233,7 @@ ComPtr<ID3D12GraphicsCommandList> DirectX12::CommandList() const
 
 ComPtr<ID3D12CommandQueue> DirectX12::CommandQueue() const
 {
-    return s_cmdList[s_currentFrame]->Queue();
+    return s_cmdQueue->Queue();
 }
 
 std::shared_ptr<DescriptorPool> DirectX12::DescriptorPool(PoolType type) const
@@ -230,7 +248,7 @@ std::shared_ptr<DynamicConstantBuffer> DirectX12::GetConstantBuffer()
 
 D3D12_RESOURCE_DESC DirectX12::BackBufferResourceDesc() const
 {
-    return s_backBuffers[0].RTVResourceDesc();
+    return s_backBuffers[s_currentFrame].RTVResourceDesc();
 }
 
 int DirectX12::BackBufferNum() const
@@ -238,7 +256,7 @@ int DirectX12::BackBufferNum() const
     return FRAME_COUNT;
 }
 
-void DirectX12::Barrier(ID3D12Resource* resource, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after)
+void DirectX12::Barrier(ID3D12Resource* resource, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after) const
 {
     auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(resource, before, after, 0);
     CommandList()->ResourceBarrier(1, &barrier);
@@ -264,7 +282,7 @@ bool DirectX12::InitDevice()
     {
         DXGI_ADAPTER_DESC adptDesc{};
         adapter->GetDesc(&adptDesc);
-        std::wstring strDesc = adptDesc.Description;
+        std::wstring strDesc{ adptDesc.Description };
         if (strDesc.find(L"NVIDIA") != std::string::npos)
         {
             nvidiaAdapter = adapter;
@@ -278,7 +296,7 @@ bool DirectX12::InitDevice()
 
     adapter = nvidiaAdapter != nullptr ? nvidiaAdapter : maxVMAdapter;
 
-    const D3D_FEATURE_LEVEL levels[]{
+    constexpr D3D_FEATURE_LEVEL levels[]{
         D3D_FEATURE_LEVEL_12_1,
         D3D_FEATURE_LEVEL_12_0,
         D3D_FEATURE_LEVEL_11_1,
@@ -295,18 +313,33 @@ bool DirectX12::InitDevice()
 
 bool DirectX12::InitCommand()
 {
-    D3D12_COMMAND_QUEUE_DESC cmdQueueDesc{};
-    cmdQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-    cmdQueueDesc.NodeMask = 0;
-    cmdQueueDesc.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
-    cmdQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+    // キューの設定
+    D3D12_COMMAND_QUEUE_DESC desc{};
+    desc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+    desc.NodeMask = 0;
+    desc.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
+    desc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+
+    // キューの作成
+    s_cmdQueue = std::make_shared<::CommandQueue>();
+    if (!CommandQueue::Create(desc, s_cmdQueue.get())) return false;
+
     for (size_t i = 0; i < FRAME_COUNT; i++)
     {
+        s_cmdAllocator[i] = std::make_shared<::CommandAllocator>();
         s_cmdList[i] = std::make_shared<::CommandList>();
-        if (!CommandList::Create(D3D12_COMMAND_LIST_TYPE_DIRECT, cmdQueueDesc, s_cmdList[i].get()))
-        {
-            return false;
-        }
+
+        // アロケーターの作成
+        if (!CommandAllocator::Create(desc.Type, s_cmdAllocator[i].get())) return false;
+
+        // リストの作成
+        bool result = CommandList::Create(
+            desc.Type,
+            s_cmdAllocator[i]->Allocator(),
+            s_cmdQueue->Queue(),
+            s_cmdList[i].get());
+
+        if (!result) return false;
     }
     return true;
 }
@@ -334,7 +367,7 @@ bool DirectX12::CreateSwapChain()
     swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH | DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT;
 
     return SUCCEEDED(s_dxgiFactory->CreateSwapChainForHwnd(
-        CommandQueue().Get(),
+        s_cmdQueue->Queue().Get(),
         s_window.WindowHandle(),
         &swapChainDesc,
         nullptr,

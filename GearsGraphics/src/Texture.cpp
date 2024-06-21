@@ -1,9 +1,14 @@
 ﻿#include <Texture.h>
 #include <Internal/DX12/DirectX12.h>
+#include <Internal/DX12/CommandAllocator.h>
+#include <Internal/DX12/CommandList.h>
+#include <Internal/DX12/Fence.h>
 #include <DirectXTex.h>
 #include <functional>
 #include <filesystem>
 #include <StringUtility.h>
+
+using namespace Glib::Internal::Graphics;
 
 namespace
 {
@@ -37,11 +42,24 @@ namespace
 
 namespace
 {
-    auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
+    auto s_dx12 = DirectX12::Instance();
 }
 
 bool Glib::Texture::CreateTexture(std::string_view path)
 {
+    // アロケーターの作成
+    auto cmdAlloc = std::make_shared<CommandAllocator>();
+    const auto cmdType = D3D12_COMMAND_LIST_TYPE_DIRECT;
+    if (!CommandAllocator::Create(cmdType, cmdAlloc.get())) return false;
+
+    // リストの作成
+    auto cmdList = std::make_shared<CommandList>();
+    if (!CommandList::Create(cmdType, cmdAlloc->Allocator(), s_dx12->CommandQueue(), cmdList.get())) return false;
+
+    // フェンスの作成
+    auto fence = std::make_shared<Fence>();
+    if (!Fence::Create(0, D3D12_FENCE_FLAG_NONE, fence.get())) return false;
+
     std::filesystem::path filePath = Glib::CharConv(path);
     if (!filePath.is_absolute()) filePath = std::filesystem::absolute(filePath);
     if (!filePath.has_extension()) return false;
@@ -127,7 +145,7 @@ bool Glib::Texture::CreateTexture(std::string_view path)
     dst.SubresourceIndex = 0;
 
     // テクスチャのコピー
-    s_dx12->CommandList()->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);
+    cmdList->List()->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);
 
     // リソースバリアを設定
     s_dx12->Barrier(texture_.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
@@ -137,6 +155,14 @@ bool Glib::Texture::CreateTexture(std::string_view path)
 
     // ShaderResourceViewの作成
     CreateShaderResourceView(img->format);
+
+    // コマンドの実行
+    cmdList->CloseList();
+    cmdList->Execute();
+    fence->Signal(cmdList.get());
+    fence->WaitGPU();
+
+    printf_s("Texture Loaded:  %s\n", path.data());
 
     return true;
 }

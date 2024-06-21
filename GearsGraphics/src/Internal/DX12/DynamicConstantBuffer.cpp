@@ -36,7 +36,7 @@ bool Glib::Internal::Graphics::DynamicConstantBuffer::Create(size_t bufferSize, 
 
 void Glib::Internal::Graphics::DynamicConstantBuffer::ResetBuffer()
 {
-    if (!buffers_.empty()) return;
+    if (buffers_.empty()) return;
     void* data = nullptr;
     buffers_[currentFrame_]->Map(0, nullptr, &data);
     std::memset(data, 0, bufferSize_);
@@ -67,8 +67,7 @@ Glib::Internal::Graphics::ConstantBufferAddress Glib::Internal::Graphics::Dynami
 
 void Glib::Internal::Graphics::DynamicConstantBuffer::AdvanceFrame()
 {
-    currentFrame_ = (currentFrame_ + 1) % frameCount_;
-    currentBufferIndex_ = 0;
+    currentFrame_ = ++currentFrame_ % frameCount_;
 }
 
 void Glib::Internal::Graphics::DynamicConstantBuffer::Release()

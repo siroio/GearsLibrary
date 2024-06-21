@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.4)
 # == CONFIG ==
 set(SOURCE_FILE 
 	./src/Internal/DX12/DirectX12.cpp
+	./src/Internal/DX12/CommandAllocator.cpp
+	./src/Internal/DX12/CommandQueue.cpp
 	./src/Internal/DX12/CommandList.cpp
 	./src/Internal/DX12/Fence.cpp
     ./src/Internal/DX12/BlendState.cpp
@@ -44,6 +46,8 @@ set(SOURCE_FILE
 set(HEADER_FILE
     ./include/Internal/DX12/d3dx12Inc.h
 	./include/Internal/DX12/DirectX12.h
+    ./include/Internal/DX12/CommandAllocator.h
+	./include/Internal/DX12/CommandQueue.h
 	./include/Internal/DX12/CommandList.h
 	./include/Internal/DX12/Fence.h
     ./include/Internal/DX12/BlendState.h

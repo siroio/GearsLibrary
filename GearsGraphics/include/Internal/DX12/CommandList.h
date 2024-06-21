@@ -25,14 +25,14 @@ namespace Glib::Internal::Graphics
          * @return 成功 true
          * @return 失敗 false
          */
-        static bool Create(D3D12_COMMAND_LIST_TYPE type, const D3D12_COMMAND_QUEUE_DESC& desc, CommandList* cmdList);
+        static bool Create(D3D12_COMMAND_LIST_TYPE type, ComPtr<ID3D12CommandAllocator> allocator, ComPtr<ID3D12CommandQueue> queue, CommandList* cmdList);
 
         /**
          * @brief バンドル用のコマンドリストを作成
          * @return 成功 true
          * @return 失敗 false
          */
-        static bool CreateBundle(std::shared_ptr<CommandList>& cmdList);
+        static bool CreateBundle(CommandList* cmdList);
 
     public:
         /**
@@ -43,7 +43,7 @@ namespace Glib::Internal::Graphics
         /**
          * @brief バンドルしたコマンドをリストに追加
          */
-        bool CloseAndBundleToList(const Glib::WeakPtr<CommandList>& lists) const;
+        bool CloseAndBundleToList(const CommandList* lists) const;
 
         /**
          * @brief リストのクローズ
