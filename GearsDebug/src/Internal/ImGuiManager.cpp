@@ -293,8 +293,7 @@ void Glib::Internal::Debug::ImGuiManager::DrawGameView()
     Vector2 pos = Vector2{ curPos.x, curPos.y };
 
     ImGui::SetCursorPos(ImVec2{ pos.x, pos.y });
-
-    ImGui::Image((ImTextureID)s_renderTargetSRV->GPU().ptr, ImVec2{ size.x, size.y });
+    ImGui::Image(static_cast<ImTextureID>(s_renderTargetSRV->GPU().ptr), ImVec2{ size.x, size.y });
     ImGui::End();
 }
 
