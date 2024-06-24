@@ -10,8 +10,6 @@
 #include <Vector2.h>
 #include <unordered_map>
 
-// TODO: PipelineSettings
-
 namespace
 {
     auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
@@ -368,8 +366,8 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateMeshPipelineState()
     rootParams[ID::MESH_WORLD_MATRIX].InitAsConstantBufferView(1);
     rootParams[ID::MESH_MATERIAL_BUFFER].InitAsDescriptorTable(1, &range[3]);
     rootParams[ID::MESH_DIRECTIONAL_LIGHT].InitAsConstantBufferView(4);
-    rootParams[ID::MESH_SHADOW_MAP].InitAsDescriptorTable(1, &range[1]);
-    rootParams[ID::MESH_NORMAL_MAP].InitAsDescriptorTable(1, &range[2]);
+    rootParams[ID::MESH_SHADOW_MAP].InitAsDescriptorTable(1, &range[2]);
+    rootParams[ID::MESH_NORMAL_MAP].InitAsDescriptorTable(1, &range[1]);
 
     CD3DX12_STATIC_SAMPLER_DESC sampler[2]{};
     sampler[0].Init(0);
@@ -461,8 +459,8 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateSkinnedMeshPipelineState(
     rootParams[ID::MESH_MATERIAL_BUFFER].InitAsDescriptorTable(1, &range[3]);
     rootParams[ID::SKINNED_MESH_SKINNED_MATRIX].InitAsConstantBufferView(3);
     rootParams[ID::SKINNED_MESH_DIRECTIONAL_LIGHT].InitAsConstantBufferView(4);
-    rootParams[ID::SKINNED_MESH_SHADOW_MAP].InitAsDescriptorTable(1, &range[1]);
-    rootParams[ID::MESH_NORMAL_MAP].InitAsDescriptorTable(1, &range[2]);
+    rootParams[ID::SKINNED_MESH_SHADOW_MAP].InitAsDescriptorTable(1, &range[2]);
+    rootParams[ID::MESH_NORMAL_MAP].InitAsDescriptorTable(1, &range[1]);
 
     CD3DX12_STATIC_SAMPLER_DESC sampler[2]{};
     sampler[0].Init(0);
