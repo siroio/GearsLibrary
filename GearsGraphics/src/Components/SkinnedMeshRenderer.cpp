@@ -1,7 +1,9 @@
 ﻿#include <Components/SkinnedMeshRenderer.h>
 #include <Internal/RenderingManager.h>
+#include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/GraphicsResource.h>
 #include <Internal/DX12/GraphicsResourceID.h>
+#include <Internal/DX12/DynamicConstantBuffer.h>
 #include <GameObjectManager.h>
 #include <GameObject.h>
 #include <MeshManager.h>
@@ -12,15 +14,10 @@ using namespace Glib::Internal::Graphics;
 
 namespace
 {
+    auto s_dx12 = DirectX12::Instance();
     auto s_renderingManager = RenderingManager::Instance();
     auto s_graphics = GraphicsResource::Instance();
     auto s_meshManager = Glib::MeshManager::Instance();
-}
-
-Glib::SkinnedMeshRenderer::SkinnedMeshRenderer()
-{
-    worldConstantBuffer_.Create(sizeof(Matrix4x4));
-    boneConstantBuffer_.Create(sizeof(Matrix4x4) * boneMatrix_.size());
 }
 
 void Glib::SkinnedMeshRenderer::Start()
@@ -33,14 +30,17 @@ void Glib::SkinnedMeshRenderer::Start()
 void Glib::SkinnedMeshRenderer::LateUpdate()
 {
     if (!isEnabled_ || bones_.empty()) return;
-    auto worldMatrix = Matrix4x4::TRS(
+    Matrix4x4 world = Matrix4x4::TRS(
         transform_->Position(),
         transform_->Rotation(),
         transform_->Scale()
     );
-    worldConstantBuffer_.Update(sizeof(Matrix4x4), &worldMatrix);
+
+    auto buffer = s_dx12->GetConstantBuffer();
+
+    worldConstantBuffer_ = buffer->Alloc(&world, sizeof(Matrix4x4));
     ComputeBone();
-    boneConstantBuffer_.Update(static_cast<UINT>(sizeof(Matrix4x4) * boneMatrix_.size()), boneMatrix_.data());
+    boneConstantBuffer_ = buffer->Alloc(boneMatrix_.data(), sizeof(Matrix4x4) * boneMatrix_.size());
 }
 
 void Glib::SkinnedMeshRenderer::Draw(const WeakPtr<Internal::CameraBase>& camera)
@@ -48,8 +48,9 @@ void Glib::SkinnedMeshRenderer::Draw(const WeakPtr<Internal::CameraBase>& camera
     if (!isEnabled_ || bones_.empty()) return;
     // パイプラインと各定数バッファを設定して描画
     s_graphics->SetPipelineState(ID::SKINNED_MESH_PIPELINESTATE);
-    worldConstantBuffer_.SetBuffer(ID::SKINNED_MESH_WORLD_MATRIX);
-    boneConstantBuffer_.SetBuffer(ID::SKINNED_MESH_SKINNED_MATRIX);
+
+    s_dx12->CommandList()->SetGraphicsRootConstantBufferView(ID::SKINNED_MESH_WORLD_MATRIX, worldConstantBuffer_.Address());
+    s_dx12->CommandList()->SetGraphicsRootConstantBufferView(ID::SKINNED_MESH_SKINNED_MATRIX, boneConstantBuffer_.Address());
     s_renderingManager->SetDirectionalLightConstant(ID::SKINNED_MESH_DIRECTIONAL_LIGHT);
     camera->SetConstantBuffer(ID::SKINNED_MESH_CAMERA_CONSTANT);
     camera->SetShadowMap(ID::SKINNED_MESH_SHADOW_MAP);
@@ -60,8 +61,8 @@ void Glib::SkinnedMeshRenderer::DrawShadow(const WeakPtr<Internal::CameraBase>& 
 {
     s_graphics->SetPipelineState(ID::SKINNED_MESH_SHADOW_MAP);
     camera->SetConstantBuffer(0);
-    worldConstantBuffer_.SetBuffer(1);
-    boneConstantBuffer_.SetBuffer(2);
+    s_dx12->CommandList()->SetGraphicsRootConstantBufferView(1, worldConstantBuffer_.Address());
+    s_dx12->CommandList()->SetGraphicsRootConstantBufferView(2, boneConstantBuffer_.Address());
     s_meshManager->DrawShadow(meshID_);
 }
 

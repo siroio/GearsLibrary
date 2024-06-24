@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include <Internal/Renderer.h>
-#include <Internal/DX12/ConstantBuffer.h>
+#include <Internal/DX12/ConstantBufferAddress.h>
 #include <Internal/DX12/VertexBuffer.h>
 #include <Vector2.h>
 #include <Color.h>
@@ -106,7 +106,7 @@ namespace Glib
 
     private:
         bool enabled_{ false };
-        Internal::Graphics::ConstantBuffer constantBuffer_{};
+        Internal::Graphics::ConstantBufferAddress constantBuffer_{};
         Internal::Graphics::VertexBuffer vertexBuffer_{};
         bool flipX_{ false };
         bool flipY_{ false };

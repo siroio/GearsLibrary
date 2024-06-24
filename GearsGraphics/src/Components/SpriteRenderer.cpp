@@ -2,6 +2,7 @@
 #include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/GraphicsResource.h>
 #include <Internal/DX12/GraphicsResourceID.h>
+#include <Internal/DX12/DynamicConstantBuffer.h>
 #include <Internal/RenderingManager.h>
 #include <Internal/CameraBase.h>
 #include <TextureManager.h>
@@ -39,7 +40,6 @@ namespace
 
 Glib::SpriteRenderer::SpriteRenderer()
 {
-    constantBuffer_.Create(sizeof(SpriteConstant));
     vertexBuffer_.Create(sizeof(SpriteVertex), 4);
 }
 
@@ -55,14 +55,16 @@ void Glib::SpriteRenderer::LateUpdate()
     if (!enabled_) return;
 
     // 定数バッファ
-    SpriteConstant buffer{};
-    buffer.position = transform_->Position();
-    buffer.angle = transform_->EulerAngles().z * Mathf::DEG2RAD;
-    buffer.scale = transform_->Scale();
-    buffer.center = center_;
-    buffer.spriteSize = clippingSize_ / 100.0f;
-    buffer.color = color_;
-    constantBuffer_.Update(sizeof(buffer), &buffer);
+    SpriteConstant cbuffer{};
+    cbuffer.position = transform_->Position();
+    cbuffer.angle = transform_->EulerAngles().z * Mathf::DEG2RAD;
+    cbuffer.scale = transform_->Scale();
+    cbuffer.center = center_;
+    cbuffer.spriteSize = clippingSize_ / 100.0f;
+    cbuffer.color = color_;
+
+    auto buffer = s_dx12->GetConstantBuffer();
+    constantBuffer_ = buffer->Alloc(&cbuffer, sizeof(SpriteConstant));
 
     //切り取りしたUV 座標計算
     // 左上
@@ -100,7 +102,7 @@ void Glib::SpriteRenderer::Draw(const WeakPtr<Internal::CameraBase>& camera)
     vertexBuffer_.SetBuffer();
     s_resource->SetPipelineState(ID::SPRITE_PIPELINESTATE);
     camera->SetConstantBuffer(1);
-    constantBuffer_.SetBuffer(2);
+    s_dx12->CommandList()->SetGraphicsRootConstantBufferView(2, constantBuffer_.Address());
     s_textureManager->SetTexture(textureID_, 0);
     s_dx12->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
     s_dx12->CommandList()->DrawInstanced(4, 1, 0, 0);

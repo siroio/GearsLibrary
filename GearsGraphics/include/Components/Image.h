@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include <Internal/UIRenderer.h>
-#include <Internal/DX12/ConstantBuffer.h>
+#include <Internal/DX12/ConstantBufferAddress.h>
 #include <Vector2.h>
 #include <Color.h>
 
@@ -9,7 +9,6 @@ namespace Glib
     class Image : public Internal::UIRenderer
     {
     public:
-        Image();
         void Start();
         void LateUpdate();
 
@@ -52,7 +51,7 @@ namespace Glib
 
     private:
         bool enabled_{ false };
-        Internal::Graphics::ConstantBuffer constantBuffer_{};
+        Internal::Graphics::ConstantBufferAddress constantBuffer_{};
         unsigned int textureID_{ UINT_MAX };
         Vector2 center_{ 0.5f, 0.5f };
         ::Color color_{ Color::White() };

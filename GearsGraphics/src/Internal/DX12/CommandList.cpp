@@ -7,43 +7,39 @@ namespace
     auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
 }
 
-bool Glib::Internal::Graphics::CommandList::Create(D3D12_COMMAND_LIST_TYPE type, const D3D12_COMMAND_QUEUE_DESC& desc, std::shared_ptr<CommandList>& cmdList)
+bool Glib::Internal::Graphics::CommandList::Create(D3D12_COMMAND_LIST_TYPE type, ComPtr<ID3D12CommandAllocator> allocator, ComPtr<ID3D12CommandQueue> queue, CommandList* cmdList)
 {
-    auto instance = std::make_shared<CommandList>();
-    auto hr = s_dx12->Device()->CreateCommandAllocator(type, IID_PPV_ARGS(instance->cmdAllocator_.ReleaseAndGetAddressOf()));
-    if (FAILED(hr)) return false;
-
-    hr = s_dx12->Device()->CreateCommandList(
+    if (cmdList == nullptr) return false;
+    auto hr = s_dx12->Device()->CreateCommandList(
         0, type,
-        instance->cmdAllocator_.Get(),
+        allocator.Get(),
         nullptr,
-        IID_PPV_ARGS(instance->cmdList_.ReleaseAndGetAddressOf())
+        IID_PPV_ARGS(cmdList->cmdList_.ReleaseAndGetAddressOf())
     );
-    if (FAILED(hr)) return false;
 
-    hr = s_dx12->Device()->CreateCommandQueue(&desc, IID_PPV_ARGS(instance->cmdQueue_.ReleaseAndGetAddressOf()));
-    if (FAILED(hr)) return false;
+    if (allocator.Get() == nullptr ||
+        queue.Get() == nullptr) return false;
 
-    cmdList = instance;
-    return true;
+    cmdList->cmdAllocator_ = allocator;
+    cmdList->cmdQueue_ = queue;
+
+    return SUCCEEDED(hr);
 }
 
-bool Glib::Internal::Graphics::CommandList::CreateBundle(std::shared_ptr<CommandList>& cmdList)
+bool Glib::Internal::Graphics::CommandList::CreateBundle(CommandList* cmdList)
 {
-    auto instance = std::make_shared<CommandList>();
-    auto hr = s_dx12->Device()->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_BUNDLE, IID_PPV_ARGS(instance->cmdAllocator_.ReleaseAndGetAddressOf()));
+    if (cmdList == nullptr) return false;
+    auto hr = s_dx12->Device()->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_BUNDLE, IID_PPV_ARGS(cmdList->cmdAllocator_.ReleaseAndGetAddressOf()));
     if (FAILED(hr)) return false;
 
     hr = s_dx12->Device()->CreateCommandList(
         0, D3D12_COMMAND_LIST_TYPE_BUNDLE,
-        instance->cmdAllocator_.Get(),
+        cmdList->cmdAllocator_.Get(),
         nullptr,
-        IID_PPV_ARGS(instance->cmdList_.ReleaseAndGetAddressOf())
+        IID_PPV_ARGS(cmdList->cmdList_.ReleaseAndGetAddressOf())
     );
-    if (FAILED(hr)) return false;
 
-    cmdList = instance;
-    return true;
+    return SUCCEEDED(hr);
 }
 
 void Glib::Internal::Graphics::CommandList::Execute() const
@@ -52,10 +48,10 @@ void Glib::Internal::Graphics::CommandList::Execute() const
     cmdQueue_->ExecuteCommandLists(static_cast<UINT>(std::size(cmdLists)), cmdLists);
 }
 
-bool Glib::Internal::Graphics::CommandList::CloseAndBundleToList(const Glib::WeakPtr<CommandList>& list) const
+bool Glib::Internal::Graphics::CommandList::CloseAndBundleToList(const CommandList* list) const
 {
     // バンドルタイプか確認
-    if (list.expired() || Type() != D3D12_COMMAND_LIST_TYPE_BUNDLE) return false;
+    if (list == nullptr || Type() != D3D12_COMMAND_LIST_TYPE_BUNDLE) return false;
     // バンドルをクローズして追加
     list->List()->Close();
     cmdList_->ExecuteBundle(list->List().Get());
@@ -92,4 +88,3 @@ D3D12_COMMAND_LIST_TYPE Glib::Internal::Graphics::CommandList::Type() const
 {
     return cmdList_->GetType();
 }
-

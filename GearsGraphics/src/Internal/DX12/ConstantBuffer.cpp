@@ -2,7 +2,7 @@
 #include <Internal/DX12/d3dx12Inc.h>
 #include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/DescriptorPool.h>
-#include <iostream>
+
 namespace
 {
     auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
@@ -47,7 +47,7 @@ void Glib::Internal::Graphics::ConstantBuffer::SetBuffer(unsigned int rootParame
     s_dx12->CommandList()->SetGraphicsRootDescriptorTable(rootParameterIndex, handle_->GPU());
 }
 
-void Glib::Internal::Graphics::ConstantBuffer::Update(unsigned int size, const void* data)
+void Glib::Internal::Graphics::ConstantBuffer::Update(const void* data, unsigned int size)
 {
     void* map{ nullptr };
     if (FAILED(buffer_->Map(0, nullptr, &map))) return;

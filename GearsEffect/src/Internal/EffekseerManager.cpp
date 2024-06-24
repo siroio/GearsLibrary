@@ -146,6 +146,7 @@ bool Glib::Internal::Effect::EffekseerManager::Load(unsigned int id, std::string
     }
 
     auto effect = Effekseer::Effect::Create(s_efkManager, reinterpret_cast<const EFK_CHAR*>(StringToWide(path).data()));
+
     if (effect == nullptr)
     {
         Debug::Error("Effect could not be loaded.");

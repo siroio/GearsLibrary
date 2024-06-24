@@ -14,7 +14,8 @@ namespace Glib::Internal::Order
     /* 更新順番一覧 */
     namespace Update
     {
-        constexpr int INPUT = -100;
+        constexpr int DX12 = -100;
+        constexpr int INPUT = DX12 + 1;
         constexpr int TIME = INPUT + 1;
         constexpr int SCENE = TIME + 1;
         constexpr int GAMEOBJECT = SCENE + 1;

@@ -16,10 +16,13 @@ struct D3D12_RESOURCE_DESC;
 
 namespace Glib::Internal::Graphics
 {
+    class DynamicConstantBuffer;
+
     class DirectX12 :
         public SingletonPtr<DirectX12>,
         public Interface::ISystem,
         public Function::InitializeOrderSet<Order::Initialzie::DX12>,
+        public Function::UpdateOrderSet<Order::Update::DX12>,
         public Function::BeginDrawOrderSet<Order::BeginDraw::DX12>
     {
         DirectX12() = default;
@@ -46,6 +49,11 @@ namespace Glib::Internal::Graphics
         bool Initialize();
 
         /**
+         * @brief 描画準備
+         */
+        void Update();
+
+        /**
          * @brief 描画開始
          */
         void BeginDraw();
@@ -66,14 +74,29 @@ namespace Glib::Internal::Graphics
         void ExecuteCommandList();
 
         /**
+         * @brief GPUの処理待機
+         */
+        void WaitGPU(int frame);
+
+        /**
+         * @brief 現在のフレームのGPU処理待機
+         */
+        void WaitGPUThisFrame();
+
+        /**
+         * @brief 前のフレームのGPU処理待機
+         */
+        void WaitGPUPrevFrame();
+
+        /**
          * @brief レンダーターゲットの設定
          */
-        void SetDefaultRenderTarget();
+        void SetDefaultRenderTarget() const;
 
         /**
          * @brief ヒープを設定
          */
-        void SetHeaps();
+        void SetHeaps() const;
 
         /**
          * @brief デバイスを取得
@@ -96,6 +119,11 @@ namespace Glib::Internal::Graphics
         std::shared_ptr<DescriptorPool> DescriptorPool(PoolType type) const;
 
         /**
+         * @brief 動的定数バッファの取得
+         */
+        std::shared_ptr<DynamicConstantBuffer> GetConstantBuffer();
+
+        /**
          * @brief リソースデスクを取得
          */
         D3D12_RESOURCE_DESC BackBufferResourceDesc() const;
@@ -109,7 +137,7 @@ namespace Glib::Internal::Graphics
         /**
          * @brief バリアの推移
         */
-        void Barrier(ID3D12Resource* resource, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after);
+        void Barrier(ID3D12Resource* resource, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after) const;
 
         /**
          * @brief 背景色の取得
@@ -149,10 +177,5 @@ namespace Glib::Internal::Graphics
          * @brief デバッグレイヤーの有効化
          */
         void EnableDebugLayer();
-
-        /**
-         * @brief GPUの処理待機
-         */
-        void WaitGPU();
     };
 }

@@ -8,18 +8,16 @@ namespace
     auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
 }
 
-bool Glib::Internal::Graphics::Fence::Create(const UINT64& initValue, D3D12_FENCE_FLAGS flags, std::shared_ptr<Fence>& fence)
+bool Glib::Internal::Graphics::Fence::Create(const UINT64& initValue, D3D12_FENCE_FLAGS flags, Fence* fence)
 {
-    fence = std::make_shared<Fence>();
     if (fence == nullptr) return false;
-
     // フェンスの作成
     auto hr = s_dx12->Device()->CreateFence(initValue, flags, IID_PPV_ARGS(fence->fence_.ReleaseAndGetAddressOf()));
     fence->fenceValue_ = initValue;
     return SUCCEEDED(hr);
 }
 
-void Glib::Internal::Graphics::Fence::Signal(const WeakPtr<CommandList>& cmdList)
+void Glib::Internal::Graphics::Fence::Signal(const CommandList* cmdList)
 {
     cmdList->Queue()->Signal(fence_.Get(), ++fenceValue_);
 }

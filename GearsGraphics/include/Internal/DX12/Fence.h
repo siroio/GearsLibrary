@@ -23,9 +23,9 @@ namespace Glib::Internal::Graphics
          * @param flag フラグ
          * @return
          */
-        static bool Create(const UINT64& initValue, D3D12_FENCE_FLAGS flags, std::shared_ptr<Fence>& fence);
+        static bool Create(const UINT64& initValue, D3D12_FENCE_FLAGS flags, Fence* fence);
 
-        void Signal(const WeakPtr<CommandList>& cmdList);
+        void Signal(const CommandList* cmdList);
 
         void WaitGPU();
 

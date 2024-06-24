@@ -50,8 +50,6 @@ namespace Glib::Internal::Graphics
         };
 
     public:
-        bool Initialize();
-        void Finalize();
         void Update();
         void Draw();
 

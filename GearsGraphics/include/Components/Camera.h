@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <Internal/CameraBase.h>
-#include <Internal/DX12/ConstantBuffer.h>
 #include <Internal/FuncOrderConstant.h>
+#include <Internal/DX12/ConstantBufferAddress.h>
 #include <FuncOrderDefinition.h>
 #include <Components/Transform.h>
 #include <CameraClearFlags.h>
@@ -43,7 +43,6 @@ namespace Glib
         public Internal::Function::LateUpdateOrderSet<Internal::Order::LateUpdate::CAMERA>
     {
     public:
-        Camera();
         void Start();
         void LateUpdate();
 
@@ -89,7 +88,7 @@ namespace Glib
 
     private:
         WeakPtr<Transform> transform_{ nullptr };
-        Internal::Graphics::ConstantBuffer constantBuffer_{};
+        Internal::Graphics::ConstantBufferAddress constantBuffer_{};
 
         // camera用RenderTarget
         Graphics::RenderTarget renderTarget_;
@@ -98,6 +97,7 @@ namespace Glib
         // ShadowMap用RenderTarget
         Graphics::RenderTarget shadowMap_{};
         Graphics::GaussianBlur shadowMapBlur{};
+
 
         Color backGroundColor_{ 0.192f, 0.302f, 0.475f, 1.000f };
         CameraClearFlags clearFlags_{ CameraClearFlags::SkyBox };

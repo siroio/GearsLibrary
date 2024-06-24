@@ -2,6 +2,7 @@
 #include <Internal/DX12/DirectX12.h>
 #include <Internal/DX12/GraphicsResource.h>
 #include <Internal/DX12/GraphicsResourceID.h>
+#include <Internal/DX12/DynamicConstantBuffer.h>
 #include <Internal/CanvasManager.h>
 #include <TextureManager.h>
 #include <Components/Canvas.h>
@@ -30,11 +31,6 @@ namespace
     };
 }
 
-Glib::Image::Image()
-{
-    constantBuffer_.Create(sizeof(ImageConstant));
-}
-
 void Glib::Image::Start()
 {
     auto canvas = GameObject()->GetComponentInParent<Canvas>();
@@ -45,15 +41,16 @@ void Glib::Image::LateUpdate()
 {
     if (!enabled_) return;
     const auto& transform = GameObject()->Transform();
-    ImageConstant buffer;
-    buffer.position = transform->Position();
-    buffer.center = center_;
-    buffer.scale = transform->Scale();
-    buffer.angle = transform->EulerAngles().z * Mathf::DEG2RAD;
-    buffer.textureSize = s_textureManager->TextureSize(textureID_);
-    buffer.windowSize = Window::WindowSize();
-    buffer.color = color_;
-    constantBuffer_.Update(sizeof(buffer), &buffer);
+    ImageConstant cbuffer;
+    cbuffer.position = transform->Position();
+    cbuffer.center = center_;
+    cbuffer.scale = transform->Scale();
+    cbuffer.angle = transform->EulerAngles().z * Mathf::DEG2RAD;
+    cbuffer.textureSize = s_textureManager->TextureSize(textureID_);
+    cbuffer.windowSize = Window::WindowSize();
+    cbuffer.color = color_;
+    auto buffer = s_dx12->GetConstantBuffer();
+    constantBuffer_ = buffer->Alloc(&cbuffer, sizeof(ImageConstant));
 }
 
 void Glib::Image::DrawUI()
@@ -62,7 +59,7 @@ void Glib::Image::DrawUI()
     using namespace Internal::Graphics;
     s_graphics->SetPipelineState(ID::IMAGE_PIPELINESTATE);
     s_graphics->SetVertexBuffer(ID::IMAGE_VERTEX);
-    constantBuffer_.SetBuffer(1);
+    s_dx12->CommandList()->SetGraphicsRootConstantBufferView(1, constantBuffer_.Address());
     s_textureManager->SetTexture(textureID_, 0);
     s_dx12->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
     s_dx12->CommandList()->DrawInstanced(4, 1, 0, 0);

@@ -107,8 +107,8 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateTexture(unsigned int id, 
         0,
         nullptr,
         texData.data(),
-        width * 4,
-        static_cast<UINT>(texData.size())
+        static_cast<UINT>(width * 4),
+        static_cast<UINT>(datasize)
     );
 
     if (FAILED(result)) return false;
@@ -231,15 +231,13 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateSpritePipelineState()
         InputLayout::TEXCOORD
     };
 
-    CD3DX12_DESCRIPTOR_RANGE range[3]{};
-    range[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
-    range[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
-    range[2].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 1);
+    CD3DX12_DESCRIPTOR_RANGE range{};
+    range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
 
     CD3DX12_ROOT_PARAMETER rootParams[3]{};
-    rootParams[0].InitAsDescriptorTable(1, &range[0]);
-    rootParams[1].InitAsDescriptorTable(1, &range[1]);
-    rootParams[2].InitAsDescriptorTable(1, &range[2]);
+    rootParams[0].InitAsDescriptorTable(1, &range);
+    rootParams[1].InitAsConstantBufferView(0);
+    rootParams[2].InitAsConstantBufferView(1);
 
     CD3DX12_STATIC_SAMPLER_DESC sampler{};
     sampler.Init(0);
@@ -272,13 +270,12 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateImagePipelineState()
 {
     D3D12_INPUT_ELEMENT_DESC inputLayout = InputLayout::POSITION_2D;
 
-    CD3DX12_DESCRIPTOR_RANGE range[2]{};
-    range[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
-    range[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
+    CD3DX12_DESCRIPTOR_RANGE range{};
+    range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
 
     CD3DX12_ROOT_PARAMETER rootParams[2]{};
-    rootParams[0].InitAsDescriptorTable(1, &range[0]);
-    rootParams[1].InitAsDescriptorTable(1, &range[1]);
+    rootParams[0].InitAsDescriptorTable(1, &range);
+    rootParams[1].InitAsConstantBufferView(0);
 
     CD3DX12_STATIC_SAMPLER_DESC sampler{};
     sampler.Init(0);
@@ -315,11 +312,8 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateLinePipelineState()
         InputLayout::COLOR
     };
 
-    CD3DX12_DESCRIPTOR_RANGE range{};
-    range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
-
     CD3DX12_ROOT_PARAMETER rootParam{};
-    rootParam.InitAsDescriptorTable(1, &range);
+    rootParam.InitAsConstantBufferView(0);
 
     // ルートシグネチャ作成
     D3D12_ROOT_SIGNATURE_DESC rootSigDesc{};
@@ -359,20 +353,21 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateMeshPipelineState()
         InputLayout::TANGENT,
     };
 
-    CD3DX12_DESCRIPTOR_RANGE range[7]{};
-    range[ID::MESH_ALBEDO].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
-    range[ID::MESH_CAMERA_CONSTANT].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
-    range[ID::MESH_WORLD_MATRIX].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 1);
-    range[ID::MESH_MATERIAL_BUFFER].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 2);
-    range[ID::MESH_DIRECTIONAL_LIGHT].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 4);
-    range[ID::MESH_SHADOW_MAP].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 2);
-    range[ID::MESH_NORMAL_MAP].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1);
+    // マテリアルのみ個別の定数バッファ
+    CD3DX12_DESCRIPTOR_RANGE range[4]{};
+    range[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+    range[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1);
+    range[2].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 2);
+    range[3].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 2);
 
     CD3DX12_ROOT_PARAMETER rootParams[7]{};
-    for (int i = 0; i < std::size(rootParams); i++)
-    {
-        rootParams[i].InitAsDescriptorTable(1, &range[i]);
-    }
+    rootParams[ID::MESH_ALBEDO].InitAsDescriptorTable(1, &range[0]);
+    rootParams[ID::MESH_CAMERA_CONSTANT].InitAsConstantBufferView(0);
+    rootParams[ID::MESH_WORLD_MATRIX].InitAsConstantBufferView(1);
+    rootParams[ID::MESH_MATERIAL_BUFFER].InitAsDescriptorTable(1, &range[3]);
+    rootParams[ID::MESH_DIRECTIONAL_LIGHT].InitAsConstantBufferView(4);
+    rootParams[ID::MESH_SHADOW_MAP].InitAsDescriptorTable(1, &range[2]);
+    rootParams[ID::MESH_NORMAL_MAP].InitAsDescriptorTable(1, &range[1]);
 
     CD3DX12_STATIC_SAMPLER_DESC sampler[2]{};
     sampler[0].Init(0);
@@ -413,13 +408,9 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateMeshShadowPipelineState()
         InputLayout::BONEWEIGHT
     };
 
-    CD3DX12_DESCRIPTOR_RANGE range[2]{};
-    range[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
-    range[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 1);
-
     CD3DX12_ROOT_PARAMETER rootParams[2]{};
-    rootParams[0].InitAsDescriptorTable(1, &range[0]);
-    rootParams[1].InitAsDescriptorTable(1, &range[1]);
+    rootParams[0].InitAsConstantBufferView(0);
+    rootParams[1].InitAsConstantBufferView(1);
 
     // ルートシグネチャ作成
     D3D12_ROOT_SIGNATURE_DESC rootSigDesc{};
@@ -454,21 +445,22 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateSkinnedMeshPipelineState(
         InputLayout::TANGENT
     };
 
-    CD3DX12_DESCRIPTOR_RANGE range[8]{};
-    range[ID::MESH_ALBEDO].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
-    range[ID::SKINNED_MESH_CAMERA_CONSTANT].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
-    range[ID::SKINNED_MESH_WORLD_MATRIX].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 1);
-    range[ID::MESH_MATERIAL_BUFFER].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 2);
-    range[ID::SKINNED_MESH_SKINNED_MATRIX].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 3);
-    range[ID::SKINNED_MESH_DIRECTIONAL_LIGHT].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 4);
-    range[ID::SKINNED_MESH_SHADOW_MAP].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 2);
-    range[ID::MESH_NORMAL_MAP].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1);
+    // マテリアルのみ個別の定数バッファ
+    CD3DX12_DESCRIPTOR_RANGE range[4]{};
+    range[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+    range[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1);
+    range[2].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 2);
+    range[3].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 2);
 
     CD3DX12_ROOT_PARAMETER rootParams[8]{};
-    for (int i = 0; i < std::size(range); i++)
-    {
-        rootParams[i].InitAsDescriptorTable(1, &range[i]);
-    }
+    rootParams[ID::MESH_ALBEDO].InitAsDescriptorTable(1, &range[0]);
+    rootParams[ID::SKINNED_MESH_CAMERA_CONSTANT].InitAsConstantBufferView(0);
+    rootParams[ID::SKINNED_MESH_WORLD_MATRIX].InitAsConstantBufferView(1);
+    rootParams[ID::MESH_MATERIAL_BUFFER].InitAsDescriptorTable(1, &range[3]);
+    rootParams[ID::SKINNED_MESH_SKINNED_MATRIX].InitAsConstantBufferView(3);
+    rootParams[ID::SKINNED_MESH_DIRECTIONAL_LIGHT].InitAsConstantBufferView(4);
+    rootParams[ID::SKINNED_MESH_SHADOW_MAP].InitAsDescriptorTable(1, &range[2]);
+    rootParams[ID::MESH_NORMAL_MAP].InitAsDescriptorTable(1, &range[1]);
 
     CD3DX12_STATIC_SAMPLER_DESC sampler[2]{};
     sampler[0].Init(0);
@@ -509,15 +501,10 @@ bool Glib::Internal::Graphics::GraphicsResource::CreateSkinnedMeshShadowPipeline
         InputLayout::BONEWEIGHT
     };
 
-    CD3DX12_DESCRIPTOR_RANGE range[3]{};
-    range[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
-    range[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 1);
-    range[2].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 3);
-
     CD3DX12_ROOT_PARAMETER rootParams[3]{};
-    rootParams[0].InitAsDescriptorTable(1, &range[0]);
-    rootParams[1].InitAsDescriptorTable(1, &range[1]);
-    rootParams[2].InitAsDescriptorTable(1, &range[2]);
+    rootParams[0].InitAsConstantBufferView(0);
+    rootParams[1].InitAsConstantBufferView(1);
+    rootParams[2].InitAsConstantBufferView(3);
 
     // ルートシグネチャ作成
     D3D12_ROOT_SIGNATURE_DESC rootSigDesc{};
