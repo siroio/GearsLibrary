@@ -40,7 +40,7 @@ void Glib::SkinnedMeshRenderer::LateUpdate()
 
     worldConstantBuffer_ = buffer->Alloc(&world, sizeof(Matrix4x4));
     ComputeBone();
-    boneConstantBuffer_ = buffer->Alloc(boneMatrix_.data(), sizeof(sizeof(Matrix4x4) * boneMatrix_.size()));
+    boneConstantBuffer_ = buffer->Alloc(boneMatrix_.data(), sizeof(Matrix4x4) * boneMatrix_.size());
 }
 
 void Glib::SkinnedMeshRenderer::Draw(const WeakPtr<Internal::CameraBase>& camera)
