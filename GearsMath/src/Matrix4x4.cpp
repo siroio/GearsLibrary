@@ -7,6 +7,9 @@
 Matrix4x4::Matrix4x4() : matrix{ 0.0f }
 {}
 
+Matrix4x4::Matrix4x4(float def) : matrix{ def }
+{}
+
 Matrix4x4::Matrix4x4(
     float m11, float m12, float m13, float m14,
     float m21, float m22, float m23, float m24,
@@ -53,9 +56,9 @@ Matrix4x4 Matrix4x4::Translate(const Vector3& v)
 
 Matrix4x4 Matrix4x4::Rotate(const Quaternion& q)
 {
-    float x = q.x * 2.0F;
-    float y = q.y * 2.0F;
-    float z = q.z * 2.0F;
+    float x = q.x * 2.0f;
+    float y = q.y * 2.0f;
+    float z = q.z * 2.0f;
     float xx = q.x * x;
     float yy = q.y * y;
     float zz = q.z * z;

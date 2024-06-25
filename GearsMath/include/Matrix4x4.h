@@ -29,6 +29,7 @@ public:
 public:
     Matrix4x4(const Matrix4x4&) = default;
     explicit Matrix4x4();
+    explicit Matrix4x4(float def);
     explicit Matrix4x4(
         float m11, float m12, float m13, float m14,
         float m21, float m22, float m23, float m24,

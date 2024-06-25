@@ -99,7 +99,11 @@ void Glib::Internal::Effect::EffekseerManager::Finalize()
 void Glib::Internal::Effect::EffekseerManager::Update()
 {
     // エフェクトの更新
-    s_efkManager->Update(GameTimer::DeltaTime() * EFFECT_FPS);
+    Effekseer::Manager::UpdateParameter param{};
+    param.DeltaFrame = GameTimer::DeltaTime() * EFFECT_FPS;
+    param.UpdateInterval = GameTimer::DeltaTime() * EFFECT_FPS;
+    param.SyncUpdate = false;
+    s_efkManager->Update(param);
 }
 
 void Glib::Internal::Effect::EffekseerManager::Draw()
