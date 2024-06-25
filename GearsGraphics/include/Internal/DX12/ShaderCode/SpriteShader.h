@@ -15,12 +15,9 @@ namespace Glib::Internal::Graphics::ShaderCode
 
         cbuffer SpriteConstant : register(b1)
         {
-            float3 SpritePosition;
-            float  SpriteAngle;
-            float2 SpriteScale;
+            float4x4 World;
             float2 SpriteCenter;
             float2 SpriteSize;
-            float2 SpritePadding;
             float4 SpriteColor;
         };
 
@@ -43,20 +40,12 @@ namespace Glib::Internal::Graphics::ShaderCode
 
         VSOutput VSmain(VSInput input)
         {
-            float2 spriteSize = SpriteSize * SpriteScale;
 		 	VSOutput o;
-		 	o.position = input.position;
-		 	o.position.xy *= spriteSize;
-		 	o.position.x -= spriteSize.x * SpriteCenter.x;
-		 	o.position.y += spriteSize.y * SpriteCenter.y;
-		 	float2 rotate;
-            float c = cos(SpriteAngle);
-            float s = sin(SpriteAngle);
-		 	rotate.x = o.position.x * c - o.position.y * s;
-		 	rotate.y = o.position.y * c + o.position.x * s;
-		 	o.position.xy = rotate;
-		 	o.position.xyz += SpritePosition;
-		 	o.position = mul(Projection, mul(View, o.position));
+            o.position = input.position;
+		 	o.position.xy *= SpriteSize;
+            o.position.x -= SpriteCenter.x * SpriteSize.x;
+            o.position.y += SpriteCenter.y * SpriteSize.y;
+		 	o.position = mul(Projection, mul(View,  mul(World, o.position)));
 		 	o.uv = input.uv;
 		 	return o;
         }

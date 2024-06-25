@@ -17,12 +17,12 @@ namespace
     auto s_renderingManager = RenderingManager::Instance();
     auto s_graphics = GraphicsResource::Instance();
     auto s_meshManager = Glib::MeshManager::Instance();
-
 }
 
 
 Glib::MeshRenderer::MeshRenderer()
 {
+    constantBuffer_ = ConstantBufferAddress{};
     isEnabled_ = false;
 }
 

@@ -9,6 +9,7 @@
 #include <GameObject.h>
 #include <Mathf.h>
 #include <Vector3.h>
+#include <Matrix4x4.h>
 #include <GLGUI.h>
 
 using namespace  Glib::Internal::Graphics;
@@ -22,12 +23,9 @@ namespace
 
     struct SpriteConstant
     {
-        Vector3 position{ 0.0f, 0.0f, 0.0f };
-        float angle{ 0.0f };
-        Vector2 scale{ 1.0f, 1.0f };
+        Matrix4x4 world{};
         Vector2 center{ 0.5f, 0.5f };
         Vector2 spriteSize{ 0.0f, 0.0f };
-        float padding[2]{ 0.0f, 0.0f };
         Color color{ 1.0f, 1.0f, 1.0f, 1.0f };
     };
 
@@ -56,11 +54,13 @@ void Glib::SpriteRenderer::LateUpdate()
 
     // 定数バッファ
     SpriteConstant cbuffer{};
-    cbuffer.position = transform_->Position();
-    cbuffer.angle = transform_->EulerAngles().z * Mathf::DEG2RAD;
-    cbuffer.scale = transform_->Scale();
+    cbuffer.world = Matrix4x4::TRS(
+        transform_->Position(),
+        transform_->Rotation(),
+        transform_->Scale()
+    );
     cbuffer.center = center_;
-    cbuffer.spriteSize = clippingSize_ / 100.0f;
+    cbuffer.spriteSize = clippingSize_ / static_cast<float>(pixelPerUnit_);
     cbuffer.color = color_;
 
     auto buffer = s_dx12->GetConstantBuffer();
@@ -166,6 +166,16 @@ const Vector2& Glib::SpriteRenderer::ClippingSize() const
 void Glib::SpriteRenderer::ClippingSize(const Vector2& size)
 {
     clippingSize_ = size;
+}
+
+unsigned int Glib::SpriteRenderer::PixelPerUnit() const
+{
+    return pixelPerUnit_;
+}
+
+void Glib::SpriteRenderer::PixelPerUnit(unsigned int ppu)
+{
+    pixelPerUnit_ = ppu;
 }
 
 unsigned int Glib::SpriteRenderer::TextureID() const

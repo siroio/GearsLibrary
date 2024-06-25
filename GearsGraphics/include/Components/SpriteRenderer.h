@@ -92,6 +92,17 @@ namespace Glib
         void ClippingSize(const Vector2& size);
 
         /**
+         * @brief ワールド空間でのピクセルの比率
+         * @return
+         */
+        unsigned int PixelPerUnit() const;
+
+        /**
+         * @brief 比率を設定
+         */
+        void PixelPerUnit(unsigned int ppu);
+
+        /**
          * @brief テクスチャIDを取得
          */
         unsigned int TextureID() const;
@@ -111,6 +122,7 @@ namespace Glib
         bool flipX_{ false };
         bool flipY_{ false };
         unsigned int textureID_{ UINT_MAX };
+        unsigned int pixelPerUnit_{ 100 };
         Vector2 center_{ 0.5f, 0.5f };
         Vector2 textureSize_{ 0.0f, 0.0f };
         Vector2 clippingPosition_{ 0.0f, 0.0f };
