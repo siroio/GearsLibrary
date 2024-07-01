@@ -11,14 +11,16 @@
 #include <GameTimer.h>
 #include <GameObject.h>
 #include <RaycastHit.h>
+#include <Layer2D.h>
+#include <Mathf.h>
 #include <Debugger.h>
 #include <unordered_map>
 #include <unordered_set>
 #include <memory>
 #include <list>
-#include <Layer2D.h>
+#include <deque>
+#include <algorithm>
 #include <ranges>
-#include <Mathf.h>
 
 using namespace physx;
 
@@ -32,15 +34,15 @@ namespace
     Glib::Layer2D s_layer;
     std::unordered_map<uintptr_t, Glib::WeakPtr<Glib::Internal::Interface::IRigidbody>> s_rigidbodys;
     std::unordered_map<uintptr_t, GameObjectPtr> s_staticRigidbodys;
-    std::list<Glib::WeakPtr<Glib::Internal::Interface::ICollider>> s_colliders;
+    std::deque<Glib::WeakPtr<Glib::Internal::Interface::ICollider>> s_colliders;
 
-    std::list<GameObjectPair> s_triggerEnterCallbacks;
-    std::list<GameObjectPair> s_triggerStayCallbacks;
-    std::list<GameObjectPair> s_triggerExitCallbacks;
+    std::deque<GameObjectPair> s_triggerEnterCallbacks;
+    std::deque<GameObjectPair> s_triggerStayCallbacks;
+    std::deque<GameObjectPair> s_triggerExitCallbacks;
 
-    std::list<GameObjectPair> s_collisionEnterCallbacks;
-    std::list<GameObjectPair> s_collisionStayCallbacks;
-    std::list<GameObjectPair> s_collisionExitCallbacks;
+    std::deque<GameObjectPair> s_collisionEnterCallbacks;
+    std::deque<GameObjectPair> s_collisionStayCallbacks;
+    std::deque<GameObjectPair> s_collisionExitCallbacks;
 
     PxDefaultAllocator s_defaultAllocator;
     PxDefaultErrorCallback s_defaultErrorCallback;
@@ -49,6 +51,28 @@ namespace
     PxDefaultCpuDispatcher* s_dispatcher{ nullptr };
     PxScene* s_scene{ nullptr };
     PxPvd* s_pvd{ nullptr };
+}
+
+namespace
+{
+    template<typename T>
+    inline void DequeSplice(std::deque<T>& source,
+                            std::deque<T>& dest,
+                            typename std::deque<T>::iterator dest_pos)
+    {
+        std::ranges::move(source, std::inserter(dest, dest_pos));
+        source.clear();
+    }
+
+    template <class T>
+    inline void RemoveFromDeque(std::deque<std::pair<T, T>>& deque, const std::pair<T, T>& pair)
+    {
+        auto range = std::ranges::remove_if(deque, [&](const std::pair<T, T>& p)
+        {
+            return p == pair;
+        });
+        deque.erase(range.begin(), range.end());
+    }
 }
 
 namespace
@@ -201,7 +225,9 @@ void Glib::Internal::Physics::PhysXManager::Update()
         rigidbody->SyncToPhysics();
     }
 
-    s_colliders.remove_if(IsDeleteCollider);
+
+    auto result = std::ranges::remove_if(s_colliders, IsDeleteCollider);
+    s_colliders.erase(result.begin(), result.end());
     for (const auto& collider : s_colliders)
     {
         collider->SyncActive();
@@ -262,9 +288,10 @@ void Glib::Internal::Physics::PhysXManager::ExecuteTriggerCallbacks()
         );
     }
 
-    s_triggerStayCallbacks.splice(
-        s_triggerStayCallbacks.end(),
-        std::move(s_triggerEnterCallbacks)
+    DequeSplice(
+        s_triggerEnterCallbacks,
+        s_triggerStayCallbacks,
+        s_triggerStayCallbacks.begin()
     );
 
     for (const auto& [body1, body2] : s_triggerExitCallbacks)
@@ -300,9 +327,10 @@ void Glib::Internal::Physics::PhysXManager::ExecuteCollisionCallbacks()
         );
     }
 
-    s_collisionStayCallbacks.splice(
-        s_collisionStayCallbacks.end(),
-        std::move(s_collisionEnterCallbacks)
+    DequeSplice(
+        s_collisionEnterCallbacks,
+        s_collisionStayCallbacks,
+        s_collisionStayCallbacks.end()
     );
 
     for (const auto& [body1, body2] : s_collisionExitCallbacks)
@@ -444,16 +472,16 @@ void Glib::Internal::Physics::PhysXManager::onContact(const PxContactPairHeader&
         if ((event & PxPairFlag::eNOTIFY_TOUCH_FOUND) != 0)
         {
             // 衝突時
-            s_collisionEnterCallbacks.push_back({ gameObject0, gameObject1 });
-            s_collisionEnterCallbacks.push_back({ gameObject1, gameObject0 });
+            s_collisionEnterCallbacks.emplace_back(gameObject0, gameObject1);
+            s_collisionEnterCallbacks.emplace_back(gameObject1, gameObject0);
         }
         else if ((event & PxPairFlag::eNOTIFY_TOUCH_LOST) != 0)
         {
             // 離散時
-            s_collisionExitCallbacks.push_back({ gameObject0, gameObject1 });
-            s_collisionExitCallbacks.push_back({ gameObject1, gameObject0 });
-            s_collisionStayCallbacks.remove({ gameObject0, gameObject1 });
-            s_collisionStayCallbacks.remove({ gameObject1, gameObject0 });
+            s_collisionExitCallbacks.emplace_back(gameObject0, gameObject1);
+            s_collisionExitCallbacks.emplace_back(gameObject1, gameObject0);
+            RemoveFromDeque(s_collisionStayCallbacks, { gameObject0, gameObject1 });
+            RemoveFromDeque(s_collisionStayCallbacks, { gameObject1, gameObject0 });
         }
     }
 }
@@ -470,16 +498,16 @@ void Glib::Internal::Physics::PhysXManager::onTrigger(PxTriggerPair* pairs, PxU3
         if ((event & PxPairFlag::eNOTIFY_TOUCH_FOUND) != 0)
         {
             // 衝突時
-            s_triggerEnterCallbacks.push_back({ triggerObject, otherObject });
-            s_triggerEnterCallbacks.push_back({ otherObject, triggerObject });
+            s_triggerEnterCallbacks.emplace_back(triggerObject, otherObject);
+            s_triggerEnterCallbacks.emplace_back(otherObject, triggerObject);
         }
         else if ((event & PxPairFlag::eNOTIFY_TOUCH_LOST) != 0)
         {
             // 離散時
-            s_triggerExitCallbacks.push_back({ triggerObject, otherObject });
-            s_triggerExitCallbacks.push_back({ otherObject, triggerObject });
-            s_triggerStayCallbacks.remove({ triggerObject, otherObject });
-            s_triggerStayCallbacks.remove({ otherObject, triggerObject });
+            s_triggerExitCallbacks.emplace_back(triggerObject, otherObject);
+            s_triggerExitCallbacks.emplace_back(otherObject, triggerObject);
+            RemoveFromDeque(s_triggerStayCallbacks, { triggerObject, otherObject });
+            RemoveFromDeque(s_triggerStayCallbacks, { otherObject, triggerObject });
         }
     }
 }
