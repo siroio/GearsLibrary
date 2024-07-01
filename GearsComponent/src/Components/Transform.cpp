@@ -8,7 +8,7 @@ Glib::Transform::~Transform()
 {
     if (!parent_.expired())
     {
-        parent_->RemoveChild(shared_from_this());
+        parent_->RemoveChild(weak_from_this());
     }
 }
 
@@ -235,14 +235,14 @@ Vector3 Glib::Transform::InverseTransformDirection(const Vector3& direction) con
     return Quaternion::Inverse(Rotation()) * direction;
 }
 
-void Glib::Transform::Parent(Glib::WeakPtr<Transform> parent)
+void Glib::Transform::Parent(const Glib::WeakPtr<Transform>& parent)
 {
-    if (parent == shared_from_this()) return;
+    if (parent == weak_from_this()) return;
 
     if (!parent.expired())
     {
         // 親がいたら親の子供リストから自分を削除
-        parent->RemoveChild(shared_from_this());
+        parent->RemoveChild(weak_from_this());
         local_position_ = parent->TransformPoint(local_position_);
         local_rotation_ = parent->Rotation() * local_rotation_;
         local_scale_ = Vector3::Scale(local_scale_, parent->Scale());

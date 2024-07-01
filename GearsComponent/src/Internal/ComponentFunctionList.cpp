@@ -1,6 +1,7 @@
 ﻿#include <Internal/ComponentFunctionList.h>
 #include <Internal/CameraBase.h>
 #include <Component.h>
+#include <algorithm>
 
 void Glib::Internal::ComponentFunctionList::Update()
 {
@@ -61,11 +62,13 @@ void Glib::Internal::ComponentFunctionList::ExecuteClear(FunctionType type, cons
 
 void Glib::Internal::ComponentFunctionList::Remove(FunctionType type)
 {
-    functions_[type].remove_if([](const FunctionVariant& variant)
+    auto result = std::ranges::remove_if(functions_[type], [](const FunctionVariant& variant)
     {
         return std::visit([](auto& v)
         {
             return v.function->IsDelete();
         }, variant);
     });
+
+    functions_[type].erase(result.begin(), result.end());
 }

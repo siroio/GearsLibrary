@@ -57,7 +57,7 @@ namespace Glib
             return ptr_.expired();
         }
 
-        std::uintptr_t getId() const
+        std::uintptr_t getID() const
         {
             return reinterpret_cast<std::uintptr_t>(get().get());
         }
@@ -98,4 +98,3 @@ namespace Glib
         std::weak_ptr<T> ptr_;
     };
 }
-

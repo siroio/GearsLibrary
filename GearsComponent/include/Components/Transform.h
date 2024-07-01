@@ -65,7 +65,7 @@ namespace Glib
         Vector3 InverseTransformVector(const Vector3& vector) const;
         Vector3 InverseTransformDirection(const Vector3& direction) const;
 
-        void Parent(Glib::WeakPtr<Transform> parent);
+        void Parent(const Glib::WeakPtr<Transform>& parent);
         Glib::WeakPtr<Transform> Parent() const;
         Glib::WeakPtr<Transform> Find(std::string_view name);
         const std::list<Glib::WeakPtr<Transform>>& Children() const;

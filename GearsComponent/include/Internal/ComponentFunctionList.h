@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include <variant>
-#include <list>
+#include <deque>
 #include <unordered_map>
 #include <Internal/ComponentFunctionInfo.h>
 #include <Internal/ComponentFunctionType.h>
@@ -64,8 +64,8 @@ namespace Glib::Internal
         {}
 
     private:
-        std::list<std::pair<FunctionType, FunctionVariant>> addedFunction_;
-        std::unordered_map<FunctionType, std::list<FunctionVariant>> functions_;
+        std::deque<std::pair<FunctionType, FunctionVariant>> addedFunction_;
+        std::unordered_map<FunctionType, std::deque<FunctionVariant>> functions_;
     };
 
     template<class T> requires std::derived_from<T, Component>

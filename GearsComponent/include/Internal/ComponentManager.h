@@ -51,17 +51,18 @@ namespace Glib::Internal
         std::shared_ptr<ComponentType> component = std::make_shared<ComponentType>(std::forward<Args>(args)...);
         std::static_pointer_cast<Interface::IComponent>(component)->SetGameObject(gameObject);
         normalFunction_.AddFunction(component);
-        std::uintptr_t ptr = gameObject.getId();
+        std::uintptr_t id = gameObject.getID();
 
-        if (eventFunction_.contains(ptr))
+        auto eventFuncIt = eventFunction_.find(id);
+        if (eventFuncIt != eventFunction_.end())
         {
-            eventFunction_[ptr].AddFunction(component);
+            eventFuncIt->second.AddFunction(component);
         }
         else
         {
             ComponentEventFunctionList list{};
             list.AddFunction(component);
-            if (!list.Empty()) eventFunction_[ptr] = std::move(list);
+            if (!list.Empty()) eventFunction_[id] = std::move(list);
         }
 
         return component;
@@ -76,7 +77,7 @@ namespace Glib::Internal
     template<class... Args>
     inline void ComponentManager::ExecuteEventFunction(const GameObjectPtr& gameObject, ComponentFunctionType type, const Args&... args)
     {
-        const auto& function = eventFunction_.find(gameObject.getId());
+        const auto& function = eventFunction_.find(gameObject.getID());
         if (function == eventFunction_.end()) return;
         function->second.Execute(type, args...);
     }
