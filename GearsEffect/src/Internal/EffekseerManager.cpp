@@ -13,26 +13,32 @@
 #include <Matrix4x4.h>
 #include <Vector3.h>
 #include <Color.h>
+#include <Random.h>
 #include <GameTimer.h>
 #include <StringUtility.h>
 #include <FileUtility.h>
 #include <Debugger.h>
 #include <unordered_map>
+#include <deque>
 
 namespace
 {
     EffekseerRenderer::RendererRef s_efkRenderer{ nullptr };
     Effekseer::ManagerRef s_efkManager{ nullptr };
-    Effekseer::RefPtr<EffekseerRenderer::SingleFrameMemoryPool> s_efkMemoryPool{ nullptr };
-    Effekseer::RefPtr<EffekseerRenderer::CommandList> s_efkCommandList{ nullptr };
+    std::deque<Effekseer::RefPtr<EffekseerRenderer::SingleFrameMemoryPool>> s_efkMemoryPools{ nullptr };
+    std::deque<Effekseer::RefPtr<EffekseerRenderer::CommandList>> s_efkCommandLists{ nullptr };
     std::unordered_map<unsigned int, Effekseer::EffectRef> s_effects{};
+
     auto s_dx12 = Glib::Internal::Graphics::DirectX12::Instance();
     auto s_cameraManager = Glib::Internal::Graphics::CameraManager::Instance();
 }
 
 namespace
 {
+    // 最大描画数
     constexpr int MAX_SQAURE{ 8000 };
+
+    // エフェクトのフレーム速度
     constexpr float EFFECT_FPS{ 60.0f };
 }
 
@@ -61,14 +67,25 @@ bool Glib::Internal::Effect::EffekseerManager::Initialize()
     s_efkManager = Effekseer::Manager::Create(MAX_SQAURE);
     if (s_efkManager == nullptr) return false;
 
-    // メモリープールの作成
-    s_efkMemoryPool = EffekseerRenderer::CreateSingleFrameMemoryPool(s_efkRenderer->GetGraphicsDevice());
-    if (s_efkMemoryPool == nullptr) return false;
+    // per frame
 
-    // コマンドリストの作成
-    s_efkCommandList = EffekseerRenderer::CreateCommandList(s_efkRenderer->GetGraphicsDevice(), s_efkMemoryPool);
-    if (s_efkCommandList == nullptr) return false;
-    s_efkRenderer->SetCommandList(s_efkCommandList);
+    s_efkMemoryPools.resize(s_dx12->BackBufferNum());
+    s_efkCommandLists.resize(s_dx12->BackBufferNum());
+    for (int i = 0; i < s_efkMemoryPools.size(); i++)
+    {
+        // メモリープールの作成
+        auto memPool = EffekseerRenderer::CreateSingleFrameMemoryPool(s_efkRenderer->GetGraphicsDevice());
+        if (memPool == nullptr) return false;
+        s_efkMemoryPools.at(i) = memPool;
+
+        // コマンドリストの作成
+        auto cmdList = EffekseerRenderer::CreateCommandList(s_efkRenderer->GetGraphicsDevice(), memPool);
+        if (cmdList == nullptr) return false;
+        s_efkCommandLists.at(i) = cmdList;
+    }
+
+    // 現在のコマンドリストを設定
+    s_efkRenderer->SetCommandList(s_efkCommandLists.at(s_dx12->CurrentBackBufferIndex()));
 
     // 描画モジュールの設定
     s_efkManager->SetCoordinateSystem(Effekseer::CoordinateSystem::LH);
@@ -77,6 +94,7 @@ bool Glib::Internal::Effect::EffekseerManager::Initialize()
     s_efkManager->SetRingRenderer(s_efkRenderer->CreateRingRenderer());
     s_efkManager->SetTrackRenderer(s_efkRenderer->CreateTrackRenderer());
     s_efkManager->SetModelRenderer(s_efkRenderer->CreateModelRenderer());
+    s_efkManager->SetRandFunc(Random::Next);
 
     // テクスチャ、モデル、カーブ、マテリアルローダーの設定する。
     s_efkManager->SetTextureLoader(s_efkRenderer->CreateTextureLoader());
@@ -91,25 +109,19 @@ void Glib::Internal::Effect::EffekseerManager::Finalize()
 {
     s_effects.clear();
     s_efkManager.Reset();
-    s_efkCommandList.Reset();
-    s_efkMemoryPool.Reset();
+    s_efkCommandLists.clear();
+    s_efkMemoryPools.clear();
     s_efkRenderer.Reset();
 }
 
 void Glib::Internal::Effect::EffekseerManager::Update()
 {
     // エフェクトの更新
-    Effekseer::Manager::UpdateParameter param{};
-    param.DeltaFrame = GameTimer::DeltaTime() * EFFECT_FPS;
-    param.UpdateInterval = GameTimer::DeltaTime() * EFFECT_FPS;
-    param.SyncUpdate = false;
-    s_efkManager->Update(param);
+    s_efkManager->Update(GameTimer::DeltaTime() * EFFECT_FPS);
 }
 
 void Glib::Internal::Effect::EffekseerManager::Draw()
 {
-    Matrix4x4 view;
-    Matrix4x4 proj;
     for (const auto& camera : s_cameraManager->Cameras())
     {
         if (!camera->Active()) continue;
@@ -118,17 +130,22 @@ void Glib::Internal::Effect::EffekseerManager::Draw()
         camera->SetRenderTarget();
 
         // 変換行列の取得
+        Matrix4x4 view, proj;
         camera->ViewMatrix(view);
         camera->ProjectionMatrix(proj);
 
         // 行列の設定
-        s_efkRenderer->SetProjectionMatrix(ToMatrix44(proj));
         s_efkRenderer->SetCameraMatrix(ToMatrix44(view));
+        s_efkRenderer->SetProjectionMatrix(ToMatrix44(proj));
+
+        // コマンドリストの取得
+        const int bbIdx = s_dx12->CurrentBackBufferIndex();
+        const auto& cmdList = s_efkCommandLists.at(bbIdx);
 
         // 描画開始処理
-        s_efkMemoryPool->NewFrame();
-        EffekseerRendererDX12::BeginCommandList(s_efkCommandList, s_dx12->CommandList().Get());
-        s_efkRenderer->SetCommandList(s_efkCommandList);
+        s_efkMemoryPools.at(bbIdx)->NewFrame();
+        EffekseerRendererDX12::BeginCommandList(cmdList, s_dx12->CommandList().Get());
+        s_efkRenderer->SetCommandList(cmdList);
         s_efkRenderer->BeginRendering();
 
         // 描画
@@ -137,12 +154,13 @@ void Glib::Internal::Effect::EffekseerManager::Draw()
         // 描画終了処理
         s_efkRenderer->EndRendering();
         s_efkRenderer->SetCommandList(nullptr);
-        EffekseerRendererDX12::EndCommandList(s_efkCommandList);
+        EffekseerRendererDX12::EndCommandList(cmdList);
     }
 }
 
 bool Glib::Internal::Effect::EffekseerManager::Load(unsigned int id, std::string_view path)
 {
+    // エフェクトファイルが存在しているかチェック
     if (!Glib::ExistsFile(path))
     {
         Debug::Error("Effect file does not exist.");
@@ -151,6 +169,7 @@ bool Glib::Internal::Effect::EffekseerManager::Load(unsigned int id, std::string
 
     auto effect = Effekseer::Effect::Create(s_efkManager, reinterpret_cast<const EFK_CHAR*>(StringToWide(path).data()));
 
+    // エフェクトが作成できたかチェック
     if (effect == nullptr)
     {
         Debug::Error("Effect could not be loaded.");

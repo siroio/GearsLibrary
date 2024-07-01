@@ -35,10 +35,12 @@ void GameObject::RemoveComponents()
 
 void GameObject::RemoveDeadComponents()
 {
-    components_.remove_if([](const Glib::WeakPtr<Component>& component)
+    auto result = std::ranges::remove_if(components_, [](const Glib::WeakPtr<Component>& component)
     {
         return component->IsDead();
     });
+
+    components_.erase(result.begin(), result.end());
 }
 
 void GameObject::DrawGUI()
@@ -58,13 +60,17 @@ void GameObject::DrawGUI()
 
 void GameObject::Destroy()
 {
+    // 子オブジェクトの破棄を呼び出す
     for (const auto& child : transform_->Children())
     {
         child->GameObject()->Destroy();
     }
 
+    // 破棄フラグをセット
     isActive_ = false;
     isDead_ = true;
+
+    // コンポーネントの破棄を呼び出す
     for (const auto& component : components_)
     {
         component->Destroy();

@@ -12,7 +12,7 @@
 #include <Debugger.h>
 #include <filesystem>
 #include <unordered_map>
-#include <list>
+#include <deque>
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
     HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -34,7 +34,7 @@ namespace
     Color s_clearColor{ Color::Black() };
     D3D12_RECT s_scissorRect{};
     D3D12_VIEWPORT s_viewport{};
-    std::list<Glib::Internal::Debug::LogMessage> s_consoleLog;
+    std::deque<Glib::Internal::Debug::LogMessage> s_consoleLog;
     bool s_enableGameView{ true };
     bool s_enableConsole{ true };
     bool s_resetLayout{ false };
@@ -225,7 +225,7 @@ void Glib::Internal::Debug::ImGuiManager::DrawConsole()
     for (const auto& [level, message] : s_consoleLog)
     {
         ImVec4 textoColor{ 1.0f, 1.0f, 1.0f, 1.0f };
-        if (auto colorIt = s_logTextColor.find(level); colorIt != s_logTextColor.end())
+        if (const auto& colorIt = s_logTextColor.find(level); colorIt != s_logTextColor.end())
         {
             textoColor = colorIt->second;
         }

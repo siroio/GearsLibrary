@@ -258,6 +258,11 @@ int DirectX12::BackBufferNum() const
     return FRAME_COUNT;
 }
 
+int Glib::Internal::Graphics::DirectX12::CurrentBackBufferIndex() const
+{
+    return s_currentFrame;
+}
+
 void DirectX12::Barrier(ID3D12Resource* resource, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after) const
 {
     auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(resource, before, after, 0);

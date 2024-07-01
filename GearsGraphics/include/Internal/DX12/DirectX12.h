@@ -135,6 +135,11 @@ namespace Glib::Internal::Graphics
         int BackBufferNum() const;
 
         /**
+         * @brief 描画対象のバックバッファのインデックスを取得
+         */
+        int CurrentBackBufferIndex() const;
+
+        /**
          * @brief バリアの推移
         */
         void Barrier(ID3D12Resource* resource, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after) const;

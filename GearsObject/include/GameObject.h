@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <memory>
 #include <list>
+#include <deque>
 #include <Internal/IGameObject.h>
 #include <Internal/ComponentManager.h>
 #include <GameObjectManager.h>
@@ -198,7 +199,7 @@ private:
     unsigned int layer_{ 0 };
     std::string name_{ "" };
     std::string tag_{ "" };
-    std::list<std::shared_ptr<Component>> components_;
+    std::deque<std::shared_ptr<Component>> components_;
     Glib::WeakPtr<Glib::Transform> transform_{ nullptr };
 };
 

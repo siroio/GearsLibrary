@@ -44,12 +44,12 @@ void Glib::Internal::Graphics::CanvasManager::AddCanvas(const WeakPtr<Canvas>& c
 void Glib::Internal::Graphics::CanvasManager::AddUI(const WeakPtr<Internal::UIRenderer>& renderer, const WeakPtr<Canvas>& canvas)
 {
     if (canvas.expired()) return;
-    s_renderers[canvas.getId()].push_back(renderer);
+    s_renderers[canvas.getID()].push_back(renderer);
 }
 
 void Glib::Internal::Graphics::CanvasManager::ChangeCanvasOrder(const WeakPtr<Canvas>& canvas, int order)
 {
-    if (s_renderers.contains(canvas.getId())) return;
+    if (s_renderers.contains(canvas.getID())) return;
     // 新しい順序に変更
     s_canvas[canvas->Order()].remove(canvas);
     s_canvas[order].push_back(canvas);
@@ -60,15 +60,14 @@ void Glib::Internal::Graphics::CanvasManager::DrawUI(const WeakPtr<Canvas>& canv
     if (canvas.expired())
     {
         //無効なキャンバスを削除
-        s_renderers.erase(canvas.getId());
+        s_renderers.erase(canvas.getID());
     }
     else if (canvas->Active())
     {
         // 有効なUIを描画
-        for (const auto& renderer : s_renderers[canvas.getId()])
+        for (const auto& renderer : s_renderers[canvas.getID()])
         {
             renderer->DrawUI();
         }
     }
 }
-
