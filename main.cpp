@@ -283,7 +283,8 @@ public:
 
         AudioManager::LoadVoice(0, "Assets/SE/correct_answer3.wav");
 
-        EffectManager::Load(0, "Assets/Effect/Laser01.efk");
+        EffectManager::Load(0, "Assets/Effect/Laser/Laser01.efk");
+        EffectManager::Load(1, "Assets/Effect/ToonExplosionSmokeDark/ToonExplosionSmokeDarkWithFlash.efkefc");
 
         SceneManager::LoadScene("TestScene");
     }
