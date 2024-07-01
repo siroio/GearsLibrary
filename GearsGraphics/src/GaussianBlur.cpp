@@ -18,10 +18,12 @@ namespace
     auto s_shaderManager = ShaderManager::Instance();
     auto s_resources = GraphicsResource::Instance();
 
+    float s_power{ FLT_MAX };
+
     struct GaussianBlurConstant
     {
         float weights[8];
-    };
+    } s_BlurBuffer;
 }
 
 bool Glib::Graphics::GaussianBlur::Initialize(const ComPtr<ID3D12Resource>& texture, DXGI_FORMAT format)
@@ -35,28 +37,32 @@ bool Glib::Graphics::GaussianBlur::Initialize(const ComPtr<ID3D12Resource>& text
 
 void Glib::Graphics::GaussianBlur::Execute(float power)
 {
-    // 定数バッファ更新
-    GaussianBlurConstant cbuffer{};
-    float total = 0.0f;
+    // powerが大幅に変更された場合は更新
+    if (!Mathf::Approximately(s_power, power))
+    {
+        // 定数バッファ更新
+        s_power = power;
+        float total = 0.0f;
+        float invP = 1.0f / power;
 
-    float invP = 1.0f / power;
-    for (int i = 0; i < 8; i++)
-    {
-        cbuffer.weights[i] = Mathf::Exp(-0.5f * (i * i) * invP);
-        total += 2.0f * cbuffer.weights[i];
-    }
-    for (int i = 0; i < 8; i++)
-    {
-        cbuffer.weights[i] /= total;
+        for (int i = 0; i < 8; i++)
+        {
+            s_BlurBuffer.weights[i] = Mathf::Exp(-0.5f * (i * i) * invP);
+            total += 2.0f * s_BlurBuffer.weights[i];
+        }
+        for (int i = 0; i < 8; i++)
+        {
+            s_BlurBuffer.weights[i] /= total;
+        }
     }
 
     auto buffer = s_dx12->GetConstantBuffer();
-    constantBuffer_ = buffer->Alloc(&cbuffer, sizeof(GaussianBlurConstant));
+    constantBuffer_ = buffer->Alloc(&s_BlurBuffer, sizeof(GaussianBlurConstant));
 
     s_resources->SetVertexBuffer(ID::CAMERA_VERTEX);
     s_dx12->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-    float clearColor[4]{ 1.0f, 1.0f, 1.0f, 1.0f };
+    constexpr float clearColor[4]{ 1.0f, 1.0f, 1.0f, 1.0f };
 
     {
         // 横ブラー
