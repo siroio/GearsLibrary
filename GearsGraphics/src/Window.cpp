@@ -121,11 +121,11 @@ void Glib::Window::RegisterProcedure(IWindowMessage* const proc)
 
 void Glib::Window::UnRegisterProcedure(IWindowMessage* const proc)
 {
-    if (s_windowProcedures.empty()) return;
-    std::erase_if(s_windowProcedures, [&](IWindowMessage* value)
-    {
-        return value == proc;
-    });
+    if (s_windowProcedures.empty() || proc == nullptr) return;
+    s_windowProcedures.erase(
+        std::remove(s_windowProcedures.begin(), s_windowProcedures.end(), proc),
+        s_windowProcedures.end()
+    );
 }
 
 std::string& Glib::Window::WindowName()

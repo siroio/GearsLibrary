@@ -57,7 +57,7 @@ Vector3 Vector3::Right()
     return Vector3{ 1.0f, 0.0, 0.0f };
 }
 
-Vector3 Vector3::Divide(const Vector3& v1, const Vector3 v2, float threshold)
+Vector3 Vector3::Divide(const Vector3& v1, const Vector3& v2, float threshold)
 {
     return Vector3{
         Mathf::Abs(v2.x) <= threshold ? 0.0f : v1.x / v2.x,
@@ -97,7 +97,7 @@ float Vector3::SignedAngle(const Vector3& from, const Vector3& to, const Vector3
     return unsignedAngle * sign;
 }
 
-float Vector3::Distance(const Vector3 a, const Vector3 b)
+float Vector3::Distance(const Vector3& a, const Vector3& b)
 {
     float diffX = a.x - b.x;
     float diffY = a.y - b.y;

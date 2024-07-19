@@ -39,11 +39,11 @@ public:
     static Vector3 Down();
     static Vector3 Left();
     static Vector3 Right();
-    static Vector3 Divide(const Vector3& v1, const Vector3 v2, float threshold = 1e-5f);
+    static Vector3 Divide(const Vector3& v1, const Vector3& v2, float threshold = 1e-5f);
     static float Dot(const Vector3& v1, const Vector3& v2);
     static float Angle(const Vector3& from, const Vector3& to);
     static float SignedAngle(const Vector3& from, const Vector3& to, const Vector3& axis);
-    static float Distance(const Vector3 a, const Vector3 b);
+    static float Distance(const Vector3& a, const Vector3& b);
     static float SqrMagnitude(const Vector3& vector);
     static float Magnitude(const Vector3& vector);
     static Vector3 Min(const Vector3& lhs, const Vector3& rhs);

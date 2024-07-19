@@ -62,9 +62,36 @@ float Mathf::Atan(float f)
     return std::atanf(f);
 }
 
+float Mathf::FastAtan(float x)
+{
+    float x2 = x * x;
+    return x * (0.9998660f + x2 * (0.3302995f + x2 * (0.1801410f + x2 * (0.0851330f + x2 * 0.0208351f))));
+}
+
 float Mathf::Atan2(float y, float x)
 {
     return std::atan2f(y, x);
+}
+
+float Mathf::FastAtan2(float y, float x)
+{
+    if (x == 0.0f)
+    {
+        return (y > 0.0f) ? HALF_PI : ((y == 0.0f) ? 0.0f : -HALF_PI);
+    }
+
+    float atan;
+    float z = y / x;
+    if (Abs(z) < 1.0f)
+    {
+        atan = FastAtan(z);
+        return (x < 0.0f) ? ((y < 0.0f) ? atan - PI : atan + PI) : atan;
+    }
+    else
+    {
+        atan = HALF_PI - FastAtan(1.0f / z);
+        return (y < 0.0f) ? atan - PI : atan;
+    }
 }
 
 float Mathf::Abs(float f)
@@ -109,22 +136,17 @@ float Mathf::Sqrt(const float a)
 
 float Mathf::InvSqrt(const float a)
 {
-    return 1 / Sqrt(a);
+    return 1.0f / Sqrt(a);
 }
 
-float Mathf::FastInvSqrt(const float a)
+float Mathf::FastInvSqrt(float a)
 {
-    long X, Y;
-    float y;
-    X = *(long*)&a;
-    Y = 0x5F3759DF - (X >> 1); // Magic number!
-    y = *(float*)&Y;
+    int i = *reinterpret_cast<int*>(&a);
+    i = 0x5F3759DF - (i >> 1); // Magic number!
+    float y = *reinterpret_cast<float*>(&i);
 
     // Newton's method
-    constexpr float threehalfs = 1.5F;
-    float x2 = a * 0.5F;
-    y = y * (threehalfs - (x2 * y * y));
-    return y;
+    return (y * (1.5f - 0.5f * a * y * y));
 }
 
 float Mathf::Exp(float power)

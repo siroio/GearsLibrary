@@ -34,7 +34,9 @@ public:
     static float FastAsin(float f);
     static float Acos(float f);
     static float Atan(float f);
+    static float FastAtan(float x);
     static float Atan2(float y, float x);
+    static float FastAtan2(float y, float x);
 
     static float Abs(float f);
     static int Abs(int f);
@@ -46,7 +48,7 @@ public:
     static float Pow(const float a, const float b);
     static float Sqrt(const float a);
     static float InvSqrt(const float a);
-    static float FastInvSqrt(const float a);
+    static float FastInvSqrt(float a);
     static float Exp(float power);
     static float Log(float f, float p);
     static float Log(float f);
