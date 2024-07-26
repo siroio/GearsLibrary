@@ -44,7 +44,7 @@ public:
     void Set(const Matrix3x3& m);
     void SetIdentity();
     std::string ToString() const;
-    void Copy();
+
 public:
     std::array<float, 3> operator [] (const size_t index) const;
     std::array<float, 3>& operator [] (const size_t index);
@@ -62,5 +62,8 @@ Matrix3x3 operator * (const Matrix3x3& m, float scalar);
 Matrix3x3 operator * (float scalar, const Matrix3x3& m);
 Matrix3x3 operator * (const Matrix3x3& m1, const Matrix3x3& m2);
 Matrix3x3 operator / (const Matrix3x3& m, float scalar);
+
+bool operator == (const Matrix3x3& m1, const Matrix3x3& m2);
+bool operator != (const Matrix3x3& m1, const Matrix3x3& m2);
 
 std::ostream& operator << (std::ostream& stream, const Matrix3x3& m);

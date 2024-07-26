@@ -186,8 +186,8 @@ unsigned int Glib::SpriteRenderer::TextureID() const
 void Glib::SpriteRenderer::TextureID(unsigned int id, bool isResetSize)
 {
     enabled_ = s_textureManager->Contains(id);
-    if (!enabled_) return;
     textureID_ = id;
+    if (!enabled_) return;
     textureSize_ = s_textureManager->TextureSize(id);
     if (isResetSize) clippingSize_ = textureSize_;
 }
@@ -198,6 +198,11 @@ void Glib::SpriteRenderer::OnGUI()
     if (GLGUI::InputInt("Texture ID", &id))
     {
         TextureID(static_cast<unsigned int>(id));
+    }
+    int ppu = static_cast<int>(pixelPerUnit_);
+    if (GLGUI::InputInt("PixelPerUnit", &ppu))
+    {
+        pixelPerUnit_ = static_cast<unsigned int>(ppu);
     }
     GLGUI::DragVector2("Center", &center_, 0.01f, 0.0f, 1.0f);
     GLGUI::ColorInput4("Color", &color_);

@@ -178,17 +178,18 @@ Matrix3x3 operator*=(Matrix3x3& m, float scalar)
 
 Matrix3x3 operator/=(Matrix3x3& m, float scalar)
 {
-    m.m11 /= scalar;
-    m.m12 /= scalar;
-    m.m13 /= scalar;
+    float invScaler = 1.0f / scalar;
+    m.m11 *= invScaler;
+    m.m12 *= invScaler;
+    m.m13 *= invScaler;
 
-    m.m21 /= scalar;
-    m.m22 /= scalar;
-    m.m23 /= scalar;
+    m.m21 *= invScaler;
+    m.m22 *= invScaler;
+    m.m23 *= invScaler;
 
-    m.m31 /= scalar;
-    m.m32 /= scalar;
-    m.m33 /= scalar;
+    m.m31 *= invScaler;
+    m.m32 *= invScaler;
+    m.m33 *= invScaler;
 
     return m;
 }
@@ -286,23 +287,41 @@ Matrix3x3 operator*(const Matrix3x3& m1, const Matrix3x3& m2)
 Matrix3x3 operator/(const Matrix3x3& m, float scalar)
 {
     Matrix3x3 result{};
-    result.m11 = m.m11 / scalar;
-    result.m12 = m.m12 / scalar;
-    result.m13 = m.m13 / scalar;
+    float invScalar = 1.0f / scalar;
+    result.m11 = m.m11 * invScalar;
+    result.m12 = m.m12 * invScalar;
+    result.m13 = m.m13 * invScalar;
 
-    result.m21 = m.m21 / scalar;
-    result.m22 = m.m22 / scalar;
-    result.m23 = m.m23 / scalar;
+    result.m21 = m.m21 * invScalar;
+    result.m22 = m.m22 * invScalar;
+    result.m23 = m.m23 * invScalar;
 
-    result.m31 = m.m31 / scalar;
-    result.m32 = m.m32 / scalar;
-    result.m33 = m.m33 / scalar;
+    result.m31 = m.m31 * invScalar;
+    result.m32 = m.m32 * invScalar;
+    result.m33 = m.m33 * invScalar;
 
     return result;
+}
+
+bool operator==(const Matrix3x3& m1, const Matrix3x3& m2)
+{
+    return Mathf::Abs(m1.m11 - m2.m11) < Mathf::EPSILON &&
+        Mathf::Abs(m1.m12 - m2.m12) < Mathf::EPSILON &&
+        Mathf::Abs(m1.m13 - m2.m13) < Mathf::EPSILON &&
+        Mathf::Abs(m1.m21 - m2.m21) < Mathf::EPSILON &&
+        Mathf::Abs(m1.m22 - m2.m22) < Mathf::EPSILON &&
+        Mathf::Abs(m1.m23 - m2.m23) < Mathf::EPSILON &&
+        Mathf::Abs(m1.m31 - m2.m31) < Mathf::EPSILON &&
+        Mathf::Abs(m1.m32 - m2.m32) < Mathf::EPSILON &&
+        Mathf::Abs(m1.m33 - m2.m33) < Mathf::EPSILON;
+}
+
+bool operator!=(const Matrix3x3& m1, const Matrix3x3& m2)
+{
+    return !(m1 == m2);
 }
 
 std::ostream& operator<<(std::ostream& stream, const Matrix3x3& m)
 {
     return stream << m.ToString();
 }
-

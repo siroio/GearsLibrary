@@ -47,17 +47,105 @@ public:
     */
     static Quaternion AngleAxis(float angle, const Vector3& axis);
 
+    /**
+     * @brief クォータニオンのドット積を計算する
+     *
+     * @param q1 クォータニオン1
+     * @param q2 クォータニオン2
+     * @return クォータニオン1とクォータニオン2のドット積
+     */
     static float Dot(const Quaternion& q1, const Quaternion& q2);
+
+    /**
+     * @brief クォータニオンを正規化する
+     *
+     * @param q 正規化するクォータニオン
+     * @return 正規化されたクォータニオン
+     */
     static Quaternion Normalize(const Quaternion& q);
+
+    /**
+     * @brief オイラー角からクォータニオンを作成する
+     *
+     * @param x X軸回りの回転角（ラジアン）
+     * @param y Y軸回りの回転角（ラジアン）
+     * @param z Z軸回りの回転角（ラジアン）
+     * @return オイラー角から作成されたクォータニオン
+     */
     static Quaternion Euler(float x, float y, float z);
+
+    /**
+     * @brief オイラー角からクォータニオンを作成する
+     *
+     * @param euler オイラー角を持つベクトル
+     * @return オイラー角から作成されたクォータニオン
+     */
     static Quaternion Euler(const Vector3& euler);
+
+    /**
+     * @brief クォータニオンの逆数を計算する
+     *
+     * @param q 逆数を求めるクォータニオン
+     * @return クォータニオンの逆数
+     */
     static Quaternion Inverse(const Quaternion& q);
+
+    /**
+     * @brief 2つのクォータニオンを球面線形補間する
+     *
+     * @param a 補間開始のクォータニオン
+     * @param b 補間終了のクォータニオン
+     * @param t 補間係数（0.0f から 1.0f の範囲）
+     * @return 球面線形補間されたクォータニオン
+     */
     static Quaternion Slerp(const Quaternion& a, const Quaternion& b, float t);
+
+    /**
+     * @brief 2つのクォータニオンを球面線形補間する（範囲制限なし）
+     *
+     * @param a 補間開始のクォータニオン
+     * @param b 補間終了のクォータニオン
+     * @param t 補間係数
+     * @return 球面線形補間されたクォータニオン
+     */
     static Quaternion SlerpUnclamped(const Quaternion& a, const Quaternion& b, float t);
+
+    /**
+     * @brief 2つの方向ベクトルの間の回転を計算する
+     *
+     * @param fromDirection 始点の方向ベクトル
+     * @param toDirection 終点の方向ベクトル
+     * @return 2つの方向ベクトルの間の回転を表すクォータニオン
+     */
     static Quaternion FromToRotation(const Vector3& fromDirection, const Vector3& toDirection);
+
+    /**
+     * @brief 目標方向と上方向から回転を計算する
+     *
+     * @param view 目標方向のベクトル
+     * @param up 上方向のベクトル
+     * @return 目標方向と上方向から作成されたクォータニオン
+     */
     static Quaternion LookRotation(const Vector3& view, const Vector3& up);
+
+    /**
+     * @brief 目標方向から回転を計算する
+     *
+     * @param view 目標方向のベクトル
+     * @return 目標方向から作成されたクォータニオン
+     */
     static Quaternion LookRotation(const Vector3& view);
+
+    /**
+     * @brief 2つのクォータニオンの間を回転する
+     *
+     * @param from 現在のクォータニオン
+     * @param to 目標のクォータニオン
+     * @param maxDegreesDelta 最大回転角度（度）
+     * @return 指定した角度内で回転したクォータニオン
+     */
     static Quaternion RotateTowards(const Quaternion& from, const Quaternion& to, float maxDegreesDelta);
+
 
 public:
     void Set(const Quaternion& q);
@@ -70,7 +158,6 @@ public:
     Vector3 EulerAngles() const;
     Quaternion Normalized() const;
     std::string ToString() const;
-    void Copy();
 
 private:
     static float NormalizeAxis(float angle);

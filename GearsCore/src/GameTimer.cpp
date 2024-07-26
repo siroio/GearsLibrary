@@ -5,7 +5,7 @@ void Glib::GameTimer::Update()
 {
     const TimePoint now = Clock::now();
     const Duration deltaTime = now - prevTime_;
-    unscaledDeltaTime_ = min(deltaTime, maxDeltaTime_);
+    unscaledDeltaTime_ = std::min(deltaTime, maxDeltaTime_);
     deltaTime_ = unscaledDeltaTime_ * timeScale_;
     prevTime_ = now;
 }

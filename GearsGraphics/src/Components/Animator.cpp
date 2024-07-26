@@ -53,7 +53,8 @@ void Glib::Animator::Update()
 
             matrix[bone.boneIndex]
                 = Matrix4x4::Translate(-bone.position)
-                * Matrix4x4::Rotate(rotation) * Matrix4x4::Translate(translation)
+                * Matrix4x4::Rotate(rotation)
+                * Matrix4x4::Translate(translation)
                 * Matrix4x4::Translate(bone.position);
         }
 
@@ -73,8 +74,10 @@ void Glib::Animator::Update()
     elapsedTime_ += deltaTime;
     currentFrame_ += animationFrameRate_ * deltaTime;
 
+    // アニメーションの終了を確認
     if (currentFrame_ > animation_->EndFrame())
     {
+        // ループするかをチェック
         currentFrame_ = isLoop_ ? 0.0f : animation_->EndFrame();
     }
 }

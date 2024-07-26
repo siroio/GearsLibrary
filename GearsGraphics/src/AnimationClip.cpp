@@ -53,7 +53,7 @@ Glib::AnimationClip::KeyFrame Glib::AnimationClip::GetKeyFrame(const std::string
     }
 
     const auto& keyframes = it->second;
-    const auto [start, end] = SearchKeyFrame(keyframes, frameNo);
+    const auto& [start, end] = SearchKeyFrame(keyframes, frameNo);
 
     // 一致したらそのまま返す
     if (start == end) return keyframes.at(start);
@@ -78,28 +78,26 @@ float Glib::AnimationClip::EndFrame() const
 
 std::tuple<int, int> Glib::AnimationClip::SearchKeyFrame(const KeyFrames& keys, float frameNo) const
 {
-    int start = 0;
-    int end = static_cast<int>(keys.size() - 1);
+    // 2分探索でフレームを探索
 
-    if (frameNo <= keys.at(start).frameNo)
+    int start = -1;
+    int end = static_cast<int>(keys.size());
+
+    if (frameNo <= keys.front().frameNo)
     {
         return { 0, 0 };
     }
 
-    if (frameNo >= keys.at(end).frameNo)
+    if (frameNo >= keys.back().frameNo)
     {
-        return { end, end };
+        return { end - 1, end - 1 };
     }
 
-    while ((start + 1) < end)
+    while (Mathf::Abs(end - start) > 1)
     {
-        int mid = start + (end - start) / 2;
+        int mid = (end + start) / 2;
 
-        if (keys.at(mid).frameNo == frameNo)
-        {
-            return { mid, mid };
-        }
-        else if (keys.at(mid).frameNo < frameNo)
+        if (keys.at(mid).frameNo <= frameNo)
         {
             start = mid;
         }

@@ -72,6 +72,45 @@ Vector4 Vector4::Scale(const Vector4& v, float scalar)
     return Vector4{ v.x * scalar, v.y * scalar, v.z * scalar, v.w * scalar };
 }
 
+Vector4 Vector4::Lerp(const Vector4& a, const Vector4& b, float t)
+{
+    t = Mathf::Clamp01(t);
+    float lerp_x = a.x + (b.x - a.x) * t;
+    float lerp_y = a.y + (b.y - a.y) * t;
+    float lerp_z = a.z + (b.z - a.z) * t;
+    float lerp_w = a.w + (b.w - a.w) * t;
+
+    return Vector4{ lerp_x, lerp_y, lerp_z, lerp_w };
+}
+
+Vector4 Vector4::LerpUnclamped(const Vector4& a, const Vector4& b, float t)
+{
+    float lerp_x = a.x + (b.x - a.x) * t;
+    float lerp_y = a.y + (b.y - a.y) * t;
+    float lerp_z = a.z + (b.z - a.z) * t;
+    float lerp_w = a.w + (b.w - a.w) * t;
+
+    return Vector4{ lerp_x, lerp_y, lerp_z, lerp_w };
+}
+
+Vector4 Vector4::Normalize(const Vector4& v)
+{
+    float mag = Magnitude(v);
+    return mag > Mathf::EPSILON ? Scale(v, 1.0f / mag) : Zero();
+}
+
+Vector4 Vector4::Reflect(const Vector4& inDirection, const Vector4& inNormal)
+{
+    return inDirection - Scale(inNormal, 2 * Dot(inDirection, inNormal));
+}
+
+Vector4 Vector4::Project(const Vector4& vector, const Vector4& onNormal)
+{
+    float dotProduct = Dot(vector, onNormal);
+    float sqrMag = SqrMagnitude(onNormal);
+    return sqrMag > Mathf::EPSILON_SQRT ? Scale(onNormal, dotProduct / sqrMag) : Zero();
+}
+
 void Vector4::Set(const Vector4& v)
 {
     x = v.x;
@@ -251,7 +290,8 @@ bool operator==(const Vector4& v1, const Vector4 v2)
     float diff_y = v1.y - v2.y;
     float diff_z = v1.z - v2.z;
     float diff_w = v1.w - v2.w;
-    float sqrMag = { diff_x * diff_x +
+    float sqrMag = {
+        diff_x * diff_x +
         diff_y * diff_y +
         diff_z * diff_z +
         diff_w * diff_w

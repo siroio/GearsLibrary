@@ -291,8 +291,6 @@ public:
      */
     std::string ToString() const;
 
-    void Copy();
-
 public:
     void operator = (const Vector2& v);
     void operator = (const Vector3& v);

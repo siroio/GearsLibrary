@@ -380,10 +380,12 @@ void Matrix4x4::SetTRS(const Vector3& translate, const Quaternion& rotation, con
 std::string Matrix4x4::ToString() const
 {
     std::ostringstream ss;
+    ss << "[";
     ss << m11 << ", " << m12 << ", " << m13 << ", " << m14 << "\n";
     ss << m21 << ", " << m22 << ", " << m23 << ", " << m24 << "\n";
     ss << m31 << ", " << m32 << ", " << m33 << ", " << m34 << "\n";
     ss << m41 << ", " << m42 << ", " << m43 << ", " << m44;
+    ss << "]";
     return ss.str();
 }
 
@@ -669,6 +671,31 @@ Matrix4x4 operator/(const Matrix4x4& m, float scalar)
     result.m44 = m.m44 * scalarInv;
 
     return result;
+}
+
+bool operator==(const Matrix4x4& m1, const Matrix4x4& m2)
+{
+    return Mathf::Abs(m1.m11 - m2.m11) < Mathf::EPSILON &&
+        Mathf::Abs(m1.m12 - m2.m12) < Mathf::EPSILON &&
+        Mathf::Abs(m1.m13 - m2.m13) < Mathf::EPSILON &&
+        Mathf::Abs(m1.m14 - m2.m14) < Mathf::EPSILON &&
+        Mathf::Abs(m1.m21 - m2.m21) < Mathf::EPSILON &&
+        Mathf::Abs(m1.m22 - m2.m22) < Mathf::EPSILON &&
+        Mathf::Abs(m1.m23 - m2.m23) < Mathf::EPSILON &&
+        Mathf::Abs(m1.m24 - m2.m24) < Mathf::EPSILON &&
+        Mathf::Abs(m1.m31 - m2.m31) < Mathf::EPSILON &&
+        Mathf::Abs(m1.m32 - m2.m32) < Mathf::EPSILON &&
+        Mathf::Abs(m1.m33 - m2.m33) < Mathf::EPSILON &&
+        Mathf::Abs(m1.m34 - m2.m34) < Mathf::EPSILON &&
+        Mathf::Abs(m1.m41 - m2.m41) < Mathf::EPSILON &&
+        Mathf::Abs(m1.m42 - m2.m42) < Mathf::EPSILON &&
+        Mathf::Abs(m1.m43 - m2.m43) < Mathf::EPSILON &&
+        Mathf::Abs(m1.m44 - m2.m44) < Mathf::EPSILON;
+}
+
+bool operator!=(const Matrix4x4& m1, const Matrix4x4& m2)
+{
+    return !(m1 == m2);
 }
 
 std::ostream& operator<<(std::ostream& stream, const Matrix4x4& m)

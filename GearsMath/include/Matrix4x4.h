@@ -66,6 +66,7 @@ public:
 
     Matrix4x4 Inverse() const;
     Matrix4x4 Transpose() const;
+    float Determinant() const;
 
     void Set(float m11, float m12, float m13, float m14,
              float m21, float m22, float m23, float m24,
@@ -93,5 +94,8 @@ Matrix4x4 operator * (const Matrix4x4& m, float scalar);
 Matrix4x4 operator * (float scalar, const Matrix4x4& m);
 Matrix4x4 operator * (const Matrix4x4& m1, const Matrix4x4& m2);
 Matrix4x4 operator / (const Matrix4x4& m, float scalar);
+
+bool operator == (const Matrix4x4& m1, const Matrix4x4& m2);
+bool operator != (const Matrix4x4& m1, const Matrix4x4& m2);
 
 std::ostream& operator << (std::ostream& stream, const Matrix4x4& m);

@@ -4,6 +4,7 @@
 #include <Vector3.h>
 #include <Vector4.h>
 #include <Color.h>
+#include <cstdarg>
 
 void Glib::GLGUI::Space()
 {
@@ -177,4 +178,36 @@ bool Glib::GLGUI::ColorBar3(std::string_view label, Color* color)
 bool Glib::GLGUI::ColorBar4(std::string_view label, Color* color)
 {
     return ImGui::ColorEdit4(label.data(), color->Raw(), ImGuiColorEditFlags_NoInputs);
+}
+
+bool Glib::GLGUI::InputText(std::string_view label, char* buf, size_t bufSize, bool multiline, bool readOnly, bool password)
+{
+    ImGuiInputTextFlags flags = 0;
+    if (multiline) flags |= ImGuiInputTextFlags_Multiline;
+    if (readOnly) flags |= ImGuiInputTextFlags_ReadOnly;
+    if (password) flags |= ImGuiInputTextFlags_Password;
+
+    return ImGui::InputText(label.data(), buf, bufSize, flags);
+}
+
+void Glib::GLGUI::ProgressBar(float fraction, const Vector2& size, std::string_view overlay)
+{
+    ImGui::ProgressBar(fraction, ImVec2{ size.x, size.y }, overlay.data());
+}
+
+bool Glib::GLGUI::ToggleSwitch(std::string_view label, std::string_view enableText, std::string_view disableText, bool* toggled, bool sameLine)
+{
+    if (sameLine) ImGui::SameLine();
+    bool result = ImGui::Checkbox(label.data(), toggled);
+    if (sameLine) ImGui::SameLine();
+    ImGui::Text(*toggled ? enableText.data() : disableText.data());
+    return result;
+}
+
+void Glib::GLGUI::Tooltip(std::string_view text)
+{
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::SetTooltip(text.data());
+    }
 }
