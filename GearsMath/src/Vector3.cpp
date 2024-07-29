@@ -57,12 +57,12 @@ Vector3 Vector3::Right()
     return Vector3{ 1.0f, 0.0, 0.0f };
 }
 
-Vector3 Vector3::Divide(const Vector3& v1, const Vector3& v2, float threshold)
+Vector3 Vector3::Divide(const Vector3& v1, const Vector3& v2)
 {
     return Vector3{
-        Mathf::Abs(v2.x) <= threshold ? 0.0f : v1.x / v2.x,
-        Mathf::Abs(v2.y) <= threshold ? 0.0f : v1.y / v2.y,
-        Mathf::Abs(v2.z) <= threshold ? 0.0f : v1.z / v2.z
+        Mathf::Abs(v2.x) < Mathf::EPSILON ? 0.0f : v1.x / v2.x,
+        Mathf::Abs(v2.y) < Mathf::EPSILON ? 0.0f : v1.y / v2.y,
+        Mathf::Abs(v2.z) < Mathf::EPSILON ? 0.0f : v1.z / v2.z
     };
 }
 
@@ -486,8 +486,8 @@ Vector3& operator/=(Vector3& v, float scalar)
 {
     float m = 1.0f / scalar;
     v.x *= m;
-    v.y += m;
-    v.z += m;
+    v.y *= m;
+    v.z *= m;
 
     return v;
 }

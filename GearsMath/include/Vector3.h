@@ -95,7 +95,7 @@ public:
      * @param threshold しきい値（デフォルトは1e-5f）
      * @return 除算結果のベクトル
      */
-    static Vector3 Divide(const Vector3& v1, const Vector3& v2, float threshold = 1e-5f);
+    static Vector3 Divide(const Vector3& v1, const Vector3& v2);
 
     /**
      * @brief 2つのベクトルのドット積を計算する

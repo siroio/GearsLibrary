@@ -195,7 +195,7 @@ void Glib::GLGUI::ProgressBar(float fraction, const Vector2& size, std::string_v
     ImGui::ProgressBar(fraction, ImVec2{ size.x, size.y }, overlay.data());
 }
 
-bool Glib::GLGUI::ToggleSwitch(std::string_view label, std::string_view enableText, std::string_view disableText, bool* toggled, bool sameLine)
+bool Glib::GLGUI::ToggleSwitch(std::string_view label, bool* toggled, std::string_view enableText, std::string_view disableText, bool sameLine)
 {
     if (sameLine) ImGui::SameLine();
     bool result = ImGui::Checkbox(label.data(), toggled);

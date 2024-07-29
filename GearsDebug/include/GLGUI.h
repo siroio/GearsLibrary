@@ -285,7 +285,7 @@ namespace Glib
          * @param size サイズ
          * @param overlay オーバーレイテキスト
          */
-        static void ProgressBar(float fraction, const Vector2& size = Vector2{ -FLT_MIN, 0 }, std::string_view overlay = "");
+        static void ProgressBar(float fraction, const Vector2& size, std::string_view overlay = "");
 
         /**
          * @brief トグルスイッチを表示
@@ -294,7 +294,7 @@ namespace Glib
          * @param sameLine 同じ行に表示させるか
          * @return トグル状態
          */
-        static bool ToggleSwitch(std::string_view label, std::string_view enableText = "On", std::string_view disableText = "Off", bool* toggled, bool sameLine = false);
+        static bool ToggleSwitch(std::string_view label, bool* toggled, std::string_view enableText = "On", std::string_view disableText = "Off", bool sameLine = false);
 
         /**
          * @brief ツールチップを表示
