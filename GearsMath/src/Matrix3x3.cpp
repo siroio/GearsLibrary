@@ -287,7 +287,7 @@ Matrix3x3 operator*(const Matrix3x3& m1, const Matrix3x3& m2)
 Matrix3x3 operator/(const Matrix3x3& m, float scalar)
 {
     Matrix3x3 result{};
-    float invScalar = 1.0f / scalar;
+    const float invScalar = Mathf::Inverse(scalar);
     result.m11 = m.m11 * invScalar;
     result.m12 = m.m12 * invScalar;
     result.m13 = m.m13 * invScalar;
