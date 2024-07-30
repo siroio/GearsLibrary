@@ -1,4 +1,5 @@
 ﻿#include <Internal/MouseDevice.h>
+#include <BitFlag.h>
 #include <WinUser.h>
 #include <vector>
 
@@ -29,17 +30,20 @@ void Glib::Internal::Input::MouseDevice::Update()
     prevMouseBuffer_ = currentMouseBuffer_;
 
     // バッファから取得
-    for (const auto& buffer : frameBuffer_)
+    if (!frameBuffer_.empty())
     {
-        currentMouseBuffer_.Position = buffer.Position;
-        currentMouseBuffer_.Wheel = buffer.Wheel;
-        for (char i = 0; i < 5; i++)
+        for (const auto& buffer : frameBuffer_)
         {
-            currentMouseBuffer_.Buttons[i] |= buffer.Buttons[i];
+            currentMouseBuffer_.Position = buffer.Position;
+            currentMouseBuffer_.Wheel = buffer.Wheel;
+            for (char i = 0; i < 5; i++)
+            {
+                currentMouseBuffer_.Buttons[i] = buffer.Buttons[i];
+            }
         }
+        currentMouseBuffer_.Delta = currentMouseBuffer_.Position - prevMouseBuffer_.Position;
+        frameBuffer_.clear();
     }
-    currentMouseBuffer_.Delta = currentMouseBuffer_.Position - prevMouseBuffer_.Position;
-    frameBuffer_.clear();
 }
 
 bool Glib::Internal::Input::MouseDevice::ButtonDown(MouseButton button) const
@@ -97,6 +101,7 @@ void Glib::Internal::Input::MouseDevice::ProcessMouse(const HRAWINPUT* hRawInput
 {
     UINT size = 0;
     GetRawInputData(*hRawInput, RID_INPUT, nullptr, &size, sizeof(RAWINPUTHEADER));
+    if (size <= 0) return;
     auto buffer = std::make_unique<BYTE[]>(size);
     if (GetRawInputData(*hRawInput, RID_INPUT, buffer.get(), &size, sizeof(RAWINPUTHEADER)) != size)
     {
@@ -157,16 +162,11 @@ void Glib::Internal::Input::MouseDevice::ProcessMouse(const HRAWINPUT* hRawInput
         }
 
         // ボタンを確認
-        if (buttonFlags & RI_MOUSE_BUTTON_1_DOWN) buffer.Buttons[0] = true;
-        if (buttonFlags & RI_MOUSE_BUTTON_1_UP) buffer.Buttons[0] = false;
-        if (buttonFlags & RI_MOUSE_BUTTON_2_DOWN) buffer.Buttons[1] = true;
-        if (buttonFlags & RI_MOUSE_BUTTON_2_UP) buffer.Buttons[1] = false;
-        if (buttonFlags & RI_MOUSE_BUTTON_3_DOWN) buffer.Buttons[2] = true;
-        if (buttonFlags & RI_MOUSE_BUTTON_3_UP) buffer.Buttons[2] = false;
-        if (buttonFlags & RI_MOUSE_BUTTON_4_DOWN) buffer.Buttons[3] = true;
-        if (buttonFlags & RI_MOUSE_BUTTON_4_UP) buffer.Buttons[3] = false;
-        if (buttonFlags & RI_MOUSE_BUTTON_5_DOWN) buffer.Buttons[4] = true;
-        if (buttonFlags & RI_MOUSE_BUTTON_5_UP) buffer.Buttons[4] = false;
+        buffer.Buttons[0] = buttonFlags & RI_MOUSE_BUTTON_1_DOWN;
+        buffer.Buttons[1] = buttonFlags & RI_MOUSE_BUTTON_2_DOWN;
+        buffer.Buttons[2] = buttonFlags & RI_MOUSE_BUTTON_3_DOWN;
+        buffer.Buttons[3] = buttonFlags & RI_MOUSE_BUTTON_4_DOWN;
+        buffer.Buttons[4] = buttonFlags & RI_MOUSE_BUTTON_5_DOWN;
 
         // バッファに追加
         frameBuffer_.push_back(std::move(buffer));
