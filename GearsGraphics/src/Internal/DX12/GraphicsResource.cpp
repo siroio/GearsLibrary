@@ -7,6 +7,7 @@
 #include <Internal/DX12/GraphicsResourceID.h>
 #include <Internal/DX12/InputLayout.h>
 #include <Internal/DX12/BlendState.h>
+#include <Texture.h>
 #include <Vector2.h>
 #include <unordered_map>
 
@@ -20,8 +21,7 @@ namespace
 {
     std::unordered_map<unsigned int, Glib::Internal::Graphics::VertexBuffer> s_vertexBuffers;
     std::unordered_map<unsigned int, Glib::Internal::Graphics::GraphicsPipeline> s_pipelines;
-    std::unordered_map<unsigned int, ComPtr<ID3D12Resource>> s_textureResources;
-    std::unordered_map<unsigned int, std::shared_ptr<Glib::Internal::Graphics::DescriptorHandle>> s_srvHandles;
+    std::unordered_map<unsigned int, std::shared_ptr<Glib::Texture>> s_defaultTexture;
 }
 
 bool Glib::Internal::Graphics::GraphicsResource::Initialize()
@@ -49,8 +49,7 @@ void Glib::Internal::Graphics::GraphicsResource::Finalize()
 {
     s_vertexBuffers.clear();
     s_pipelines.clear();
-    s_textureResources.clear();
-    s_srvHandles.clear();
+    s_defaultTexture.clear();
 }
 
 void Glib::Internal::Graphics::GraphicsResource::SetVertexBuffer(unsigned int id)
@@ -65,68 +64,16 @@ void Glib::Internal::Graphics::GraphicsResource::SetPipelineState(unsigned int i
 
 void Glib::Internal::Graphics::GraphicsResource::SetTexture(unsigned int id, unsigned int rootParameterIndex)
 {
-    if (!s_textureResources.contains(id)) return;
-    s_dx12->CommandList()->SetGraphicsRootDescriptorTable(rootParameterIndex, s_srvHandles.at(id)->GPU());
+    const auto& texture = s_defaultTexture.find(id);
+    if (texture == s_defaultTexture.end()) return;
+    texture->second->SetTexture(rootParameterIndex);
 }
 
 bool Glib::Internal::Graphics::GraphicsResource::CreateTexture(unsigned int id, unsigned char r, unsigned char g, unsigned char b, unsigned char a)
 {
-    static constexpr UINT64 width = 4;
-    static constexpr UINT64 height = 4;
-    static constexpr UINT64 datasize = width * height * 4;
-    CD3DX12_HEAP_PROPERTIES heapProp{ D3D12_HEAP_TYPE_CUSTOM, 0U, 0U };
-    heapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
-    heapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
-    CD3DX12_RESOURCE_DESC resDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R8G8B8A8_UNORM, width, height, 1U, 1U);
-    // リソースの作成
-    auto result = s_dx12->Device()->CreateCommittedResource(
-        &heapProp,
-        D3D12_HEAP_FLAG_NONE,
-        &resDesc,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-        nullptr,
-        IID_PPV_ARGS(s_textureResources[id].ReleaseAndGetAddressOf())
-    );
-    if (FAILED(result)) return false;
-
-    std::array<unsigned char, datasize> texData{};
-    for (int i = 0; i < texData.size(); i++)
-    {
-        int idx = i % 4;
-        switch (idx)
-        {
-            case 0: texData.at(i) = r; break;
-            case 1: texData.at(i) = g; break;
-            case 2: texData.at(i) = b; break;
-            case 3: texData.at(i) = a; break;
-        }
-    }
-
-    // データ転送
-    result = s_textureResources.at(id)->WriteToSubresource(
-        0,
-        nullptr,
-        texData.data(),
-        static_cast<UINT>(width * 4),
-        static_cast<UINT>(datasize)
-    );
-
-    if (FAILED(result)) return false;
-
-    auto handle = s_dx12->DescriptorPool(DirectX12::PoolType::RES);
-    s_srvHandles[id] = handle->GetHandle();
-
-    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-    srvDesc.Format = resDesc.Format;
-    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-    srvDesc.Texture2D.MipLevels = 1;
-    s_dx12->Device()->CreateShaderResourceView(
-        s_textureResources.at(id).Get(),
-        &srvDesc,
-        s_srvHandles.at(id)->CPU()
-    );
-
+    auto texture = std::make_shared<Texture>();
+    if (!texture->CreateTexture(4, 4, { r, g, b, a })) return false;
+    s_defaultTexture.emplace(id, texture);
     return true;
 }
 

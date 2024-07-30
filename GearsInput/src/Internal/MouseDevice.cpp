@@ -34,13 +34,15 @@ void Glib::Internal::Input::MouseDevice::Update()
     {
         for (const auto& buffer : frameBuffer_)
         {
-            currentMouseBuffer_.Position = buffer.Position;
-            currentMouseBuffer_.Wheel = buffer.Wheel;
-            for (char i = 0; i < 5; i++)
-            {
-                currentMouseBuffer_.Buttons[i] = buffer.Buttons[i];
-            }
+            // unroll
+            currentMouseBuffer_.Buttons[0] = buffer.Buttons[0];
+            currentMouseBuffer_.Buttons[1] = buffer.Buttons[1];
+            currentMouseBuffer_.Buttons[2] = buffer.Buttons[2];
+            currentMouseBuffer_.Buttons[3] = buffer.Buttons[3];
+            currentMouseBuffer_.Buttons[4] = buffer.Buttons[4];
         }
+        currentMouseBuffer_.Position = frameBuffer_.back().Position;
+        currentMouseBuffer_.Wheel = frameBuffer_.back().Wheel;
         currentMouseBuffer_.Delta = currentMouseBuffer_.Position - prevMouseBuffer_.Position;
         frameBuffer_.clear();
     }

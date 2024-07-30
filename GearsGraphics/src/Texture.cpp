@@ -4,9 +4,11 @@
 #include <Internal/DX12/CommandList.h>
 #include <Internal/DX12/Fence.h>
 #include <DirectXTex.h>
+#include <StringUtility.h>
+#include <Color.h>
+#include <vector>
 #include <functional>
 #include <filesystem>
-#include <StringUtility.h>
 
 using namespace Glib::Internal::Graphics;
 
@@ -34,7 +36,7 @@ namespace
     };
 
     /* アライメント計算 */
-    size_t AlignmentedSize(size_t size)
+    size_t AlignmentedSize(const size_t& size)
     {
         return (size + D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1) & ~(D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1);
     }
@@ -45,21 +47,53 @@ namespace
     auto s_dx12 = DirectX12::Instance();
 }
 
+bool Glib::Texture::CreateTexture(unsigned int width, unsigned int height, const std::array<unsigned char, 4>& color)
+{
+    const size_t dataSize = color.size() * width * height;
+
+    CD3DX12_HEAP_PROPERTIES heapProp{ D3D12_HEAP_TYPE_CUSTOM, 0U, 0U };
+    heapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+    heapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+    CD3DX12_RESOURCE_DESC resDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R8G8B8A8_UNORM, width, height, 1U, 1U);
+    auto hr = s_dx12->Device()->CreateCommittedResource(
+        &heapProp,
+        D3D12_HEAP_FLAG_NONE,
+        &resDesc,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+        nullptr,
+        IID_PPV_ARGS(texture_.ReleaseAndGetAddressOf())
+    );
+    if (FAILED(hr)) return false;
+
+    std::vector<unsigned char> texData(dataSize);
+    for (int i = 0; i < texData.size(); i++)
+    {
+        int idx = i % 4;
+        switch (idx)
+        {
+            case 0: texData.at(i) = color[0]; break;
+            case 1: texData.at(i) = color[1]; break;
+            case 2: texData.at(i) = color[2]; break;
+            case 3: texData.at(i) = color[3]; break;
+        }
+    }
+
+    hr = texture_->WriteToSubresource(
+        0U,
+        nullptr,
+        texData.data(),
+        static_cast<UINT>(width * 4), // 横幅 * 4byte
+        0U
+    );
+    if (FAILED(hr)) return false;
+
+    CreateShaderResourceView(resDesc.Format);
+
+    return true;
+}
+
 bool Glib::Texture::CreateTexture(std::string_view path)
 {
-    // アロケーターの作成
-    auto cmdAlloc = std::make_shared<CommandAllocator>();
-    const auto cmdType = D3D12_COMMAND_LIST_TYPE_DIRECT;
-    if (!CommandAllocator::Create(cmdType, cmdAlloc.get())) return false;
-
-    // リストの作成
-    auto cmdList = std::make_shared<CommandList>();
-    if (!CommandList::Create(cmdType, cmdAlloc->Allocator(), s_dx12->CommandQueue(), cmdList.get())) return false;
-
-    // フェンスの作成
-    auto fence = std::make_shared<Fence>();
-    if (!Fence::Create(0, D3D12_FENCE_FLAG_NONE, fence.get())) return false;
-
     std::filesystem::path filePath = Glib::CharConv(path);
     if (!filePath.is_absolute()) filePath = std::filesystem::absolute(filePath);
     if (!filePath.has_extension()) return false;
@@ -116,16 +150,7 @@ bool Glib::Texture::CreateTexture(std::string_view path)
     // アップロード用のバッファにコピー
     uint8_t* mapped{ nullptr };
     if (FAILED(uploadBuffer->Map(0, nullptr, reinterpret_cast<void**>(&mapped)))) return false;
-
-    auto srcImg = img->pixels;
-    auto rowPitch = AlignmentedSize(img->rowPitch);
-
-    for (unsigned int y = 0; y < img->height; y++)
-    {
-        std::copy_n(srcImg, rowPitch, mapped);
-        srcImg += img->rowPitch;
-        mapped += rowPitch;
-    }
+    std::copy_n(img->pixels, img->slicePitch, mapped);
     uploadBuffer->Unmap(0, nullptr);
 
     // コピーの設定
@@ -143,6 +168,19 @@ bool Glib::Texture::CreateTexture(std::string_view path)
     dst.pResource = texture_.Get();
     dst.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
     dst.SubresourceIndex = 0;
+
+    // アロケーターの作成
+    auto cmdAlloc = std::make_shared<CommandAllocator>();
+    const auto cmdType = D3D12_COMMAND_LIST_TYPE_DIRECT;
+    if (!CommandAllocator::Create(cmdType, cmdAlloc.get())) return false;
+
+    // リストの作成
+    auto cmdList = std::make_shared<CommandList>();
+    if (!CommandList::Create(cmdType, cmdAlloc->Allocator(), s_dx12->CommandQueue(), cmdList.get())) return false;
+
+    // フェンスの作成
+    auto fence = std::make_shared<Fence>();
+    if (!Fence::Create(0, D3D12_FENCE_FLAG_NONE, fence.get())) return false;
 
     // テクスチャのコピー
     cmdList->List()->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);

@@ -6,15 +6,16 @@
 #include <WeakPtr.h>
 #include <Vector2.h>
 #include <string_view>
+#include <array>
 
 namespace Glib
 {
     class Texture
     {
     public:
+        bool CreateTexture(unsigned int width, unsigned int height, const std::array<unsigned char, 4>& color);
         bool CreateTexture(std::string_view path);
         void SetTexture(unsigned int rootParamIndex) const;
-        //bool CreateTexture(Vector2 textureSize, DXGI_FORMAT format);
         ComPtr<ID3D12Resource> Get() const;
         const Vector2& TextureSize() const;
 
@@ -28,4 +29,3 @@ namespace Glib
         ComPtr<ID3D12Resource> texture_{ nullptr };
     };
 }
-
