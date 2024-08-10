@@ -8,6 +8,7 @@
 #include <RenderTarget.h>
 #include <Window.h>
 #include <Color.h>
+#include <MsgBox.h>
 #include <Vector2.h>
 #include <dxgi1_6.h>
 #include <string>
@@ -33,9 +34,9 @@ namespace
 
     /* コマンド系統 */
 
-    std::array<std::shared_ptr<CommandAllocator>, FRAME_COUNT> s_cmdAllocator{};
-    std::array<std::shared_ptr<CommandList>, FRAME_COUNT> s_cmdList{};
-    std::shared_ptr<CommandQueue> s_cmdQueue{};
+    std::array<std::unique_ptr<CommandAllocator>, FRAME_COUNT> s_cmdAllocator{};
+    std::array<std::unique_ptr<CommandList>, FRAME_COUNT> s_cmdList{};
+    std::unique_ptr<CommandQueue> s_cmdQueue{};
 
     /* フェンス */
     std::array<Fence, FRAME_COUNT> s_fence{};
@@ -175,6 +176,18 @@ void DirectX12::Finalize()
     s_descriptors[static_cast<int>(PoolType::SMP)].reset();
     s_descriptors[static_cast<int>(PoolType::RTV)].reset();
     s_descriptors[static_cast<int>(PoolType::DSV)].reset();
+    for (auto& cmdAllocator : s_cmdAllocator)
+    {
+        cmdAllocator.reset();
+    }
+    for (auto& cmdList : s_cmdList)
+    {
+        cmdList.reset();
+    }
+    s_cmdQueue.reset();
+    s_dxgiFactory.Reset();
+    s_device.Reset();
+    s_swapChain.Reset();
     s_window.Finalize();
 }
 
@@ -215,12 +228,9 @@ void DirectX12::SetDefaultRenderTarget() const
 
 void DirectX12::SetHeaps() const
 {
-    std::array<ID3D12DescriptorHeap* const, 2> heaps{
-        s_descriptors[static_cast<UINT>(PoolType::RES)]->GetHeap().Get(),
-        s_descriptors[static_cast<UINT>(PoolType::SMP)]->GetHeap().Get()
-    };
-
-    CommandList()->SetDescriptorHeaps(static_cast<UINT>(heaps.size()), heaps.data());
+    // リソースとサンプラーのヒープを設定
+    s_descriptors[static_cast<UINT>(PoolType::RES)]->SetHeaps(CommandList());
+    s_descriptors[static_cast<UINT>(PoolType::SMP)]->SetHeaps(CommandList());
 }
 
 ComPtr<ID3D12Device> DirectX12::Device() const
@@ -302,6 +312,11 @@ bool DirectX12::InitDevice()
     }
 
     adapter = nvidiaAdapter != nullptr ? nvidiaAdapter : maxVMAdapter;
+    if (!adapter)
+    {
+        MsgBox::Show("No suitable adapter found", "AdapterError", MsgBox::STYLE::OK, MsgBox::ICON::ERROR_ICON);
+        return false;
+    }
 
     constexpr D3D_FEATURE_LEVEL levels[]{
         D3D_FEATURE_LEVEL_12_1,
@@ -312,10 +327,12 @@ bool DirectX12::InitDevice()
 
     for (const auto& level : levels)
     {
-        auto result = SUCCEEDED(D3D12CreateDevice(adapter.Get(), level, IID_PPV_ARGS(s_device.ReleaseAndGetAddressOf())));
-        if (result) break;
+        if (SUCCEEDED(D3D12CreateDevice(adapter.Get(), level, IID_PPV_ARGS(s_device.ReleaseAndGetAddressOf()))))
+        {
+            return true;
+        }
     }
-    return s_device != nullptr;
+    return false;
 }
 
 bool DirectX12::InitCommand()
@@ -328,13 +345,13 @@ bool DirectX12::InitCommand()
     desc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 
     // キューの作成
-    s_cmdQueue = std::make_shared<::CommandQueue>();
+    s_cmdQueue = std::make_unique<::CommandQueue>();
     if (!CommandQueue::Create(desc, s_cmdQueue.get())) return false;
 
     for (size_t i = 0; i < FRAME_COUNT; i++)
     {
-        s_cmdAllocator[i] = std::make_shared<::CommandAllocator>();
-        s_cmdList[i] = std::make_shared<::CommandList>();
+        s_cmdAllocator[i] = std::make_unique<::CommandAllocator>();
+        s_cmdList[i] = std::make_unique<::CommandList>();
 
         // アロケーターの作成
         if (!CommandAllocator::Create(desc.Type, s_cmdAllocator[i].get())) return false;

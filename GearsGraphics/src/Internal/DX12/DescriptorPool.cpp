@@ -70,6 +70,11 @@ size_t Glib::Internal::Graphics::DescriptorPool::UseHeapCount() const
     return handles_.UseCount();
 }
 
+void Glib::Internal::Graphics::DescriptorPool::SetHeaps(const ComPtr<ID3D12GraphicsCommandList>& cmdList)
+{
+    cmdList->SetDescriptorHeaps(1U, heap_.GetAddressOf());
+}
+
 void Glib::Internal::Graphics::DescriptorPool::Resize(size_t numDescriptors)
 {
     ComPtr<ID3D12DescriptorHeap> newHeap;

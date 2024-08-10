@@ -46,6 +46,12 @@ namespace Glib::Internal::Graphics
          */
         size_t UseHeapCount() const;
 
+        /**
+         * @brief ヒープのを設定
+         * @param cmdList コマンドリスト
+         */
+        void SetHeaps(const ComPtr<ID3D12GraphicsCommandList>& cmdList);
+
     private:
         void Resize(size_t numDescriptors);
 
