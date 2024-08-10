@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <ranges>
 #include <Mathf.h>
+#include <Debugger.h>
 
 Matrix4x4 Glib::AnimationClip::KeyFrame::Matrix() const
 {
@@ -12,7 +13,11 @@ Matrix4x4 Glib::AnimationClip::KeyFrame::Matrix() const
 bool Glib::AnimationClip::Load(std::string_view fileName)
 {
     GLAnimation animation{};
-    if (!animation.ReadFile(fileName)) return false;
+    if (!animation.ReadFile(fileName))
+    {
+        Glib::Debug::Error(std::string{ fileName } + " file could not be loaded");
+        return false;
+    }
 
     for (const auto& motion : animation.Motions())
     {

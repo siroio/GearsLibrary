@@ -16,7 +16,6 @@ bool Glib::AnimationManager::Load(unsigned int id, std::string_view filePath)
 
 Glib::WeakPtr<Glib::AnimationClip> Glib::AnimationManager::Animation(unsigned int id)
 {
-    if (!s_animations.contains(id)) return Glib::WeakPtr<AnimationClip>{ nullptr };
-    return Glib::WeakPtr<AnimationClip>{ s_animations.at(id) };
+    if (!s_animations.contains(id)) return nullptr;
+    return s_animations.at(id);
 }
-
