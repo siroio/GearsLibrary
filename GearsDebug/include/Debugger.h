@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <string_view>
+#include <Singleton.h>
 
 namespace Glib
 {
@@ -14,16 +15,29 @@ namespace Glib
      * @brief 簡易ロガークラス
      * @brief ファイル出力なし
      */
-    class Debug final
+    class Debug final : public Singleton<Debug>
     {
     private:
         Debug() = default;
-        Debug(const Debug&) = delete;
-        Debug& operator = (const Debug&) = delete;
+        friend Debug& Singleton<Debug>::Instance();
+        virtual ~Debug() override;
 
     public:
 
+        /**
+         * @brief デバッグが有効か確認
+         * @return 有効 : true
+         * @return 無効 : false
+         */
         static bool Enabled();
+
+        /**
+         * @brief コンソールへの出力を有効化
+         * @brief 実行中に無効にはできません
+         * @param enable 有効化
+         * @param createConsole コンソールを作成するか
+         */
+        static void EnableConosleLog(bool enable, bool createConsole = true);
 
         /**
          * @brief メッセージ指定なしassert

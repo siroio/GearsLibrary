@@ -7,9 +7,8 @@
 #include <Color.h>
 #include <Vector2.h>
 #include <RenderTarget.h>
-#include <TimeUtility.h>
-#include <GameTimer.h>
 #include <Debugger.h>
+#include <GameTimer.h>
 #include <filesystem>
 #include <unordered_map>
 #include <deque>
@@ -188,15 +187,9 @@ void Glib::Internal::Debug::ImGuiManager::Finalize()
 
 void Glib::Internal::Debug::ImGuiManager::Log(std::string_view message, LogLevel loglevel)
 {
-    std::string msg;
-    msg.append(Glib::TimeUtility::CurrentTimeStr());
-    msg.append(Glib::Debug::GetPrefix(loglevel));
-    msg.append(" ");
-    msg.append(message);
-    msg.append("\n");
     Debug::LogMessage log;
-    log.level = loglevel;
-    log.message = msg;
+    log.level = std::move(loglevel);
+    log.message = std::move(message);
     s_consoleLog.push_back(log);
 }
 
