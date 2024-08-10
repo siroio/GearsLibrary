@@ -19,8 +19,9 @@ namespace Glib
 
     class Window : public Singleton<Window>
     {
+    private:
         Window() = default;
-        friend Window& Glib::Singleton<Window>::Instance();
+        friend Window& Singleton<Window>::Instance();
 
     public:
 
