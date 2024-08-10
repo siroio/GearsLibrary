@@ -192,8 +192,7 @@ void Glib::Internal::Graphics::RenderingManager::DebugDraw()
 
     if (s_enableShadowMapWindow)
     {
-        ImGui::Begin("Hierarchy", &s_enableShadowMapWindow);
-        ImGui::Separator();
+        ImGui::Begin("ShadowMap", &s_enableShadowMapWindow);
 
         GLGUI::DragFloat("ShadowBias", &s_shadowBias, 0.0001f, 0.0f);
         GLGUI::DragFloat("MomentBias", &s_momentBias, 0.0001f, 0.0f);
